@@ -1,0 +1,30 @@
+{
+  "java.import.gradle.enabled": true,
+  "java.autobuild.enabled": false,
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/.settings": true
+  },
+  "wpilib.selectDefaultSimulateExtension": true,
+  "java.test.config": [
+        {
+            "name": "SeriouslyCommonLib",
+            "workingDirectory": "${workspaceFolder}/build/jni/release",
+            "vmargs": [ "-Djava.library.path=${workspaceFolder}/build/jni/release" ],
+            "env": { "LD_LIBRARY_PATH": "${workspaceFolder}/build/jni/release" ,
+                "DYLD_LIBRARY_PATH": "${workspaceFolder}/build/jni/release" }
+        },
+    ],
+    "coverage-gutters.coverageReportFileName": "html/index.html",
+    "coverage-gutters.coverageBaseDir": "build/reports/jacoco/test",
+    "coverage-gutters.coverageFileNames": [
+        "jacocoTestReport.xml"
+    ],
+    "problems.decorations.enabled": true,
+    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable"
+}

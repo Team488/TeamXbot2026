@@ -1,0 +1,3 @@
+[submodule "SeriouslyCommonLib"]
+	path = SeriouslyCommonLib
+	url = https://github.com/Team488/SeriouslyCommonLib.git

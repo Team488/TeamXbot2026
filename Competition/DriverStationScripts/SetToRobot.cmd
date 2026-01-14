@@ -1,0 +1,1 @@
+netsh interface ipv4 set address "Wi-Fi" static 10.4.88.20 255.0.0.0 10.4.88.4
