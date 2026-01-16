@@ -117,6 +117,14 @@ public class CompetitionContract extends ElectricalContract {
         };
     }
 
+    public CANMotorControllerInfo getFuelCollectorMotor() {
+        return new CANMotorControllerInfo("FuelCollectorMotor",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                23
+        );
+    }
+
     @Override
     public DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance) {
         double simulationScalingValue = 1.0;
@@ -145,6 +153,8 @@ public class CompetitionContract extends ElectricalContract {
             default -> new Translation2d(0, 0);
         };
     }
+
+
 
     @Override
     public double getSteeringGearRatio() {
