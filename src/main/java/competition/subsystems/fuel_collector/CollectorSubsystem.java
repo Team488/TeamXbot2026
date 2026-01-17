@@ -1,13 +1,15 @@
 package competition.subsystems.fuel_collector;
 
 import competition.electrical_contract.ElectricalContract;
-import competition.operator_interface.OperatorInterface;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
-import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class CollectorSubsystem extends BaseSubsystem {
 
     public enum IntakeState {
@@ -16,31 +18,33 @@ public class CollectorSubsystem extends BaseSubsystem {
         STOPPED
     }
 
+    public final ElectricalContract electricalContract;
     public final XCANMotorController collectorMotor;
     DoubleProperty intakePower;
-    DoubleProperty outputPower;
+    DoubleProperty ejectPower;
 
+    @Inject
     public CollectorSubsystem(ElectricalContract electricalContract,
                               XCANMotorController.XCANMotorControllerFactory motorFactory,
                               PropertyFactory pf) {
 
         pf.setPrefix(this);
-        if (electricalContract.isgetFuelCollectorMotorReady()) {
+        this.electricalContract = electricalContract;
+        if (electricalContract.isFuelCollectorMotorReady()) {
             this.collectorMotor = motorFactory.create(
                     electricalContract.getFuelCollectorMotor(),
                     getPrefix(),
-                    "fuelCollector"
+                    "FuelCollectorPID"
             );
+            this.registerDataFrameRefreshable(collectorMotor);
         } else {
             this.collectorMotor = null;
         }
-        //set intake and output values, output should be - and intake is +
 
-        intakePower = pf.createPersistentProperty("intake Power", 1);
-        outputPower = pf.createPersistentProperty("output Power", -1);
-
+        //set intake and eject values, eject is - and intake is +
+        intakePower = pf.createPersistentProperty("CollectorIntakePower", 1);
+        ejectPower = pf.createPersistentProperty("CollectorEjectPower", -1);
     }
-
 
     public void intake() {
         if (collectorMotor == null) {
@@ -53,7 +57,7 @@ public class CollectorSubsystem extends BaseSubsystem {
         if (collectorMotor == null) {
             return;
         }
-        collectorMotor.setPower(outputPower.get());
+        collectorMotor.setPower(ejectPower.get());
     }
 
     public void stop() {
@@ -61,5 +65,12 @@ public class CollectorSubsystem extends BaseSubsystem {
             return;
         }
         collectorMotor.setPower(0);
+    }
+
+    @Override
+    public void periodic() {
+        if (electricalContract.isFuelCollectorMotorReady()) {
+            collectorMotor.periodic();
+        }
     }
 }
