@@ -2,8 +2,6 @@ package competition.electrical_contract;
 
 import javax.inject.Inject;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Translation2d;
 import xbot.common.injection.electrical_contract.CANBusId;
@@ -12,7 +10,6 @@ import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.swerve.SwerveInstance;
-import xbot.common.math.XYPair;
 
 import static edu.wpi.first.units.Units.Inches;
 
@@ -31,6 +28,19 @@ public class CompetitionContract extends ElectricalContract {
     @Override
     public boolean areCanCodersReady() {
         return true;
+    }
+
+    @Override
+    public boolean isShooterFeederReady() {
+        return false;
+    }
+
+    public CANMotorControllerInfo getShooterFeederMotor() {
+        return new CANMotorControllerInfo("ShooterFeederMotor",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                489,
+                new CANMotorControllerOutputConfig());
     }
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
