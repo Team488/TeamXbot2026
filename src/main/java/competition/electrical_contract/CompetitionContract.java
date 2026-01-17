@@ -33,6 +33,16 @@ public class CompetitionContract extends ElectricalContract {
         return true;
     }
 
+    public boolean isShooterReady() { return false; }
+
+    public CANMotorControllerInfo getShooterMotor() {
+        return new CANMotorControllerInfo("ShooterMotor",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                918,
+                new CANMotorControllerOutputConfig());
+    }
+
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/Drive";
     }
