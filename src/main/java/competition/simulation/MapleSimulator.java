@@ -11,6 +11,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 import org.ironmaple.simulation.drivesims.COTS;
+import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 import xbot.common.advantage.AKitLogger;
 import xbot.common.controls.sensors.mock_adapters.MockGyro;
 import xbot.common.logic.TimeStableValidator;
@@ -25,6 +26,8 @@ import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+
+import java.util.function.Supplier;
 
 @Singleton
 public class MapleSimulator implements BaseSimulator {
@@ -60,12 +63,13 @@ public class MapleSimulator implements BaseSimulator {
                 Units.Meters.of(0.76),
                 Units.Meters.of(0.52),
                 Units.Meters.of(0.52),
+                COTS.ofPigeon2(),
                 COTS.ofMark4(
                         DCMotor.getKrakenX60(1),
                         DCMotor.getKrakenX60(1),
                         COTS.WHEELS.SLS_PRINTED_WHEELS.cof,
-                        3),
-                COTS.ofPigeon2());
+                        3)
+        );
 
         // TODO: custom things to provide here like motor ratios and what have you
         config = ourConfig.withCustomModuleTranslations(new Translation2d[] {
