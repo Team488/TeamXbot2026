@@ -11,11 +11,14 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import xbot.common.command.BaseRobot;
 import xbot.common.math.FieldPose;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 public class Robot extends BaseRobot {
+    Logger log = LogManager.getLogger(Robot.class);
 
     public static final double LOOP_INTERVAL = 0.02;
 
@@ -50,15 +53,20 @@ public class Robot extends BaseRobot {
             String chosenContract = Preferences.getString("ContractToUse", "Competition");
 
             switch (chosenContract) {
-                case "Practice":
-                    System.out.println("Using practice contract");
+                case "2023":
+                    log.info("Using 2023 contract");
+                    return DaggerPracticeRobotComponent.create();
+                case "2025":
+                    log.info("Using 2025 contract");
                     return DaggerPracticeRobotComponent.create();
                 case "Robox":
                     System.out.println("Using Robox contract");
                     return DaggerRoboxComponent.create();
                 default:
-                    System.out.println("Using Competition contract");
-                    // In all other cases, return the competition component.
+                    if(!Preferences.containsKey("ContractToUse")) {
+                        Preferences.setString("ContractToUse", "Competition");
+                    }
+                    log.info("Using Competition contract");
                     return DaggerRobotComponent.create();
             }
         } else {
