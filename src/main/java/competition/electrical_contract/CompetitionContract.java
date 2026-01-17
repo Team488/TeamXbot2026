@@ -117,12 +117,15 @@ public class CompetitionContract extends ElectricalContract {
         };
     }
 
+    @Override
+    public boolean isgetFuelCollectorMotorReady() {return true;}
+
     public CANMotorControllerInfo getFuelCollectorMotor() {
         return new CANMotorControllerInfo("FuelCollectorMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
-                23
-        );
+                23,
+                new CANMotorControllerOutputConfig());
     }
 
     @Override

@@ -21,5 +21,8 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance);
 
+    public abstract boolean isgetFuelCollectorMotorReady();
+
+    public abstract CANMotorControllerInfo getFuelCollectorMotor();
 
 }
