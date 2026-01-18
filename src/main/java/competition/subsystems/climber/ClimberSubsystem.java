@@ -26,30 +26,39 @@ public class ClimberSubsystem extends BaseSubsystem {
         if (electricalContract.isClimberReady()) {
             this.climberMotor = motorFactory.create(
                     electricalContract.getClimberMotor(), this.getPrefix(), "ClimberMotorPID",
-                    new XCANMotorControllerPIDProperties()
-            );
+                    new XCANMotorControllerPIDProperties());
+            this.registerDataFrameRefreshable(climberMotor);
         } else {
             this.climberMotor = null;
         }
 
-        extendPower = propertyFactory.createPersistentProperty("Extend Power",.1);
-        retractPower = propertyFactory.createPersistentProperty("Retract Power", -.1);
+        extendPower = propertyFactory.createPersistentProperty("Extend Power",0.1);
+        retractPower = propertyFactory.createPersistentProperty("Retract Power", -0.1);
     }
-        public void extend(){
-            if (climberMotor != null) {
-                climberMotor.setPower(extendPower.get());
-            }
+
+    public void extend() {
+        if (climberMotor != null) {
+            climberMotor.setPower(extendPower.get());
         }
-        public void retract(){
-            if (climberMotor != null) {
-                climberMotor.setPower(retractPower.get());
-            }
+    }
+
+    public void retract() {
+        if (climberMotor != null) {
+            climberMotor.setPower(retractPower.get());
         }
-        public void stop(){
-            if( climberMotor != null) {
-                climberMotor.setPower(0);
-            }
+    }
+
+    public void stop() {
+        if( climberMotor != null) {
+            climberMotor.setPower(0);
         }
+    }
+
+    public void periodic() {
+        if (climberMotor != null) {
+            climberMotor.periodic();
+        }
+    }
 
     }
 
