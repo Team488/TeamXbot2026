@@ -13,16 +13,9 @@ public class EnableShooterFeederCommand extends BaseCommand {
         this.shooterFeeder = shooterFeeder;
         this.addRequirements(shooterFeeder);
     }
+    
     @Override
     public void initialize() {
-
+        // TODO: Fill in later
     }
-
-    @Override
-    public void end(boolean interrupted) {
-    }
-
-
-
 }
-
