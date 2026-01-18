@@ -67,9 +67,4 @@ public class Landmarks {
     public static Pose2d redClimbCenter = new Pose2d(1.510,3.750,Rotation2d.fromDegrees(0));
     public static Pose2d redClimbMiddleOutpostSide = new Pose2d(1.510,4.380,Rotation2d.fromDegrees(0));
     public static Pose2d redClimbDepotOutpostEdge = new Pose2d(1.510,4.650,Rotation2d.fromDegrees(0));
-
-
-
-
-
 }
