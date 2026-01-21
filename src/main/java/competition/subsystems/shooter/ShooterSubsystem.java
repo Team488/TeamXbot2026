@@ -3,6 +3,7 @@ package competition.subsystems.shooter;
 import competition.electrical_contract.ElectricalContract;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
+import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -21,7 +22,15 @@ public class ShooterSubsystem extends BaseSubsystem {
         propertyFactory.setPrefix(this);
         if (eletricalContract.isShooterReady()) {
             shooterMotor = xcanMotorControllerFactory.create(eletricalContract.getShooterMotor(),
-                    getPrefix(),"ShooterMotor");
+                    getPrefix(),"ShooterMotorPID",
+                    new XCANMotorControllerPIDProperties(
+                            0.1,
+                            0.01,
+                            0.25,
+                            0.0002,
+                            0.750,
+                            1,
+                            0));
         } else {
             this.shooterMotor = null;
         }
