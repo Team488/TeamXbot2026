@@ -6,4 +6,9 @@ public class UnitTestCompetitionContract extends CompetitionContract {
 
     @Inject
     public UnitTestCompetitionContract() {}
+
+    @Override
+    public boolean isShooterReady() {
+        return true;
+    }
 }
