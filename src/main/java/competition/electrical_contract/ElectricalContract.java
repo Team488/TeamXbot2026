@@ -1,8 +1,10 @@
 package competition.electrical_contract;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
+import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.injection.swerve.SwerveInstance;
 
@@ -22,4 +24,20 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public abstract boolean isCollectDeployReady();
 
     public abstract CANMotorControllerInfo getCollectDeployMotor();
+  
+    public abstract boolean isShooterReady();
+
+    public abstract CANMotorControllerInfo getShooterMotor();
+  
+    public abstract boolean isClimberReady();
+
+    public abstract CANMotorControllerInfo getClimberMotor();
+  
+    public abstract boolean isShooterFeederReady();
+  
+    public abstract CANMotorControllerInfo getShooterFeederMotor();
+  
+    public abstract boolean isFuelCollectorMotorReady();
+  
+    public abstract CANMotorControllerInfo getFuelCollectorMotor();
 }
