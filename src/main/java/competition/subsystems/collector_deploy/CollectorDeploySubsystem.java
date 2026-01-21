@@ -8,37 +8,42 @@ import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
 @Singleton
 public class CollectorDeploySubsystem extends BaseSubsystem {
-    public final XCANMotorController collectorDeploy;
-    public DoubleProperty intakePower;
-    public DoubleProperty outputPower;
-
+    public final XCANMotorController collectorDeployMotor;
+    public DoubleProperty retrackPower;
+    public DoubleProperty extendPower;
 
     @Inject
     public CollectorDeploySubsystem (XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
                                       ElectricalContract electricalContract, XCANMotorController motor, PropertyFactory propertyFactory) {
         propertyFactory.setPrefix(this);
-        if(electricalContract.isCollectDeployReady()){
-
-            this.collectorDeploy = xcanMotorControllerFactory.create(electricalContract.getCollectDeployMotor(),
+        if (electricalContract.isCollectDeployReady()) {
+            this.collectorDeployMotor = xcanMotorControllerFactory.create(electricalContract.getCollectDeployMotor(),
                     getPrefix(),"collectorDeploy");
-
+            this.registerDataFrameRefreshable(motor);
         } else {
-            this.collectorDeploy = null;
+            this.collectorDeployMotor = null;
         }
 
-        this.intakePower = propertyFactory.createPersistentProperty("intake Power",.1);
-        this.outputPower = propertyFactory.createPersistentProperty("output Power",.1);
+        this.retrackPower = propertyFactory.createPersistentProperty("retrackPower",-0.1);
+        this.extendPower = propertyFactory.createPersistentProperty("extend Power",0.1);
 
     }
     public void intake() {
-        collectorDeploy.setPower(intakePower.get());
+        collectorDeployMotor.setPower(retrackPower.get());
     }
+
     public void output() {
-        collectorDeploy.setPower(outputPower.get());
+        collectorDeployMotor.setPower(extendPower.get());
     }
+
     public void stop() {
-        collectorDeploy.setPower(0);
+        collectorDeployMotor.setPower(0);
+    }
+
+    public void periodic() {
+        collectorDeployMotor.periodic();
     }
 }

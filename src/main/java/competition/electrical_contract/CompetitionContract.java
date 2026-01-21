@@ -41,7 +41,7 @@ public class CompetitionContract extends ElectricalContract {
         return new CANMotorControllerInfo("CollectorDeployMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
-                676767,
+                676767, // TODO:Change ID
                 new CANMotorControllerOutputConfig());
     }
 
