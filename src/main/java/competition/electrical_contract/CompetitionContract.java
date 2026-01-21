@@ -21,25 +21,40 @@ public class CompetitionContract extends ElectricalContract {
     public CompetitionContract() {}
 
     @Override
-    public boolean isDriveReady() {
-        return true;
-    }
+    public boolean isDriveReady() { return true; }
 
     @Override
-    public boolean areCanCodersReady() {
-        return true;
-    }
+    public boolean areCanCodersReady() { return true; }
 
     @Override
-    public boolean isShooterFeederReady() {
-        return false;
+    public boolean isClimberReady() { return false; }
+
+    public CANMotorControllerInfo getClimberMotor() {
+        return new CANMotorControllerInfo("ClimberMotor",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                488,
+                new CANMotorControllerOutputConfig());
     }
+                                          
+    @Override                                    
+    public boolean isShooterFeederReady() { return false; }
 
     public CANMotorControllerInfo getShooterFeederMotor() {
         return new CANMotorControllerInfo("ShooterFeederMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 489,
+                new CANMotorControllerOutputConfig());
+    }
+
+    public boolean isShooterReady() { return false; }
+
+    public CANMotorControllerInfo getShooterMotor() {
+        return new CANMotorControllerInfo("ShooterMotor",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                918,
                 new CANMotorControllerOutputConfig());
     }
 
@@ -128,7 +143,7 @@ public class CompetitionContract extends ElectricalContract {
     }
 
     @Override
-    public boolean isFuelCollectorMotorReady() {return true;}
+    public boolean isFuelCollectorMotorReady() { return true; }
 
     public CANMotorControllerInfo getFuelCollectorMotor() {
         return new CANMotorControllerInfo("FuelCollectorMotor",
