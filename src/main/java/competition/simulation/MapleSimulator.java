@@ -24,6 +24,7 @@ import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 
 @Singleton
 public class MapleSimulator implements BaseSimulator {
@@ -51,6 +52,9 @@ public class MapleSimulator implements BaseSimulator {
          * MapleSim arena and drive setup
          */
         arena = SimulatedArena.getInstance();
+        
+        // uncomment this to force all fuel onto the sim, otherwise it defaults to 1/3rd of the fuel for perf reasons
+        //((Arena2026Rebuilt)arena).setEfficiencyMode(false);
         arena.resetFieldForAuto();
 
         var ourConfig = new DriveTrainSimulationConfig(
@@ -100,6 +104,9 @@ public class MapleSimulator implements BaseSimulator {
         // run the simulation
         arena.simulationPeriodic();
         swerveDriveSimulation.periodic();
+
+        aKitLog.record("FieldSimulation/GamePieces", arena.getGamePiecesArrayByType("Fuel"));
+        
 
         // this is where the robot really is in the sim
         aKitLog.record("FieldSimulation/Robot", swerveDriveSimulation.getActualPoseInSimulationWorld());

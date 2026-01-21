@@ -13,13 +13,11 @@
             "/AdvantageKit/RealOutputs",
             "/AdvantageKit/RealOutputs/PoseSubsystem",
             "/AdvantageKit/RealOutputs/Simulator",
-            "/AdvantageKit/RealOutputs/Simulator/FieldSimulation",
-            "/AdvantageKit/RealOutputs/LoggedRobot",
-            "/AdvantageKit/RealOutputs/Logger"
+            "/AdvantageKit/RealOutputs/Simulator/FieldSimulation"
           ]
         },
         "tabs": {
-          "selected": 1,
+          "selected": 2,
           "tabs": [
             {
               "type": 0,
@@ -84,6 +82,15 @@
                     "options": {
                       "model": "2026 KitBot"
                     }
+                  },
+                  {
+                    "type": "gamePiece",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Simulator/FieldSimulation/GamePieces",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {
+                      "variant": "Fuel"
+                    }
                   }
                 ],
                 "game": "FRC:2026 Field"
@@ -93,14 +100,14 @@
                 "cameraIndex": -1,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  1.6198029769346944,
-                  8.5733742600967,
-                  -4.5316319234864935
+                  -0.9878454092227529,
+                  9.947570443154682,
+                  -9.735659848749354
                 ],
                 "cameraTarget": [
-                  2.745790324446207,
-                  0.30352083875812863,
-                  -0.004462822873707355
+                  -0.3357071152822095,
+                  -2.2147502970890423,
+                  -0.5696208183979151
                 ]
               },
               "controlsHeight": 200
