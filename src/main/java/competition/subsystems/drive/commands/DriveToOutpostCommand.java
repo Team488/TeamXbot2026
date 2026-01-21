@@ -22,8 +22,8 @@ public class DriveToOutpostCommand extends BaseCommand {
         pf.setPrefix(this);
         this.drive = drive;
         this.addRequirements(drive);
-        this.moveRobotX = pf.createPersistentProperty("Move Robot X", 0.2);
-        this.timeAmountToMove = pf.createPersistentProperty("Time Amount To Move", 3);
+        this.moveRobotX = pf.createPersistentProperty("Move Robot X", 2);
+        this.timeAmountToMove = pf.createPersistentProperty("Time Amount To Move", 2);
     }
 
     @Override
@@ -35,4 +35,8 @@ public class DriveToOutpostCommand extends BaseCommand {
         drive.drive(new XYPair(moveRobotX.get(), 0),0);
     }
 
+    @Override
+    public boolean isFinished() {
+        return XTimer.getFPGATimestamp() - startTime > timeAmountToMove.get();
+    }
 }
