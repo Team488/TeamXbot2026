@@ -143,10 +143,10 @@ public class CompetitionContract extends ElectricalContract {
     }
 
     @Override
-    public boolean isFuelCollectorMotorReady() { return true; }
+    public boolean isFuelIntakeMotorReady() { return true; }
 
-    public CANMotorControllerInfo getFuelCollectorMotor() {
-        return new CANMotorControllerInfo("FuelCollectorMotor",
+    public CANMotorControllerInfo getFuelIntakeMotor() {
+        return new CANMotorControllerInfo("FuelIntakeMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 23,
