@@ -9,6 +9,8 @@ import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.subsystems.fuel_intake.IntakeSubsystem;
 import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
 import competition.subsystems.fuel_intake.commands.FuelStopCommand;
+import competition.subsystems.shooter.ShooterSubsystem;
+import competition.subsystems.shooter.commands.ShooterStopCommand;
 
 /**
  * For setting the default commands on subsystems
@@ -23,8 +25,14 @@ public class SubsystemDefaultCommandMap {
     public void setupDriveSubsystem(DriveSubsystem driveSubsystem, SwerveDriveWithJoysticksCommand command) {
         driveSubsystem.setDefaultCommand(command);
     }
+
     @Inject
     public void intakeStopCommand(IntakeSubsystem intakeSubsystem, FuelStopCommand command) {
         intakeSubsystem.setDefaultCommand(command);
+    }
+
+    @Inject
+    public void setupShooterSubsystem(ShooterSubsystem shooter, ShooterStopCommand command) {
+        shooter.setDefaultCommand(command);
     }
 }
