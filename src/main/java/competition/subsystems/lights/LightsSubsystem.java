@@ -3,6 +3,7 @@ package competition.subsystems.lights;
 
 import com.ctre.phoenix6.signals.AnimationDirectionValue;
 import com.ctre.phoenix6.signals.LarsonBounceValue;
+import competition.electrical_contract.ElectricalContract;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -22,18 +23,17 @@ import static edu.wpi.first.units.Units.Hertz;
 
 @Singleton
 public class LightsSubsystem extends BaseSubsystem {
-    public final XCANLightController lights2;
+    public final XCANLightController lights;
 
     @Inject
-    public LightsSubsystem(XCANLightController.XCANLightControllerFactory lightsFactory) {
-        lights2 =  lightsFactory.create(new CANLightControllerInfo("Lights",
-                LightControllerType.Candle, CANBusId.DefaultCanivore, 11,
-                new CANLightControllerOutputConfig(LEDStripType.GRB, 0.15, new int[] {8})));
-        lights2.larson(0, Hertz.of(25), Color.kDarkBlue, LarsonBounceValue.Back);
+    public LightsSubsystem(XCANLightController.XCANLightControllerFactory lightsFactory,
+                           ElectricalContract electricalContract) {
+        lights = lightsFactory.create(electricalContract.getLightControlerInfo()) ;
     }
 
     @Override
     public void periodic() {
         super.periodic();
+        lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
     }
 }

@@ -2,6 +2,7 @@ package competition.electrical_contract;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import xbot.common.injection.electrical_contract.CANBusId;
+import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.MotorControllerType;
@@ -36,4 +37,6 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public abstract boolean isFuelCollectorMotorReady();
   
     public abstract CANMotorControllerInfo getFuelCollectorMotor();
+
+    public abstract CANLightControllerInfo getLightControlerInfo();
 }
