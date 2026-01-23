@@ -1,7 +1,5 @@
 package competition.electrical_contract;
 
-import javax.inject.Inject;
-
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Translation2d;
 import xbot.common.injection.electrical_contract.CANBusId;
@@ -11,76 +9,26 @@ import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.swerve.SwerveInstance;
 
+import javax.inject.Inject;
+
 import static edu.wpi.first.units.Units.Inches;
 
-public class CompetitionContract extends ElectricalContract {
+public class Contract2023 extends CompetitionContract {
 
     protected final double simulationScalingValue = 256.0 * PoseSubsystem.INCHES_IN_A_METER;
 
     @Inject
-    public CompetitionContract() {}
+    public Contract2023() {}
 
     @Override
-    public boolean isDriveReady() { return true; }
-
-    @Override
-    public boolean areCanCodersReady() { return true; }
-
-    @Override
-    public boolean isClimberReady() { return false; }
-
-    public CANMotorControllerInfo getClimberMotor() {
-        return new CANMotorControllerInfo("ClimberMotor",
-                MotorControllerType.TalonFx,
-                CANBusId.RIO,
-                488,
-                new CANMotorControllerOutputConfig());
-    }
-                                          
-    @Override                                    
-    public boolean isShooterFeederReady() { return false; }
-
-    public CANMotorControllerInfo getShooterFeederMotor() {
-        return new CANMotorControllerInfo("ShooterFeederMotor",
-                MotorControllerType.TalonFx,
-                CANBusId.RIO,
-                489,
-                new CANMotorControllerOutputConfig());
-    }
-
-    public boolean isShooterReady() { return false; }
-
-    public CANMotorControllerInfo getShooterMotor() {
-        return new CANMotorControllerInfo("ShooterMotor",
-                MotorControllerType.TalonFx,
-                CANBusId.RIO,
-                918,
-                new CANMotorControllerOutputConfig());
-    }
-
-
-    public boolean isIntakeDeployReady() { return false; }
-
-    //TODO: change id
-    public CANMotorControllerInfo getIntakeDeployMotor() {
-        return new CANMotorControllerInfo("IntakeDeployMotor",
-                MotorControllerType.TalonFx,
-                CANBusId.RIO,
-                676767, // TODO:Change ID
-                new CANMotorControllerOutputConfig());
+    public boolean isDriveReady() {
+        return true;
     }
 
     @Override
-    public boolean isHoodReady() {return false;}
-
-    public CANMotorControllerInfo getHoodMotor() {
-        return new CANMotorControllerInfo("hoodMotor",
-                MotorControllerType.TalonFx,
-                CANBusId.RIO,
-                1000,
-                new CANMotorControllerOutputConfig());
+    public boolean areCanCodersReady() {
+        return true;
     }
-
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/Drive";
@@ -167,17 +115,6 @@ public class CompetitionContract extends ElectricalContract {
     }
 
     @Override
-    public boolean isFuelIntakeMotorReady() { return true; }
-
-    public CANMotorControllerInfo getFuelIntakeMotor() {
-        return new CANMotorControllerInfo("FuelIntakeMotor",
-                MotorControllerType.TalonFx,
-                CANBusId.RIO,
-                23,
-                new CANMotorControllerOutputConfig());
-    }
-
-    @Override
     public DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance) {
         double simulationScalingValue = 1.0;
 
@@ -205,8 +142,6 @@ public class CompetitionContract extends ElectricalContract {
             default -> new Translation2d(0, 0);
         };
     }
-
-
 
     @Override
     public double getSteeringGearRatio() {
