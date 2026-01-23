@@ -59,11 +59,11 @@ public class CompetitionContract extends ElectricalContract {
     }
 
 
-    public boolean isCollectDeployReady() { return false; }
+    public boolean isIntakeDeployReady() { return false; }
 
     //TODO: change id
-    public CANMotorControllerInfo getCollectDeployMotor() {
-        return new CANMotorControllerInfo("CollectorDeployMotor",
+    public CANMotorControllerInfo getIntakeDeployMotor() {
+        return new CANMotorControllerInfo("IntakeDeployMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 676767, // TODO:Change ID
