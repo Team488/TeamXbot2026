@@ -58,6 +58,18 @@ public class CompetitionContract extends ElectricalContract {
                 new CANMotorControllerOutputConfig());
     }
 
+
+    public boolean isIntakeDeployReady() { return false; }
+
+    //TODO: change id
+    public CANMotorControllerInfo getIntakeDeployMotor() {
+        return new CANMotorControllerInfo("IntakeDeployMotor",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                676767, // TODO:Change ID
+                new CANMotorControllerOutputConfig());
+    }
+
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/Drive";
     }

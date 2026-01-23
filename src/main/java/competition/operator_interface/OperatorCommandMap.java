@@ -3,7 +3,7 @@ package competition.operator_interface;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import competition.subsystems.fuel_collector.CollectorSubsystem;
+import competition.subsystems.fuel_intake.IntakeSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import xbot.common.controls.sensors.XXboxController;
