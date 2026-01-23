@@ -18,13 +18,13 @@ public class HoodSubsystem extends BaseSubsystem {
     public DoubleProperty openPower;
     public DoubleProperty closePower;
     @Inject
-    public HoodSubsystem(XCANMotorController.XCANMotorControllerFactory XcanMotorControllerFactory,
+    public HoodSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
                          ElectricalContract electricalContract, PropertyFactory propertyFactory) {
 
         propertyFactory.setPrefix(this);
 
         if (electricalContract.isHoodReady()) {
-            this.hoodMotor = XcanMotorControllerFactory.create(electricalContract.getHoodMotor(),
+            this.hoodMotor = xcanMotorControllerFactory.create(electricalContract.getHoodMotor(),
                     this.getPrefix(),
                     "HoodMotorPID",
                     new XCANMotorControllerPIDProperties());
