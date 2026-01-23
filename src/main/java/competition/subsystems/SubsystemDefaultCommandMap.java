@@ -3,12 +3,17 @@ package competition.subsystems;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import competition.subsystems.climber.ClimberSubsystem;
+import competition.subsystems.climber.commands.ClimberStopCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.subsystems.fuel_intake.IntakeSubsystem;
-import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
 import competition.subsystems.fuel_intake.commands.FuelStopCommand;
+import competition.subsystems.shooter.ShooterSubsystem;
+import competition.subsystems.shooter.commands.ShooterStopCommand;
+import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
+import competition.subsystems.shooter_feeder.commands.DisableShooterFeederCommand;
 
 /**
  * For setting the default commands on subsystems
@@ -27,4 +32,18 @@ public class SubsystemDefaultCommandMap {
     public void intakeStopCommand(IntakeSubsystem intakeSubsystem, FuelStopCommand command) {
         intakeSubsystem.setDefaultCommand(command);
     }
+    @Inject
+    public void climberStopCommand(ClimberSubsystem climberSubsystem, ClimberStopCommand command) {
+        climberSubsystem.setDefaultCommand(command);
+    }
+    @Inject
+    public void shooterStopCommand(ShooterSubsystem shooterSubsystem, ShooterStopCommand command) {
+        shooterSubsystem.setDefaultCommand(command);
+    }
+    public void disableShooterFeederCommand(ShooterFeederSubsystem shooterFeederSubsystem,
+                                            DisableShooterFeederCommand command) {
+        shooterFeederSubsystem.setDefaultCommand(command);
+    }
+
+
 }
