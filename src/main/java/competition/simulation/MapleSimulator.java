@@ -1,20 +1,33 @@
 package competition.simulation;
 
 import competition.Robot;
+import competition.simulation.shooter.ShooterSimulator;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.LinearVelocity;
+import org.dyn4j.geometry.Circle;
 import org.ironmaple.simulation.drivesims.COTS;
+import org.ironmaple.simulation.gamepieces.GamePieceOnFieldSimulation;
+import org.ironmaple.simulation.gamepieces.GamePieceProjectile;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import xbot.common.advantage.AKitLogger;
 import xbot.common.controls.sensors.mock_adapters.MockGyro;
 import xbot.common.logic.TimeStableValidator;
 
+import static edu.wpi.first.units.Units.Centimeters;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
 import javax.inject.Inject;
@@ -25,6 +38,8 @@ import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+
+import java.util.Random;
 
 @Singleton
 public class MapleSimulator implements BaseSimulator {
@@ -39,13 +54,17 @@ public class MapleSimulator implements BaseSimulator {
     // maple-sim stuff ----------------------------
     final DriveTrainSimulationConfig config;
     final IntakeSimulation intakeSimulation;
-    final SimulatedArena arena;
+    final Arena2026Rebuilt arena;
     final SelfControlledSwerveDriveSimulation swerveDriveSimulation;
 
+    final ShooterSimulator shooterSimulator;
+
     @Inject
-    public MapleSimulator(PoseSubsystem pose, DriveSubsystem drive) {
+    public MapleSimulator(PoseSubsystem pose, DriveSubsystem drive, ShooterSimulator shooter) {
         this.pose = pose;
         this.drive = drive;
+
+        this.shooterSimulator = shooter;
 
         aKitLog = new AKitLogger("Simulator/");
 
@@ -96,8 +115,8 @@ public class MapleSimulator implements BaseSimulator {
             "Fuel",
             this.swerveDriveSimulation.getDriveTrainSimulation(),
             // How big the intake is
-            Units.Inches.of(28),
-            Units.Inches.of(12),
+            Inches.of(28),
+            Inches.of(12),
             IntakeSimulation.IntakeSide.FRONT,
             100
         );
@@ -111,6 +130,24 @@ public class MapleSimulator implements BaseSimulator {
 
     public void update() {
         this.updateDriveSimulation();
+        this.updateShooterSimulation();
+    }
+
+    protected void updateShooterSimulation() {
+        if (this.shooterSimulator.isShooting()) {
+            arena.addPieceWithVariance(
+                    pose.getCurrentPose2d().getTranslation(),
+                    pose.getCurrentHeading(),
+                    Inches.of(20),
+                    MetersPerSecond.of(12.0),
+                    Degrees.of(65),
+                    0.30,
+                    0.30,
+                    2.0,
+                    1.0,
+                    2.0
+            );
+        }
     }
 
     protected void updateDriveSimulation() {
