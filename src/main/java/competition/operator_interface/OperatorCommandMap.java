@@ -27,6 +27,6 @@ public class OperatorCommandMap {
         resetHeading.setHeadingToApply(0);
         operatorInterface.gamepad.getifAvailable(1).onTrue(resetHeading);
 
-        operatorInterface.debugGamepad.getifAvailable(XXboxController.XboxButton.LeftJoystickYAxisPositive).whileTrue(shooterOutputCommand);
+        operatorInterface.debugGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(shooterOutputCommand);
     }
 }
