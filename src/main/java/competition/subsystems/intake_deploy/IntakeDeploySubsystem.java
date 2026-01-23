@@ -1,4 +1,4 @@
-package competition.subsystems.collector_deploy;
+package competition.subsystems.intake_deploy;
 
 import competition.electrical_contract.ElectricalContract;
 import xbot.common.command.BaseSubsystem;
@@ -10,21 +10,21 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class CollectorDeploySubsystem extends BaseSubsystem {
-    public final XCANMotorController collectorDeployMotor;
+public class IntakeDeploySubsystem extends BaseSubsystem {
+    public final XCANMotorController intakeDeployMotor;
     public DoubleProperty retrackPower;
     public DoubleProperty extendPower;
 
     @Inject
-    public CollectorDeploySubsystem (XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
-                                      ElectricalContract electricalContract, XCANMotorController motor, PropertyFactory propertyFactory) {
+    public IntakeDeploySubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
+              ElectricalContract electricalContract, XCANMotorController motor, PropertyFactory propertyFactory) {
         propertyFactory.setPrefix(this);
         if (electricalContract.isCollectDeployReady()) {
-            this.collectorDeployMotor = xcanMotorControllerFactory.create(electricalContract.getCollectDeployMotor(),
+            this.intakeDeployMotor = xcanMotorControllerFactory.create(electricalContract.getCollectDeployMotor(),
                     getPrefix(),"collectorDeploy");
             this.registerDataFrameRefreshable(motor);
         } else {
-            this.collectorDeployMotor = null;
+            this.intakeDeployMotor = null;
         }
 
         this.retrackPower = propertyFactory.createPersistentProperty("retrackPower",-0.1);
@@ -32,18 +32,18 @@ public class CollectorDeploySubsystem extends BaseSubsystem {
 
     }
     public void intake() {
-        collectorDeployMotor.setPower(retrackPower.get());
+        intakeDeployMotor.setPower(retrackPower.get());
     }
 
     public void output() {
-        collectorDeployMotor.setPower(extendPower.get());
+        intakeDeployMotor.setPower(extendPower.get());
     }
 
     public void stop() {
-        collectorDeployMotor.setPower(0);
+        intakeDeployMotor.setPower(0);
     }
 
     public void periodic() {
-        collectorDeployMotor.periodic();
+        intakeDeployMotor.periodic();
     }
 }
