@@ -1,6 +1,8 @@
 package competition.subsystems.drive.commands;
 
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.pose.PoseSubsystem;
+import edu.wpi.first.math.geometry.Pose2d;
 import xbot.common.command.BaseCommand;
 import xbot.common.controls.sensors.XTimer;
 import xbot.common.math.XYPair;
@@ -22,21 +24,31 @@ public class DriveToOutpostCommand extends BaseCommand {
         pf.setPrefix(this);
         this.drive = drive;
         this.addRequirements(drive);
-        this.moveRobotX = pf.createPersistentProperty("Move Robot X", 2);
+
+        this.moveRobotX = pf.createPersistentProperty("Move Robot X", 7);
         this.timeAmountToMove = pf.createPersistentProperty("Time Amount To Move", 2);
     }
 
     @Override
     public void initialize() {
         startTime = XTimer.getMatchTime();
+        log.info("initialize");
     }
     @Override
     public void execute() {
         drive.drive(new XYPair(moveRobotX.get(), 0),0);
+        aKitLog.record("DriveToOutpostCommand", PoseSubsystem);
     }
+
 
     @Override
     public boolean isFinished() {
         return XTimer.getFPGATimestamp() - startTime > timeAmountToMove.get();
+
     }
+    @Override
+    public void end(boolean interrupted) {
+        log.info("end");
+    }
+
 }

@@ -3,6 +3,10 @@ package competition.operator_interface;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import competition.auto.DriveToOutpostAuto;
+import competition.subsystems.drive.commands.DriveToOutpostCommand;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import xbot.common.simulation.ResetSimulatorPositionCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
 /**
@@ -22,4 +26,14 @@ public class OperatorCommandMap {
         resetHeading.setHeadingToApply(0);
         operatorInterface.gamepad.getifAvailable(1).onTrue(resetHeading);
     }
+    @Inject
+    public void setupSimulatorCommands(
+            ResetSimulatorPositionCommand resetSimulatorPositionCommand,
+            DriveToOutpostCommand driveToOutpostCommand
+    ) {
+        resetSimulatorPositionCommand.includeOnSmartDashboard("Reset Simulator Position");
+        driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
+
+    }
+
 }
