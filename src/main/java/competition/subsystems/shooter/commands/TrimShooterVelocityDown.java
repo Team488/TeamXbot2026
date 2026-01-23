@@ -17,5 +17,6 @@ public class TrimShooterVelocityDown extends BaseCommand {
     @Override
     public void initialize() {
         shooter.decreaseTargetVelocity();
+        aKitLog.record("Current target velocity", shooter.targetVelocity.get());
     }
 }
