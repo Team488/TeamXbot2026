@@ -65,7 +65,7 @@ public class ShooterSubsystem extends BaseSubsystem {
         if (shooterMotor != null) {
             shooterMotor.periodic();
 
-            shooterMotor.setVelocityTarget(RPM.of(3000));
+            shooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
         }
     }
 }
