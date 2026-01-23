@@ -19,8 +19,8 @@ public class IntakeDeploySubsystem extends BaseSubsystem {
     public IntakeDeploySubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
               ElectricalContract electricalContract, XCANMotorController motor, PropertyFactory propertyFactory) {
         propertyFactory.setPrefix(this);
-        if (electricalContract.isCollectDeployReady()) {
-            this.intakeDeployMotor = xcanMotorControllerFactory.create(electricalContract.getCollectDeployMotor(),
+        if (electricalContract.isIntakeDeployReady()) {
+            this.intakeDeployMotor = xcanMotorControllerFactory.create(electricalContract.getIntakeDeployMotor(),
                     getPrefix(),"collectorDeploy");
             this.registerDataFrameRefreshable(motor);
         } else {
