@@ -5,9 +5,7 @@ import javax.inject.Singleton;
 
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
-import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.subsystems.fuel_intake.IntakeSubsystem;
-import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
 import competition.subsystems.fuel_intake.commands.FuelStopCommand;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.commands.ShooterStopCommand;
