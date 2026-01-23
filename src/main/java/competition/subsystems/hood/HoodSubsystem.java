@@ -31,8 +31,8 @@ public class HoodSubsystem extends BaseSubsystem {
         } else {
             this.hoodMotor = null;
         };
-        openPower = propertyFactory.createPersistentProperty("open hood", .1);
-        closePower = propertyFactory.createPersistentProperty("close hood", -.1);
+        openPower = propertyFactory.createPersistentProperty("open hood", 0.1);
+        closePower = propertyFactory.createPersistentProperty("close hood", -0.1);
 
     };
 
