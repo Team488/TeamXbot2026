@@ -1,6 +1,6 @@
 package competition.subsystems.vision;
 
-import competition.subsystems.pose.Landmarks;
+//import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -31,20 +31,22 @@ public class AprilTagVisionSubsystemExtended extends AprilTagVisionSubsystem {
                                            AprilTagVisionIOFactory visionIOFactory) {
         super(pf, fieldLayout, contract, visionIOFactory);
         this.cameras = contract.getCameraInfo();
+        // TODO update these landmarks if needed, see https://github.com/Team488/TeamXbot2026/pull/11
+        //
         // Note: flipped april tag IDs across the y-midpoint of the field for blue alliance
         // map both blue and red alliance poses
-        aprilTagIDHashMap.put(PoseSubsystem.convertBluetoRed(Landmarks.BlueCloseLeftAlgae), 6);
-        aprilTagIDHashMap.put(PoseSubsystem.convertBluetoRed(Landmarks.BlueCloseAlgae), 7);
-        aprilTagIDHashMap.put(PoseSubsystem.convertBluetoRed(Landmarks.BlueCloseRightAlgae), 8);
-        aprilTagIDHashMap.put(PoseSubsystem.convertBluetoRed(Landmarks.BlueFarLeftAlgae), 11);
-        aprilTagIDHashMap.put(PoseSubsystem.convertBluetoRed(Landmarks.BlueFarAlgae), 10);
-        aprilTagIDHashMap.put(PoseSubsystem.convertBluetoRed(Landmarks.BlueFarRightAlgae), 9);
-        aprilTagIDHashMap.put(Landmarks.BlueCloseLeftAlgae, 19);
-        aprilTagIDHashMap.put(Landmarks.BlueCloseAlgae, 18);
-        aprilTagIDHashMap.put(Landmarks.BlueCloseRightAlgae, 17);
-        aprilTagIDHashMap.put(Landmarks.BlueFarLeftAlgae, 20);
-        aprilTagIDHashMap.put(Landmarks.BlueFarAlgae, 21);
-        aprilTagIDHashMap.put(Landmarks.BlueFarRightAlgae, 22);
+        // aprilTagIDHashMap.put(PoseSubsystem.convertBluetoRed(Landmarks.BlueCloseLeftAlgae), 6);
+        // aprilTagIDHashMap.put(PoseSubsystem.convertBluetoRed(Landmarks.BlueCloseAlgae), 7);
+        // aprilTagIDHashMap.put(PoseSubsystem.convertBluetoRed(Landmarks.BlueCloseRightAlgae), 8);
+        // aprilTagIDHashMap.put(PoseSubsystem.convertBluetoRed(Landmarks.BlueFarLeftAlgae), 11);
+        // aprilTagIDHashMap.put(PoseSubsystem.convertBluetoRed(Landmarks.BlueFarAlgae), 10);
+        // aprilTagIDHashMap.put(PoseSubsystem.convertBluetoRed(Landmarks.BlueFarRightAlgae), 9);
+        // aprilTagIDHashMap.put(Landmarks.BlueCloseLeftAlgae, 19);
+        // aprilTagIDHashMap.put(Landmarks.BlueCloseAlgae, 18);
+        // aprilTagIDHashMap.put(Landmarks.BlueCloseRightAlgae, 17);
+        // aprilTagIDHashMap.put(Landmarks.BlueFarLeftAlgae, 20);
+        // aprilTagIDHashMap.put(Landmarks.BlueFarAlgae, 21);
+        // aprilTagIDHashMap.put(Landmarks.BlueFarRightAlgae, 22);
 
         aprilTagFieldLayout = fieldLayout;
     }

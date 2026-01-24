@@ -1,11 +1,13 @@
 package competition.injection.modules;
 
+import competition.electrical_contract.ElectricalContract;
 import competition.subsystems.vision.AprilTagVisionSubsystemExtended;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.injection.swerve.FrontLeftDrive;
 import xbot.common.injection.swerve.FrontRightDrive;
 import xbot.common.injection.swerve.RearLeftDrive;
@@ -55,6 +57,10 @@ public abstract class CommonModule {
     public static AprilTagFieldLayout fieldLayout() {
         return AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
     }
+
+    @Binds
+    @Singleton
+    public abstract XCameraElectricalContract getCameraContract(ElectricalContract impl);
 
     @Binds
     @Singleton
