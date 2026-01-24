@@ -3,12 +3,14 @@ package competition.operator_interface;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.fuel_intake.IntakeSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import xbot.common.controls.sensors.XXboxController;
+import xbot.common.simulation.ResetSimulatorPositionCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
 /**
@@ -35,6 +37,15 @@ public class OperatorCommandMap {
         operatorInterface.debugGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(shooterOutputCommand);
         operatorInterface.debugGamepad.getifAvailable(XXboxController.XboxButton.X).onTrue(trimShooterVelocityDown);
         operatorInterface.debugGamepad.getifAvailable(XXboxController.XboxButton.Y).onTrue(trimShooterVelocityUp);
+
+    }
+    @Inject
+    public void setupSimulatorCommands(
+            ResetSimulatorPositionCommand resetSimulatorPositionCommand,
+            DriveToOutpostCommand driveToOutpostCommand
+    ) {
+        resetSimulatorPositionCommand.includeOnSmartDashboard("Reset Simulator Position");
+        driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
     }
 }
