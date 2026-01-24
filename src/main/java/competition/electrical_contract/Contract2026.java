@@ -3,17 +3,22 @@ package competition.electrical_contract;
 import javax.inject.Inject;
 
 import competition.subsystems.pose.PoseSubsystem;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANLightControllerOutputConfig;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
+import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.LEDStripType;
 import xbot.common.injection.electrical_contract.LightControllerType;
 import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.swerve.SwerveInstance;
+import xbot.common.subsystems.vision.CameraCapabilities;
 
 import static edu.wpi.first.units.Units.Inches;
 
@@ -228,5 +233,9 @@ public class Contract2026 extends ElectricalContract {
     @Override
     public double getDriveGearRatio() {
         return 6.48; // Documented value for WCP x2i with X3 10t gears.
+    }
+
+    public CameraInfo[] getCameraInfo() {
+        return new CameraInfo[] { /* TODO: No cameras defined yet in 2026 */ };
     }
 }
