@@ -11,6 +11,8 @@ import competition.subsystems.fuel_intake.IntakeSubsystem;
 import competition.subsystems.fuel_intake.commands.FuelStopCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.StopHoodCommand;
+import competition.subsystems.intake_deploy.IntakeDeployExtendCommand;
+import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.commands.ShooterStopCommand;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
@@ -39,18 +41,27 @@ public class SubsystemDefaultCommandMap {
     public void hoodSubSystem(HoodSubsystem hoodSubsystem, StopHoodCommand command) {
         hoodSubsystem.setDefaultCommand(command);
     }
+
     @Inject
     public void climberStopCommand(ClimberSubsystem climberSubsystem, ClimberStopCommand command) {
         climberSubsystem.setDefaultCommand(command);
     }
+
     @Inject
     public void shooterStopCommand(ShooterSubsystem shooterSubsystem, ShooterStopCommand command) {
         shooterSubsystem.setDefaultCommand(command);
     }
+
+    @Inject
     public void disableShooterFeederCommand(ShooterFeederSubsystem shooterFeederSubsystem,
                                             DisableShooterFeederCommand command) {
         shooterFeederSubsystem.setDefaultCommand(command);
     }
+
+//    @Inject
+//    public void intakeDeployStopCommand(IntakeSubsystem intakeSubsystem, intakeDeployStopCommand command) {
+//        IntakeDeploySubsystem.setDefaultCommand(command);
+//    }
 
 
 }
