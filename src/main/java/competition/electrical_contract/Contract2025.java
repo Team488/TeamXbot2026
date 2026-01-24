@@ -1,31 +1,20 @@
 package competition.electrical_contract;
 
 import competition.subsystems.pose.PoseSubsystem;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.units.measure.Distance;
-import xbot.common.controls.sensors.XGyro;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
-import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig.InversionType;
-import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
-import xbot.common.injection.electrical_contract.IMUInfo;
 import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.swerve.SwerveInstance;
-import xbot.common.math.XYPair;
-import xbot.common.subsystems.vision.CameraCapabilities;
 
 import javax.inject.Inject;
-import java.util.EnumSet;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 
-public class Contract2025 extends CompetitionContract {
+public class Contract2025 extends Contract2026 {
 
     protected final double simulationScalingValue = 256.0 * PoseSubsystem.INCHES_IN_A_METER;
 
