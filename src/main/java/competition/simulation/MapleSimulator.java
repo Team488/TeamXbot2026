@@ -76,7 +76,7 @@ public class MapleSimulator implements BaseSimulator {
         });
 
         // starting middle ish of the field on blue
-        var startingPose = new Pose2d(7, 7 , new Rotation2d());
+        var startingPose = new Pose2d(3.57,.650, Rotation2d.fromDegrees(0));
 
         // Creating the SelfControlledSwerveDriveSimulation instance
         this.swerveDriveSimulation = new SelfControlledSwerveDriveSimulation(
