@@ -85,7 +85,6 @@ public class CompetitionContract extends ElectricalContract {
                 new CANMotorControllerOutputConfig());
     }
 
-
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/Drive";
     }
