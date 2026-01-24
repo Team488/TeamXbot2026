@@ -15,20 +15,20 @@ import static edu.wpi.first.units.Units.RPM;
 @Singleton
 public class ShooterSubsystem extends BaseSubsystem {
     public final XCANMotorController leftShooterMotor;
-    public final XCANMotorController middleshooterMotor;
-    public final XCANMotorController rightshooterMotor;
+    public final XCANMotorController middleShooterMotor;
+    public final XCANMotorController rightShooterMotor;
 
     public DoubleProperty outputPower;
     public DoubleProperty targetVelocity;
 
-@Singleton
     @Inject
     public ShooterSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
-                            XCANMotorController leftShooterMotor, XCANMotorController middleshooterMotor,
-                            XCANMotorController rightshooterMotor, ElectricalContract eletricalContract,
+                            XCANMotorController leftShooterMotor, XCANMotorController middleShooterMotor,
+                            XCANMotorController rightShooterMotor, ElectricalContract eletricalContract,
                             PropertyFactory propertyFactory) {
 
         propertyFactory.setPrefix(this);
+
         var defaultPIDProperties = new XCANMotorControllerPIDProperties(
                 0.1,
                 0.01,
@@ -37,6 +37,7 @@ public class ShooterSubsystem extends BaseSubsystem {
                 0.750,
                 1,
                 0);
+
         if (eletricalContract.isLeftShooterReady()) {
             this.leftShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getLeftShooterMotor(),
                     getPrefix(), "ShooterMotor", defaultPIDProperties);
@@ -46,19 +47,19 @@ public class ShooterSubsystem extends BaseSubsystem {
         }
 
         if (eletricalContract.isMiddleShooterReady()) {
-            this.middleshooterMotor = xcanMotorControllerFactory.create(eletricalContract.getMiddleShooterMotor(),
+            this.middleShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getMiddleShooterMotor(),
                     getPrefix(), "ShooterMotor", defaultPIDProperties);
-            this.registerDataFrameRefreshable(middleshooterMotor);
+            this.registerDataFrameRefreshable(middleShooterMotor);
         } else {
-            this.middleshooterMotor = null;
+            this.middleShooterMotor = null;
         }
 
         if (eletricalContract.isRightShooterReady()) {
-            this.rightshooterMotor = xcanMotorControllerFactory.create(eletricalContract.getRightShooterMotor(),
+            this.rightShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getRightShooterMotor(),
                     getPrefix(), "ShooterMotor", defaultPIDProperties);
-            this.registerDataFrameRefreshable(rightshooterMotor);
+            this.registerDataFrameRefreshable(rightShooterMotor);
         } else {
-            this.rightshooterMotor = null;
+            this.rightShooterMotor = null;
         }
 
         this.outputPower = propertyFactory.createPersistentProperty("Output Power", 0.1);
@@ -71,12 +72,12 @@ public class ShooterSubsystem extends BaseSubsystem {
             leftShooterMotor.setPower(outputPower.get());
         }
 
-        if (middleshooterMotor != null) {
-            middleshooterMotor.setPower(outputPower.get());
+        if (middleShooterMotor != null) {
+            middleShooterMotor.setPower(outputPower.get());
         }
 
-        if (rightshooterMotor != null) {
-            rightshooterMotor.setPower(outputPower.get());
+        if (rightShooterMotor != null) {
+            rightShooterMotor.setPower(outputPower.get());
         }
     }
 
@@ -85,12 +86,12 @@ public class ShooterSubsystem extends BaseSubsystem {
             leftShooterMotor.setPower(0);
         }
 
-        if (middleshooterMotor != null) {
-            middleshooterMotor.setPower(0);
+        if (middleShooterMotor != null) {
+            middleShooterMotor.setPower(0);
         }
 
-        if (rightshooterMotor != null) {
-            rightshooterMotor.setPower(0);
+        if (rightShooterMotor != null) {
+            rightShooterMotor.setPower(0);
         }
     }
 
@@ -108,14 +109,14 @@ public class ShooterSubsystem extends BaseSubsystem {
             leftShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
         }
 
-        if (middleshooterMotor != null) {
-            middleshooterMotor.periodic();
-            middleshooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        if (middleShooterMotor != null) {
+            middleShooterMotor.periodic();
+            middleShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
         }
 
-        if (rightshooterMotor != null) {
-            rightshooterMotor.periodic();
-            rightshooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        if (rightShooterMotor != null) {
+            rightShooterMotor.periodic();
+            rightShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
         }
     }
 }
