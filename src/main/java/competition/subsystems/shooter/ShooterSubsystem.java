@@ -3,11 +3,14 @@ package competition.subsystems.shooter;
 import competition.electrical_contract.ElectricalContract;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
+import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import static edu.wpi.first.units.Units.RPM;
 
 @Singleton
 public class ShooterSubsystem extends BaseSubsystem {
@@ -16,6 +19,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     public final XCANMotorController shooterMotorRight;
 
     public DoubleProperty outputPower;
+    public DoubleProperty targetVelocity;
 
     @Inject
     public ShooterSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
@@ -39,6 +43,7 @@ public class ShooterSubsystem extends BaseSubsystem {
         }
 
         this.outputPower = propertyFactory.createPersistentProperty("Output Power", 0.1);
+        this.targetVelocity = propertyFactory.createPersistentProperty("Target Velocity", 3000);
     }
 
     public void output() {
@@ -67,6 +72,12 @@ public class ShooterSubsystem extends BaseSubsystem {
         if (shooterMotorRight != null) {
             shooterMotorRight.setPower(0);
         }
+    public void increaseTargetVelocity() {
+        targetVelocity.set(targetVelocity.get() + 25);
+    }
+
+    public void decreaseTargetVelocity() {
+        targetVelocity.set(targetVelocity.get() - 25);
     }
 
     public void periodic() {
@@ -80,6 +91,7 @@ public class ShooterSubsystem extends BaseSubsystem {
 
         if (shooterMotorRight != null) {
             shooterMotorRight.periodic();
+            shooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
         }
     }
 }
