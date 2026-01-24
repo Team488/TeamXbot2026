@@ -17,12 +17,12 @@ import xbot.common.injection.swerve.SwerveInstance;
 
 import static edu.wpi.first.units.Units.Inches;
 
-public class CompetitionContract extends ElectricalContract {
+public class Contract2026 extends ElectricalContract {
 
     protected final double simulationScalingValue = 256.0 * PoseSubsystem.INCHES_IN_A_METER;
 
     @Inject
-    public CompetitionContract() {}
+    public Contract2026() {}
 
     @Override
     public boolean isDriveReady() { return true; }
