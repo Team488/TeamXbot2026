@@ -25,6 +25,7 @@ public class ShooterSimulator {
     final ShooterSubsystem shooter;
     final ShooterFeederSubsystem shooterFeeder;
 
+    final MockCANMotorController shooterMotor;
     final MockCANMotorController shooterFeederMotor;
 
     final DoubleProperty ballsPerSecond;
@@ -38,6 +39,8 @@ public class ShooterSimulator {
         this.pose = pose;
         this.shooter = shooter;
         this.shooterFeeder = shooterFeeder;
+
+        this.shooterMotor = (MockCANMotorController) shooter.shooterMotor;
         this.shooterFeederMotor = (MockCANMotorController) shooterFeeder.shooterFeederMotor;
 
         this.ballsPerSecond = pf.createPersistentProperty("ballsPerSecond", 10);
@@ -46,7 +49,8 @@ public class ShooterSimulator {
     }
 
     public boolean isShooting() {
-        return shooterFeederMotor.getPower() > 0;
+        // TODO: Change to shooter feeder once integrated
+        return shooterMotor.getPower() > 0;
     }
 
     public void updateShooterSimulation(Arena2026Rebuilt arena) {
