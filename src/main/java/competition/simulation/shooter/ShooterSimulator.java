@@ -66,19 +66,18 @@ public class ShooterSimulator {
                             pose.getCurrentPose2d().getTranslation(),
                             pose.getCurrentHeading(),
                             Inches.of(20),
-                            MetersPerSecond.of(12.0),
-                            Degrees.of(65),
+                            MetersPerSecond.of(10.0),
+                            Degrees.of(80),
                             0.30,
                             0.30,
                             2.0,
                             1.0,
                             2.0
                     );
+            fuel.setHitTargetCallBack(() -> {
+                System.out.println("HITTING TARGET");
+            });
             // code for hub
-//                    .withTargetPosition(() -> {
-//                        return PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueHub).getTranslation();
-//                    });
-
 //            fuel.setHitTargetCallBack(() -> {
 //                arena.addPieceWithVariance(
 //                        pose.getCurrentPose2d().getTranslation(),
