@@ -5,9 +5,13 @@ import javax.inject.Inject;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Translation2d;
 import xbot.common.injection.electrical_contract.CANBusId;
+import xbot.common.injection.electrical_contract.CANLightControllerInfo;
+import xbot.common.injection.electrical_contract.CANLightControllerOutputConfig;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
 import xbot.common.injection.electrical_contract.DeviceInfo;
+import xbot.common.injection.electrical_contract.LEDStripType;
+import xbot.common.injection.electrical_contract.LightControllerType;
 import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.swerve.SwerveInstance;
 
@@ -67,6 +71,17 @@ public class CompetitionContract extends ElectricalContract {
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 676767, // TODO:Change ID
+                new CANMotorControllerOutputConfig());
+    }
+
+    @Override
+    public boolean isHoodReady() {return false;}
+
+    public CANMotorControllerInfo getHoodMotor() {
+        return new CANMotorControllerInfo("hoodMotor",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                1000,
                 new CANMotorControllerOutputConfig());
     }
 
@@ -163,6 +178,15 @@ public class CompetitionContract extends ElectricalContract {
                 CANBusId.RIO,
                 23,
                 new CANMotorControllerOutputConfig());
+    }
+
+    @Override
+    public CANLightControllerInfo getLightControlerInfo() {
+        return new CANLightControllerInfo("Lights",
+                LightControllerType.Candle, CANBusId.DefaultCanivore,
+                11, new CANLightControllerOutputConfig(LEDStripType.GRB,
+                0.15, new int[] {8}));
+
     }
 
     @Override
