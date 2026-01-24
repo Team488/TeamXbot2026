@@ -13,7 +13,7 @@ import javax.inject.Inject;
 
 import static edu.wpi.first.units.Units.Inches;
 
-public class Contract2023 extends Contract2026 {
+public class Contract2023 extends Contract2025 {
 
     protected final double simulationScalingValue = 256.0 * PoseSubsystem.INCHES_IN_A_METER;
 
@@ -26,8 +26,7 @@ public class Contract2023 extends Contract2026 {
     }
 
     @Override
-    public boolean areCanCodersReady() {
-        return true;
+    public boolean areCanCodersReady() {return false;
     }
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {

@@ -29,7 +29,7 @@ public class Contract2025 extends Contract2026 {
 
     @Override
     public boolean areCanCodersReady() {
-        return true;
+        return false;
     }
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
