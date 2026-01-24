@@ -6,7 +6,6 @@ import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
@@ -21,6 +20,7 @@ import static edu.wpi.first.units.Units.Seconds;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
@@ -38,6 +38,7 @@ public class MapleSimulator implements BaseSimulator {
 
     // maple-sim stuff ----------------------------
     final DriveTrainSimulationConfig config;
+    final IntakeSimulation intakeSimulation;
     final SimulatedArena arena;
     final SelfControlledSwerveDriveSimulation swerveDriveSimulation;
 
@@ -51,7 +52,11 @@ public class MapleSimulator implements BaseSimulator {
         /**
          * MapleSim arena and drive setup
          */
-        arena = SimulatedArena.getInstance();
+        arena = new org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt(false);
+        SimulatedArena.overrideInstance(arena);
+        
+        // uncomment this to force all fuel onto the sim, otherwise it defaults to 1/3rd of the fuel for perf reasons
+        //((Arena2026Rebuilt)arena).setEfficiencyMode(false);
         arena.resetFieldForAuto();
 
         var ourConfig = new DriveTrainSimulationConfig(
@@ -60,12 +65,13 @@ public class MapleSimulator implements BaseSimulator {
                 Units.Meters.of(0.76),
                 Units.Meters.of(0.52),
                 Units.Meters.of(0.52),
+                COTS.ofPigeon2(),
                 COTS.ofMark4(
                         DCMotor.getKrakenX60(1),
                         DCMotor.getKrakenX60(1),
                         COTS.WHEELS.SLS_PRINTED_WHEELS.cof,
-                        3),
-                COTS.ofPigeon2());
+                        3)
+        );
 
         // TODO: custom things to provide here like motor ratios and what have you
         config = ourConfig.withCustomModuleTranslations(new Translation2d[] {
@@ -86,6 +92,20 @@ public class MapleSimulator implements BaseSimulator {
 
         arena.addDriveTrainSimulation(swerveDriveSimulation.getDriveTrainSimulation());
 
+        intakeSimulation = IntakeSimulation.OverTheBumperIntake(
+            "Fuel",
+            this.swerveDriveSimulation.getDriveTrainSimulation(),
+            // How big the intake is
+            Units.Inches.of(28),
+            Units.Inches.of(12),
+            IntakeSimulation.IntakeSide.FRONT,
+            100
+        );
+
+        // TODO: this should depend on when we actually deploy and run our collector
+        // but for now just auto deploy it right away
+        intakeSimulation.startIntake();
+
         SimulatedArena.overrideSimulationTimings(Seconds.of(Robot.LOOP_INTERVAL), 5);
     }
 
@@ -100,6 +120,9 @@ public class MapleSimulator implements BaseSimulator {
         // run the simulation
         arena.simulationPeriodic();
         swerveDriveSimulation.periodic();
+
+        aKitLog.record("FieldSimulation/GamePieces", arena.getGamePiecesArrayByType("Fuel"));
+        
 
         // this is where the robot really is in the sim
         aKitLog.record("FieldSimulation/Robot", swerveDriveSimulation.getActualPoseInSimulationWorld());
