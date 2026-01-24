@@ -9,6 +9,8 @@ import competition.subsystems.fuel_intake.IntakeSubsystem;
 import competition.subsystems.fuel_intake.commands.FuelStopCommand;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.commands.ShooterStopCommand;
+import competition.subsystems.hood.HoodSubsystem;
+import competition.subsystems.hood.commands.StopHoodCommand;
 
 /**
  * For setting the default commands on subsystems
@@ -32,5 +34,10 @@ public class SubsystemDefaultCommandMap {
     @Inject
     public void setupShooterSubsystem(ShooterSubsystem shooter, ShooterStopCommand command) {
         shooter.setDefaultCommand(command);
+    }
+
+    @Inject
+    public void setupHoodSubsystem(HoodSubsystem hood, StopHoodCommand command) {
+        hood.setDefaultCommand(command);
     }
 }
