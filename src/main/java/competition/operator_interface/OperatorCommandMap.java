@@ -3,6 +3,8 @@ package competition.operator_interface;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import competition.subsystems.fuel_intake.IntakeSubsystem;
+import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
@@ -17,7 +19,7 @@ public class OperatorCommandMap {
 
     @Inject
     public OperatorCommandMap() {}
-    
+
     // Example for setting up a command to fire when a button is pressed:
     @Inject
     public void setupMyCommands(
