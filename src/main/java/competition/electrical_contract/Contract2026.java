@@ -9,6 +9,7 @@ import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANLightControllerOutputConfig;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
+import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.LEDStripType;
 import xbot.common.injection.electrical_contract.LightControllerType;
@@ -17,12 +18,12 @@ import xbot.common.injection.swerve.SwerveInstance;
 
 import static edu.wpi.first.units.Units.Inches;
 
-public class CompetitionContract extends ElectricalContract {
+public class Contract2026 extends ElectricalContract {
 
     protected final double simulationScalingValue = 256.0 * PoseSubsystem.INCHES_IN_A_METER;
 
     @Inject
-    public CompetitionContract() {}
+    public Contract2026() {}
 
     @Override
     public boolean isDriveReady() { return true; }
@@ -84,7 +85,6 @@ public class CompetitionContract extends ElectricalContract {
                 1000,
                 new CANMotorControllerOutputConfig());
     }
-
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/Drive";
@@ -184,7 +184,7 @@ public class CompetitionContract extends ElectricalContract {
     @Override
     public CANLightControllerInfo getLightControlerInfo() {
         return new CANLightControllerInfo("Lights",
-                LightControllerType.Candle, CANBusId.DefaultCanivore,
+                LightControllerType.Candle, CANBusId.Canivore,
                 11, new CANLightControllerOutputConfig(LEDStripType.GRB,
                 0.15, new int[] {8}));
 
@@ -229,5 +229,9 @@ public class CompetitionContract extends ElectricalContract {
     @Override
     public double getDriveGearRatio() {
         return 6.48; // Documented value for WCP x2i with X3 10t gears.
+    }
+
+    public CameraInfo[] getCameraInfo() {
+        return new CameraInfo[] { /* TODO: No cameras defined yet in 2026 */ };
     }
 }
