@@ -70,6 +70,18 @@ public class CompetitionContract extends ElectricalContract {
                 new CANMotorControllerOutputConfig());
     }
 
+    @Override
+    public boolean isHoodReady() {return false;}
+
+    public CANMotorControllerInfo getHoodMotor() {
+        return new CANMotorControllerInfo("hoodMotor",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                1000,
+                new CANMotorControllerOutputConfig());
+    }
+
+
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/Drive";
     }
