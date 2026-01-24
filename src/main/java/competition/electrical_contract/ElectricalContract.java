@@ -5,11 +5,10 @@ import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
-import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.injection.swerve.SwerveInstance;
 
-public abstract class ElectricalContract implements XSwerveDriveElectricalContract, XCameraElectricalContract {
+public abstract class ElectricalContract implements XSwerveDriveElectricalContract {
     public abstract boolean isDriveReady();
 
     public abstract boolean areCanCodersReady();
@@ -22,6 +21,18 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance);
 
+    public abstract boolean isLeftShooterReady();
+
+    public abstract CANMotorControllerInfo getLeftShooterMotor();
+
+    public abstract boolean isMiddleShooterReady();
+
+    public abstract CANMotorControllerInfo getMiddleShooterMotor();
+
+    public abstract boolean isRightShooterReady();
+
+    public abstract CANMotorControllerInfo getRightShooterMotor();
+
     public abstract boolean isHoodReady();
 
     public abstract CANMotorControllerInfo getHoodMotor();
@@ -29,10 +40,6 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public abstract boolean isIntakeDeployReady();
 
     public abstract CANMotorControllerInfo getIntakeDeployMotor();
-
-    public abstract boolean isShooterReady();
-
-    public abstract CANMotorControllerInfo getShooterMotor();
 
     public abstract boolean isClimberReady();
 
@@ -45,6 +52,6 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public abstract boolean isFuelIntakeMotorReady();
 
     public abstract CANMotorControllerInfo getFuelIntakeMotor();
-  
+
     public abstract CANLightControllerInfo getLightControlerInfo();
 }
