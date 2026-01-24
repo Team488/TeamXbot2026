@@ -53,9 +53,13 @@ public class Contract2026 extends ElectricalContract {
                 new CANMotorControllerOutputConfig());
     }
 
-    public boolean isShooterReady() { return false; }
+    public boolean isLeftShooterReady() { return false; }
 
-    public CANMotorControllerInfo getShooterMotor() {
+    public boolean isMiddleShooterReady() { return false; }
+
+    public boolean isRightShooterReady() { return false; }
+
+    public CANMotorControllerInfo getLeftShooterMotor() {
         return new CANMotorControllerInfo("ShooterMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
@@ -63,6 +67,21 @@ public class Contract2026 extends ElectricalContract {
                 new CANMotorControllerOutputConfig());
     }
 
+    public CANMotorControllerInfo getMiddleShooterMotor() {
+        return new CANMotorControllerInfo("ShooterMotor",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                211,
+                new CANMotorControllerOutputConfig());
+    }
+
+    public CANMotorControllerInfo getRightShooterMotor() {
+        return new CANMotorControllerInfo("ShooterMotor",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                900,
+                new CANMotorControllerOutputConfig());
+    }
 
     public boolean isIntakeDeployReady() { return false; }
 
