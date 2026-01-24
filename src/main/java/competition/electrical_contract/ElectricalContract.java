@@ -5,10 +5,11 @@ import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
+import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.injection.swerve.SwerveInstance;
 
-public abstract class ElectricalContract implements XSwerveDriveElectricalContract {
+public abstract class ElectricalContract implements XSwerveDriveElectricalContract, XCameraElectricalContract {
     public abstract boolean isDriveReady();
 
     public abstract boolean areCanCodersReady();
