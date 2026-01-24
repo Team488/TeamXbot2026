@@ -8,7 +8,15 @@ public class UnitTestCompetitionContract extends CompetitionContract {
     public UnitTestCompetitionContract() {}
 
     @Override
-    public boolean isShooterReady() {
+    public boolean isLeftShooterReady() {
+        return true;
+    }
+
+    public boolean isMiddleShooterReady() {
+        return true;
+    }
+
+    public boolean isRightShooterReady() {
         return true;
     }
 }

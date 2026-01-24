@@ -52,13 +52,33 @@ public class CompetitionContract extends ElectricalContract {
                 new CANMotorControllerOutputConfig());
     }
 
-    public boolean isShooterReady() { return false; }
+    public boolean isLeftShooterReady() { return false; }
 
-    public CANMotorControllerInfo getShooterMotor() {
+    public boolean isMiddleShooterReady() { return false; }
+
+    public boolean isRightShooterReady() { return false; }
+
+    public CANMotorControllerInfo getLeftShooterMotor() {
         return new CANMotorControllerInfo("ShooterMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 918,
+                new CANMotorControllerOutputConfig());
+    }
+
+    public CANMotorControllerInfo getMiddleShooterMotor() {
+        return new CANMotorControllerInfo("ShooterMotor",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                211,
+                new CANMotorControllerOutputConfig());
+    }
+
+    public CANMotorControllerInfo getRightShooterMotor() {
+        return new CANMotorControllerInfo("ShooterMotor",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                900,
                 new CANMotorControllerOutputConfig());
     }
 
@@ -84,8 +104,6 @@ public class CompetitionContract extends ElectricalContract {
                 1000,
                 new CANMotorControllerOutputConfig());
     }
-
-    public boolean isShooterReady() { return false; }
 
     public CANMotorControllerInfo getShooterMotor() {
         return new CANMotorControllerInfo("ShooterMotor",
