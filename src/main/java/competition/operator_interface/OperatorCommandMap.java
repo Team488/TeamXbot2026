@@ -3,10 +3,6 @@ package competition.operator_interface;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import competition.subsystems.shooter.commands.ShooterOutputCommand;
-import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
-import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
-import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
 /**
@@ -22,17 +18,8 @@ public class OperatorCommandMap {
     @Inject
     public void setupMyCommands(
             OperatorInterface operatorInterface,
-            SetRobotHeadingCommand resetHeading,
-            ShooterOutputCommand shooterOutputCommand,
-            TrimShooterVelocityUp trimShooterVelocityUp,
-            TrimShooterVelocityDown trimShooterVelocityDown
-    ) {
+            SetRobotHeadingCommand resetHeading) {
         resetHeading.setHeadingToApply(0);
         operatorInterface.gamepad.getifAvailable(1).onTrue(resetHeading);
-
-        operatorInterface.debugGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(shooterOutputCommand);
-        operatorInterface.debugGamepad.getifAvailable(XXboxController.XboxButton.X).onTrue(trimShooterVelocityDown);
-        operatorInterface.debugGamepad.getifAvailable(XXboxController.XboxButton.Y).onTrue(trimShooterVelocityUp);
-
     }
 }

@@ -20,7 +20,6 @@ import static edu.wpi.first.units.Units.Seconds;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
@@ -38,7 +37,6 @@ public class MapleSimulator implements BaseSimulator {
 
     // maple-sim stuff ----------------------------
     final DriveTrainSimulationConfig config;
-    final IntakeSimulation intakeSimulation;
     final SimulatedArena arena;
     final SelfControlledSwerveDriveSimulation swerveDriveSimulation;
 
@@ -52,11 +50,7 @@ public class MapleSimulator implements BaseSimulator {
         /**
          * MapleSim arena and drive setup
          */
-        arena = new org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt(false);
-        SimulatedArena.overrideInstance(arena);
-        
-        // uncomment this to force all fuel onto the sim, otherwise it defaults to 1/3rd of the fuel for perf reasons
-        //((Arena2026Rebuilt)arena).setEfficiencyMode(false);
+        arena = SimulatedArena.getInstance();
         arena.resetFieldForAuto();
 
         var ourConfig = new DriveTrainSimulationConfig(
@@ -92,20 +86,6 @@ public class MapleSimulator implements BaseSimulator {
 
         arena.addDriveTrainSimulation(swerveDriveSimulation.getDriveTrainSimulation());
 
-        intakeSimulation = IntakeSimulation.OverTheBumperIntake(
-            "Fuel",
-            this.swerveDriveSimulation.getDriveTrainSimulation(),
-            // How big the intake is
-            Units.Inches.of(28),
-            Units.Inches.of(12),
-            IntakeSimulation.IntakeSide.FRONT,
-            100
-        );
-
-        // TODO: this should depend on when we actually deploy and run our collector
-        // but for now just auto deploy it right away
-        intakeSimulation.startIntake();
-
         SimulatedArena.overrideSimulationTimings(Seconds.of(Robot.LOOP_INTERVAL), 5);
     }
 
@@ -120,9 +100,6 @@ public class MapleSimulator implements BaseSimulator {
         // run the simulation
         arena.simulationPeriodic();
         swerveDriveSimulation.periodic();
-
-        aKitLog.record("FieldSimulation/GamePieces", arena.getGamePiecesArrayByType("Fuel"));
-        
 
         // this is where the robot really is in the sim
         aKitLog.record("FieldSimulation/Robot", swerveDriveSimulation.getActualPoseInSimulationWorld());
