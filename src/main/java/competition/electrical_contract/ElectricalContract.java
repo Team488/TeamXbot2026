@@ -5,7 +5,6 @@ import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
-import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.injection.swerve.SwerveInstance;
 
@@ -22,21 +21,29 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance);
 
+    public abstract boolean isHoodReady();
+
+    public abstract CANMotorControllerInfo getHoodMotor();
+
+    public abstract boolean isIntakeDeployReady();
+
+    public abstract CANMotorControllerInfo getIntakeDeployMotor();
+
     public abstract boolean isShooterReady();
 
     public abstract CANMotorControllerInfo getShooterMotor();
-  
+
     public abstract boolean isClimberReady();
 
     public abstract CANMotorControllerInfo getClimberMotor();
-  
-    public abstract boolean isShooterFeederReady();
-  
-    public abstract CANMotorControllerInfo getShooterFeederMotor();
-  
-    public abstract boolean isFuelCollectorMotorReady();
-  
-    public abstract CANMotorControllerInfo getFuelCollectorMotor();
 
+    public abstract boolean isShooterFeederReady();
+
+    public abstract CANMotorControllerInfo getShooterFeederMotor();
+
+    public abstract boolean isFuelIntakeMotorReady();
+
+    public abstract CANMotorControllerInfo getFuelIntakeMotor();
+  
     public abstract CANLightControllerInfo getLightControlerInfo();
 }
