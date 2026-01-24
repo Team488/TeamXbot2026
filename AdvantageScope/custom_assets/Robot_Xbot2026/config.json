@@ -1,0 +1,54 @@
+{
+  "name": "Xbot 2026",
+  "rotations": [
+    {
+      "axis": "x",
+      "degrees": 90
+    },
+    {
+      "axis": "x",
+      "degrees": 90
+    }
+    ],
+  "position": [
+    0,
+    0,
+    0
+  ],
+  "cameras": [
+    {
+      "name": "Front Camera",
+      "rotations": [],
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "resolution": [
+        0,
+        0
+      ],
+      "fov": 0
+    },
+    {
+      "name": "Back Camera",
+      "rotations": [
+        {
+          "axis": "z",
+          "degrees": 0
+        }
+      ],
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "resolution": [
+        0,
+        0
+      ],
+      "fov": 0
+    }
+  ],
+  "components": []
+}
