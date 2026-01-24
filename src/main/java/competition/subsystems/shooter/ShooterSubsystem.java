@@ -3,6 +3,7 @@ package competition.subsystems.shooter;
 import competition.electrical_contract.ElectricalContract;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
+import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -20,6 +21,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     public DoubleProperty outputPower;
     public DoubleProperty targetVelocity;
 
+@Singleton
     @Inject
     public ShooterSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
                             XCANMotorController leftShooterMotor, XCANMotorController middleshooterMotor,
@@ -27,9 +29,17 @@ public class ShooterSubsystem extends BaseSubsystem {
                             PropertyFactory propertyFactory) {
 
         propertyFactory.setPrefix(this);
+        var defaultPIDProperties = new XCANMotorControllerPIDProperties(
+                0.1,
+                0.01,
+                0.25,
+                0.0002,
+                0.750,
+                1,
+                0);
         if (eletricalContract.isLeftShooterReady()) {
             this.leftShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getLeftShooterMotor(),
-                    getPrefix(), "ShooterMotor");
+                    getPrefix(), "ShooterMotor", defaultPIDProperties);
             this.registerDataFrameRefreshable(leftShooterMotor);
         } else {
             this.leftShooterMotor = null;
@@ -37,7 +47,7 @@ public class ShooterSubsystem extends BaseSubsystem {
 
         if (eletricalContract.isMiddleShooterReady()) {
             this.middleshooterMotor = xcanMotorControllerFactory.create(eletricalContract.getMiddleShooterMotor(),
-                    getPrefix(), "ShooterMotor");
+                    getPrefix(), "ShooterMotor", defaultPIDProperties);
             this.registerDataFrameRefreshable(middleshooterMotor);
         } else {
             this.middleshooterMotor = null;
@@ -45,7 +55,7 @@ public class ShooterSubsystem extends BaseSubsystem {
 
         if (eletricalContract.isRightShooterReady()) {
             this.rightshooterMotor = xcanMotorControllerFactory.create(eletricalContract.getRightShooterMotor(),
-                    getPrefix(), "ShooterMotor");
+                    getPrefix(), "ShooterMotor", defaultPIDProperties);
             this.registerDataFrameRefreshable(rightshooterMotor);
         } else {
             this.rightshooterMotor = null;
