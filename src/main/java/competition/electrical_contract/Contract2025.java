@@ -1,15 +1,22 @@
 package competition.electrical_contract;
 
 import competition.subsystems.pose.PoseSubsystem;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
+import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.swerve.SwerveInstance;
+import xbot.common.subsystems.vision.CameraCapabilities;
 
 import javax.inject.Inject;
+
+import java.util.EnumSet;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
@@ -62,25 +69,25 @@ public class Contract2025 extends Contract2026 {
             case "FrontRightDrive" -> new CANMotorControllerInfo(
                     getDriveControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
-                    CANBusId.DefaultCanivore,
+                    CANBusId.Canivore,
                     39,
                     regularDriveMotorConfig);
             case "RearRightDrive" -> new CANMotorControllerInfo(
                     getDriveControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
-                    CANBusId.DefaultCanivore,
+                    CANBusId.Canivore,
                     31,
                     regularDriveMotorConfig);
             case "RearLeftDrive" -> new CANMotorControllerInfo(
                     getDriveControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
-                    CANBusId.DefaultCanivore,
+                    CANBusId.Canivore,
                     20,
                     regularDriveMotorConfig);
             case "FrontLeftDrive" -> new CANMotorControllerInfo(
                     getDriveControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
-                    CANBusId.DefaultCanivore,
+                    CANBusId.Canivore,
                     29,
                     regularDriveMotorConfig);
             default -> null;
@@ -100,25 +107,25 @@ public class Contract2025 extends Contract2026 {
             case "FrontRightDrive" -> new CANMotorControllerInfo(
                     getSteeringControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
-                    CANBusId.DefaultCanivore,
+                    CANBusId.Canivore,
                     38,
                     invertedSteeringMotorConfig);
             case "RearRightDrive" -> new CANMotorControllerInfo(
                     getSteeringControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
-                    CANBusId.DefaultCanivore,
+                    CANBusId.Canivore,
                     30,
                     invertedSteeringMotorConfig);
             case "RearLeftDrive" -> new CANMotorControllerInfo(
                     getSteeringControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
-                    CANBusId.DefaultCanivore,
+                    CANBusId.Canivore,
                     21,
                     invertedSteeringMotorConfig);
             case "FrontLeftDrive" -> new CANMotorControllerInfo(
                     getSteeringControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
-                    CANBusId.DefaultCanivore,
+                    CANBusId.Canivore,
                     28,
                     invertedSteeringMotorConfig);
             default -> null;
@@ -131,13 +138,13 @@ public class Contract2025 extends Contract2026 {
 
         return switch (swerveInstance.label()) {
             case "FrontRightDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.DefaultCanivore, 54, false);
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.Canivore, 54, false);
             case "RearRightDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.DefaultCanivore, 53, false);
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.Canivore, 53, false);
             case "RearLeftDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.DefaultCanivore, 52, false);
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.Canivore, 52, false);
             case "FrontLeftDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.DefaultCanivore, 51, false);
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.Canivore, 51, false);
             default -> null;
         };
     }

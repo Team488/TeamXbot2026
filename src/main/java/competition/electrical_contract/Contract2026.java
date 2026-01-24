@@ -184,7 +184,7 @@ public class Contract2026 extends ElectricalContract {
     @Override
     public CANLightControllerInfo getLightControlerInfo() {
         return new CANLightControllerInfo("Lights",
-                LightControllerType.Candle, CANBusId.DefaultCanivore,
+                LightControllerType.Candle, CANBusId.Canivore,
                 11, new CANLightControllerOutputConfig(LEDStripType.GRB,
                 0.15, new int[] {8}));
 
