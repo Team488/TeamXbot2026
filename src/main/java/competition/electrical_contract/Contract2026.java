@@ -3,10 +3,7 @@ package competition.electrical_contract;
 import javax.inject.Inject;
 
 import competition.subsystems.pose.PoseSubsystem;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANLightControllerOutputConfig;
@@ -18,7 +15,6 @@ import xbot.common.injection.electrical_contract.LEDStripType;
 import xbot.common.injection.electrical_contract.LightControllerType;
 import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.swerve.SwerveInstance;
-import xbot.common.subsystems.vision.CameraCapabilities;
 
 import static edu.wpi.first.units.Units.Inches;
 
