@@ -31,13 +31,13 @@ public class DriveToOutpostCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        startTime = XTimer.getMatchTime();
+        startTime = XTimer.getFPGATimestamp();
         log.info("initialize");
     }
     @Override
     public void execute() {
         drive.drive(new XYPair(moveRobotX.get(), 0),0);
-        aKitLog.record("DriveToOutpostCommand", PoseSubsystem);
+        aKitLog.record("DriveToOutpostCommand");
     }
 
 

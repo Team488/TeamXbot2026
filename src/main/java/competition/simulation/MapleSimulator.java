@@ -2,6 +2,7 @@ package competition.simulation;
 
 import competition.Robot;
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -82,8 +83,7 @@ public class MapleSimulator implements BaseSimulator {
         });
 
         // starting middle ish of the field on blue
-        var startingPose = new Pose2d(7, 7 , new Rotation2d());
-
+        var startingPose = Landmarks.blueStartTrenchToOutpost;
         // Creating the SelfControlledSwerveDriveSimulation instance
         this.swerveDriveSimulation = new SelfControlledSwerveDriveSimulation(
                 new SwerveDriveSimulation(config, startingPose));
