@@ -12,7 +12,7 @@ import javax.inject.Singleton;
 @Singleton
 public class IntakeDeploySubsystem extends BaseSubsystem {
     public final XCANMotorController intakeDeployMotor;
-    public DoubleProperty retrackPower;
+    public DoubleProperty retractPower;
     public DoubleProperty extendPower;
 
     @Inject
@@ -27,15 +27,15 @@ public class IntakeDeploySubsystem extends BaseSubsystem {
             this.intakeDeployMotor = null;
         }
 
-        this.retrackPower = propertyFactory.createPersistentProperty("retrackPower",-0.1);
+        this.retractPower = propertyFactory.createPersistentProperty("retrackPower",-0.1);
         this.extendPower = propertyFactory.createPersistentProperty("extend Power",0.1);
 
     }
-    public void intake() {
-        intakeDeployMotor.setPower(retrackPower.get());
+    public void retract() {
+        intakeDeployMotor.setPower(retractPower.get());
     }
 
-    public void output() {
+    public void extend() {
         intakeDeployMotor.setPower(extendPower.get());
     }
 
