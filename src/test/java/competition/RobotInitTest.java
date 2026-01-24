@@ -8,4 +8,4 @@ public class RobotInitTest extends BaseCompetitionTest {
         getInjectorComponent().subsystemDefaultCommandMap();
         getInjectorComponent().operatorCommandMap();
     }
-}
+}   

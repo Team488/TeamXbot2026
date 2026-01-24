@@ -25,10 +25,10 @@ public class Contract2026 extends ElectricalContract {
     public Contract2026() {}
 
     @Override
-    public boolean isDriveReady() { return true; }
+    public boolean isDriveReady() { return false; }
 
     @Override
-    public boolean areCanCodersReady() { return true; }
+    public boolean areCanCodersReady() { return false; }
 
     @Override
     public boolean isClimberReady() { return false; }
