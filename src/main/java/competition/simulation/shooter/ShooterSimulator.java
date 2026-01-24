@@ -4,6 +4,7 @@ import competition.simulation.MapleSimulator2026Utils;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
+import edu.wpi.first.math.geometry.Pose2d;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
 import xbot.common.properties.DoubleProperty;
@@ -75,22 +76,19 @@ public class ShooterSimulator {
                             2.0
                     );
             fuel.setHitTargetCallBack(() -> {
-                System.out.println("HITTING TARGET");
+                arena.removeProjectile(fuel);
+                arena.addPieceWithVariance(
+                        pose.getCurrentPose2d().getTranslation(),
+                        Pose2d.kZero.getRotation(),
+                        Inches.of(25),
+                        MetersPerSecond.of(5.0),
+                        Degrees.of(-20),
+                        0.30,
+                        0.30,
+                        2.0,
+                        1.0,
+                        2.0);
             });
-            // code for hub
-//            fuel.setHitTargetCallBack(() -> {
-//                arena.addPieceWithVariance(
-//                        pose.getCurrentPose2d().getTranslation(),
-//                        Pose2d.kZero.getRotation(),
-//                        Inches.of(25),
-//                        MetersPerSecond.of(5.0),
-//                        Degrees.of(-20),
-//                        0.30,
-//                        0.30,
-//                        2.0,
-//                        1.0,
-//                        2.0);
-//            });
 
             arena.addGamePieceProjectile(fuel);
         }
