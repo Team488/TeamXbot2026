@@ -8,6 +8,7 @@ import competition.subsystems.shooter.ShooterSubsystem;
 import xbot.common.injection.components.BaseComponent;
 import xbot.common.injection.swerve.SwerveComponentHolder;
 import xbot.common.subsystems.drive.swerve.SwerveDefaultCommandMap;
+import competition.subsystems.vision.AprilTagVisionSubsystemExtended;
 
 public abstract class BaseRobotComponent extends BaseComponent {
     public abstract SubsystemDefaultCommandMap subsystemDefaultCommandMap();
@@ -17,6 +18,8 @@ public abstract class BaseRobotComponent extends BaseComponent {
     public abstract SwerveDefaultCommandMap swerveDefaultCommandMap();
 
     public abstract SwerveComponentHolder swerveComponentHolder();
+
+    public abstract AprilTagVisionSubsystemExtended aprilTagVisionSubsystemExtended();
 
     public abstract BaseSimulator simulator();
 
