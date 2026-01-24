@@ -2,9 +2,9 @@
 package competition;
 
 import competition.injection.components.BaseRobotComponent;
-import competition.injection.components.DaggerPracticeRobotComponent;
 import competition.injection.components.DaggerRobotComponent;
 import competition.injection.components.DaggerRobotComponent2023;
+import competition.injection.components.DaggerRobotComponent2025;
 import competition.injection.components.DaggerRoboxComponent;
 import competition.injection.components.DaggerSimulationComponent;
 import competition.simulation.BaseSimulator;
@@ -61,7 +61,7 @@ public class Robot extends BaseRobot {
                     return DaggerRobotComponent2023.create();
                 case "2025":
                     log.info("Using 2025 contract");
-                    return DaggerPracticeRobotComponent.create();
+                    return DaggerRobotComponent2025.create();
                 case "Robox":
                     System.out.println("Using Robox contract");
                     return DaggerRoboxComponent.create();
