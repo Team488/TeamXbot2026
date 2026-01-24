@@ -9,6 +9,8 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.fuel_intake.IntakeSubsystem;
 import competition.subsystems.fuel_intake.commands.FuelStopCommand;
+import competition.subsystems.hood.HoodSubsystem;
+import competition.subsystems.hood.commands.StopHoodCommand;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.commands.ShooterStopCommand;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
@@ -27,9 +29,15 @@ public class SubsystemDefaultCommandMap {
     public void setupDriveSubsystem(DriveSubsystem driveSubsystem, SwerveDriveWithJoysticksCommand command) {
         driveSubsystem.setDefaultCommand(command);
     }
+
     @Inject
     public void intakeStopCommand(IntakeSubsystem intakeSubsystem, FuelStopCommand command) {
         intakeSubsystem.setDefaultCommand(command);
+    }
+
+    @Inject
+    public void hoodSubSystem(HoodSubsystem hoodSubsystem, StopHoodCommand command) {
+        hoodSubsystem.setDefaultCommand(command);
     }
     @Inject
     public void climberStopCommand(ClimberSubsystem climberSubsystem, ClimberStopCommand command) {
