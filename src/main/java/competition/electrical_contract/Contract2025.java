@@ -163,4 +163,42 @@ public class Contract2025 extends Contract2026 {
     public double getDriveGearRatio() {
         return 6.48; // Documented value for WCP x2i with X3 10t gears.
     }
+
+    private static double frontAprilCameraXDisplacement = 10.14 / PoseSubsystem.INCHES_IN_A_METER;
+    private static double frontAprilCameraYDisplacement = 6.535 / PoseSubsystem.INCHES_IN_A_METER;
+    private static double frontAprilCameraZDisplacement = 6.7 / PoseSubsystem.INCHES_IN_A_METER;
+    private static double frontAprilCameraPitch = Math.toRadians(-21);
+    private static double frontAprilCameraYaw = Math.toRadians(0);
+
+    public CameraInfo[] getCameraInfo() {
+        return new CameraInfo[] {// {};
+
+                new CameraInfo("Apriltag_FrontLeft_Camera",
+                        "AprilTagFrontLeft",
+                        new Transform3d(new Translation3d(
+                                frontAprilCameraXDisplacement,
+                                frontAprilCameraYDisplacement,
+                                frontAprilCameraZDisplacement),
+                                new Rotation3d(0, frontAprilCameraPitch, frontAprilCameraYaw)),
+                        EnumSet.of(CameraCapabilities.APRIL_TAG)),
+
+                new CameraInfo("Apriltag_FrontRight_Camera",
+                        "AprilTagFrontRight",
+                        new Transform3d(new Translation3d(
+                                frontAprilCameraXDisplacement,
+                                -frontAprilCameraYDisplacement,
+                                frontAprilCameraZDisplacement),
+                                new Rotation3d(0, frontAprilCameraPitch, frontAprilCameraYaw)),
+                        EnumSet.of(CameraCapabilities.APRIL_TAG)),
+                new CameraInfo("Apriltag_Back_Camera",
+                        "AprilTagBack",
+                        new Transform3d(new Translation3d(
+                                -0.55 / PoseSubsystem.INCHES_IN_A_METER,
+                                -0.25 / PoseSubsystem.INCHES_IN_A_METER,
+                                6.3 / PoseSubsystem.INCHES_IN_A_METER),
+                                new Rotation3d(0, Math.toRadians(-14.5), Math.PI)),
+                        EnumSet.of(CameraCapabilities.APRIL_TAG),
+                        false)
+        };
+    }
 }
