@@ -27,10 +27,10 @@ public class IntakeDeploySubsystem extends BaseSubsystem {
             this.intakeDeployMotor = null;
         }
 
-        this.retractPower = propertyFactory.createPersistentProperty("retrackPower",-0.1);
-        this.extendPower = propertyFactory.createPersistentProperty("extend Power",0.1);
-
+        this.retractPower = propertyFactory.createPersistentProperty("retractPower", -0.1);
+        this.extendPower = propertyFactory.createPersistentProperty("extendPower", 0.1);
     }
+
     public void retract() {
         intakeDeployMotor.setPower(retractPower.get());
     }
@@ -44,6 +44,8 @@ public class IntakeDeploySubsystem extends BaseSubsystem {
     }
 
     public void periodic() {
-        intakeDeployMotor.periodic();
+        if (intakeDeployMotor != null) {
+            intakeDeployMotor.periodic();
+        }
     }
 }

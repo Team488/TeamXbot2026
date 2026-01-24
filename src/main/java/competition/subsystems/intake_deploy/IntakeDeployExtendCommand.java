@@ -5,7 +5,9 @@ import xbot.common.command.BaseCommand;
 import javax.inject.Inject;
 
 public class IntakeDeployExtendCommand extends BaseCommand {
+
     IntakeDeploySubsystem intakeDeploy;
+
     @Inject
     public IntakeDeployExtendCommand(IntakeDeploySubsystem intakeDeploySubsystem) {
         intakeDeploy = intakeDeploySubsystem;
@@ -13,5 +15,7 @@ public class IntakeDeployExtendCommand extends BaseCommand {
     }
 
     @Override
-    public void initialize() { intakeDeploy.extend(); }
+    public void initialize() {
+        intakeDeploy.extend();
+    }
 }

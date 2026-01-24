@@ -9,6 +9,7 @@ import javax.inject.Inject;
 public class IntakeDeployRetractCommand extends BaseCommand {
 
     IntakeDeploySubsystem intakeDeploy;
+
     @Inject
     public IntakeDeployRetractCommand(IntakeDeploySubsystem intakeDeploySubsystem) {
         intakeDeploy = intakeDeploySubsystem;
@@ -16,5 +17,7 @@ public class IntakeDeployRetractCommand extends BaseCommand {
     }
 
     @Override
-    public void initialize() { intakeDeploy.retract(); }
+    public void initialize() {
+        intakeDeploy.retract();
+    }
 }
