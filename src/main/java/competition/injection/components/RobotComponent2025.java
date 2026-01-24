@@ -1,7 +1,7 @@
 package competition.injection.components;
 
 import competition.injection.modules.CommonModule;
-import competition.injection.modules.PracticeModule;
+import competition.injection.modules.Module2025;
 import dagger.Component;
 import xbot.common.injection.modules.RealControlsModule;
 import xbot.common.injection.modules.RealDevicesModule;
@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 
 @Singleton
 @Component(modules = { RobotModule.class, RealDevicesModule.class, RealControlsModule.class,
-        PracticeModule.class, CommonModule.class})
-public abstract class PracticeRobotComponent extends BaseRobotComponent {
+        Module2025.class, CommonModule.class})
+public abstract class RobotComponent2025 extends BaseRobotComponent {
     
 }
