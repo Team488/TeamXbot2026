@@ -27,11 +27,7 @@ public class DriveToOutpostCommand extends SwerveSimpleTrajectoryCommand {
         pf.setPrefix("DriveToOutpost");
         this.drive = drive;
         this.addRequirements(drive);
-
-
     }
-
-
 
     @Override
     public void initialize() {
@@ -51,7 +47,6 @@ public class DriveToOutpostCommand extends SwerveSimpleTrajectoryCommand {
         super.execute();
     }
 
-
     @Override
     public boolean isFinished() {
         return super.isFinished();
@@ -61,5 +56,4 @@ public class DriveToOutpostCommand extends SwerveSimpleTrajectoryCommand {
     public void end(boolean interrupted) {
         log.info("end");
     }
-
 }
