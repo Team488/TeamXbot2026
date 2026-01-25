@@ -26,13 +26,44 @@ public class Contract2026 extends ElectricalContract {
     public Contract2026() {}
 
     @Override
-    public boolean isDriveReady() { return true; }
+    public boolean isDriveReady() {
+        return true;
+    }
 
     @Override
-    public boolean areCanCodersReady() { return true; }
+    public boolean areCanCodersReady() {
+        return true;
+    }
 
     @Override
-    public boolean isClimberReady() { return false; }
+    public boolean isClimberReady() {
+        return false;
+    }
+
+    @Override
+    public boolean isShooterFeederReady() {
+        return false;
+    }
+
+    @Override
+    public boolean isShooterReady() {
+        return false;
+    }
+
+    @Override
+    public boolean isIntakeDeployReady() {
+        return false;
+    }
+
+    @Override
+    public boolean isHoodReady() {
+        return false;
+    }
+
+    @Override
+    public boolean isFuelIntakeMotorReady() {
+        return true;
+    }
 
     public CANMotorControllerInfo getClimberMotor() {
         return new CANMotorControllerInfo("ClimberMotor",
@@ -41,9 +72,6 @@ public class Contract2026 extends ElectricalContract {
                 488,
                 new CANMotorControllerOutputConfig());
     }
-                                          
-    @Override                                    
-    public boolean isShooterFeederReady() { return false; }
 
     public CANMotorControllerInfo getShooterFeederMotor() {
         return new CANMotorControllerInfo("ShooterFeederMotor",
@@ -53,8 +81,6 @@ public class Contract2026 extends ElectricalContract {
                 new CANMotorControllerOutputConfig());
     }
 
-    public boolean isShooterReady() { return false; }
-
     public CANMotorControllerInfo getShooterMotor() {
         return new CANMotorControllerInfo("ShooterMotor",
                 MotorControllerType.TalonFx,
@@ -62,9 +88,6 @@ public class Contract2026 extends ElectricalContract {
                 918,
                 new CANMotorControllerOutputConfig());
     }
-
-
-    public boolean isIntakeDeployReady() { return false; }
 
     //TODO: change id
     public CANMotorControllerInfo getIntakeDeployMotor() {
@@ -74,9 +97,6 @@ public class Contract2026 extends ElectricalContract {
                 676767, // TODO:Change ID
                 new CANMotorControllerOutputConfig());
     }
-
-    @Override
-    public boolean isHoodReady() {return false;}
 
     public CANMotorControllerInfo getHoodMotor() {
         return new CANMotorControllerInfo("hoodMotor",
@@ -169,9 +189,6 @@ public class Contract2026 extends ElectricalContract {
             default -> null;
         };
     }
-
-    @Override
-    public boolean isFuelIntakeMotorReady() { return true; }
 
     public CANMotorControllerInfo getFuelIntakeMotor() {
         return new CANMotorControllerInfo("FuelIntakeMotor",

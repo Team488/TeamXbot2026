@@ -10,9 +10,37 @@ import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.injection.swerve.SwerveInstance;
 
 public abstract class ElectricalContract implements XSwerveDriveElectricalContract, XCameraElectricalContract {
-    public abstract boolean isDriveReady();
+    public boolean isDriveReady() {
+        return false;
+    }
 
-    public abstract boolean areCanCodersReady();
+    public boolean areCanCodersReady() {
+        return false;
+    }
+
+    public boolean isHoodReady() {
+        return false;
+    }
+
+    public boolean isIntakeDeployReady() {
+        return false;
+    }
+
+    public boolean isClimberReady() {
+        return false;
+    }
+
+    public boolean isShooterReady() {
+        return false;
+    }
+
+    public boolean isShooterFeederReady() {
+        return false;
+    }
+
+    public boolean isFuelIntakeMotorReady() {
+        return false;
+    }
 
     public abstract CANMotorControllerInfo getDriveMotor(SwerveInstance swerveInstance);
 
@@ -22,27 +50,15 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance);
 
-    public abstract boolean isHoodReady();
-
     public abstract CANMotorControllerInfo getHoodMotor();
-
-    public abstract boolean isIntakeDeployReady();
 
     public abstract CANMotorControllerInfo getIntakeDeployMotor();
 
-    public abstract boolean isShooterReady();
-
     public abstract CANMotorControllerInfo getShooterMotor();
-
-    public abstract boolean isClimberReady();
 
     public abstract CANMotorControllerInfo getClimberMotor();
 
-    public abstract boolean isShooterFeederReady();
-
     public abstract CANMotorControllerInfo getShooterFeederMotor();
-
-    public abstract boolean isFuelIntakeMotorReady();
 
     public abstract CANMotorControllerInfo getFuelIntakeMotor();
   

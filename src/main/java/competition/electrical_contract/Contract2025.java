@@ -26,8 +26,7 @@ public class Contract2025 extends Contract2026 {
     protected final double simulationScalingValue = 256.0 * PoseSubsystem.INCHES_IN_A_METER;
 
     @Inject
-    public Contract2025() {
-    }
+    public Contract2025() {}
 
     @Override
     public boolean isDriveReady() {
