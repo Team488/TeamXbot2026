@@ -14,6 +14,7 @@ import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.subsystems.drive.BaseDriveSubsystem;
 import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
+import xbot.common.subsystems.pose.SimulatedPositionSupplier;
 
 @Module
 public abstract class SimulatedRobotModule {
@@ -40,4 +41,8 @@ public abstract class SimulatedRobotModule {
     @Binds
     @Singleton
     public abstract BaseSimulator getSimulator(MapleSimulator impl);
+        
+    @Binds
+    @Singleton
+    abstract SimulatedPositionSupplier getSimulatedPositionSupplier(BaseSimulator impl);
 }
