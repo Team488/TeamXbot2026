@@ -200,9 +200,9 @@ public class Contract2026 extends ElectricalContract {
             case "FrontRightDrive" ->
                     new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 54, false, simulationScalingValue);
             case "RearLeftDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 51, false, simulationScalingValue);
-            case "RearRightDrive" ->
                     new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 52, false, simulationScalingValue);
+            case "RearRightDrive" ->
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 51, false, simulationScalingValue);
             default -> null;
         };
     }
