@@ -9,6 +9,7 @@ import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANLightControllerOutputConfig;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
+import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.LEDStripType;
 import xbot.common.injection.electrical_contract.LightControllerType;
@@ -191,7 +192,7 @@ public class Contract2026 extends ElectricalContract {
     @Override
     public CANLightControllerInfo getLightControlerInfo() {
         return new CANLightControllerInfo("Lights",
-                LightControllerType.Candle, CANBusId.DefaultCanivore,
+                LightControllerType.Candle, CANBusId.Canivore,
                 11, new CANLightControllerOutputConfig(LEDStripType.GRB,
                 0.15, new int[] {8}));
 
@@ -236,5 +237,9 @@ public class Contract2026 extends ElectricalContract {
     @Override
     public double getDriveGearRatio() {
         return 6.48; // Documented value for WCP x2i with X3 10t gears.
+    }
+
+    public CameraInfo[] getCameraInfo() {
+        return new CameraInfo[] { /* TODO: No cameras defined yet in 2026 */ };
     }
 }
