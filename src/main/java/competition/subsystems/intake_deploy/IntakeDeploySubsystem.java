@@ -12,7 +12,7 @@ import javax.inject.Singleton;
 @Singleton
 public class IntakeDeploySubsystem extends BaseSubsystem {
     public final XCANMotorController intakeDeployMotor;
-    public XAbsoluteEncoder intakeDeployAbsoluteEncoder;
+    public final XAbsoluteEncoder intakeDeployAbsoluteEncoder;
     public DoubleProperty retractPower;
     public DoubleProperty extendPower;
 
@@ -27,8 +27,15 @@ public class IntakeDeploySubsystem extends BaseSubsystem {
             this.registerDataFrameRefreshable(motor);
         } else {
             this.intakeDeployMotor = null;
+        }
+
+        if (electricalContract.isIntakeDeployAbsoluteEncoderReady()) {
+            this.intakeDeployAbsoluteEncoder = xAbsoluteEncoderFactory.create(electricalContract.getIntakeDeployAbsoluteEncoderMotor(),
+                    getPrefix());
+        } else {
             this.intakeDeployAbsoluteEncoder = null;
         }
+
 
         this.retractPower = propertyFactory.createPersistentProperty("retractPower", -0.1);
         this.extendPower = propertyFactory.createPersistentProperty("extendPower", 0.1);
@@ -49,6 +56,10 @@ public class IntakeDeploySubsystem extends BaseSubsystem {
     public void periodic() {
         if (intakeDeployMotor != null) {
             intakeDeployMotor.periodic();
+
+        }
+        if (intakeDeployAbsoluteEncoder != null) {
+            intakeDeployAbsoluteEncoder.periodic();
         }
     }
 }
