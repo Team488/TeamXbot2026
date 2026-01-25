@@ -24,7 +24,7 @@ public class RoboxContract extends Contract2026 {
 
     public CANMotorControllerInfo getShooterMotor() {
         return new CANMotorControllerInfo("ShooterMotor",
-                MotorControllerType.TalonFx,
+                MotorControllerType.SparkMax,
                 CANBusId.RIO,
                 32,
                 new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(10)));

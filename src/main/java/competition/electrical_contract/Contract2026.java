@@ -106,28 +106,28 @@ public class Contract2026 extends ElectricalContract {
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
-                            31,
+                            30,
                             new CANMotorControllerOutputConfig());
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
-                            29,
+                            38,
                             new CANMotorControllerOutputConfig());
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
-                            38,
+                            28,
                             new CANMotorControllerOutputConfig());
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
-                            21,
+                            20,
                             new CANMotorControllerOutputConfig());
             default -> null;
         };
@@ -143,28 +143,28 @@ public class Contract2026 extends ElectricalContract {
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
-                            30,
+                            31,
                             new CANMotorControllerOutputConfig());
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
-                            28,
+                            39,
                             new CANMotorControllerOutputConfig());
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
-                            39,
+                            29,
                             new CANMotorControllerOutputConfig());
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
-                            20,
+                            21,
                             new CANMotorControllerOutputConfig());
             default -> null;
         };
@@ -196,13 +196,13 @@ public class Contract2026 extends ElectricalContract {
 
         return switch (swerveInstance.label()) {
             case "FrontLeftDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 51, false, simulationScalingValue);
-            case "FrontRightDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 52, false, simulationScalingValue);
-            case "RearLeftDrive" ->
                     new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 53, false, simulationScalingValue);
-            case "RearRightDrive" ->
+            case "FrontRightDrive" ->
                     new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 54, false, simulationScalingValue);
+            case "RearLeftDrive" ->
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 51, false, simulationScalingValue);
+            case "RearRightDrive" ->
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 52, false, simulationScalingValue);
             default -> null;
         };
     }

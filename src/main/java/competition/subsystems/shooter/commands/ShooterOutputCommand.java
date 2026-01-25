@@ -18,7 +18,10 @@ public class ShooterOutputCommand extends BaseCommand {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() {}
+
+    @Override
+    public void execute() {
         shooter.runAtTargetVelocity();
         log.info("Shooting at " + shooter.targetVelocity.get() + " RPM");
     }
