@@ -39,7 +39,7 @@ public class ShooterSimulator {
         this.shooter = shooter;
         this.shooterFeeder = shooterFeeder;
 
-        this.shooterMotor = (MockCANMotorController) shooter.shooterMotor;
+        this.shooterMotor = (MockCANMotorController) shooter.middleShooterMotor;
         this.shooterFeederMotor = (MockCANMotorController) shooterFeeder.shooterFeederMotor;
 
         this.ballsPerSecond = pf.createPersistentProperty("ballsPerSecond", 10);
