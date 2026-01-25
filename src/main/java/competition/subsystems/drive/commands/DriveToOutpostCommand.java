@@ -1,51 +1,62 @@
 package competition.subsystems.drive.commands;
 
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
-import xbot.common.command.BaseCommand;
-import xbot.common.controls.sensors.XTimer;
-import xbot.common.math.XYPair;
+import xbot.common.logging.RobotAssertionManager;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
+import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
+import xbot.common.subsystems.drive.SwerveSimpleTrajectoryCommand;
+import xbot.common.subsystems.drive.control_logic.HeadingModule;
+import xbot.common.trajectory.XbotSwervePoint;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 
-public class DriveToOutpostCommand extends BaseCommand {
+public class DriveToOutpostCommand extends SwerveSimpleTrajectoryCommand {
     final DriveSubsystem drive;
 
-    DoubleProperty moveRobotX;
-    final DoubleProperty timeAmountToMove;
-
-    double startTime;
-
+    public Pose2d outpostPose;
     @Inject
-    public DriveToOutpostCommand(DriveSubsystem drive, PropertyFactory pf) {
-        pf.setPrefix(this);
+    public DriveToOutpostCommand(DriveSubsystem drive, BaseSwerveDriveSubsystem baseSwerveDriveSubsystem,
+                                 PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
+                                 PoseSubsystem pose, RobotAssertionManager robotAssertionManager) {
+        super(drive,pose,pf,headingModuleFactory,robotAssertionManager);
+        pf.setPrefix("DriveToOutpost");
         this.drive = drive;
         this.addRequirements(drive);
 
-        this.moveRobotX = pf.createPersistentProperty("Move Robot X", 7);
-        this.timeAmountToMove = pf.createPersistentProperty("Time Amount To Move", 2);
+
     }
+
+
 
     @Override
     public void initialize() {
-        startTime = XTimer.getFPGATimestamp();
-        log.info("initialize");
+        outpostPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueOutpost);
+
+        ArrayList<XbotSwervePoint> swervePoints = new ArrayList<>();
+        swervePoints.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(
+                outpostPose, 3));
+        this.logic.setKeyPoints(swervePoints);
+        this.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
+        super.initialize();
+
     }
+
     @Override
     public void execute() {
-        drive.drive(new XYPair(moveRobotX.get(), 0),0);
-        aKitLog.record("DriveToOutpostCommand");
+        super.execute();
     }
 
 
     @Override
     public boolean isFinished() {
-        return XTimer.getFPGATimestamp() - startTime > timeAmountToMove.get();
-
+        return super.isFinished();
     }
+
     @Override
     public void end(boolean interrupted) {
         log.info("end");

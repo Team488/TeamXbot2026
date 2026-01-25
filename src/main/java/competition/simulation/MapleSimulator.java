@@ -82,7 +82,7 @@ public class MapleSimulator implements BaseSimulator {
                 drive.getRearRightSwerveModuleSubsystem().getModuleTranslation()
         });
 
-        // starting middle ish of the field on blue
+        // starting
         var startingPose = Landmarks.blueStartTrenchToOutpost;
         // Creating the SelfControlledSwerveDriveSimulation instance
         this.swerveDriveSimulation = new SelfControlledSwerveDriveSimulation(

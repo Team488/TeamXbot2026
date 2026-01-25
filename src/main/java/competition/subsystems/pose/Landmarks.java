@@ -9,7 +9,7 @@ import javax.inject.Singleton;
 @Singleton
 public class Landmarks {
     // Starting on blue alliance towards outpost
-    public static Pose2d blueStartTrenchToOutpost = new Pose2d(3.57,.650, Rotation2d.fromDegrees(0));
+    public static Pose2d blueStartTrenchToOutpost = new Pose2d(3.57,.650, Rotation2d.fromDegrees(0.00));
     public static Pose2d blueStartBumpToOutpost = new Pose2d(3.57,2.3, Rotation2d.fromDegrees(0));
 
     // Starting on blue alliance towards depot
@@ -29,7 +29,7 @@ public class Landmarks {
     public static Pose2d blueDepotTowerSide = new Pose2d(0.460, 4.950, Rotation2d.fromDegrees(90));
 
     // Blue Outpost
-    public static Pose2d blueOutpost = new Pose2d(0.470, 0.650, Rotation2d.fromDegrees(180));
+    public static Pose2d blueOutpost = new Pose2d(0.350, 0.650, Rotation2d.fromDegrees(0));
 
     // Blue Tower
     public static Pose2d blueClimbOutpostEdge = new Pose2d(1.510,2.780,Rotation2d.fromDegrees(180));

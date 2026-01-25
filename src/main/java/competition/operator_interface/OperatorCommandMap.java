@@ -3,6 +3,7 @@ package competition.operator_interface;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.fuel_intake.IntakeSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
@@ -41,7 +42,7 @@ public class OperatorCommandMap {
     }
     @Inject
     public void setupSimulatorCommands(
-            ResetSimulatorPositionCommand resetSimulatorPositionCommand,
+            ResetSimulatedPoseCommand resetSimulatorPositionCommand,
             DriveToOutpostCommand driveToOutpostCommand
     ) {
         resetSimulatorPositionCommand.includeOnSmartDashboard("Reset Simulator Position");
