@@ -7,11 +7,14 @@ import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.fuel_intake.IntakeSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
+import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
+import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.simulation.ResetSimulatorPositionCommand;
+import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
 /**
@@ -27,18 +30,27 @@ public class OperatorCommandMap {
     @Inject
     public void setupMyCommands(
             OperatorInterface operatorInterface,
-            SetRobotHeadingCommand resetHeading,
             ShooterOutputCommand shooterOutputCommand,
             TrimShooterVelocityUp trimShooterVelocityUp,
             TrimShooterVelocityDown trimShooterVelocityDown
     ) {
-        resetHeading.setHeadingToApply(0);
-        operatorInterface.gamepad.getifAvailable(1).onTrue(resetHeading);
-
         operatorInterface.debugGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(shooterOutputCommand);
         operatorInterface.debugGamepad.getifAvailable(XXboxController.XboxButton.X).onTrue(trimShooterVelocityDown);
         operatorInterface.debugGamepad.getifAvailable(XXboxController.XboxButton.Y).onTrue(trimShooterVelocityUp);
+    }
 
+    @Inject
+    public void setupDriveCommands(OperatorInterface operatorInterface,
+                                   SetRobotHeadingCommand resetHeading,
+                                   DebugSwerveModuleCommand debugModule,
+                                   ChangeActiveSwerveModuleCommand changeActiveModule,
+                                   SwerveDriveWithJoysticksCommand typicalSwerveDrive) {
+        resetHeading.setHeadingToApply(0);
+        operatorInterface.driverGamepad.getifAvailable(1).onTrue(resetHeading);
+
+        operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
+        operatorInterface.driverGamepad.getPovIfAvailable(90).onTrue(changeActiveModule);
+        operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(typicalSwerveDrive);
     }
     @Inject
     public void setupSimulatorCommands(

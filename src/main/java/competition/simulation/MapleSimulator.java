@@ -1,6 +1,7 @@
 package competition.simulation;
 
 import competition.Robot;
+import competition.simulation.shooter.ShooterSimulator;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
@@ -11,10 +12,12 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 import org.ironmaple.simulation.drivesims.COTS;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import xbot.common.advantage.AKitLogger;
 import xbot.common.controls.sensors.mock_adapters.MockGyro;
 import xbot.common.logic.TimeStableValidator;
 
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Seconds;
 
@@ -40,13 +43,17 @@ public class MapleSimulator implements BaseSimulator {
     // maple-sim stuff ----------------------------
     final DriveTrainSimulationConfig config;
     final IntakeSimulation intakeSimulation;
-    final SimulatedArena arena;
+    final Arena2026Rebuilt arena;
     final SelfControlledSwerveDriveSimulation swerveDriveSimulation;
 
+    final ShooterSimulator shooterSimulator;
+
     @Inject
-    public MapleSimulator(PoseSubsystem pose, DriveSubsystem drive) {
+    public MapleSimulator(PoseSubsystem pose, DriveSubsystem drive, ShooterSimulator shooter) {
         this.pose = pose;
         this.drive = drive;
+
+        this.shooterSimulator = shooter;
 
         aKitLog = new AKitLogger("Simulator/");
 
@@ -96,8 +103,8 @@ public class MapleSimulator implements BaseSimulator {
             "Fuel",
             this.swerveDriveSimulation.getDriveTrainSimulation(),
             // How big the intake is
-            Units.Inches.of(28),
-            Units.Inches.of(12),
+            Inches.of(28),
+            Inches.of(12),
             IntakeSimulation.IntakeSide.FRONT,
             100
         );
@@ -111,6 +118,7 @@ public class MapleSimulator implements BaseSimulator {
 
     public void update() {
         this.updateDriveSimulation();
+        shooterSimulator.updateShooterSimulation(this.arena);
     }
 
     protected void updateDriveSimulation() {
