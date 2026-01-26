@@ -19,9 +19,6 @@ jobs:
       displayName: 'Checkout sources'
       submodules: true
       clean: true
-    - powershell: |
-        $version = & git rev-parse HEAD:SeriouslyCommonLib
-        Write-Host "##vso[task.setvariable variable=SCLVersion]$version"
     - task: JavaToolInstaller@0
       inputs:
         versionSpec: '17'
@@ -32,11 +29,6 @@ jobs:
         key: 'gradle | "$(Agent.OS)" | $(Build.SourcesDirectory)/build.gradle | $(Build.SourcesDirectory)/settings.gradle | $(Build.SourcesDirectory)/gradle/wrapper/gradle-wrapper.properties | $(Build.SourcesDirectory)/vendordeps/*'
         path: $(GRADLE_USER_HOME)
       displayName: 'Cache Gradle dependencies'
-    - task: Cache@2
-      inputs:
-        key: 'gradle | "$(Agent.OS)" | $(SCLVersion)'
-        path: $(Build.SourcesDirectory)/SeriouslyCommonLib/build/
-      displayName: 'Cache SCL build outputs'
     - task: Gradle@3
       inputs:
         gradleWrapperFile: 'gradlew'
@@ -44,7 +36,7 @@ jobs:
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml'
         tasks: 'build'
-        options: '--info -x :SeriouslyCommonLib:test -x :SeriouslyCommonLib:compileTestJava'
+        options: '--warn -x :SeriouslyCommonLib:test -x :SeriouslyCommonLib:compileTestJava -x :SeriouslyCommonLib:checkstyleTest -x :SeriouslyCommonLib:checkstyleMain'
       env:
         GRADLE_USER_HOME: $(GRADLE_USER_HOME)
     - task: PublishCodeCoverageResults@2
