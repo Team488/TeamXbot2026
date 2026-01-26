@@ -44,7 +44,7 @@ jobs:
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml'
         tasks: 'build'
-        options: '--warn'
+        options: '--info -x :SeriouslyCommonLib:test -x :SeriouslyCommonLib:compileTestJava'
       env:
         GRADLE_USER_HOME: $(GRADLE_USER_HOME)
     - task: PublishCodeCoverageResults@2
