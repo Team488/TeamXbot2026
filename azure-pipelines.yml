@@ -36,7 +36,7 @@ jobs:
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml'
         tasks: 'build'
-        options: '--warn -x :SeriouslyCommonLib:test -x :SeriouslyCommonLib:compileTestJava -x :SeriouslyCommonLib:checkstyleTest -x :SeriouslyCommonLib:checkstyleMain'
+        options: '-x :SeriouslyCommonLib:test -x :SeriouslyCommonLib:compileTestJava -x :SeriouslyCommonLib:checkstyleTest -x :SeriouslyCommonLib:checkstyleMain'
       env:
         GRADLE_USER_HOME: $(GRADLE_USER_HOME)
     - task: PublishCodeCoverageResults@2
