@@ -35,8 +35,8 @@ jobs:
         gradleOptions: '-Xmx3072m'
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml'
-        tasks: 'build'
-        options: '--no-daemon -x :SeriouslyCommonLib:test -x :SeriouslyCommonLib:compileTestJava -x :SeriouslyCommonLib:checkstyleTest -x :SeriouslyCommonLib:checkstyleMain'
+        tasks: ':build'
+        options: ''
       env:
         GRADLE_USER_HOME: $(GRADLE_USER_HOME)
     - task: PublishCodeCoverageResults@2
@@ -44,3 +44,13 @@ jobs:
         codeCoverageTool: 'JaCoCo'
         summaryFileLocation: 'build/reports/jacoco/test/jacocoTestReport.xml'
         reportDirectory: 'build/reports/jacoco/test/html'
+    - task: Gradle@3
+      displayName: Stop gradle daemon
+      inputs:
+        workingDirectory: ''
+        gradleWrapperFile: 'gradlew'
+        gradleOptions: '-Xmx3072m'
+        tasks: '--stop'
+        publishJUnitResults: false
+      env:
+        GRADLE_USER_HOME: $(GRADLE_USER_HOME)
