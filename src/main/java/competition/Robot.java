@@ -10,6 +10,7 @@ import competition.injection.components.DaggerSimulationComponent;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
+import competition.subsystems.shooter.ShooterSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import org.apache.logging.log4j.LogManager;
@@ -45,6 +46,7 @@ public class Robot extends BaseRobot {
         dataFrameRefreshables.add((DriveSubsystem)getInjectorComponent().driveSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().poseSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().aprilTagVisionSubsystemExtended());
+        dataFrameRefreshables.add((ShooterSubsystem)getInjectorComponent().shooterSubsystem());
     }
 
     protected BaseRobotComponent createDaggerComponent() {
