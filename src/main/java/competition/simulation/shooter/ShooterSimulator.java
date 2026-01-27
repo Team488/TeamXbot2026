@@ -1,6 +1,5 @@
 package competition.simulation.shooter;
 
-import competition.simulation.intake.IntakeSimulator;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
@@ -54,7 +53,7 @@ public class ShooterSimulator {
         return shooterMotor.getPower() > 0;
     }
 
-    public void updateShooterSimulation(Arena2026Rebuilt arena, IntakeSimulation intake) {
+    public void update(Arena2026Rebuilt arena, IntakeSimulation intake) {
         if (!isShooting()) {
             return;
         }

@@ -2,14 +2,8 @@ package competition.simulation.intake;
 
 
 import competition.subsystems.fuel_intake.IntakeSubsystem;
-import edu.wpi.first.units.Units;
-import org.dyn4j.geometry.Convex;
-import org.dyn4j.geometry.Rectangle;
 import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.drivesims.AbstractDriveTrainSimulation;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import static edu.wpi.first.units.Units.Inches;
 
@@ -26,7 +20,6 @@ public class IntakeSimulator {
         this.simulation = IntakeSimulation.OverTheBumperIntake(
                 "Fuel",
                 driveTrainSim,
-                // How big the intake is
                 Inches.of(28),
                 Inches.of(12),
                 IntakeSimulation.IntakeSide.FRONT,
@@ -34,8 +27,8 @@ public class IntakeSimulator {
         );
     }
 
-    // Deployed + intaking motor spinning
     public boolean isIntaking() {
+        // Deployed + intaking motor spinning
         return true;
     }
 

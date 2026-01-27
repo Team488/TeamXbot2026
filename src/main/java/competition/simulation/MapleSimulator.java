@@ -18,14 +18,12 @@ import xbot.common.advantage.AKitLogger;
 import xbot.common.controls.sensors.mock_adapters.MockGyro;
 import xbot.common.logic.TimeStableValidator;
 
-import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Seconds;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
@@ -111,7 +109,7 @@ public class MapleSimulator implements BaseSimulator {
     public void update() {
         this.updateDriveSimulation();
         intakeSimulator.update();
-        shooterSimulator.updateShooterSimulation(this.arena, intakeSimulator.simulation);
+        shooterSimulator.update(this.arena, intakeSimulator.simulation);
     }
 
     protected void updateDriveSimulation() {
