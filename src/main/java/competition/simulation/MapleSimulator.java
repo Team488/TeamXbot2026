@@ -1,8 +1,10 @@
 package competition.simulation;
 
 import competition.Robot;
+import competition.simulation.intake.IntakeSimulator;
 import competition.simulation.shooter.ShooterSimulator;
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.fuel_intake.IntakeSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -41,18 +43,17 @@ public class MapleSimulator implements BaseSimulator {
 
     // maple-sim stuff ----------------------------
     final DriveTrainSimulationConfig config;
-    final IntakeSimulation intakeSimulation;
     final Arena2026Rebuilt arena;
     final SelfControlledSwerveDriveSimulation swerveDriveSimulation;
 
     final ShooterSimulator shooterSimulator;
+    final IntakeSimulator intakeSimulator;
 
     @Inject
-    public MapleSimulator(PoseSubsystem pose, DriveSubsystem drive, ShooterSimulator shooter) {
+    public MapleSimulator(PoseSubsystem pose, DriveSubsystem drive, ShooterSimulator shooterSimulator,
+                          IntakeSubsystem intakeSubsystem) {
         this.pose = pose;
         this.drive = drive;
-
-        this.shooterSimulator = shooter;
 
         aKitLog = new AKitLogger("Simulator/");
 
@@ -99,26 +100,18 @@ public class MapleSimulator implements BaseSimulator {
 
         arena.addDriveTrainSimulation(swerveDriveSimulation.getDriveTrainSimulation());
 
-        intakeSimulation = IntakeSimulation.OverTheBumperIntake(
-            "Fuel",
-            this.swerveDriveSimulation.getDriveTrainSimulation(),
-            // How big the intake is
-            Inches.of(28),
-            Inches.of(12),
-            IntakeSimulation.IntakeSide.FRONT,
-            100
-        );
-
         // TODO: this should depend on when we actually deploy and run our collector
         // but for now just auto deploy it right away
-        intakeSimulation.startIntake();
+        this.shooterSimulator = shooterSimulator;
+        this.intakeSimulator = new IntakeSimulator(intakeSubsystem, swerveDriveSimulation.getDriveTrainSimulation());
 
         SimulatedArena.overrideSimulationTimings(Seconds.of(Robot.LOOP_INTERVAL), 5);
     }
 
     public void update() {
         this.updateDriveSimulation();
-        shooterSimulator.updateShooterSimulation(this.arena);
+        intakeSimulator.update();
+        shooterSimulator.updateShooterSimulation(this.arena, intakeSimulator.simulation);
     }
 
     protected void updateDriveSimulation() {
