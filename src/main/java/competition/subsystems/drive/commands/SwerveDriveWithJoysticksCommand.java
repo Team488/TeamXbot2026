@@ -83,8 +83,8 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     }
 
     private XYPair getRawHumanTranslationIntent() {
-        double xIntent = MathUtils.deadband(oi.gamepad.getLeftVector().getX(), 0.15);
-        double yIntent = MathUtils.deadband(oi.gamepad.getLeftVector().getY(), 0.15);
+        double xIntent = MathUtils.deadband(oi.driverGamepad.getLeftVector().getX(), 0.15);
+        double yIntent = MathUtils.deadband(oi.driverGamepad.getLeftVector().getY(), 0.15);
 
         XYPair translationIntent = new XYPair(xIntent, yIntent);
 
@@ -98,8 +98,8 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
     private double getRawHumanRotationIntent() {
         // Deadband is to prevent buggy joysticks/triggers
-        double rotateLeftIntent = MathUtils.deadband(oi.gamepad.getLeftTrigger(), 0.05);
-        double rotateRightIntent = MathUtils.deadband(oi.gamepad.getRightTrigger(), 0.05);
+        double rotateLeftIntent = MathUtils.deadband(oi.driverGamepad.getLeftTrigger(), 0.05);
+        double rotateRightIntent = MathUtils.deadband(oi.driverGamepad.getRightTrigger(), 0.05);
 
         // Merge the two trigger values together in case of conflicts
         // Rotate left = positive, right = negative
@@ -110,7 +110,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         // Checks the right joystick input to see if we want to snap to a certain side
         // Apparently, we need to invert the x input here as it has been inverted for other commands already
         // And of course, we must rotate -90 (similar to how we got raw translation) for default alignment
-        XYPair joystickInput = new XYPair(-oi.gamepad.getRightVector().getX(), oi.gamepad.getRightVector().getY()).rotate(-90);
+        XYPair joystickInput = new XYPair(-oi.driverGamepad.getRightVector().getX(), oi.driverGamepad.getRightVector().getY()).rotate(-90);
 
         SwerveSuggestedRotation suggested = advisor.getSuggestedRotationValue(joystickInput, triggerRotateIntent);
         return processSuggestedRotationValueIntoPower(suggested);
