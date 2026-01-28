@@ -4,7 +4,6 @@ import competition.Robot;
 import competition.simulation.intake.IntakeSimulator;
 import competition.simulation.shooter.ShooterSimulator;
 import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.fuel_intake.IntakeSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -49,7 +48,7 @@ public class MapleSimulator implements BaseSimulator {
 
     @Inject
     public MapleSimulator(PoseSubsystem pose, DriveSubsystem drive, ShooterSimulator shooterSimulator,
-                          IntakeSubsystem intakeSubsystem) {
+                          IntakeSimulator intakeSimulator) {
         this.pose = pose;
         this.drive = drive;
 
@@ -101,7 +100,8 @@ public class MapleSimulator implements BaseSimulator {
         // TODO: this should depend on when we actually deploy and run our collector
         // but for now just auto deploy it right away
         this.shooterSimulator = shooterSimulator;
-        this.intakeSimulator = new IntakeSimulator(intakeSubsystem, swerveDriveSimulation.getDriveTrainSimulation());
+        this.intakeSimulator = intakeSimulator;
+        this.intakeSimulator.initialize(this.swerveDriveSimulation.getDriveTrainSimulation());
 
         SimulatedArena.overrideSimulationTimings(Seconds.of(Robot.LOOP_INTERVAL), 5);
     }
@@ -109,7 +109,7 @@ public class MapleSimulator implements BaseSimulator {
     public void update() {
         this.updateDriveSimulation();
         intakeSimulator.update();
-        shooterSimulator.update(this.arena, intakeSimulator);
+        shooterSimulator.update(this.arena);
     }
 
     protected void updateDriveSimulation() {

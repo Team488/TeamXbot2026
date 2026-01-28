@@ -29,13 +29,14 @@ public class ShooterSimulator {
     final MockCANMotorController shooterMotor;
     final MockCANMotorController shooterFeederMotor;
 
-    final DoubleProperty ballsPerSecond;
+    final IntakeSimulator intakeSimulator;
 
+    final DoubleProperty ballsPerSecond;
     final Random random;
 
     @Inject
     public ShooterSimulator(PoseSubsystem pose, ShooterSubsystem shooter, ShooterFeederSubsystem shooterFeeder,
-                            PropertyFactory pf) {
+                            PropertyFactory pf, IntakeSimulator intakeSimulator) {
         pf.setPrefix("Simulator/");
         this.pose = pose;
         this.shooter = shooter;
@@ -44,8 +45,9 @@ public class ShooterSimulator {
         this.shooterMotor = (MockCANMotorController) shooter.shooterMotor;
         this.shooterFeederMotor = (MockCANMotorController) shooterFeeder.shooterFeederMotor;
 
-        this.ballsPerSecond = pf.createPersistentProperty("ballsPerSecond", 10);
+        this.intakeSimulator = intakeSimulator;
 
+        this.ballsPerSecond = pf.createPersistentProperty("ballsPerSecond", 10);
         this.random = new Random();
     }
 
@@ -54,15 +56,14 @@ public class ShooterSimulator {
         return shooterMotor.getPower() > 0;
     }
 
-    public void update(Arena2026Rebuilt arena, IntakeSimulator intake) {
+    public void update(Arena2026Rebuilt arena) {
         if (!isShooting()) {
             return;
         }
 
-        // TODO: Add a count for # of fuel stored in robot so we don't go crazy
         // TODO: Extract constants later
         if (random.nextDouble() < ballsPerSecond.get() / 50.0) {
-            if (!intake.getPieceFromIntake()) {
+            if (!intakeSimulator.getPieceFromIntake()) {
                 return;
             }
 
