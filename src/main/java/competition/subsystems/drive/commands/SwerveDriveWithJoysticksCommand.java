@@ -3,6 +3,7 @@ package competition.subsystems.drive.commands;
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
+import xbot.common.controls.sensors.XGyro;
 import xbot.common.logic.HumanVsMachineDecider;
 import xbot.common.logic.HumanVsMachineDecider.HumanVsMachineDeciderFactory;
 import xbot.common.subsystems.drive.swerve.SwerveSuggestedRotation;
@@ -26,6 +27,8 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     PoseSubsystem pose;
     HeadingModule headingModule;
 
+    XGyro xGyro;
+
     DoubleProperty overallDrivingPowerScale;
     DoubleProperty overallTurningPowerScale;
 
@@ -35,9 +38,12 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     @Inject
     public SwerveDriveWithJoysticksCommand(
             OperatorInterface oi, DriveSubsystem drive, PoseSubsystem pose, PropertyFactory pf,
-            HeadingModuleFactory headingModuleFactory, HumanVsMachineDeciderFactory hvmFactory) {
+            HeadingModuleFactory headingModuleFactory, HumanVsMachineDeciderFactory hvmFactory,
+            XGyro xGyro
+            ) {
         pf.setPrefix(this);
         this.drive = drive;
+        this.xGyro = xGyro;
         this.pose = pose;
         this.oi = oi;
         this.headingModule = headingModuleFactory.create(drive.getRotateToHeadingPid());
@@ -73,6 +79,8 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
             rotationIntent *= overallTurningPowerScale.get();
         }
 
+
+
         // Field oriented drive will process the actual swerve movements for us
         drive.fieldOrientedDrive(
                 translationIntent,
@@ -92,6 +100,8 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
             translationIntent.rotate(180);
         }
 
+
+
         // We have to rotate -90 degrees to fix some alignment issues
         return translationIntent.rotate(-90);
     }
@@ -100,6 +110,10 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         // Deadband is to prevent buggy joysticks/triggers
         double rotateLeftIntent = MathUtils.deadband(oi.driverGamepad.getLeftTrigger(), 0.05);
         double rotateRightIntent = MathUtils.deadband(oi.driverGamepad.getRightTrigger(), 0.05);
+
+        if (xGyro != null && xGyro.isBroken()){
+            rotateRightIntent = 0;
+        }
 
         // Merge the two trigger values together in case of conflicts
         // Rotate left = positive, right = negative
