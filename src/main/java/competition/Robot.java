@@ -2,14 +2,15 @@
 package competition;
 
 import competition.injection.components.BaseRobotComponent;
-import competition.injection.components.DaggerPracticeRobotComponent;
 import competition.injection.components.DaggerRobotComponent;
 import competition.injection.components.DaggerRobotComponent2023;
+import competition.injection.components.DaggerRobotComponent2025;
 import competition.injection.components.DaggerRoboxComponent;
 import competition.injection.components.DaggerSimulationComponent;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
+import competition.subsystems.shooter.ShooterSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import org.apache.logging.log4j.LogManager;
@@ -36,6 +37,7 @@ public class Robot extends BaseRobot {
         getInjectorComponent().operatorCommandMap();
         getInjectorComponent().swerveDefaultCommandMap();
         getInjectorComponent().shooterSubsystem();
+        getInjectorComponent().lightsSubsystem();
 
         if (BaseRobot.isSimulation()) {
             simulator = getInjectorComponent().simulator();
@@ -43,6 +45,9 @@ public class Robot extends BaseRobot {
 
         dataFrameRefreshables.add((DriveSubsystem)getInjectorComponent().driveSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().poseSubsystem());
+        dataFrameRefreshables.add(getInjectorComponent().aprilTagVisionSubsystemExtended());
+        dataFrameRefreshables.add((ShooterSubsystem)getInjectorComponent().shooterSubsystem());
+        dataFrameRefreshables.add(getInjectorComponent().intakeDeploySubsystem());
     }
 
     protected BaseRobotComponent createDaggerComponent() {
@@ -60,7 +65,7 @@ public class Robot extends BaseRobot {
                     return DaggerRobotComponent2023.create();
                 case "2025":
                     log.info("Using 2025 contract");
-                    return DaggerPracticeRobotComponent.create();
+                    return DaggerRobotComponent2025.create();
                 case "Robox":
                     System.out.println("Using Robox contract");
                     return DaggerRoboxComponent.create();

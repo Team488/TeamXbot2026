@@ -5,21 +5,26 @@ import javax.inject.Inject;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Translation2d;
 import xbot.common.injection.electrical_contract.CANBusId;
+import xbot.common.injection.electrical_contract.CANLightControllerInfo;
+import xbot.common.injection.electrical_contract.CANLightControllerOutputConfig;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
+import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
+import xbot.common.injection.electrical_contract.LEDStripType;
+import xbot.common.injection.electrical_contract.LightControllerType;
 import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.electrical_contract.PDHPort;
 import xbot.common.injection.swerve.SwerveInstance;
 
 import static edu.wpi.first.units.Units.Inches;
 
-public class CompetitionContract extends ElectricalContract {
+public class Contract2026 extends ElectricalContract {
 
     protected final double simulationScalingValue = 256.0 * PoseSubsystem.INCHES_IN_A_METER;
 
     @Inject
-    public CompetitionContract() {}
+    public Contract2026() {}
 
     @Override
     public boolean isDriveReady() { return true; }
@@ -65,14 +70,21 @@ public class CompetitionContract extends ElectricalContract {
 
     public boolean isIntakeDeployReady() { return false; }
 
-    //TODO: change id
     public CANMotorControllerInfo getIntakeDeployMotor() {
         return new CANMotorControllerInfo("IntakeDeployMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
-                676767, // TODO:Change ID
-                PDHPort.PDH00,
+                676767, // TODO: Change ID
+                PDHPort.PDH00, // TODO: Change port
                 new CANMotorControllerOutputConfig());
+    }
+
+    public boolean isIntakeDeployAbsoluteEncoderReady() { return false; }
+
+    @Override
+    public DeviceInfo getIntakeDeployAbsoluteEncoderMotor() {
+        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady",100);
+
     }
 
     @Override
@@ -83,10 +95,9 @@ public class CompetitionContract extends ElectricalContract {
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 1000,
-                PDHPort.PDH00,
+                PDHPort.PDH00, // TODO: Change port
                 new CANMotorControllerOutputConfig());
     }
-
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/Drive";
@@ -106,34 +117,34 @@ public class CompetitionContract extends ElectricalContract {
             case "FrontLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANBusId.RIO,
-                            31,
-                            PDHPort.PDH00,
+                            MotorControllerType.TalonFx,
+                            CANBusId.Canivore,
+                            30,
+                            PDHPort.PDH00, // TODO: Change port
                             new CANMotorControllerOutputConfig());
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANBusId.RIO,
-                            29,
-                            PDHPort.PDH00,
+                            MotorControllerType.TalonFx,
+                            CANBusId.Canivore,
+                            38,
+                            PDHPort.PDH00, // TODO: Change port
                             new CANMotorControllerOutputConfig());
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANBusId.RIO,
-                            38,
-                            PDHPort.PDH00,
+                            MotorControllerType.TalonFx,
+                            CANBusId.Canivore,
+                            28,
+                            PDHPort.PDH00, // TODO: Change port
                             new CANMotorControllerOutputConfig());
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANBusId.RIO,
-                            21,
-                            PDHPort.PDH00,
+                            MotorControllerType.TalonFx,
+                            CANBusId.Canivore,
+                            20,
+                            PDHPort.PDH00, // TODO: Change port
                             new CANMotorControllerOutputConfig());
             default -> null;
         };
@@ -147,49 +158,62 @@ public class CompetitionContract extends ElectricalContract {
             case "FrontLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANBusId.RIO,
-                            30,
-                            PDHPort.PDH00,
-                            new CANMotorControllerOutputConfig());
+                            MotorControllerType.TalonFx,
+                            CANBusId.Canivore,
+                            31,
+                            PDHPort.PDH00, // TODO: Change port
+                            new CANMotorControllerOutputConfig()
+                                    .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANBusId.RIO,
-                            28,
-                            PDHPort.PDH00,
-                            new CANMotorControllerOutputConfig());
+                            MotorControllerType.TalonFx,
+                            CANBusId.Canivore,
+                            39,
+                            PDHPort.PDH00, // TODO: Change port
+                            new CANMotorControllerOutputConfig()
+                                    .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANBusId.RIO,
-                            39,
-                            PDHPort.PDH00,
-                            new CANMotorControllerOutputConfig());
+                            MotorControllerType.TalonFx,
+                            CANBusId.Canivore,
+                            29,
+                            PDHPort.PDH00, // TODO: Change port
+                            new CANMotorControllerOutputConfig()
+                                    .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANBusId.RIO,
-                            20,
-                            PDHPort.PDH00,
-                            new CANMotorControllerOutputConfig());
+                            MotorControllerType.TalonFx,
+                            CANBusId.Canivore,
+                            21,
+                            PDHPort.PDH00, // TODO: Change port
+                            new CANMotorControllerOutputConfig()
+                                    .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
             default -> null;
         };
     }
 
     @Override
-    public boolean isFuelIntakeMotorReady() { return true; }
+    public boolean isFuelIntakeMotorReady() { return false; }
 
     public CANMotorControllerInfo getFuelIntakeMotor() {
         return new CANMotorControllerInfo("FuelIntakeMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 23,
-                PDHPort.PDH00,
+                PDHPort.PDH00, // TODO: Change port
                 new CANMotorControllerOutputConfig());
+    }
+
+    @Override
+    public CANLightControllerInfo getLightControlerInfo() {
+        return new CANLightControllerInfo("Lights",
+                LightControllerType.Candle, CANBusId.Canivore,
+                11, new CANLightControllerOutputConfig(LEDStripType.GRB,
+                0.15, new int[] {8}));
+
     }
 
     @Override
@@ -198,13 +222,13 @@ public class CompetitionContract extends ElectricalContract {
 
         return switch (swerveInstance.label()) {
             case "FrontLeftDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 51, false, simulationScalingValue);
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.Canivore, 53, false);
             case "FrontRightDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 52, false, simulationScalingValue);
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.Canivore, 54, false);
             case "RearLeftDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 53, false, simulationScalingValue);
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.Canivore, 52, false);
             case "RearRightDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 54, false, simulationScalingValue);
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.Canivore, 51, false);
             default -> null;
         };
     }
@@ -231,5 +255,9 @@ public class CompetitionContract extends ElectricalContract {
     @Override
     public double getDriveGearRatio() {
         return 6.48; // Documented value for WCP x2i with X3 10t gears.
+    }
+
+    public CameraInfo[] getCameraInfo() {
+        return new CameraInfo[] { /* TODO: No cameras defined yet in 2026 */ };
     }
 }

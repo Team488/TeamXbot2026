@@ -14,7 +14,7 @@ import javax.inject.Inject;
 
 import static edu.wpi.first.units.Units.Inches;
 
-public class Contract2023 extends CompetitionContract {
+public class Contract2023 extends Contract2026 {
 
     protected final double simulationScalingValue = 256.0 * PoseSubsystem.INCHES_IN_A_METER;
 

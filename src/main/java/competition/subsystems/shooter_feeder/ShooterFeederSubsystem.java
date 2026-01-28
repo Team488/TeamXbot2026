@@ -17,7 +17,7 @@ public class ShooterFeederSubsystem  extends BaseSubsystem {
     @Inject
     public ShooterFeederSubsystem(ElectricalContract electricalContract,
                                   XCANMotorController.XCANMotorControllerFactory motorFactory, PropertyFactory pf) {
-
+        pf.setPrefix(this);
         if (electricalContract.isShooterFeederReady()) {
             this.shooterFeederMotor = motorFactory.create(electricalContract.getShooterFeederMotor(),
                     getPrefix(), "ShooterFeederMotorPID");

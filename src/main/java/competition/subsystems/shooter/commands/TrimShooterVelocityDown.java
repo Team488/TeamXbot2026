@@ -7,22 +7,24 @@ import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
-public class ShooterOutputCommand extends BaseCommand {
+public class TrimShooterVelocityDown extends BaseCommand {
     ShooterSubsystem shooter;
-    Logger log = LogManager.getLogger(ShooterOutputCommand.class);
+    Logger log = LogManager.getLogger(TrimShooterVelocityDown.class);
 
     @Inject
-    public ShooterOutputCommand(ShooterSubsystem shooterSubsystem) {
+    public TrimShooterVelocityDown(ShooterSubsystem shooterSubsystem) {
         shooter = shooterSubsystem;
         this.addRequirements(shooter);
     }
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+        shooter.decreaseTargetVelocity();
+        log.info("Decreasing target velocity to " + shooter.targetVelocity.get());
+    }
 
     @Override
-    public void execute() {
-        shooter.runAtTargetVelocity();
-        log.info("Shooting at " + shooter.targetVelocity.get() + " RPM");
+    public boolean isFinished() {
+        return true;
     }
 }
