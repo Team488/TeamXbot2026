@@ -9,6 +9,7 @@ import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.MotorControllerType;
+import xbot.common.injection.electrical_contract.PDHPort;
 import xbot.common.injection.swerve.SwerveInstance;
 
 import static edu.wpi.first.units.Units.Inches;
@@ -34,6 +35,7 @@ public class CompetitionContract extends ElectricalContract {
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 488,
+                PDHPort.PDH00,
                 new CANMotorControllerOutputConfig());
     }
                                           
@@ -45,6 +47,7 @@ public class CompetitionContract extends ElectricalContract {
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 489,
+                PDHPort.PDH00,
                 new CANMotorControllerOutputConfig());
     }
 
@@ -55,6 +58,7 @@ public class CompetitionContract extends ElectricalContract {
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 918,
+                PDHPort.PDH00,
                 new CANMotorControllerOutputConfig());
     }
 
@@ -67,6 +71,7 @@ public class CompetitionContract extends ElectricalContract {
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 676767, // TODO:Change ID
+                PDHPort.PDH00,
                 new CANMotorControllerOutputConfig());
     }
 
@@ -78,6 +83,7 @@ public class CompetitionContract extends ElectricalContract {
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 1000,
+                PDHPort.PDH00,
                 new CANMotorControllerOutputConfig());
     }
 
@@ -103,6 +109,7 @@ public class CompetitionContract extends ElectricalContract {
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             31,
+                            PDHPort.PDH00,
                             new CANMotorControllerOutputConfig());
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
@@ -110,6 +117,7 @@ public class CompetitionContract extends ElectricalContract {
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             29,
+                            PDHPort.PDH00,
                             new CANMotorControllerOutputConfig());
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
@@ -117,6 +125,7 @@ public class CompetitionContract extends ElectricalContract {
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             38,
+                            PDHPort.PDH00,
                             new CANMotorControllerOutputConfig());
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
@@ -124,6 +133,7 @@ public class CompetitionContract extends ElectricalContract {
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             21,
+                            PDHPort.PDH00,
                             new CANMotorControllerOutputConfig());
             default -> null;
         };
@@ -140,6 +150,7 @@ public class CompetitionContract extends ElectricalContract {
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             30,
+                            PDHPort.PDH00,
                             new CANMotorControllerOutputConfig());
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
@@ -147,6 +158,7 @@ public class CompetitionContract extends ElectricalContract {
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             28,
+                            PDHPort.PDH00,
                             new CANMotorControllerOutputConfig());
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
@@ -154,6 +166,7 @@ public class CompetitionContract extends ElectricalContract {
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             39,
+                            PDHPort.PDH00,
                             new CANMotorControllerOutputConfig());
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
@@ -161,6 +174,7 @@ public class CompetitionContract extends ElectricalContract {
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             20,
+                            PDHPort.PDH00,
                             new CANMotorControllerOutputConfig());
             default -> null;
         };
@@ -174,6 +188,7 @@ public class CompetitionContract extends ElectricalContract {
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 23,
+                PDHPort.PDH00,
                 new CANMotorControllerOutputConfig());
     }
 
