@@ -25,8 +25,8 @@ public class Landmarks {
 
     // Blue Depot
     public static Pose2d blueDepotCollectCenter = new Pose2d(1.180, 5.940, Rotation2d.fromDegrees(180));
-    public static Pose2d blueDepotWallSide = new Pose2d(0.460, 6.980, Rotation2d.fromDegrees(270));
-    public static Pose2d blueDepotTowerSide = new Pose2d(0.460, 4.950, Rotation2d.fromDegrees(90));
+    public static Pose2d blueDepotWallSide = new Pose2d(0.44, 6.980, Rotation2d.fromDegrees(270));
+    public static Pose2d blueDepotTowerSide = new Pose2d(0.44, 4.950, Rotation2d.fromDegrees(270));
 
     // Blue Outpost
     public static Pose2d blueOutpost = new Pose2d(0.470, 0.650, Rotation2d.fromDegrees(180));
