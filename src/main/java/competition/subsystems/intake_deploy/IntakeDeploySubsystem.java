@@ -18,13 +18,13 @@ public class IntakeDeploySubsystem extends BaseSubsystem {
 
     @Inject
     public IntakeDeploySubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
-              ElectricalContract electricalContract, XCANMotorController motor, PropertyFactory propertyFactory,
+              ElectricalContract electricalContract, PropertyFactory propertyFactory,
                                  XAbsoluteEncoder.XAbsoluteEncoderFactory xAbsoluteEncoderFactory) {
         propertyFactory.setPrefix(this);
         if (electricalContract.isIntakeDeployReady()) {
             this.intakeDeployMotor = xcanMotorControllerFactory.create(electricalContract.getIntakeDeployMotor(),
                     getPrefix(),"intakeDeploy");
-            this.registerDataFrameRefreshable(motor);
+            this.registerDataFrameRefreshable(this.intakeDeployMotor);
         } else {
             this.intakeDeployMotor = null;
         }
@@ -32,6 +32,7 @@ public class IntakeDeploySubsystem extends BaseSubsystem {
         if (electricalContract.isIntakeDeployAbsoluteEncoderReady()) {
             this.intakeDeployAbsoluteEncoder = xAbsoluteEncoderFactory.create(electricalContract.getIntakeDeployAbsoluteEncoderMotor(),
                     getPrefix());
+            registerDataFrameRefreshable(intakeDeployAbsoluteEncoder);
         } else {
             this.intakeDeployAbsoluteEncoder = null;
         }
@@ -56,10 +57,6 @@ public class IntakeDeploySubsystem extends BaseSubsystem {
     public void periodic() {
         if (intakeDeployMotor != null) {
             intakeDeployMotor.periodic();
-
-        }
-        if (intakeDeployAbsoluteEncoder != null) {
-            intakeDeployAbsoluteEncoder.periodic();
         }
     }
 }
