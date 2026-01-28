@@ -1,0 +1,19 @@
+{
+  "name": "Xbot 2026",
+  "model": "model.glb",
+  "rotations": [
+    {
+      "axis": "x",
+      "degrees": 90
+    },
+    {
+      "axis": "x",
+      "degrees": 0
+    }
+  ],
+  "position": [
+    0,
+    0,
+    0
+  ]
+}
