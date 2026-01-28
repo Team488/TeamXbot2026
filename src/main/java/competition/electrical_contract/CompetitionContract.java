@@ -171,7 +171,7 @@ public class CompetitionContract extends ElectricalContract {
     }
 
     @Override
-    public boolean isFuelIntakeMotorReady() { return true; }
+    public boolean isFuelIntakeMotorReady() { return false; }
 
     public CANMotorControllerInfo getFuelIntakeMotor() {
         return new CANMotorControllerInfo("FuelIntakeMotor",

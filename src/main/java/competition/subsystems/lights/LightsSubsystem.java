@@ -9,11 +9,13 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANLightController;
+import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANLightControllerOutputConfig;
 import xbot.common.injection.electrical_contract.LEDStripType;
 import xbot.common.injection.electrical_contract.LightControllerType;
+import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -27,9 +29,18 @@ public class LightsSubsystem extends BaseSubsystem {
 
     @Inject
     public LightsSubsystem(XCANLightController.XCANLightControllerFactory lightsFactory,
-                           ElectricalContract electricalContract) {
-        lights = lightsFactory.create(electricalContract.getLightControlerInfo()) ;
+                           ElectricalContract electricalContract, PropertyFactory propertyFactory) {
+
+        propertyFactory.setPrefix(this);
+        if (electricalContract.isLightsReady()) {
+            this.lights = lightsFactory.create(
+                    electricalContract.getLightControlerInfo());
+        } else {
+            this.lights = null;
+        }
     }
+
+
 
     @Override
     public void periodic() {
