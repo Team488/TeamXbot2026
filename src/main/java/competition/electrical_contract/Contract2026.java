@@ -71,8 +71,16 @@ public class Contract2026 extends ElectricalContract {
         return new CANMotorControllerInfo("IntakeDeployMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
-                676767, // TODO:Change ID
+                679178, // TODO:Change ID
                 new CANMotorControllerOutputConfig());
+    }
+
+    public boolean isIntakeDeployAbsoluteEncoderReady() { return false; }
+
+    @Override
+    public DeviceInfo getIntakeDeployAbsoluteEncoderMotor() {
+        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady",100);
+
     }
 
     @Override

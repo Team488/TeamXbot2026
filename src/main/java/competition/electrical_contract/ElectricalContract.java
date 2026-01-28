@@ -1,5 +1,6 @@
 package competition.electrical_contract;
 
+import com.revrobotics.AbsoluteEncoder;
 import edu.wpi.first.math.geometry.Translation2d;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
@@ -29,6 +30,10 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public abstract boolean isIntakeDeployReady();
 
     public abstract CANMotorControllerInfo getIntakeDeployMotor();
+
+    public abstract boolean isIntakeDeployAbsoluteEncoderReady();
+
+    public abstract DeviceInfo getIntakeDeployAbsoluteEncoderMotor();
 
     public abstract boolean isShooterReady();
 
