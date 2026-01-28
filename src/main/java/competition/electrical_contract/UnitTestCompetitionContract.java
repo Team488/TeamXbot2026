@@ -19,4 +19,9 @@ public class UnitTestCompetitionContract extends Contract2026 {
     public boolean isRightShooterReady() {
         return true;
     }
+
+    @Override
+    public boolean isIntakeDeployReady() {
+        return true;
+    }
 }

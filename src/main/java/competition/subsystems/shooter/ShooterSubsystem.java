@@ -18,7 +18,6 @@ public class ShooterSubsystem extends BaseSubsystem {
     public final XCANMotorController middleShooterMotor;
     public final XCANMotorController rightShooterMotor;
 
-    public DoubleProperty outputPower;
     public DoubleProperty targetVelocity;
 
     @Inject
@@ -61,10 +60,8 @@ public class ShooterSubsystem extends BaseSubsystem {
             this.rightShooterMotor = null;
         }
 
-        this.outputPower = propertyFactory.createPersistentProperty("Output Power", 0.1);
         this.targetVelocity = propertyFactory.createPersistentProperty("Target Velocity", 3000);
     }
-
 
     public void output() {
         if (leftShooterMotor != null) {
@@ -96,10 +93,12 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     public void increaseTargetVelocity() {
         targetVelocity.set(targetVelocity.get() + 25);
+        shooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
     }
 
     public void decreaseTargetVelocity() {
         targetVelocity.set(targetVelocity.get() - 25);
+        shooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
     }
 
     public void periodic() {
