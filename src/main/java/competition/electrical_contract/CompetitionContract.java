@@ -182,6 +182,8 @@ public class CompetitionContract extends ElectricalContract {
     }
 
     @Override
+    public boolean isLightsReady() { return false; }
+
     public CANLightControllerInfo getLightControlerInfo() {
         return new CANLightControllerInfo("Lights",
                 LightControllerType.Candle, CANBusId.DefaultCanivore,
