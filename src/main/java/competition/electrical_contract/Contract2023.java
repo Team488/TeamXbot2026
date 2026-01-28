@@ -162,4 +162,3 @@ public class Contract2023 extends CompetitionContract {
         return 6.48; // Documented value for WCP x2i with X3 10t gears.
     }
 }
-
