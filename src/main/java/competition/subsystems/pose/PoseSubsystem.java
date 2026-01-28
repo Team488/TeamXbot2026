@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 // import org.kobe.xbot.JClient.XTablesClient;
 // import org.kobe.xbot.Utilities.Entities.BatchedPushRequests;
-import xbot.common.controls.sensors.XGyro;
 import xbot.common.controls.sensors.XGyro.XGyroFactory;
 import xbot.common.math.WrappedRotation2d;
 // import xbot.common.math.estimator.DeadwheelPoseEstimator;
@@ -48,7 +47,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
     private final DriveSubsystem drive;
     private final AprilTagVisionSubsystemExtended aprilTagVisionSubsystem;
     private final BooleanProperty useVisionAssistedPose;
-    private final BooleanProperty useDeadwheelAssistedPose;
+    // private final BooleanProperty useDeadwheelAssistedPose;
     private final BooleanProperty continueUpdatingSwerveTelemetry;
     private final BooleanProperty reportCameraPoses;
     // private final CoprocessorCommunicationSubsystem coprocessorComms;  // no coprocessor currently
@@ -82,7 +81,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
         propManager.setPrefix(this);
         propManager.setDefaultLevel(Property.PropertyLevel.Important);
         useVisionAssistedPose = propManager.createPersistentProperty("UseVisionAssistedPose", true);
-        useDeadwheelAssistedPose = propManager.createPersistentProperty("useDeadwheelAssistedPose", false);
+        // useDeadwheelAssistedPose = propManager.createPersistentProperty("useDeadwheelAssistedPose", false);
         continueUpdatingSwerveTelemetry = propManager.createPersistentProperty("continueUpdatingSwerveTelemetry", true);
         reportCameraPoses = propManager.createPersistentProperty("ReportCameraPoses", false);
     }
@@ -119,7 +118,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
     }
 
     private boolean shouldAlsoUpdateFullSwerve() {
-        return this.useDeadwheelAssistedPose.get() && this.continueUpdatingSwerveTelemetry.get();
+        return /* this.useDeadwheelAssistedPose.get() && */ this.continueUpdatingSwerveTelemetry.get();
     }
 
     private void updateOdometryWithVision() {
