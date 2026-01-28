@@ -3,6 +3,7 @@ package competition.injection.components;
 import competition.operator_interface.OperatorCommandMap;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.SubsystemDefaultCommandMap;
+import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.lights.LightsSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import xbot.common.injection.components.BaseComponent;
@@ -29,4 +30,6 @@ public abstract class BaseRobotComponent extends BaseComponent {
     public abstract GameField gameField();
 
     public abstract LightsSubsystem lightsSubsystem();
+
+    public abstract IntakeDeploySubsystem intakeDeploySubsystem();
 }
