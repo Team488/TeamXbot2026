@@ -1,22 +1,22 @@
 package competition.simulation.intake;
 
-
 import competition.subsystems.fuel_intake.IntakeSubsystem;
 import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.drivesims.AbstractDriveTrainSimulation;
+import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
 
 import static edu.wpi.first.units.Units.Inches;
 
 public class IntakeSimulator {
 
     final IntakeSubsystem intake;
-    public final IntakeSimulation simulation;
+    final IntakeSimulation simulation;
 
-    // Useful methods
-    // obtainGamePieceFromIntake
+    final MockCANMotorController intakeMotor;
 
     public IntakeSimulator(IntakeSubsystem intake, AbstractDriveTrainSimulation driveTrainSim) {
         this.intake = intake;
+        this.intakeMotor = (MockCANMotorController) intake.intakeMotor;
         this.simulation = IntakeSimulation.OverTheBumperIntake(
                 "Fuel",
                 driveTrainSim,
@@ -28,8 +28,12 @@ public class IntakeSimulator {
     }
 
     public boolean isIntaking() {
-        // Deployed + intaking motor spinning
-        return true;
+        // TODO: Make sure that we have deployed our intake, too.
+        return intakeMotor.getPower() > 0;
+    }
+
+    public boolean getPieceFromIntake() {
+        return simulation.obtainGamePieceFromIntake();
     }
 
     public void update() {

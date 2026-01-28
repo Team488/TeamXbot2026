@@ -1,5 +1,6 @@
 package competition.simulation.shooter;
 
+import competition.simulation.intake.IntakeSimulator;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
@@ -53,7 +54,7 @@ public class ShooterSimulator {
         return shooterMotor.getPower() > 0;
     }
 
-    public void update(Arena2026Rebuilt arena, IntakeSimulation intake) {
+    public void update(Arena2026Rebuilt arena, IntakeSimulator intake) {
         if (!isShooting()) {
             return;
         }
@@ -61,7 +62,7 @@ public class ShooterSimulator {
         // TODO: Add a count for # of fuel stored in robot so we don't go crazy
         // TODO: Extract constants later
         if (random.nextDouble() < ballsPerSecond.get() / 50.0) {
-            if (!intake.obtainGamePieceFromIntake()) {
+            if (!intake.getPieceFromIntake()) {
                 return;
             }
 

@@ -109,7 +109,7 @@ public class MapleSimulator implements BaseSimulator {
     public void update() {
         this.updateDriveSimulation();
         intakeSimulator.update();
-        shooterSimulator.update(this.arena, intakeSimulator.simulation);
+        shooterSimulator.update(this.arena, intakeSimulator);
     }
 
     protected void updateDriveSimulation() {
