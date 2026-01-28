@@ -35,8 +35,8 @@ jobs:
         gradleOptions: '-Xmx3072m'
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml'
-        tasks: 'build'
-        options: '--warn'
+        tasks: ':build'
+        options: ''
       env:
         GRADLE_USER_HOME: $(GRADLE_USER_HOME)
     - task: PublishCodeCoverageResults@2

@@ -14,6 +14,7 @@ import xbot.common.injection.swerve.RearLeftDrive;
 import xbot.common.injection.swerve.RearRightDrive;
 import xbot.common.injection.swerve.SwerveComponent;
 import xbot.common.injection.swerve.SwerveInstance;
+import xbot.common.subsystems.pose.GameField;
 import xbot.common.subsystems.vision.AprilTagVisionSubsystem;
 
 import javax.inject.Singleton;
@@ -55,7 +56,13 @@ public abstract class CommonModule {
     @Provides
     @Singleton
     public static AprilTagFieldLayout fieldLayout() {
-        return AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+        return AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
+    }
+
+    @Provides
+    @Singleton
+    public static GameField.Symmetry fieldSymmetry() {
+        return GameField.Symmetry.Rotational;
     }
 
     @Binds
