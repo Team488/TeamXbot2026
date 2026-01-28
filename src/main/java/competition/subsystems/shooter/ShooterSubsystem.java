@@ -63,20 +63,6 @@ public class ShooterSubsystem extends BaseSubsystem {
         this.targetVelocity = propertyFactory.createPersistentProperty("Target Velocity", 3000);
     }
 
-    public void output() {
-        if (leftShooterMotor != null) {
-            leftShooterMotor.setPower(outputPower.get());
-        }
-
-        if (middleShooterMotor != null) {
-            middleShooterMotor.setPower(outputPower.get());
-        }
-
-        if (rightShooterMotor != null) {
-            rightShooterMotor.setPower(outputPower.get());
-        }
-    }
-
     public void stop() {
         if (leftShooterMotor != null) {
             leftShooterMotor.setPower(0);
@@ -93,12 +79,29 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     public void increaseTargetVelocity() {
         targetVelocity.set(targetVelocity.get() + 25);
-        shooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        leftShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        middleShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        rightShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
     }
 
     public void decreaseTargetVelocity() {
         targetVelocity.set(targetVelocity.get() - 25);
-        shooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        leftShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        middleShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        rightShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+    }
+
+    public void setTargetVelocity(double velocity) {
+        targetVelocity.set(velocity);
+        leftShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        middleShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        rightShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+    }
+
+    public void runAtTargetVelocity() {
+        leftShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        middleShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        rightShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
     }
 
     public void periodic() {
