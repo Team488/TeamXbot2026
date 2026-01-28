@@ -1,6 +1,5 @@
 package competition.subsystems.intake_deploy;
 
-import competition.subsystems.shooter.ShooterSubsystem;
 import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
@@ -11,8 +10,8 @@ public class IntakeDeployStopCommand extends BaseCommand {
 
     @Inject
     public IntakeDeployStopCommand(IntakeDeploySubsystem intakeDeploySubsystem) {
-            intakeDeploy = intakeDeploySubsystem;
-            this.addRequirements(intakeDeploy);
+        intakeDeploy = intakeDeploySubsystem;
+        this.addRequirements(intakeDeploySubsystem);
     }
 
     @Override

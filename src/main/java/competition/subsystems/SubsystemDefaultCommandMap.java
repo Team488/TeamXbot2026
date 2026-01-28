@@ -55,8 +55,8 @@ public class SubsystemDefaultCommandMap {
         shooterFeeder.setDefaultCommand(command);
     }
 
-    @Inject
-    public void intakeDeployStopCommand(IntakeSubsystem intakeSubsystem, IntakeDeployStopCommand command) {
-        intakeSubsystem.setDefaultCommand(command);
-    }
+//    @Inject
+//    public void intakeDeployStopCommand(IntakeSubsystem intakeSubsystem, IntakeDeployStopCommand command) {
+//        intakeSubsystem.setDefaultCommand(command);
+//    }
 }
