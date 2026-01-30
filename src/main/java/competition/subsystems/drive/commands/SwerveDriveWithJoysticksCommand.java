@@ -108,10 +108,6 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         double rotateLeftIntent = MathUtils.deadband(oi.driverGamepad.getLeftTrigger(), 0.05);
         double rotateRightIntent = MathUtils.deadband(oi.driverGamepad.getRightTrigger(), 0.05);
 
-        if (xGyro != null && xGyro.isBroken()){
-            rotateRightIntent = 0;
-        }
-
         // Merge the two trigger values together in case of conflicts
         // Rotate left = positive, right = negative
         return rotateLeftIntent - rotateRightIntent;
@@ -122,6 +118,10 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         // Apparently, we need to invert the x input here as it has been inverted for other commands already
         // And of course, we must rotate -90 (similar to how we got raw translation) for default alignment
         XYPair joystickInput = new XYPair(-oi.driverGamepad.getRightVector().getX(), oi.driverGamepad.getRightVector().getY()).rotate(-90);
+
+        if (xGyro != null && xGyro.isBroken()){
+            joystickInput = new XYPair(0,0);
+        }
 
         SwerveSuggestedRotation suggested = advisor.getSuggestedRotationValue(joystickInput, triggerRotateIntent);
         return processSuggestedRotationValueIntoPower(suggested);
