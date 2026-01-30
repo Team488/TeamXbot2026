@@ -34,7 +34,7 @@ import java.util.ArrayList;
 
         @Override
         public void initialize() {
-            Pose2d depotSideClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbMiddleDepotSide);
+            Pose2d depotSideClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbMiddleOutpostSide);
 
             ArrayList<XbotSwervePoint> swervePoints = new ArrayList<>();
 
