@@ -45,6 +45,7 @@ public class LightsSubsystem extends BaseSubsystem {
     @Override
     public void periodic() {
         super.periodic();
-        lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
-    }
+        if (lights != null) {
+            lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
+        }
 }
