@@ -17,6 +17,6 @@ public class IntakeDeployStopCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        intakeDeploy.stop();
+        intakeDeploy.setTargetValue(intakeDeploy.getCurrentValue());
     }
 }

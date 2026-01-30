@@ -1,6 +1,7 @@
 package competition.subsystems.intake_deploy;
 
 import competition.electrical_contract.ElectricalContract;
+import edu.wpi.first.units.measure.Angle;
 import xbot.common.command.BaseSetpointSubsystem;
 
 import xbot.common.controls.actuators.XCANMotorController;
@@ -10,12 +11,15 @@ import xbot.common.controls.sensors.XAbsoluteEncoder;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+
 @Singleton
-public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Double,Double>  {
+public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  {
     public final XCANMotorController intakeDeployMotor;
     public final XAbsoluteEncoder intakeDeployAbsoluteEncoder;
     public DoubleProperty retractPower;
     public DoubleProperty extendPower;
+
+    private Angle angleRotation;
 
     @Inject
     public IntakeDeploySubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
@@ -43,51 +47,36 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Double,Double> 
         this.extendPower = propertyFactory.createPersistentProperty("extendPower", 0.1);
     }
 
-    public void retract() {
-        intakeDeployMotor.setPower(retractPower.get());
+
+
+    @Override
+    public Angle getCurrentValue() {
+        return intakeDeployAbsoluteEncoder.getAbsolutePosition();
     }
 
-    public void extend() {
-        intakeDeployMotor.setPower(extendPower.get());
-    }
 
-    public void stop() {
-        intakeDeployMotor.setPower(0);
-    }
-
-    public void periodic() {
-        if (intakeDeployMotor != null) {
-            intakeDeployMotor.periodic();
-        }
+    @Override
+    public Angle getTargetValue() {
+        return angleRotation;
     }
 
     @Override
-    public Double getCurrentValue() {
-        return null;
-    }
-
-    @Override
-    public Double getTargetValue() {
-        return null;
-    }
-
-    @Override
-    public void setTargetValue(Double value) {
-
+    public void setTargetValue(Angle value) {
+        angleRotation = value;
     }
 
     @Override
     public void setPower(Double power) {
-
+        intakeDeployMotor.setPower(power);
     }
 
     @Override
     public boolean isCalibrated() {
-        return false;
+        return true;
     }
 
     @Override
-    protected boolean areTwoTargetsEquivalent(Double target1, Double target2) {
-        return false;
+    protected boolean areTwoTargetsEquivalent(Angle target1, Angle target2) {
+        return target1.isEquivalent(target2);
     }
 }

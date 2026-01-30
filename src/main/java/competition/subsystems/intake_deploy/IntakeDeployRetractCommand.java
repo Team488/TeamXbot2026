@@ -6,6 +6,8 @@ import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
+import static edu.wpi.first.units.Units.Degree;
+
 public class IntakeDeployRetractCommand extends BaseCommand {
 
     IntakeDeploySubsystem intakeDeploy;
@@ -18,6 +20,6 @@ public class IntakeDeployRetractCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        intakeDeploy.retract();
+        Degree.of(90);
     }
 }

@@ -4,6 +4,8 @@ import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
+import static edu.wpi.first.units.Units.Degree;
+
 public class IntakeDeployExtendCommand extends BaseCommand {
 
     IntakeDeploySubsystem intakeDeploy;
@@ -16,6 +18,6 @@ public class IntakeDeployExtendCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        intakeDeploy.extend();
+        Degree.of(90);
     }
 }
