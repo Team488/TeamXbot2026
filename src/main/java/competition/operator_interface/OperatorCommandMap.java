@@ -3,7 +3,10 @@ package competition.operator_interface;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
+import competition.subsystems.drive.commands.DepotSideClimbAutoCommand;
+import competition.subsystems.drive.commands.OutpostSideClimbAutoCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
@@ -19,7 +22,8 @@ import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 public class OperatorCommandMap {
 
     @Inject
-    public OperatorCommandMap() {}
+    public OperatorCommandMap() {
+    }
 
     // Example for setting up a command to fire when a button is pressed:
     @Inject
@@ -46,5 +50,18 @@ public class OperatorCommandMap {
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
         operatorInterface.driverGamepad.getPovIfAvailable(90).onTrue(changeActiveModule);
         operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(typicalSwerveDrive);
+
+
+    }
+
+    @Inject
+    public void setupSimulatorCommands(
+            ResetSimulatedPoseCommand resetSimulatorPositionCommand,
+            DepotSideClimbAutoCommand depotSideClimbAutoCommand,
+            OutpostSideClimbAutoCommand outpostSideClimbAutoCommand
+    ) {
+        resetSimulatorPositionCommand.includeOnSmartDashboard("Reset Simulator Position");
+        depotSideClimbAutoCommand.includeOnSmartDashboard("Depot climb");
+        outpostSideClimbAutoCommand.includeOnSmartDashboard("Outpost climb");
     }
 }
