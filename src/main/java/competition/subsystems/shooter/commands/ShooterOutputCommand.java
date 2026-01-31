@@ -8,8 +8,8 @@ import xbot.common.command.BaseCommand;
 import javax.inject.Inject;
 
 public class ShooterOutputCommand extends BaseCommand {
-    ShooterSubsystem shooter;
-    Logger log = LogManager.getLogger(ShooterOutputCommand.class);
+    final ShooterSubsystem shooter;
+    final Logger log = LogManager.getLogger(ShooterOutputCommand.class);
 
     @Inject
     public ShooterOutputCommand(ShooterSubsystem shooterSubsystem) {

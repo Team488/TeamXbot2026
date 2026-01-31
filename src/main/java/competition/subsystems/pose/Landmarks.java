@@ -2,7 +2,6 @@ package competition.subsystems.pose;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 import javax.inject.Singleton;
 
