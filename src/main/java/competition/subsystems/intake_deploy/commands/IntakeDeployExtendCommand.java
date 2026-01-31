@@ -6,8 +6,7 @@ import xbot.common.command.BaseCommand;
 import javax.inject.Inject;
 
 public class IntakeDeployExtendCommand extends BaseCommand {
-
-    IntakeDeploySubsystem intakeDeploy;
+    final IntakeDeploySubsystem intakeDeploy;
 
     @Inject
     public IntakeDeployExtendCommand(IntakeDeploySubsystem intakeDeploySubsystem) {

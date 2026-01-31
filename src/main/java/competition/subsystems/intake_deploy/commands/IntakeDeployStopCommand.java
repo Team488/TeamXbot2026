@@ -7,7 +7,7 @@ import javax.inject.Inject;
 
 
 public class IntakeDeployStopCommand extends BaseCommand {
-    IntakeDeploySubsystem intakeDeploy;
+    final IntakeDeploySubsystem intakeDeploy;
 
     @Inject
     public IntakeDeployStopCommand(IntakeDeploySubsystem intakeDeploySubsystem) {
