@@ -98,10 +98,14 @@ public class PoseSubsystem extends BasePoseSubsystem {
         onlyWheelsGyroSwerveOdometry.update(
                 this.getCurrentHeadingGyroOnly(),
                 getSwerveModulePositions());
+        fullSwerveOdometry.update(
+                this.getCurrentHeadingGyroOnly(),
+                getSwerveModulePositions());
 
         this.updateOdometryWithVision();
 
         aKitLog.record("WheelsOnlyEstimate", onlyWheelsGyroSwerveOdometry.getEstimatedPosition());
+        aKitLog.record("FullSwerveEstimate", fullSwerveOdometry.getEstimatedPosition());
 
         // Report poses
         Pose2d swerveOnlyPosition = new Pose2d(
@@ -112,12 +116,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
         Pose2d fullSwervePosition = new Pose2d(
                 fullSwerveOdometry.getEstimatedPosition().getTranslation(),
                 fullSwerveOdometry.getEstimatedPosition().getRotation());
-        aKitLog.record("SwerveVisionEnhancedPose", fullSwervePosition);
-
-        Pose2d visionEnhancedPosition = new Pose2d(
-                this.getPrimaryPoseEstimator().getEstimatedPosition().getTranslation(),
-                this.getPrimaryPoseEstimator().getEstimatedPosition().getRotation());
-        aKitLog.record("VisionEnhancedPose", visionEnhancedPosition);
+        aKitLog.record("VisionEnhancedPose", fullSwervePosition);
 
         Pose2d robotPose = this.useVisionAssistedPose.get() && !preferOdometryToVision
                 ? getPrimaryPoseEstimator().getEstimatedPosition()
