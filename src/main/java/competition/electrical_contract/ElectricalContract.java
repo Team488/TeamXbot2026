@@ -23,6 +23,18 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance);
 
+    public abstract boolean isLeftShooterReady();
+
+    public abstract CANMotorControllerInfo getLeftShooterMotor();
+
+    public abstract boolean isMiddleShooterReady();
+
+    public abstract CANMotorControllerInfo getMiddleShooterMotor();
+
+    public abstract boolean isRightShooterReady();
+
+    public abstract CANMotorControllerInfo getRightShooterMotor();
+
     public abstract boolean isHoodReady();
 
     public abstract CANMotorControllerInfo getHoodMotor();
@@ -34,10 +46,6 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public abstract boolean isIntakeDeployAbsoluteEncoderReady();
 
     public abstract DeviceInfo getIntakeDeployAbsoluteEncoderMotor();
-
-    public abstract boolean isShooterReady();
-
-    public abstract CANMotorControllerInfo getShooterMotor();
 
     public abstract boolean isClimberReady();
 
