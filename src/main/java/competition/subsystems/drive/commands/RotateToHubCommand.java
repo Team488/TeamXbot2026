@@ -6,10 +6,12 @@ import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.Units;
 import xbot.common.command.BaseCommand;
+import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.Property;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
+import java.util.concurrent.locks.Lock;
 
 public class RotateToHubCommand extends BaseCommand {
 
@@ -18,6 +20,7 @@ public class RotateToHubCommand extends BaseCommand {
     final PropertyFactory pf;
 
     private Pose2d targetPose;
+    private final BooleanProperty AutoAimWhenNotInZone;
 
     @Inject
     public RotateToHubCommand(DriveSubsystem drive, PoseSubsystem pose,
@@ -27,6 +30,7 @@ public class RotateToHubCommand extends BaseCommand {
         this.pf = pf;
         pf.setPrefix(this);
         pf.setDefaultLevel(Property.PropertyLevel.Important);
+        AutoAimWhenNotInZone = pf.createPersistentProperty("AutoAimWhenNotInZone", true);
     }
 
     @Override
@@ -37,13 +41,16 @@ public class RotateToHubCommand extends BaseCommand {
     @Override
     public void execute() {
         drive.setLookAtPointTarget(targetPose.getTranslation());
-
         if (targetPose == Landmarks.blueHub) {
             if (pose.getCurrentPose2d().getX() <= Landmarks.blueAllianceToTrench.in(Units.Meters)) {
+                drive.setLookAtPointTargetActive(true);
+            } else if (AutoAimWhenNotInZone.get()) {
                 drive.setLookAtPointTargetActive(true);
             }
         } else {
             if (pose.getCurrentPose2d().getX() >= (Landmarks.fieldLength.minus(Landmarks.blueAllianceToTrench)).in(Units.Meters)) {
+                drive.setLookAtPointTargetActive(true);
+            } else if (AutoAimWhenNotInZone.get()) {
                 drive.setLookAtPointTargetActive(true);
             }
         }
