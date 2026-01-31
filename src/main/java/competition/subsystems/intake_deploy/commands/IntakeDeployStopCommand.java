@@ -5,14 +5,13 @@ import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
-
 public class IntakeDeployStopCommand extends BaseCommand {
     final IntakeDeploySubsystem intakeDeploy;
 
     @Inject
-    public IntakeDeployStopCommand(IntakeDeploySubsystem intakeDeploySubsystem) {
-            intakeDeploy = intakeDeploySubsystem;
-            this.addRequirements(intakeDeploy);
+    public IntakeDeployStopCommand(IntakeDeploySubsystem intakeDeploy) {
+        this.intakeDeploy = intakeDeploy;
+        this.addRequirements(intakeDeploy);
     }
 
     @Override

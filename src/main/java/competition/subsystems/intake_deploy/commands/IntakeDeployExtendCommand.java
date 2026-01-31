@@ -9,8 +9,8 @@ public class IntakeDeployExtendCommand extends BaseCommand {
     final IntakeDeploySubsystem intakeDeploy;
 
     @Inject
-    public IntakeDeployExtendCommand(IntakeDeploySubsystem intakeDeploySubsystem) {
-        intakeDeploy = intakeDeploySubsystem;
+    public IntakeDeployExtendCommand(IntakeDeploySubsystem intakeDeploy) {
+        this.intakeDeploy = intakeDeploy;
         this.addRequirements(intakeDeploy);
     }
 

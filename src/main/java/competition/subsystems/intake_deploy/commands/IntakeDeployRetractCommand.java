@@ -9,8 +9,8 @@ public class IntakeDeployRetractCommand extends BaseCommand {
     final IntakeDeploySubsystem intakeDeploy;
 
     @Inject
-    public IntakeDeployRetractCommand(IntakeDeploySubsystem intakeDeploySubsystem) {
-        intakeDeploy = intakeDeploySubsystem;
+    public IntakeDeployRetractCommand(IntakeDeploySubsystem intakeDeploy) {
+        this.intakeDeploy = intakeDeploy;
         this.addRequirements(intakeDeploy);
     }
 
