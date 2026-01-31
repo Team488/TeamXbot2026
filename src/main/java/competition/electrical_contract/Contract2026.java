@@ -213,6 +213,8 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
+    public boolean isLightsReady() { return false; }
+
     public CANLightControllerInfo getLightControlerInfo() {
         return new CANLightControllerInfo("Lights",
                 LightControllerType.Candle, CANBusId.Canivore,
