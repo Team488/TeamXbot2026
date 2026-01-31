@@ -17,6 +17,7 @@ import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.electrical_contract.PDHPort;
 import xbot.common.injection.swerve.SwerveInstance;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 
 public class Contract2026 extends ElectricalContract {
@@ -121,7 +122,7 @@ public class Contract2026 extends ElectricalContract {
                             CANBusId.Canivore,
                             30,
                             PDHPort.PDH00, // TODO: Change port
-                            new CANMotorControllerOutputConfig());
+                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -129,7 +130,7 @@ public class Contract2026 extends ElectricalContract {
                             CANBusId.Canivore,
                             38,
                             PDHPort.PDH00, // TODO: Change port
-                            new CANMotorControllerOutputConfig());
+                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -137,7 +138,7 @@ public class Contract2026 extends ElectricalContract {
                             CANBusId.Canivore,
                             28,
                             PDHPort.PDH00, // TODO: Change port
-                            new CANMotorControllerOutputConfig());
+                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -145,7 +146,7 @@ public class Contract2026 extends ElectricalContract {
                             CANBusId.Canivore,
                             20,
                             PDHPort.PDH00, // TODO: Change port
-                            new CANMotorControllerOutputConfig());
+                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
             default -> null;
         };
     }
@@ -163,7 +164,8 @@ public class Contract2026 extends ElectricalContract {
                             31,
                             PDHPort.PDH00, // TODO: Change port
                             new CANMotorControllerOutputConfig()
-                                    .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
+                                    .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                                            .withStatorCurrentLimit(Amps.of(40)));
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -172,7 +174,8 @@ public class Contract2026 extends ElectricalContract {
                             39,
                             PDHPort.PDH00, // TODO: Change port
                             new CANMotorControllerOutputConfig()
-                                    .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
+                                    .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                                    .withStatorCurrentLimit(Amps.of(40)));
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -181,7 +184,8 @@ public class Contract2026 extends ElectricalContract {
                             29,
                             PDHPort.PDH00, // TODO: Change port
                             new CANMotorControllerOutputConfig()
-                                    .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
+                                    .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                                    .withStatorCurrentLimit(Amps.of(40)));
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -190,7 +194,8 @@ public class Contract2026 extends ElectricalContract {
                             21,
                             PDHPort.PDH00, // TODO: Change port
                             new CANMotorControllerOutputConfig()
-                                    .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
+                                    .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                                    .withStatorCurrentLimit(Amps.of(40)));
             default -> null;
         };
     }
@@ -235,12 +240,11 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance) {
-        // Update these XYPairs with the swerve module locations!!! (In inches)
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" -> new Translation2d(Inches.of(15), Inches.of(15));
-            case "FrontRightDrive" -> new Translation2d(Inches.of(15), Inches.of(-15));
-            case "RearLeftDrive" -> new Translation2d(Inches.of(-15), Inches.of(15));
-            case "RearRightDrive" -> new Translation2d(Inches.of(-15), Inches.of(-15));
+            case "FrontLeftDrive" -> new Translation2d(Inches.of(11), Inches.of(10));
+            case "FrontRightDrive" -> new Translation2d(Inches.of(11), Inches.of(-10));
+            case "RearLeftDrive" -> new Translation2d(Inches.of(-11), Inches.of(10));
+            case "RearRightDrive" -> new Translation2d(Inches.of(-11), Inches.of(-10));
             default -> new Translation2d(0, 0);
         };
     }

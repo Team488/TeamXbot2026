@@ -12,6 +12,7 @@ import xbot.common.injection.swerve.SwerveInstance;
 
 import javax.inject.Inject;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 
 public class Contract2023 extends Contract2026 {
@@ -53,7 +54,7 @@ public class Contract2023 extends Contract2026 {
                             CANBusId.RIO,
                             31,
                             PDHPort.PDH00,
-                            new CANMotorControllerOutputConfig());
+                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -61,7 +62,7 @@ public class Contract2023 extends Contract2026 {
                             CANBusId.RIO,
                             29,
                             PDHPort.PDH00,
-                            new CANMotorControllerOutputConfig());
+                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -69,7 +70,7 @@ public class Contract2023 extends Contract2026 {
                             CANBusId.RIO,
                             38,
                             PDHPort.PDH00,
-                            new CANMotorControllerOutputConfig());
+                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -77,7 +78,7 @@ public class Contract2023 extends Contract2026 {
                             CANBusId.RIO,
                             21,
                             PDHPort.PDH00,
-                            new CANMotorControllerOutputConfig());
+                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
             default -> null;
         };
     }
@@ -94,7 +95,7 @@ public class Contract2023 extends Contract2026 {
                             CANBusId.RIO,
                             30,
                             PDHPort.PDH00,
-                            new CANMotorControllerOutputConfig());
+                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(40)));
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -102,7 +103,7 @@ public class Contract2023 extends Contract2026 {
                             CANBusId.RIO,
                             28,
                             PDHPort.PDH00,
-                            new CANMotorControllerOutputConfig());
+                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(40)));
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -110,7 +111,7 @@ public class Contract2023 extends Contract2026 {
                             CANBusId.RIO,
                             39,
                             PDHPort.PDH00,
-                            new CANMotorControllerOutputConfig());
+                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(40)));
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -118,7 +119,7 @@ public class Contract2023 extends Contract2026 {
                             CANBusId.RIO,
                             20,
                             PDHPort.PDH00,
-                            new CANMotorControllerOutputConfig());
+                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(40)));
             default -> null;
         };
     }
