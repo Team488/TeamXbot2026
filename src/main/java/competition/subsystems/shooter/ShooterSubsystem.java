@@ -51,7 +51,6 @@ public class ShooterSubsystem extends BaseSubsystem {
         if (eletricalContract.isLeftShooterReady()) {
             this.leftShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getLeftShooterMotor(),
                     getPrefix(), "ShooterMotor", defaultPIDProperties);
-            this.leftShooterMotor.setPidDirectly(0, 0, 0, 0, 0, 1);
             this.registerDataFrameRefreshable(leftShooterMotor);
         } else {
             this.leftShooterMotor = null;
