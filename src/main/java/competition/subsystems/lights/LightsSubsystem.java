@@ -17,9 +17,7 @@ public class LightsSubsystem extends BaseSubsystem {
 
     @Inject
     public LightsSubsystem(XCANLightController.XCANLightControllerFactory lightsFactory,
-                           ElectricalContract electricalContract, PropertyFactory propertyFactory) {
-
-        propertyFactory.setPrefix(this);
+                           ElectricalContract electricalContract) {
         if (electricalContract.isLightsReady()) {
             this.lights = lightsFactory.create(
                     electricalContract.getLightControlerInfo());
