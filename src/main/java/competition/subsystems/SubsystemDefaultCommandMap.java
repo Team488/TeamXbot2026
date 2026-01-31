@@ -67,6 +67,4 @@ public class SubsystemDefaultCommandMap {
     public void intakeDeployStopCommand(IntakeDeploySubsystem intakeDeploySubsystem, IntakeDeployStopCommand command) {
         intakeDeploySubsystem.setDefaultCommand(command);
     }
-
-
 }

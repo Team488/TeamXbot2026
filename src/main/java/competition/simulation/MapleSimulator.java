@@ -135,7 +135,7 @@ public class MapleSimulator implements BaseSimulator {
         // this is where the robot really is in the sim
         aKitLog.record("FieldSimulation/Robot", swerveDriveSimulation.getActualPoseInSimulationWorld());
 
-        // tell the pose subystem about where the robot has moved based on odometry
+        // tell the pose subsystem about where the robot has moved based on odometry
         pose.ingestSimulatedSwerveModulePositions(swerveDriveSimulation.getLatestModulePositions());
 
         aKitLog.record("RobotVelocity", swerveDriveSimulation.getActualSpeedsFieldRelative());
