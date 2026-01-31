@@ -6,7 +6,7 @@ import xbot.common.command.BaseCommand;
 import javax.inject.Inject;
 
 public class EnableShooterFeederCommand extends BaseCommand {
-    ShooterFeederSubsystem shooterFeeder;
+    final ShooterFeederSubsystem shooterFeeder;
 
     @Inject
     public EnableShooterFeederCommand(ShooterFeederSubsystem shooterFeeder) {
