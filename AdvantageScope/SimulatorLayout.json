@@ -1,19 +1,42 @@
 {
   "hubs": [
     {
-      "x": -7,
-      "y": -7,
-      "width": 1142,
-      "height": 718,
+      "x": 14,
+      "y": 51,
+      "width": 1100,
+      "height": 650,
       "state": {
         "sidebar": {
           "width": 300,
           "expanded": [
             "/AdvantageKit",
             "/AdvantageKit/RealOutputs",
-            "/AdvantageKit/RealOutputs/PoseSubsystem",
             "/AdvantageKit/RealOutputs/Simulator",
-            "/AdvantageKit/RealOutputs/Simulator/FieldSimulation"
+            "/AdvantageKit/RealOutputs/Simulator/FieldSimulation",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState",
+            "/Preferences",
+            "/Preferences/SwerveSteeringSubsystem",
+            "/AdvantageKit/SwerveSteeringSubsystem",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/0",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/1",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/2",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/3",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState/3",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState/0",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState/1",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState/2",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState/0/angle",
+            "/AdvantageKit/RealOutputs/PoseSubsystem",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/RobotPoses",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/RobotPosesAccepted",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/TagPoses",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/RobotPosesRejected",
+            "/AdvantageKit/RealOutputs/PoseSubsystem/RobotPose",
+            "/AdvantageKit/RealOutputs/PoseSubsystem/SwerveVisionEnhancedPose",
+            "/AdvantageKit/RealOutputs/PoseSubsystem/VisionEnhancedPose"
           ]
         },
         "tabs": {
@@ -24,7 +47,7 @@
               "title": "",
               "controller": null,
               "controllerUUID": "oltsw5wa6pb97d3zpuli6g0zbr1nn798",
-              "renderer": "#/",
+              "renderer": "",
               "controlsHeight": 0
             },
             {
@@ -70,7 +93,7 @@
                     "logType": "Pose2d",
                     "visible": true,
                     "options": {
-                      "model": "2026 KitBot",
+                      "model": "Xbot 2026",
                       "color": "#00ff00"
                     }
                   },
@@ -80,7 +103,17 @@
                     "logType": "Pose2d",
                     "visible": true,
                     "options": {
-                      "model": "2026 KitBot"
+                      "model": "Xbot 2026"
+                    }
+                  },
+                  {
+                    "type": "vision",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/TagPoses",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {
+                      "color": "#00ff00",
+                      "size": "normal"
                     }
                   },
                   {
@@ -91,6 +124,16 @@
                     "options": {
                       "variant": "Fuel"
                     }
+                  },
+                  {
+                    "type": "ghost",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/PoseSubsystem/VisionEnhancedPose",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "model": "2025 KitBot",
+                      "color": "#ff8c00"
+                    }
                   }
                 ],
                 "game": "FRC:2026 Field"
@@ -100,16 +143,51 @@
                 "cameraIndex": -1,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  -0.9878454092227529,
-                  9.947570443154682,
-                  -9.735659848749354
+                  4.425421275840583,
+                  8.604053791095486,
+                  -7.714279173044558
                 ],
                 "cameraTarget": [
-                  -0.3357071152822095,
-                  -2.2147502970890423,
-                  -0.5696208183979151
+                  -0.5651997241045817,
+                  -2.2754560705009603,
+                  -0.8423091444061894
                 ]
               },
+              "controlsHeight": 200
+            },
+            {
+              "type": 9,
+              "title": "Swerve",
+              "controller": {
+                "sources": [
+                  {
+                    "type": "states",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState",
+                    "logType": "SwerveModuleState[]",
+                    "visible": true,
+                    "options": {
+                      "color": "#ff0000",
+                      "arrangement": "0,1,2,3"
+                    }
+                  },
+                  {
+                    "type": "states",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState",
+                    "logType": "SwerveModuleState[]",
+                    "visible": true,
+                    "options": {
+                      "color": "#0000ff",
+                      "arrangement": "0,1,2,3"
+                    }
+                  }
+                ],
+                "maxSpeed": 5,
+                "sizeX": 0.56,
+                "sizeY": 0.508,
+                "orientation": 1
+              },
+              "controllerUUID": "vdejqk3ppthmvhtk6ixg5eg5pzzyihfb",
+              "renderer": null,
               "controlsHeight": 200
             },
             {
