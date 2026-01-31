@@ -2,6 +2,8 @@ package competition.subsystems.pose;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Distance;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 import javax.inject.Singleton;
@@ -40,4 +42,10 @@ public class Landmarks {
 
     // Blue Hub
     public static Pose2d blueHub = new Pose2d(4.62, 4.040, Rotation2d.fromDegrees(0));
+
+    // Blue Alliance Area
+    public static Distance blueAllianceArea = Units.Inches.of(156.06);
+
+    // Field Length
+    public static Distance fieldLength = Units.Inches.of(650.12);
 }

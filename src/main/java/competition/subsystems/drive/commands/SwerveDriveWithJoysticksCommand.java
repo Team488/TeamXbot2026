@@ -2,6 +2,7 @@ package competition.subsystems.drive.commands;
 
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import xbot.common.controls.sensors.XGyro;
 import xbot.common.controls.sensors.XGyroFactoryImpl;
