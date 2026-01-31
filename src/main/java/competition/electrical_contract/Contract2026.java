@@ -3,7 +3,10 @@ package competition.electrical_contract;
 import javax.inject.Inject;
 
 import competition.subsystems.pose.PoseSubsystem;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANLightControllerOutputConfig;
@@ -16,6 +19,9 @@ import xbot.common.injection.electrical_contract.LightControllerType;
 import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.electrical_contract.PDHPort;
 import xbot.common.injection.swerve.SwerveInstance;
+import xbot.common.subsystems.vision.CameraCapabilities;
+
+import java.util.EnumSet;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
@@ -283,6 +289,22 @@ public class Contract2026 extends ElectricalContract {
     }
 
     public CameraInfo[] getCameraInfo() {
-        return new CameraInfo[] { /* TODO: No cameras defined yet in 2026 */ };
+        // TODO: These camera positions are a placeholder for simulator-based testing.
+        double frontAprilCameraXDisplacement = 10.14 / PoseSubsystem.INCHES_IN_A_METER;
+        double frontAprilCameraYDisplacement = 0 / PoseSubsystem.INCHES_IN_A_METER;
+        double frontAprilCameraZDisplacement = 6.7 / PoseSubsystem.INCHES_IN_A_METER;
+        double frontAprilCameraPitch = Math.toRadians(-21);
+        double frontAprilCameraYaw = Math.toRadians(0);
+
+        return new CameraInfo[]{
+                new CameraInfo("Apriltag_Front",
+                        "AprilTagFront",
+                        new Transform3d(new Translation3d(
+                                frontAprilCameraXDisplacement,
+                                frontAprilCameraYDisplacement,
+                                frontAprilCameraZDisplacement),
+                                new Rotation3d(0, frontAprilCameraPitch, frontAprilCameraYaw)),
+                        EnumSet.of(CameraCapabilities.APRIL_TAG))
+        };
     }
 }
