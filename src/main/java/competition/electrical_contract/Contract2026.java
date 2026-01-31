@@ -226,12 +226,11 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance) {
-        // Update these XYPairs with the swerve module locations!!! (In inches)
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" -> new Translation2d(Inches.of(15), Inches.of(15));
-            case "FrontRightDrive" -> new Translation2d(Inches.of(15), Inches.of(-15));
-            case "RearLeftDrive" -> new Translation2d(Inches.of(-15), Inches.of(15));
-            case "RearRightDrive" -> new Translation2d(Inches.of(-15), Inches.of(-15));
+            case "FrontLeftDrive" -> new Translation2d(Inches.of(11), Inches.of(10));
+            case "FrontRightDrive" -> new Translation2d(Inches.of(11), Inches.of(-10));
+            case "RearLeftDrive" -> new Translation2d(Inches.of(-11), Inches.of(10));
+            case "RearRightDrive" -> new Translation2d(Inches.of(-11), Inches.of(-10));
             default -> new Translation2d(0, 0);
         };
     }
