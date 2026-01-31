@@ -20,12 +20,10 @@ import static edu.wpi.first.units.Units.RPM;
 
 @Singleton
 public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Double> {
-    public final XCANMotorController shooterMotor;
-    public ElectricalContract electricalContract;
-public class ShooterSubsystem extends BaseSubsystem {
     public final XCANMotorController leftShooterMotor;
     public final XCANMotorController middleShooterMotor;
     public final XCANMotorController rightShooterMotor;
+        public ElectricalContract electricalContract;
 
     public DoubleProperty targetVelocity;
     double rotationAtZero = 0;
@@ -33,24 +31,9 @@ public class ShooterSubsystem extends BaseSubsystem {
     @Inject
     public ShooterSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
                             ElectricalContract electricalContract, PropertyFactory propertyFactory) {
-                            ElectricalContract eletricalContract,
-                            PropertyFactory propertyFactory) {
 
         propertyFactory.setPrefix(this);
         this.electricalContract = electricalContract;
-
-        if (electricalContract.isShooterReady()) {
-            shooterMotor = xcanMotorControllerFactory.create(electricalContract.getShooterMotor(),
-                    getPrefix(),"ShooterMotorPID",
-                    new XCANMotorControllerPIDProperties(
-                            0.1,
-                            0.01,
-                            0.25,
-                            0.0002,
-                            0.750,
-                            1,
-                            0));
-            registerDataFrameRefreshable(shooterMotor);
 
         var defaultPIDProperties = new XCANMotorControllerPIDProperties(
                 0.1,
@@ -61,24 +44,24 @@ public class ShooterSubsystem extends BaseSubsystem {
                 1,
                 0);
 
-        if (eletricalContract.isLeftShooterReady()) {
-            this.leftShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getLeftShooterMotor(),
+        if (electricalContract.isLeftShooterReady()) {
+            this.leftShooterMotor = xcanMotorControllerFactory.create(electricalContract.getLeftShooterMotor(),
                     getPrefix(), "ShooterMotor", defaultPIDProperties);
             this.registerDataFrameRefreshable(leftShooterMotor);
         } else {
             this.leftShooterMotor = null;
         }
 
-        if (eletricalContract.isMiddleShooterReady()) {
-            this.middleShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getMiddleShooterMotor(),
+        if (electricalContract.isMiddleShooterReady()) {
+            this.middleShooterMotor = xcanMotorControllerFactory.create(electricalContract.getMiddleShooterMotor(),
                     getPrefix(), "ShooterMotor", defaultPIDProperties);
             this.registerDataFrameRefreshable(middleShooterMotor);
         } else {
             this.middleShooterMotor = null;
         }
 
-        if (eletricalContract.isRightShooterReady()) {
-            this.rightShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getRightShooterMotor(),
+        if (electricalContract.isRightShooterReady()) {
+            this.rightShooterMotor = xcanMotorControllerFactory.create(electricalContract.getRightShooterMotor(),
                     getPrefix(), "ShooterMotor", defaultPIDProperties);
             this.registerDataFrameRefreshable(rightShooterMotor);
         } else {
@@ -104,7 +87,6 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     public void increaseTargetVelocity() {
         targetVelocity.set(targetVelocity.get() + 25);
-        shooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
     }
 
     public void decreaseTargetVelocity() {
@@ -149,8 +131,8 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     @Override
     public AngularVelocity getCurrentValue() {
-        if (electricalContract.isShooterReady()) {
-            return shooterMotor.getVelocity();
+        if (electricalContract.isMiddleShooterReady()) {
+            return middleShooterMotor.getVelocity(); // TODO: Left/Right
         }
         return RPM.zero(); //rpm = rotation per minute
     }
@@ -163,12 +145,12 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     @Override
     public void setTargetValue(AngularVelocity value) {
-
+        // TODO: Fill later
     }
 
     @Override
     public void setPower(Double power) {
-
+        // TODO: Fill later
     }
 
     @Override
@@ -178,6 +160,6 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     @Override
     protected boolean areTwoTargetsEquivalent(AngularVelocity target1, AngularVelocity target2) {
-        return false;
+        return target1.isEquivalent(target2);
     }
 }

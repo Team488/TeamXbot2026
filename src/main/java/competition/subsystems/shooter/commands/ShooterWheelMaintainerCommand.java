@@ -83,9 +83,15 @@ public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<Angular
     // the forwards button and how much they are moving
 
 
-@Override
-protected double getHumanInputMagnitude() {
-    return Math.abs(getHumanInput());
+    @Override
+    protected double getHumanInputMagnitude() {
+        return Math.abs(getHumanInput());
     // magnitude = distance/absolute value
+    }
+    @Override
+    public void end(boolean interrupted) {
+        if (interrupted) {
+            shooterWheel.stop();
+        }
     }
 }
