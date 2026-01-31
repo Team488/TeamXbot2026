@@ -6,8 +6,7 @@ import xbot.common.command.BaseCommand;
 import javax.inject.Inject;
 
 public class OpenHoodCommand extends BaseCommand{
-
-    HoodSubsystem hood;
+    final HoodSubsystem hood;
 
     @Inject
     public OpenHoodCommand(HoodSubsystem hoodSubsystem) {

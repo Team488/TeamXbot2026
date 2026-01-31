@@ -9,7 +9,7 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
 @Singleton
-public class ShooterFeederSubsystem  extends BaseSubsystem {
+public class ShooterFeederSubsystem extends BaseSubsystem {
     public final XCANMotorController shooterFeederMotor;
 
     public DoubleProperty shooterFeederMotorPower;
