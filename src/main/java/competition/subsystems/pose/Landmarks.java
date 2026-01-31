@@ -42,8 +42,8 @@ public class Landmarks {
     // Blue Hub
     public static Pose2d blueHub = new Pose2d(4.62, 4.040, Rotation2d.fromDegrees(0));
 
-    // Blue Alliance Area
-    public static Distance blueAllianceArea = Units.Inches.of(156.06);
+    // Blue Alliance to trench
+    public static Distance blueAllianceToTrench = Units.Inches.of(156.06);
 
     // Field Length
     public static Distance fieldLength = Units.Inches.of(650.12);

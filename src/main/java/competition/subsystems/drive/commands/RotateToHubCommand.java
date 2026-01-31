@@ -37,13 +37,13 @@ public class RotateToHubCommand extends BaseCommand {
     @Override
     public void execute() {
         drive.setLookAtPointTarget(targetPose.getTranslation());
-        
+
         if (targetPose == Landmarks.blueHub) {
-            if (pose.getCurrentPose2d().getX() <= Landmarks.blueAllianceArea.in(Units.Meters)) {
+            if (pose.getCurrentPose2d().getX() <= Landmarks.blueAllianceToTrench.in(Units.Meters)) {
                 drive.setLookAtPointTargetActive(true);
             }
         } else {
-            if (pose.getCurrentPose2d().getX() >= (Landmarks.fieldLength.minus(Landmarks.blueAllianceArea)).in(Units.Meters)) {
+            if (pose.getCurrentPose2d().getX() >= (Landmarks.fieldLength.minus(Landmarks.blueAllianceToTrench)).in(Units.Meters)) {
                 drive.setLookAtPointTargetActive(true);
             }
         }
