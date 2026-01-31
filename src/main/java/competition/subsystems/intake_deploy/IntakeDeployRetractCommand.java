@@ -1,7 +1,5 @@
 package competition.subsystems.intake_deploy;
 
-import competition.subsystems.shooter.ShooterSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;

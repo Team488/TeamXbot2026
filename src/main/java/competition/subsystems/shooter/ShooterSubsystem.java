@@ -20,10 +20,10 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     @Inject
     public ShooterSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
-                            ElectricalContract eletricalContract, PropertyFactory propertyFactory) {
+                            ElectricalContract electricalContract, PropertyFactory propertyFactory) {
         propertyFactory.setPrefix(this);
-        if (eletricalContract.isShooterReady()) {
-            shooterMotor = xcanMotorControllerFactory.create(eletricalContract.getShooterMotor(),
+        if (electricalContract.isShooterReady()) {
+            shooterMotor = xcanMotorControllerFactory.create(electricalContract.getShooterMotor(),
                     getPrefix(),"ShooterMotorPID",
                     new XCANMotorControllerPIDProperties(
                             0.1,
