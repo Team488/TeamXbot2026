@@ -7,6 +7,7 @@ import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.controls.actuators.XCANMotorController.MotorPidMode;
 import xbot.common.controls.sensors.XDigitalInput;
 import xbot.common.injection.electrical_contract.DeviceInfo;
+import xbot.common.logic.TimeStableValidator;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -24,6 +25,7 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     public final DoubleProperty targetVelocity;
     public final DoubleProperty activeShotFeedForward;
+    public final DoubleProperty activeShotP;
 
     @Inject
     public ShooterSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
@@ -32,7 +34,10 @@ public class ShooterSubsystem extends BaseSubsystem {
 
         propertyFactory.setPrefix(this);
         // TODO: Put in contract
-        shooterBeamBreak = digitalInputFactory.create(new DeviceInfo("BeamBreak", 1), this.getPrefix());
+        shooterBeamBreak = digitalInputFactory.create(
+                new DeviceInfo("1BeamBreak", 1),
+                this.getPrefix()
+        );
         this.dataFrameRefreshables.add(shooterBeamBreak);
 
         var defaultPIDProperties = new XCANMotorControllerPIDProperties(
@@ -44,9 +49,8 @@ public class ShooterSubsystem extends BaseSubsystem {
                 1,
                 0);
 
-        
-        
         this.activeShotFeedForward = propertyFactory.createPersistentProperty("Active Shot Feed Forward", 0.0);
+        this.activeShotP = propertyFactory.createPersistentProperty("Active Shot P", 0.0);
         
         if (eletricalContract.isLeftShooterReady()) {
             this.leftShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getLeftShooterMotor(),
@@ -104,7 +108,7 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     public void runAtTargetVelocity() {
         if (leftShooterMotor != null) {
-            if(shooterBeamBreak.get()) {
+            if (shooterBeamBreak.get()) {
                 leftShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()), MotorPidMode.DutyCycle, 1);
             } else {
                 leftShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
@@ -124,7 +128,15 @@ public class ShooterSubsystem extends BaseSubsystem {
         if (leftShooterMotor != null) {
             leftShooterMotor.periodic();
             // Manually sync the slot 1 pid properties
-            leftShooterMotor.setPidDirectly(0, 0, 0, activeShotFeedForward.get(), 0, 1);
+            // Do we need a time stable validator?
+            leftShooterMotor.setPidDirectly(
+                    activeShotP.get(),
+                    0,
+                    0,
+                    activeShotFeedForward.get(),
+                    0,
+                    1
+            );
         }
 
         if (middleShooterMotor != null) {
