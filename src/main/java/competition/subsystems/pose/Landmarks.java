@@ -1,5 +1,6 @@
 package competition.subsystems.pose;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.Units;
@@ -47,4 +48,53 @@ public class Landmarks {
 
     // Field Length
     public static Distance fieldLength = Units.Inches.of(650.12);
+
+    public static int RedCenterHubNeutralSideFiducialId = 4;
+    public static int RedCenterHubDriverSideFiducialId = 10;
+
+    public static int BlueCenterHubNeutralSideFiducialId = 20;
+    public static int BlueCenterHubDriverSideFiducialId = 26;
+
+    public static int BlueTrenchDriverDepotSideFiducialId = 23;
+    public static int RedTrenchDriverDepotSideFiducialId = 7;
+
+    public static List<Integer> getAllianceHubCenterFiducialIds(DriverStation.Alliance alliance) {
+        switch (alliance) {
+            case Red:
+                return List.of(RedCenterHubNeutralSideFiducialId, RedCenterHubDriverSideFiducialId);
+            case Blue:
+                return List.of(BlueCenterHubNeutralSideFiducialId, BlueCenterHubDriverSideFiducialId);
+            default:
+                return new ArrayList<Integer>();
+        }
+    }
+
+    public static Pose2d getAllianceHub(AprilTagFieldLayout aprilTagFieldLayout, DriverStation.Alliance alliance) {
+        var allianceHubCenterTags = Landmarks.getAllianceHubCenterFiducialIds(alliance);
+
+        // Tags to tag poses, to 2d poses
+        List<Pose2d> hubCenterTags = allianceHubCenterTags.stream()
+                .map(aprilTagFieldLayout::getTagPose)
+                .filter(Optional::isPresent)
+                .flatMap(Optional::stream)
+                .map(Pose3d::toPose2d)
+                .collect(Collectors.toList());
+
+        // Sum across poses to a total X value, same y
+        double xTotal = hubCenterTags.stream().map((p) -> p.getX()).reduce(0, (a, b) -> a + b);
+        double yTotal = hubCenterTags.stream().map((p) -> p.getY()).reduce(0, (a, b) -> a + b);
+
+        return Pose2d(xTotal / hubCenterTags.size(), yTotal / hubCenterTags.size(), Rotation2d.fromDegrees(0));
+    }
+
+    public static Pose2d getTrenchDriverDepotSideFiducialId(DriverStation.Alliance alliance) {
+        switch (alliance) {
+            case Red:
+                return aprilTagFieldLayout::getTagPose(BlueTrenchDriverDepotSideFiducialId).get().toPose2d();
+            case Blue:
+                return aprilTagFieldLayout::getTagPose(RedTrenchDriverDepotSideFiducialId).get().toPose2d();
+            default:
+                throw new Exception("Not expected!");
+        }
+    }
 }

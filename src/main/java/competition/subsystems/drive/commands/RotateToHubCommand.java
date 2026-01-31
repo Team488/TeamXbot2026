@@ -5,6 +5,7 @@ import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import xbot.common.command.BaseCommand;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.Property;
@@ -35,25 +36,21 @@ public class RotateToHubCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        targetPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueHub);
+        targetPose = Landmarks.getAllianceHub(DriverStation.getAlliance());
     }
 
     @Override
     public void execute() {
         drive.setLookAtPointTarget(targetPose.getTranslation());
-        if (targetPose == Landmarks.blueHub) {
-            if (pose.getCurrentPose2d().getX() <= Landmarks.blueAllianceToTrench.in(Units.Meters)) {
-                drive.setLookAtPointTargetActive(true);
-            } else if (AutoAimWhenNotInZone.get()) {
-                drive.setLookAtPointTargetActive(true);
-            }
+        double xTrenchLocation = Landmarks.getTrenchDriverDepotSideFiducialId(DriverStation.getAlliance());
+        boolean areWeInAllianceZone = false;
+        if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
+            areWeInAllianceZone = pose.getCurrentPose2d().getX() >= xTrenchLocation;
         } else {
-            if (pose.getCurrentPose2d().getX() >= (Landmarks.fieldLength.minus(Landmarks.blueAllianceToTrench)).in(Units.Meters)) {
-                drive.setLookAtPointTargetActive(true);
-            } else if (AutoAimWhenNotInZone.get()) {
-                drive.setLookAtPointTargetActive(true);
-            }
+            areWeInAllianceZone = pose.getCurrentPose2d().getX() <= xTrenchLocation;
         }
+
+        drive.setLookAtPointTarget(areWeInAllianceZone || AutoAimWhenNotInZone.get());
     }
 
     @Override
