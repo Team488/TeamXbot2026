@@ -71,25 +71,25 @@ public class Contract2025 extends Contract2026 {
                     MotorControllerType.TalonFx,
                     CANBusId.Canivore,
                     39,
-                    regularDriveMotorConfig);
+                    regularDriveMotorConfig.withStatorCurrentLimit(Amps.of(60)));
             case "RearRightDrive" -> new CANMotorControllerInfo(
                     getDriveControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
                     CANBusId.Canivore,
                     31,
-                    regularDriveMotorConfig);
+                    regularDriveMotorConfig.withStatorCurrentLimit(Amps.of(60)));
             case "RearLeftDrive" -> new CANMotorControllerInfo(
                     getDriveControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
                     CANBusId.Canivore,
                     20,
-                    regularDriveMotorConfig);
+                    regularDriveMotorConfig.withStatorCurrentLimit(Amps.of(60)));
             case "FrontLeftDrive" -> new CANMotorControllerInfo(
                     getDriveControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
                     CANBusId.Canivore,
                     29,
-                    regularDriveMotorConfig);
+                    regularDriveMotorConfig.withStatorCurrentLimit(Amps.of(60)));
             default -> null;
         };
     }
@@ -109,25 +109,25 @@ public class Contract2025 extends Contract2026 {
                     MotorControllerType.TalonFx,
                     CANBusId.Canivore,
                     38,
-                    invertedSteeringMotorConfig);
+                    invertedSteeringMotorConfig.withStatorCurrentLimit(Amps.of(40)));
             case "RearRightDrive" -> new CANMotorControllerInfo(
                     getSteeringControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
                     CANBusId.Canivore,
                     30,
-                    invertedSteeringMotorConfig);
+                    invertedSteeringMotorConfig.withStatorCurrentLimit(Amps.of(40)));
             case "RearLeftDrive" -> new CANMotorControllerInfo(
                     getSteeringControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
                     CANBusId.Canivore,
                     21,
-                    invertedSteeringMotorConfig);
+                    invertedSteeringMotorConfig.withStatorCurrentLimit(Amps.of(40)));
             case "FrontLeftDrive" -> new CANMotorControllerInfo(
                     getSteeringControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
                     CANBusId.Canivore,
                     28,
-                    invertedSteeringMotorConfig);
+                    invertedSteeringMotorConfig.withStatorCurrentLimit(Amps.of(40)));
             default -> null;
         };
     }
