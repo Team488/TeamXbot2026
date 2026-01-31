@@ -1,5 +1,6 @@
-package competition.subsystems.intake_deploy;
+package competition.subsystems.intake_deploy.commands;
 
+import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
