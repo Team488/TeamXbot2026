@@ -8,8 +8,8 @@ import xbot.common.command.BaseCommand;
 import javax.inject.Inject;
 
 public class TrimShooterVelocityDown extends BaseCommand {
-    ShooterSubsystem shooter;
-    Logger log = LogManager.getLogger(TrimShooterVelocityDown.class);
+    final ShooterSubsystem shooter;
+    final Logger log = LogManager.getLogger(TrimShooterVelocityDown.class);
 
     @Inject
     public TrimShooterVelocityDown(ShooterSubsystem shooterSubsystem) {

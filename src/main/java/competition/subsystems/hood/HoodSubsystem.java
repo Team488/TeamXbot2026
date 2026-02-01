@@ -47,7 +47,9 @@ public class HoodSubsystem extends BaseSubsystem {
         }
     }
     public void stopHood() {
-        hoodMotor.setPower(0);
+        if (hoodMotor != null) {
+            hoodMotor.setPower(0);
+        }
     }
 
 }
