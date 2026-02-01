@@ -12,7 +12,6 @@ import xbot.common.properties.Property;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
-import java.util.concurrent.locks.Lock;
 
 public class RotateToHubCommand extends BaseCommand {
 
@@ -26,7 +25,7 @@ public class RotateToHubCommand extends BaseCommand {
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
     private Pose2d targetPose;
-    private final BooleanProperty AutoAimWhenNotInZone;
+    private final BooleanProperty autoAimWhenNotInZone;
 
     @Inject
     public RotateToHubCommand(DriveSubsystem drive, PoseSubsystem pose, AprilTagFieldLayout aprilTagFieldLayout,
@@ -37,7 +36,7 @@ public class RotateToHubCommand extends BaseCommand {
         this.pf = pf;
         pf.setPrefix(this);
         pf.setDefaultLevel(Property.PropertyLevel.Important);
-        AutoAimWhenNotInZone = pf.createPersistentProperty("AutoAimWhenNotInZone", true);
+        autoAimWhenNotInZone = pf.createPersistentProperty("AutoAimWhenNotInZone", true);
     }
 
     @Override
@@ -53,7 +52,8 @@ public class RotateToHubCommand extends BaseCommand {
         double xTrenchLocation = 0.0;
         try {
             xTrenchLocation = Landmarks.getTrenchDriverDepotSideFiducialId(this.aprilTagFieldLayout, alliance).getX();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         boolean areWeInAllianceZone = false;
         if (alliance == DriverStation.Alliance.Blue) {
@@ -62,7 +62,7 @@ public class RotateToHubCommand extends BaseCommand {
             areWeInAllianceZone = pose.getCurrentPose2d().getX() <= xTrenchLocation;
         }
 
-        drive.setLookAtPointTargetActive(areWeInAllianceZone || AutoAimWhenNotInZone.get());
+        drive.setLookAtPointTargetActive(areWeInAllianceZone || autoAimWhenNotInZone.get());
     }
 
     @Override
