@@ -2,10 +2,13 @@ package competition.subsystems.pose;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.DriverStation;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import javax.inject.Singleton;
 
 @Singleton
@@ -41,13 +44,8 @@ public class Landmarks {
     public static Pose2d blueClimbDepotSideEdge = new Pose2d(1.510,4.650,Rotation2d.fromDegrees(180));
 
     // Blue Hub
+    // TODO: delete this and use getAllianceHub instead
     public static Pose2d blueHub = new Pose2d(4.62, 4.040, Rotation2d.fromDegrees(0));
-
-    // Blue Alliance to trench
-    public static Distance blueAllianceToTrench = Units.Inches.of(156.06);
-
-    // Field Length
-    public static Distance fieldLength = Units.Inches.of(650.12);
 
     public static int RedCenterHubNeutralSideFiducialId = 4;
     public static int RedCenterHubDriverSideFiducialId = 10;
@@ -59,16 +57,14 @@ public class Landmarks {
     public static int RedTrenchDriverDepotSideFiducialId = 7;
 
     public static List<Integer> getAllianceHubCenterFiducialIds(DriverStation.Alliance alliance) {
-        switch (alliance) {
-            case Red:
-                return List.of(RedCenterHubNeutralSideFiducialId, RedCenterHubDriverSideFiducialId);
-            case Blue:
-                return List.of(BlueCenterHubNeutralSideFiducialId, BlueCenterHubDriverSideFiducialId);
-            default:
-                return new ArrayList<Integer>();
-        }
+        return switch (alliance) {
+            case Red -> List.of(RedCenterHubNeutralSideFiducialId, RedCenterHubDriverSideFiducialId);
+            case Blue -> List.of(BlueCenterHubNeutralSideFiducialId, BlueCenterHubDriverSideFiducialId);
+            default -> new ArrayList<Integer>();
+        };
     }
 
+    // Get the average pose of the alliance hub using april tags
     public static Pose2d getAllianceHub(AprilTagFieldLayout aprilTagFieldLayout, DriverStation.Alliance alliance) {
         var allianceHubCenterTags = Landmarks.getAllianceHubCenterFiducialIds(alliance);
 
@@ -78,23 +74,22 @@ public class Landmarks {
                 .filter(Optional::isPresent)
                 .flatMap(Optional::stream)
                 .map(Pose3d::toPose2d)
-                .collect(Collectors.toList());
+                .toList();
 
         // Sum across poses to a total X value, same y
-        double xTotal = hubCenterTags.stream().map((p) -> p.getX()).reduce(0, (a, b) -> a + b);
-        double yTotal = hubCenterTags.stream().map((p) -> p.getY()).reduce(0, (a, b) -> a + b);
+        double xTotal = hubCenterTags.stream().map(Pose2d::getX).reduce(0.0, (a, b) -> a + b);
+        double yTotal = hubCenterTags.stream().map(Pose2d::getY).reduce(0.0, (a, b) -> a + b);
 
-        return Pose2d(xTotal / hubCenterTags.size(), yTotal / hubCenterTags.size(), Rotation2d.fromDegrees(0));
+        return new Pose2d(xTotal / hubCenterTags.size(), yTotal / hubCenterTags.size(), Rotation2d.fromDegrees(0));
     }
 
-    public static Pose2d getTrenchDriverDepotSideFiducialId(DriverStation.Alliance alliance) {
-        switch (alliance) {
-            case Red:
-                return aprilTagFieldLayout::getTagPose(BlueTrenchDriverDepotSideFiducialId).get().toPose2d();
-            case Blue:
-                return aprilTagFieldLayout::getTagPose(RedTrenchDriverDepotSideFiducialId).get().toPose2d();
-            default:
-                throw new Exception("Not expected!");
-        }
+    public static Pose2d getTrenchDriverDepotSideFiducialId(AprilTagFieldLayout aprilTagFieldLayout, DriverStation.Alliance alliance) throws Exception {
+        return switch (alliance) {
+            case Red ->
+                    aprilTagFieldLayout.getTagPose(BlueTrenchDriverDepotSideFiducialId).orElseThrow(Exception::new).toPose2d();
+            case Blue ->
+                    aprilTagFieldLayout.getTagPose(RedTrenchDriverDepotSideFiducialId).orElseThrow(Exception::new).toPose2d();
+            default -> throw new Exception("Not expected!");
+        };
     }
 }
