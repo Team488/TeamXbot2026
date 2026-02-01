@@ -52,28 +52,32 @@ public class Contract2023 extends Contract2026 {
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             31,
-                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
+                            new CANMotorControllerOutputConfig()
+                                    .withSmartCurrentLimit(Amps.of(60)));
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             29,
-                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
+                            new CANMotorControllerOutputConfig()
+                                    .withSmartCurrentLimit(Amps.of(60)));
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             38,
-                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
+                            new CANMotorControllerOutputConfig()
+                                    .withSmartCurrentLimit(Amps.of(60)));
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             21,
-                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
+                            new CANMotorControllerOutputConfig()
+                                    .withSmartCurrentLimit(Amps.of(60)));
             default -> null;
         };
     }
@@ -89,28 +93,32 @@ public class Contract2023 extends Contract2026 {
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             30,
-                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(40)));
+                            new CANMotorControllerOutputConfig()
+                                    .withSmartCurrentLimit(Amps.of(40)));
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             28,
-                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(40)));
+                            new CANMotorControllerOutputConfig()
+                                    .withSmartCurrentLimit(Amps.of(40)));
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             39,
-                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(40)));
+                            new CANMotorControllerOutputConfig()
+                                    .withSmartCurrentLimit(Amps.of(40)));
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             20,
-                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(40)));
+                            new CANMotorControllerOutputConfig()
+                                    .withSmartCurrentLimit(Amps.of(40)));
             default -> null;
         };
     }
