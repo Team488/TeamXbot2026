@@ -14,42 +14,66 @@ import static edu.wpi.first.units.Units.RPM;
 
 @Singleton
 public class ShooterSubsystem extends BaseSubsystem {
-    public final XCANMotorController shooterMotor;
+    public final XCANMotorController leftShooterMotor;
+    public final XCANMotorController middleShooterMotor;
+    public final XCANMotorController rightShooterMotor;
 
-    public DoubleProperty outputPower;
     public DoubleProperty targetVelocity;
 
     @Inject
     public ShooterSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
-                            ElectricalContract eletricalContract, PropertyFactory propertyFactory) {
+                            ElectricalContract eletricalContract,
+                            PropertyFactory propertyFactory) {
+
         propertyFactory.setPrefix(this);
-        if (eletricalContract.isShooterReady()) {
-            shooterMotor = xcanMotorControllerFactory.create(eletricalContract.getShooterMotor(),
-                    getPrefix(),"ShooterMotorPID",
-                    new XCANMotorControllerPIDProperties(
-                            0.1,
-                            0.01,
-                            0.25,
-                            0.0002,
-                            0.750,
-                            1,
-                            0));
+
+        var defaultPIDProperties = new XCANMotorControllerPIDProperties(
+                0.1,
+                0.01,
+                0.25,
+                0.0002,
+                0.750,
+                1,
+                0);
+
+        if (eletricalContract.isLeftShooterReady()) {
+            this.leftShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getLeftShooterMotor(),
+                    getPrefix(), "ShooterMotor", defaultPIDProperties);
+            this.registerDataFrameRefreshable(leftShooterMotor);
         } else {
-            this.shooterMotor = null;
+            this.leftShooterMotor = null;
         }
 
-        this.outputPower = propertyFactory.createPersistentProperty("Output Power", 0.1);
-        this.targetVelocity = propertyFactory.createPersistentProperty("Target Velocity", 3000);
-    }
-    public void output() {
-        if (shooterMotor != null) {
-            shooterMotor.setPower(outputPower.get());
+        if (eletricalContract.isMiddleShooterReady()) {
+            this.middleShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getMiddleShooterMotor(),
+                    getPrefix(), "ShooterMotor", defaultPIDProperties);
+            this.registerDataFrameRefreshable(middleShooterMotor);
+        } else {
+            this.middleShooterMotor = null;
         }
+
+        if (eletricalContract.isRightShooterReady()) {
+            this.rightShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getRightShooterMotor(),
+                    getPrefix(), "ShooterMotor", defaultPIDProperties);
+            this.registerDataFrameRefreshable(rightShooterMotor);
+        } else {
+            this.rightShooterMotor = null;
+        }
+
+        this.targetVelocity = propertyFactory.createPersistentProperty("Target Velocity", 3000);
     }
 
     public void stop() {
-        if (shooterMotor != null) {
-            shooterMotor.setPower(0);
+        if (leftShooterMotor != null) {
+            leftShooterMotor.setPower(0);
+        }
+
+        if (middleShooterMotor != null) {
+            middleShooterMotor.setPower(0);
+        }
+
+        if (rightShooterMotor != null) {
+            rightShooterMotor.setPower(0);
         }
     }
 
@@ -59,13 +83,41 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     public void decreaseTargetVelocity() {
         targetVelocity.set(targetVelocity.get() - 25);
+
+    }
+
+    public void setTargetVelocity(double velocity) {
+        targetVelocity.set(velocity);
+    }
+
+    public void runAtTargetVelocity() {
+        if (leftShooterMotor != null) {
+            leftShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        }
+
+        if (middleShooterMotor != null) {
+            middleShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        }
+
+        if (rightShooterMotor != null) {
+            rightShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        }
     }
 
     public void periodic() {
-        if (shooterMotor != null) {
-            shooterMotor.periodic();
+        if (leftShooterMotor != null) {
+            leftShooterMotor.periodic();
+            leftShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        }
 
-            shooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        if (middleShooterMotor != null) {
+            middleShooterMotor.periodic();
+            middleShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        }
+
+        if (rightShooterMotor != null) {
+            rightShooterMotor.periodic();
+            rightShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
         }
     }
 }
