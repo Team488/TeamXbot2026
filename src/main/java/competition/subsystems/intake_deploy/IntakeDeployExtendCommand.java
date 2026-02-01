@@ -19,5 +19,6 @@ public class IntakeDeployExtendCommand extends BaseCommand {
     @Override
     public void initialize() {
         Degree.of(90);
+        intakeDeploy.setTargetValue(Degree.of(90));
     }
 }
