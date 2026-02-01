@@ -132,25 +132,36 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     @Override
     public AngularVelocity getCurrentValue() {
         if (electricalContract.isMiddleShooterReady()) {
-            return middleShooterMotor.getVelocity(); // TODO: Left/Right
+            return middleShooterMotor.getVelocity();
         }
+
+        if (electricalContract.isLeftShooterReady()) {
+            return leftShooterMotor.getVelocity();
+        }
+
+        if (electricalContract.isRightShooterReady()) {
+            return rightShooterMotor.getVelocity();
+        }
+
         return RPM.zero(); //rpm = rotation per minute
     }
 
     @Override
     public AngularVelocity getTargetValue() {
-        return RPM.of(targetVelocity.get());
-        //targetVelocity = double property - .get() makes it into a double
+       return RPM.of(targetVelocity.get());
     }
+
 
     @Override
     public void setTargetValue(AngularVelocity value) {
-        // TODO: Fill later
+        targetVelocity.set(value.in(RPM));
     }
 
     @Override
     public void setPower(Double power) {
-        // TODO: Fill later
+        leftShooterMotor.setPower(power);
+        rightShooterMotor.setPower(power);
+        middleShooterMotor.setPower(power);
     }
 
     @Override

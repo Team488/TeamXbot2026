@@ -64,7 +64,7 @@ public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<Angular
         double max = humanMaxPower.get();
         double min = humanMinPower.get();
         shooterWheel.setPower(power);
-        //dont really need calibrate because it will just continue rotating.
+        //don't need to calibrate since it will just keep rotating
     }
 
     @Override
@@ -79,14 +79,11 @@ public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<Angular
     protected Double getHumanInput() {
         return 0.0;
     }
-    // pushing a button and inputs saying that oh someone is moving
-    // the forwards button and how much they are moving
-
 
     @Override
     protected double getHumanInputMagnitude() {
         return Math.abs(getHumanInput());
-    // magnitude = distance/absolute value
+        // magnitude = distance/absolute value
     }
     @Override
     public void end(boolean interrupted) {
