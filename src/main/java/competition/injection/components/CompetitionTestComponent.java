@@ -14,5 +14,5 @@ import xbot.common.injection.modules.UnitTestModule;
 @Component(modules = { UnitTestModule.class, MockDevicesModule.class, MockControlsModule.class,
         CommonModule.class, UnitTestRobotModule.class})
 public abstract class CompetitionTestComponent extends BaseRobotComponent {
-    
+
 }

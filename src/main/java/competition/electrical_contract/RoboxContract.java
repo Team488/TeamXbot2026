@@ -19,7 +19,6 @@ public class RoboxContract extends Contract2026 {
     @Override
     public boolean areCanCodersReady() { return false; }
 
-    @Override
     public boolean isShooterReady() { return true; }
 
     public CANMotorControllerInfo getShooterMotor() {
