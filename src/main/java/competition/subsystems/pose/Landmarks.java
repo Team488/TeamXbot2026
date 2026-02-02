@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Singleton;
@@ -60,7 +59,6 @@ public class Landmarks {
         return switch (alliance) {
             case Red -> List.of(redCenterHubNeutralSideFiducialId, redCenterHubDriverSideFiducialId);
             case Blue -> List.of(blueCenterHubNeutralSideFiducialId, blueCenterHubDriverSideFiducialId);
-            default -> new ArrayList<Integer>();
         };
     }
 
@@ -77,8 +75,8 @@ public class Landmarks {
                 .toList();
 
         // Sum across poses to a total X value, same y
-        double xTotal = hubCenterTags.stream().map(Pose2d::getX).reduce(0.0, (a, b) -> a + b);
-        double yTotal = hubCenterTags.stream().map(Pose2d::getY).reduce(0.0, (a, b) -> a + b);
+        double xTotal = hubCenterTags.stream().map(Pose2d::getX).reduce(0.0, Double::sum);
+        double yTotal = hubCenterTags.stream().map(Pose2d::getY).reduce(0.0, Double::sum);
 
         return new Pose2d(xTotal / hubCenterTags.size(), yTotal / hubCenterTags.size(), Rotation2d.fromDegrees(0));
     }
@@ -89,7 +87,6 @@ public class Landmarks {
                     aprilTagFieldLayout.getTagPose(blueTrenchDriverDepotSideFiducialId).orElseThrow(Exception::new).toPose2d();
             case Blue ->
                     aprilTagFieldLayout.getTagPose(redTrenchDriverDepotSideFiducialId).orElseThrow(Exception::new).toPose2d();
-            default -> throw new Exception("Not expected!");
         };
     }
 }
