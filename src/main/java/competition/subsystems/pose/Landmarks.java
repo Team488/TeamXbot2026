@@ -47,19 +47,19 @@ public class Landmarks {
     // TODO: delete this and use getAllianceHub instead
     public static Pose2d blueHub = new Pose2d(4.62, 4.040, Rotation2d.fromDegrees(0));
 
-    public static int RedCenterHubNeutralSideFiducialId = 4;
-    public static int RedCenterHubDriverSideFiducialId = 10;
+    public static int redCenterHubNeutralSideFiducialId = 4;
+    public static int redCenterHubDriverSideFiducialId = 10;
 
-    public static int BlueCenterHubNeutralSideFiducialId = 20;
-    public static int BlueCenterHubDriverSideFiducialId = 26;
+    public static int blueCenterHubNeutralSideFiducialId = 20;
+    public static int blueCenterHubDriverSideFiducialId = 26;
 
-    public static int BlueTrenchDriverDepotSideFiducialId = 23;
-    public static int RedTrenchDriverDepotSideFiducialId = 7;
+    public static int blueTrenchDriverDepotSideFiducialId = 23;
+    public static int redTrenchDriverDepotSideFiducialId = 7;
 
     public static List<Integer> getAllianceHubCenterFiducialIds(DriverStation.Alliance alliance) {
         return switch (alliance) {
-            case Red -> List.of(RedCenterHubNeutralSideFiducialId, RedCenterHubDriverSideFiducialId);
-            case Blue -> List.of(BlueCenterHubNeutralSideFiducialId, BlueCenterHubDriverSideFiducialId);
+            case Red -> List.of(redCenterHubNeutralSideFiducialId, redCenterHubDriverSideFiducialId);
+            case Blue -> List.of(blueCenterHubNeutralSideFiducialId, blueCenterHubDriverSideFiducialId);
             default -> new ArrayList<Integer>();
         };
     }
@@ -86,9 +86,9 @@ public class Landmarks {
     public static Pose2d getTrenchDriverDepotSideFiducialId(AprilTagFieldLayout aprilTagFieldLayout, DriverStation.Alliance alliance) throws Exception {
         return switch (alliance) {
             case Red ->
-                    aprilTagFieldLayout.getTagPose(BlueTrenchDriverDepotSideFiducialId).orElseThrow(Exception::new).toPose2d();
+                    aprilTagFieldLayout.getTagPose(blueTrenchDriverDepotSideFiducialId).orElseThrow(Exception::new).toPose2d();
             case Blue ->
-                    aprilTagFieldLayout.getTagPose(RedTrenchDriverDepotSideFiducialId).orElseThrow(Exception::new).toPose2d();
+                    aprilTagFieldLayout.getTagPose(redTrenchDriverDepotSideFiducialId).orElseThrow(Exception::new).toPose2d();
             default -> throw new Exception("Not expected!");
         };
     }
