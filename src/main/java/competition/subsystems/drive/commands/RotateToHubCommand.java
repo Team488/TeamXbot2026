@@ -49,13 +49,13 @@ public class RotateToHubCommand extends BaseCommand {
     public void execute() {
         DriverStation.Alliance alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
         drive.setLookAtPointTarget(targetPose.getTranslation());
-        double xTrenchLocation = 0.0;
+        double xTrenchLocation;
         try {
             xTrenchLocation = Landmarks.getTrenchDriverDepotSideFiducialId(this.aprilTagFieldLayout, alliance).getX();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        boolean areWeInAllianceZone = false;
+        boolean areWeInAllianceZone;
         if (alliance == DriverStation.Alliance.Blue) {
             areWeInAllianceZone = pose.getCurrentPose2d().getX() >= xTrenchLocation;
         } else {
