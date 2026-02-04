@@ -44,6 +44,7 @@ public class ShooterSubsystem extends BaseSubsystem {
         if (eletricalContract.isLeftShooterReady()) {
             this.leftShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getLeftShooterMotor(),
                     getPrefix(), "ShooterMotor", defaultPIDProperties);
+            shooterMotors.add(leftShooterMotor);
             this.registerDataFrameRefreshable(leftShooterMotor);
         } else {
             this.leftShooterMotor = null;
@@ -52,6 +53,7 @@ public class ShooterSubsystem extends BaseSubsystem {
         if (eletricalContract.isMiddleShooterReady()) {
             this.middleShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getMiddleShooterMotor(),
                     getPrefix(), "ShooterMotor", defaultPIDProperties);
+            shooterMotors.add(middleShooterMotor);
             this.registerDataFrameRefreshable(middleShooterMotor);
         } else {
             this.middleShooterMotor = null;
@@ -60,6 +62,7 @@ public class ShooterSubsystem extends BaseSubsystem {
         if (eletricalContract.isRightShooterReady()) {
             this.rightShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getRightShooterMotor(),
                     getPrefix(), "ShooterMotor", defaultPIDProperties);
+            shooterMotors.add(rightShooterMotor);
             this.registerDataFrameRefreshable(rightShooterMotor);
         } else {
             this.rightShooterMotor = null;
