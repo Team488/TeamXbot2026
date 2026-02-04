@@ -29,14 +29,18 @@ public class Landmarks {
     public static Pose2d blueDepotTowerSide = new Pose2d(0.460, 4.950, Rotation2d.fromDegrees(90));
 
     // Blue Outpost
-    public static Pose2d blueOutpost = new Pose2d(0.470, 0.650, Rotation2d.fromDegrees(180));
+    public static Pose2d blueOutpost = new Pose2d(0.540, 0.650, Rotation2d.fromDegrees(180));
 
     // Blue Tower
     public static Pose2d blueClimbOutpostEdge = new Pose2d(1.510,2.780,Rotation2d.fromDegrees(180));
-    public static Pose2d blueClimbMiddleOutpostSide = new Pose2d(1.510,3.630,Rotation2d.fromDegrees(180));
-    public static Pose2d blueClimbCenter = new Pose2d(1.510,3.750,Rotation2d.fromDegrees(180));
-    public static Pose2d blueClimbMiddleDepotSide = new Pose2d(1.510,3.830,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbMiddleOutpostSide = new Pose2d(1.570,3.630,Rotation2d.fromDegrees(0));
+    public static Pose2d blueClimbCenter = new Pose2d(1.510,3.730,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbMiddleDepotSide = new Pose2d(1.510,3.830,Rotation2d.fromDegrees(0));
     public static Pose2d blueClimbDepotSideEdge = new Pose2d(1.510,4.650,Rotation2d.fromDegrees(180));
+
+    // Blue tower preclimb spot
+    public static Pose2d blueClimbMiddleOutpostSideReadyPose = new Pose2d(2.036,3.630, Rotation2d.fromDegrees(0));
+    public static Pose2d blueClimbMiddleDepotSideReadyPose = new Pose2d(2.321,3.830,Rotation2d.fromDegrees(90));
 
     // Blue Hub
     public static Pose2d blueHub = new Pose2d(4.62, 4.040, Rotation2d.fromDegrees(0));

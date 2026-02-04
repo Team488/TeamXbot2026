@@ -19,6 +19,7 @@ public class ResetSimulatedPoseCommand extends BaseCommand {
     @Override
     public void initialize() {
         this.simulator.resetPosition(Landmarks.blueOutpost);
+        log.info("ResetSimulatedPoseCommand initialized");
     }
 
     @Override
