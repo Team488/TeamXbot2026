@@ -1,31 +1,39 @@
 package competition.subsystems.shooter;
 
 import competition.electrical_contract.ElectricalContract;
+import edu.wpi.first.units.AngularAccelerationUnit;
+import edu.wpi.first.units.measure.AngularVelocity;
+import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
+import xbot.common.controls.actuators.XSpeedController;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import java.lang.annotation.Target;
+
 import static edu.wpi.first.units.Units.RPM;
 
 @Singleton
-public class ShooterSubsystem extends BaseSubsystem {
+public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Double> {
     public final XCANMotorController leftShooterMotor;
     public final XCANMotorController middleShooterMotor;
     public final XCANMotorController rightShooterMotor;
+        public ElectricalContract electricalContract;
 
     public DoubleProperty targetVelocity;
+    double rotationAtZero = 0;
 
     @Inject
     public ShooterSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
-                            ElectricalContract eletricalContract,
-                            PropertyFactory propertyFactory) {
+                            ElectricalContract electricalContract, PropertyFactory propertyFactory) {
 
         propertyFactory.setPrefix(this);
+        this.electricalContract = electricalContract;
 
         var defaultPIDProperties = new XCANMotorControllerPIDProperties(
                 0.1,
@@ -36,24 +44,24 @@ public class ShooterSubsystem extends BaseSubsystem {
                 1,
                 0);
 
-        if (eletricalContract.isLeftShooterReady()) {
-            this.leftShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getLeftShooterMotor(),
+        if (electricalContract.isLeftShooterReady()) {
+            this.leftShooterMotor = xcanMotorControllerFactory.create(electricalContract.getLeftShooterMotor(),
                     getPrefix(), "ShooterMotor", defaultPIDProperties);
             this.registerDataFrameRefreshable(leftShooterMotor);
         } else {
             this.leftShooterMotor = null;
         }
 
-        if (eletricalContract.isMiddleShooterReady()) {
-            this.middleShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getMiddleShooterMotor(),
+        if (electricalContract.isMiddleShooterReady()) {
+            this.middleShooterMotor = xcanMotorControllerFactory.create(electricalContract.getMiddleShooterMotor(),
                     getPrefix(), "ShooterMotor", defaultPIDProperties);
             this.registerDataFrameRefreshable(middleShooterMotor);
         } else {
             this.middleShooterMotor = null;
         }
 
-        if (eletricalContract.isRightShooterReady()) {
-            this.rightShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getRightShooterMotor(),
+        if (electricalContract.isRightShooterReady()) {
+            this.rightShooterMotor = xcanMotorControllerFactory.create(electricalContract.getRightShooterMotor(),
                     getPrefix(), "ShooterMotor", defaultPIDProperties);
             this.registerDataFrameRefreshable(rightShooterMotor);
         } else {
@@ -116,5 +124,58 @@ public class ShooterSubsystem extends BaseSubsystem {
         if (rightShooterMotor != null) {
             rightShooterMotor.periodic();
         }
+    }
+
+    @Override
+    public AngularVelocity getCurrentValue() {
+        if (electricalContract.isMiddleShooterReady()) {
+            return middleShooterMotor.getVelocity();
+        }
+
+        if (electricalContract.isLeftShooterReady()) {
+            return leftShooterMotor.getVelocity();
+        }
+
+        if (electricalContract.isRightShooterReady()) {
+            return rightShooterMotor.getVelocity();
+        }
+
+        return RPM.zero(); //rpm = rotation per minute
+    }
+
+    @Override
+    public AngularVelocity getTargetValue() {
+       return RPM.of(targetVelocity.get());
+    }
+
+
+    @Override
+    public void setTargetValue(AngularVelocity value) {
+        targetVelocity.set(value.in(RPM));
+    }
+
+    @Override
+    public void setPower(Double power) {
+        if (leftShooterMotor != null) {
+            leftShooterMotor.setPower(power);
+        }
+
+        if (rightShooterMotor != null) {
+            rightShooterMotor.setPower(power);
+        }
+
+        if (middleShooterMotor != null) {
+            middleShooterMotor.setPower(power);
+        }
+    }
+
+    @Override
+    public boolean isCalibrated() {
+        return true;
+    }
+
+    @Override
+    protected boolean areTwoTargetsEquivalent(AngularVelocity target1, AngularVelocity target2) {
+        return target1.isEquivalent(target2);
     }
 }
