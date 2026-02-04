@@ -13,8 +13,11 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import competition.simulation.intake.IntakeSimulator;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
+import xbot.common.math.PIDManager;
+import xbot.common.math.PIDManager.PIDManagerFactory;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
+import xbot.common.simulation.MotorInternalPIDHelper;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,10 +27,10 @@ import java.util.Random;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RPM;
 
 @Singleton
 public class ShooterSimulator {
-
     final PoseSubsystem pose;
     final ShooterSubsystem shooter;
     final ShooterFeederSubsystem shooterFeeder;
@@ -37,6 +40,8 @@ public class ShooterSimulator {
 
     final IntakeSimulator intakeSimulator;
 
+    final PIDManager pidManager;
+
     final DoubleProperty ballsPerSecond;
     final Random random;
 
@@ -45,7 +50,7 @@ public class ShooterSimulator {
 
     @Inject
     public ShooterSimulator(PoseSubsystem pose, ShooterSubsystem shooter, ShooterFeederSubsystem shooterFeeder,
-                            PropertyFactory pf, IntakeSimulator intakeSimulator) {
+                            PropertyFactory pf, IntakeSimulator intakeSimulator, PIDManagerFactory pidManagerFactory) {
         pf.setPrefix("Simulator/");
         this.pose = pose;
         this.shooter = shooter;
@@ -55,6 +60,8 @@ public class ShooterSimulator {
         this.shooterFeederMotor = (MockCANMotorController) shooterFeeder.shooterFeederMotor;
 
         this.intakeSimulator = intakeSimulator;
+
+        this.pidManager = pidManagerFactory.create("ShooterSimulationPID"); // TODO: Add defaults
 
         this.ballsPerSecond = pf.createPersistentProperty("ballsPerSecond", 10);
         this.random = new Random();
@@ -80,11 +87,18 @@ public class ShooterSimulator {
     }
 
     public void update(Arena2026Rebuilt arena) {
+        // Update the power of the motor
+        MotorInternalPIDHelper.updateInternalPIDWithVelocity(
+                this.shooterMotor, pidManager, RPM.of(shooter.targetVelocity.get()));
+
+        // Update the sim
         if (DriverStation.isEnabled()) {
             this.shooterSim.setInputVoltage(this.shooterMotor.getPower() * RobotController.getBatteryVoltage());
         } else {
             this.shooterSim.setInputVoltage(0);
         }
+
+        // Update the velocity of the motor using the sim
         this.shooterSim.update(Robot.LOOP_INTERVAL);
         this.shooterMotor.setVelocity(getShooterVelocity());
 
