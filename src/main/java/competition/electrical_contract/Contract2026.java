@@ -250,6 +250,19 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
+    public boolean isHopperRollerReady() { return false; }
+
+    public CANMotorControllerInfo getHopperRollerMotor() {
+        return new CANMotorControllerInfo("HopperRoller",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                25,
+                PDHPort.PDH00,
+                new CANMotorControllerOutputConfig());
+    }
+
+
+    @Override
     public DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance) {
         double simulationScalingValue = 1.0;
 
