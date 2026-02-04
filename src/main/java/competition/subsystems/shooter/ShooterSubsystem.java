@@ -159,14 +159,22 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
     @Override
     public void setPower(Double power) {
-        leftShooterMotor.setPower(power);
-        rightShooterMotor.setPower(power);
-        middleShooterMotor.setPower(power);
+        if (leftShooterMotor != null) {
+            leftShooterMotor.setPower(power);
+        }
+
+        if (rightShooterMotor != null) {
+            rightShooterMotor.setPower(power);
+        }
+
+        if (middleShooterMotor != null) {
+            middleShooterMotor.setPower(power);
+        }
     }
 
     @Override
     public boolean isCalibrated() {
-        return false;
+        return true;
     }
 
     @Override

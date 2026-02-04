@@ -17,20 +17,12 @@ import javax.inject.Inject;
 public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<AngularVelocity, Double> {
 
     final ShooterSubsystem shooterWheel;
-    final DoubleProperty humanMaxPower;
-    final DoubleProperty humanMinPower;
-
 
     @Inject
     public ShooterWheelMaintainerCommand(ShooterSubsystem shooterWheel, PropertyFactory pf,
                                          HumanVsMachineDecider.HumanVsMachineDeciderFactory hvmFactory) {
         super(shooterWheel, pf, hvmFactory, 0.01, 0.01); // tweak number
-        pf.setPrefix(this);
         this.shooterWheel = shooterWheel;
-
-        humanMaxPower = pf.createPersistentProperty("ShooterMaxPower", 0.2); // tweak number
-        humanMinPower = pf.createPersistentProperty("ShooterMinPower", -0.2); // tweak number
-
     }
 
     @Override
