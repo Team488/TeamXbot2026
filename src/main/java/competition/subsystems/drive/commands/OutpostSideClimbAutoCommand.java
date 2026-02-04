@@ -20,8 +20,9 @@ import xbot.common.trajectory.XbotSwervePoint;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
-    public class OutpostSideClimbAutoCommand extends SwerveSimpleTrajectoryCommand {
+import static competition.subsystems.pose.Landmarks.blueClimbMiddleOutpostSide;
 
+public class OutpostSideClimbAutoCommand extends SwerveSimpleTrajectoryCommand {
 
         @Inject
         public OutpostSideClimbAutoCommand(DriveSubsystem drive, PoseSubsystem pose, PropertyFactory pf,
@@ -36,26 +37,18 @@ import java.util.ArrayList;
         @Override
         public void initialize() {
             Pose2d blueClimbMiddleOutpostSideReadyPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbMiddleOutpostSideReadyPose);
-            Pose2d supportPoint = PoseSubsystem.convertBlueToRedIfNeeded(
-                    new Pose2d(2.136,3.630, blueClimbMiddleOutpostSideReadyPose.getRotation()));
             Pose2d blueClimbMiddleOutpostSide = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbMiddleOutpostSide);
-
 
             ArrayList<XbotSwervePoint> swervePoints = new ArrayList<>();
 
-            swervePoints.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(
-                    supportPoint, 3));
-
+            swervePoints.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
+                    (blueClimbMiddleOutpostSideReadyPose,3));
 
             swervePoints.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
-                    (blueClimbMiddleOutpostSideReadyPose,2));
-
-            swervePoints.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
-                    (blueClimbMiddleOutpostSide,2));
-
+                    (blueClimbMiddleOutpostSide,4));
 
             this.logic.setKeyPoints(swervePoints);
-//            this.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
+            this.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
             super.initialize();
             log.info("Outpost Side Climb Auto Command initialized");
 

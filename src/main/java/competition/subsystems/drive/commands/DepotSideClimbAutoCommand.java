@@ -19,10 +19,10 @@ import xbot.common.trajectory.XbotSwervePoint;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
+import static competition.subsystems.pose.Landmarks.blueClimbMiddleDepotSide;
 import static competition.subsystems.pose.Landmarks.blueClimbMiddleDepotSideReadyPose;
 
 public class DepotSideClimbAutoCommand extends SwerveSimpleTrajectoryCommand {
-
 
     @Inject
     public DepotSideClimbAutoCommand(DriveSubsystem drive, PoseSubsystem pose, PropertyFactory pf,
@@ -36,21 +36,16 @@ public class DepotSideClimbAutoCommand extends SwerveSimpleTrajectoryCommand {
 
     @Override
     public void initialize() {
-        Pose2d depotSideClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbMiddleDepotSide);
-
-        Pose2d supportPoint = PoseSubsystem.convertBlueToRedIfNeeded(
-                new Pose2d(2.136,3.630, blueClimbMiddleDepotSideReadyPose.getRotation()));
-
+        Pose2d depotSideClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(blueClimbMiddleDepotSide);
         Pose2d blueClimbDepotReadyPose = PoseSubsystem.convertBlueToRedIfNeeded(blueClimbMiddleDepotSideReadyPose);
 
         ArrayList<XbotSwervePoint> swervePoints = new ArrayList<>();
-        
 
         swervePoints.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
-                (blueClimbDepotReadyPose,2));
+                (blueClimbDepotReadyPose,3));
 
         swervePoints.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
-                (depotSideClimbPose,2));
+                (depotSideClimbPose,4));
 
         this.logic.setKeyPoints(swervePoints);
         this.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
