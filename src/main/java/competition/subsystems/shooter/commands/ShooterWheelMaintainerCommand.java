@@ -19,24 +19,15 @@ public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<Angular
     final ShooterSubsystem shooterWheel;
     final DoubleProperty humanMaxPower;
     final DoubleProperty humanMinPower;
-    final PIDManager pidManager;
+
 
     @Inject
     public ShooterWheelMaintainerCommand(ShooterSubsystem shooterWheel, PropertyFactory pf,
-                                         HumanVsMachineDecider.HumanVsMachineDeciderFactory hvmFactory,
-                                         PIDManager.PIDManagerFactory pidManagerFactory) {
+                                         HumanVsMachineDecider.HumanVsMachineDeciderFactory hvmFactory) {
         super(shooterWheel, pf, hvmFactory, 0.01, 0.01); // tweak number
         pf.setPrefix(this);
         this.shooterWheel = shooterWheel;
-        this.pidManager = pidManagerFactory.create(
-                pf.getPrefix() + "/ShooterWheelMaintainerPID",
-                0,
-                0,
-                0,
-                0,
-                0,
-                0
-        );
+
         humanMaxPower = pf.createPersistentProperty("ShooterMaxPower", 0.2); // tweak number
         humanMinPower = pf.createPersistentProperty("ShooterMinPower", -0.2); // tweak number
 
@@ -54,17 +45,7 @@ public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<Angular
 
     @Override
     protected void calibratedMachineControlAction() {
-        //use pid to reach target
-        double error = getErrorMagnitude();
-        double power = pidManager.calculate(
-                shooterWheel.getCurrentValue().in(Units.RPM),
-                shooterWheel.getTargetValue().in(Units.RPM)
-        );
-
-        double max = humanMaxPower.get();
-        double min = humanMinPower.get();
-        shooterWheel.setPower(power);
-        //don't need to calibrate since it will just keep rotating
+        shooterWheel.runAtTargetVelocity();
     }
 
     @Override
