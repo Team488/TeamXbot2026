@@ -1,14 +1,8 @@
 package competition.subsystems.drive.commands;
 
-import competition.subsystems.climber.ClimberSubsystem;
-import competition.subsystems.climber.commands.ClimberExtendCommand;
-import competition.subsystems.climber.commands.ClimberRetractCommand;
-import competition.subsystems.climber.commands.ClimberStopCommand;
 import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
-import xbot.common.command.BaseCommand;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
@@ -22,13 +16,13 @@ import java.util.ArrayList;
 import static competition.subsystems.pose.Landmarks.blueClimbMiddleDepotSide;
 import static competition.subsystems.pose.Landmarks.blueClimbMiddleDepotSideReadyPose;
 
-public class DepotSideClimbAutoCommand extends SwerveSimpleTrajectoryCommand {
+public class ReadyDepotSideClimbAutoCommand extends SwerveSimpleTrajectoryCommand {
 
     @Inject
-    public DepotSideClimbAutoCommand(DriveSubsystem drive, PoseSubsystem pose, PropertyFactory pf,
-                                     HeadingModule.HeadingModuleFactory headingModuleFactory,
-                                     RobotAssertionManager robotAssertionManager,
-                                     BaseSwerveDriveSubsystem baseSwerveDriveSubsystem) {
+    public ReadyDepotSideClimbAutoCommand(DriveSubsystem drive, PoseSubsystem pose, PropertyFactory pf,
+                                          HeadingModule.HeadingModuleFactory headingModuleFactory,
+                                          RobotAssertionManager robotAssertionManager,
+                                          BaseSwerveDriveSubsystem baseSwerveDriveSubsystem) {
         super(drive,pose, pf, headingModuleFactory, robotAssertionManager);
         this.addRequirements(drive);
         this.drive = drive;
@@ -36,13 +30,12 @@ public class DepotSideClimbAutoCommand extends SwerveSimpleTrajectoryCommand {
 
     @Override
     public void initialize() {
-        Pose2d depotSideClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(blueClimbMiddleDepotSide);
-
+        Pose2d blueClimbDepotReadyPose = PoseSubsystem.convertBlueToRedIfNeeded(blueClimbMiddleDepotSideReadyPose);
 
         ArrayList<XbotSwervePoint> swervePoints = new ArrayList<>();
 
         swervePoints.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
-                (depotSideClimbPose,4));
+                (blueClimbDepotReadyPose,3));
 
         this.logic.setKeyPoints(swervePoints);
         this.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());

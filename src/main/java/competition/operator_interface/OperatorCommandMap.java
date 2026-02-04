@@ -5,8 +5,8 @@ import javax.inject.Singleton;
 
 import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
-import competition.subsystems.drive.commands.DepotSideClimbAutoCommand;
-import competition.subsystems.drive.commands.OutpostSideClimbAutoCommand;
+import competition.subsystems.drive.commands.ReadyDepotSideClimbAutoCommand;
+import competition.subsystems.drive.commands.ReadyOutpostSideClimbAutoCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
@@ -57,8 +57,8 @@ public class OperatorCommandMap {
     @Inject
     public void setupSimulatorCommands(
             ResetSimulatedPoseCommand resetSimulatorPositionCommand,
-            DepotSideClimbAutoCommand depotSideClimbAutoCommand,
-            OutpostSideClimbAutoCommand outpostSideClimbAutoCommand
+            ReadyDepotSideClimbAutoCommand depotSideClimbAutoCommand,
+            ReadyOutpostSideClimbAutoCommand outpostSideClimbAutoCommand
     ) {
         resetSimulatorPositionCommand.includeOnSmartDashboard("Reset Simulator Position");
         depotSideClimbAutoCommand.includeOnSmartDashboard("Depot climb");

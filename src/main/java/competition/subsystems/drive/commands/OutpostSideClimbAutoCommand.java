@@ -36,13 +36,9 @@ public class OutpostSideClimbAutoCommand extends SwerveSimpleTrajectoryCommand {
 
         @Override
         public void initialize() {
-            Pose2d blueClimbMiddleOutpostSideReadyPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbMiddleOutpostSideReadyPose);
             Pose2d blueClimbMiddleOutpostSide = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbMiddleOutpostSide);
 
             ArrayList<XbotSwervePoint> swervePoints = new ArrayList<>();
-
-            swervePoints.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
-                    (blueClimbMiddleOutpostSideReadyPose,3));
 
             swervePoints.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
                     (blueClimbMiddleOutpostSide,4));
