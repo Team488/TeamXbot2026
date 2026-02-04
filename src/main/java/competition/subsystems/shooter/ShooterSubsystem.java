@@ -107,17 +107,14 @@ public class ShooterSubsystem extends BaseSubsystem {
     public void periodic() {
         if (leftShooterMotor != null) {
             leftShooterMotor.periodic();
-            leftShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
         }
 
         if (middleShooterMotor != null) {
             middleShooterMotor.periodic();
-            middleShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
         }
 
         if (rightShooterMotor != null) {
             rightShooterMotor.periodic();
-            rightShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
         }
     }
 }
