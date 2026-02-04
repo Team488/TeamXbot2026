@@ -6,8 +6,7 @@ import xbot.common.command.BaseCommand;
 import javax.inject.Inject;
 
 public class CloseHoodCommand extends BaseCommand {
-
-    HoodSubsystem hood;
+    final HoodSubsystem hood;
 
     @Inject
     public CloseHoodCommand(HoodSubsystem hoodSubsystem) {
