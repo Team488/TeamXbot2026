@@ -4,6 +4,7 @@ import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
 import xbot.common.injection.electrical_contract.MotorControllerType;
+import xbot.common.injection.electrical_contract.SparkMaxMotorControllerOutputConfig;
 
 import javax.inject.Inject;
 
@@ -19,7 +20,6 @@ public class RoboxContract extends Contract2026 {
     @Override
     public boolean areCanCodersReady() { return false; }
 
-    @Override
     public boolean isShooterReady() { return true; }
 
     public CANMotorControllerInfo getShooterMotor() {
@@ -27,6 +27,7 @@ public class RoboxContract extends Contract2026 {
                 MotorControllerType.SparkMax,
                 CANBusId.RIO,
                 32,
-                new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(10)));
+                new SparkMaxMotorControllerOutputConfig()
+                        .withSmartCurrentLimit(Amps.of(80)));
     }
 }

@@ -3,7 +3,10 @@ package competition.electrical_contract;
 import javax.inject.Inject;
 
 import competition.subsystems.pose.PoseSubsystem;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANLightControllerOutputConfig;
@@ -14,7 +17,12 @@ import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.LEDStripType;
 import xbot.common.injection.electrical_contract.LightControllerType;
 import xbot.common.injection.electrical_contract.MotorControllerType;
+import xbot.common.injection.electrical_contract.PDHPort;
+import xbot.common.injection.electrical_contract.TalonFxMotorControllerOutputConfig;
 import xbot.common.injection.swerve.SwerveInstance;
+import xbot.common.subsystems.vision.CameraCapabilities;
+
+import java.util.EnumSet;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
@@ -40,6 +48,7 @@ public class Contract2026 extends ElectricalContract {
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 488,
+                PDHPort.PDH00,
                 new CANMotorControllerOutputConfig());
     }
                                           
@@ -51,28 +60,49 @@ public class Contract2026 extends ElectricalContract {
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 489,
+                PDHPort.PDH00,
                 new CANMotorControllerOutputConfig());
     }
 
-    public boolean isShooterReady() { return false; }
+    public boolean isLeftShooterReady() { return false; }
 
-    public CANMotorControllerInfo getShooterMotor() {
+    public boolean isMiddleShooterReady() { return false; }
+
+    public boolean isRightShooterReady() { return false; }
+
+    public CANMotorControllerInfo getLeftShooterMotor() {
         return new CANMotorControllerInfo("ShooterMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 918,
+                PDHPort.PDH00,
                 new CANMotorControllerOutputConfig());
     }
 
+    public CANMotorControllerInfo getMiddleShooterMotor() {
+        return new CANMotorControllerInfo("ShooterMotor",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                211,
+                new CANMotorControllerOutputConfig());
+    }
+
+    public CANMotorControllerInfo getRightShooterMotor() {
+        return new CANMotorControllerInfo("ShooterMotor",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                900,
+                new CANMotorControllerOutputConfig());
+    }
 
     public boolean isIntakeDeployReady() { return false; }
 
-    //TODO: change id
     public CANMotorControllerInfo getIntakeDeployMotor() {
         return new CANMotorControllerInfo("IntakeDeployMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
-                679178, // TODO:Change ID
+                676767, // TODO: Change ID
+                PDHPort.PDH00, // TODO: Change port
                 new CANMotorControllerOutputConfig());
     }
 
@@ -92,6 +122,7 @@ public class Contract2026 extends ElectricalContract {
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 1000,
+                PDHPort.PDH00, // TODO: Change port
                 new CANMotorControllerOutputConfig());
     }
 
@@ -116,28 +147,32 @@ public class Contract2026 extends ElectricalContract {
                             MotorControllerType.TalonFx,
                             CANBusId.Canivore,
                             30,
-                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
+                            PDHPort.PDH00, // TODO: Change port
+                            new TalonFxMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.TalonFx,
                             CANBusId.Canivore,
                             38,
-                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
+                            PDHPort.PDH00, // TODO: Change port
+                            new TalonFxMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.TalonFx,
                             CANBusId.Canivore,
                             28,
-                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
+                            PDHPort.PDH00, // TODO: Change port
+                            new TalonFxMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.TalonFx,
                             CANBusId.Canivore,
                             20,
-                            new CANMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
+                            PDHPort.PDH00, // TODO: Change port
+                            new TalonFxMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
             default -> null;
         };
     }
@@ -153,16 +188,18 @@ public class Contract2026 extends ElectricalContract {
                             MotorControllerType.TalonFx,
                             CANBusId.Canivore,
                             31,
-                            new CANMotorControllerOutputConfig()
+                            PDHPort.PDH00, // TODO: Change port
+                            new TalonFxMotorControllerOutputConfig()
                                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                            .withStatorCurrentLimit(Amps.of(40)));
+                                    .withStatorCurrentLimit(Amps.of(40)));
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.TalonFx,
                             CANBusId.Canivore,
                             39,
-                            new CANMotorControllerOutputConfig()
+                            PDHPort.PDH00, // TODO: Change port
+                            new TalonFxMotorControllerOutputConfig()
                                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
                                     .withStatorCurrentLimit(Amps.of(40)));
             case "RearLeftDrive" ->
@@ -171,7 +208,8 @@ public class Contract2026 extends ElectricalContract {
                             MotorControllerType.TalonFx,
                             CANBusId.Canivore,
                             29,
-                            new CANMotorControllerOutputConfig()
+                            PDHPort.PDH00, // TODO: Change port
+                            new TalonFxMotorControllerOutputConfig()
                                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
                                     .withStatorCurrentLimit(Amps.of(40)));
             case "RearRightDrive" ->
@@ -180,7 +218,8 @@ public class Contract2026 extends ElectricalContract {
                             MotorControllerType.TalonFx,
                             CANBusId.Canivore,
                             21,
-                            new CANMotorControllerOutputConfig()
+                            PDHPort.PDH00, // TODO: Change port
+                            new TalonFxMotorControllerOutputConfig()
                                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
                                     .withStatorCurrentLimit(Amps.of(40)));
             default -> null;
@@ -195,10 +234,13 @@ public class Contract2026 extends ElectricalContract {
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 23,
+                PDHPort.PDH00, // TODO: Change port
                 new CANMotorControllerOutputConfig());
     }
 
     @Override
+    public boolean isLightsReady() { return false; }
+
     public CANLightControllerInfo getLightControlerInfo() {
         return new CANLightControllerInfo("Lights",
                 LightControllerType.Candle, CANBusId.Canivore,
@@ -226,12 +268,11 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance) {
-        // Update these XYPairs with the swerve module locations!!! (In inches)
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" -> new Translation2d(Inches.of(15), Inches.of(15));
-            case "FrontRightDrive" -> new Translation2d(Inches.of(15), Inches.of(-15));
-            case "RearLeftDrive" -> new Translation2d(Inches.of(-15), Inches.of(15));
-            case "RearRightDrive" -> new Translation2d(Inches.of(-15), Inches.of(-15));
+            case "FrontLeftDrive" -> new Translation2d(Inches.of(11), Inches.of(10));
+            case "FrontRightDrive" -> new Translation2d(Inches.of(11), Inches.of(-10));
+            case "RearLeftDrive" -> new Translation2d(Inches.of(-11), Inches.of(10));
+            case "RearRightDrive" -> new Translation2d(Inches.of(-11), Inches.of(-10));
             default -> new Translation2d(0, 0);
         };
     }
@@ -249,6 +290,22 @@ public class Contract2026 extends ElectricalContract {
     }
 
     public CameraInfo[] getCameraInfo() {
-        return new CameraInfo[] { /* TODO: No cameras defined yet in 2026 */ };
+        // TODO: These camera positions are a placeholder for simulator-based testing.
+        double frontAprilCameraXDisplacement = 10.14 / PoseSubsystem.INCHES_IN_A_METER;
+        double frontAprilCameraYDisplacement = 0 / PoseSubsystem.INCHES_IN_A_METER;
+        double frontAprilCameraZDisplacement = 6.7 / PoseSubsystem.INCHES_IN_A_METER;
+        double frontAprilCameraPitch = Math.toRadians(-21);
+        double frontAprilCameraYaw = Math.toRadians(0);
+
+        return new CameraInfo[]{
+                new CameraInfo("Apriltag_Front",
+                        "AprilTagFront",
+                        new Transform3d(new Translation3d(
+                                frontAprilCameraXDisplacement,
+                                frontAprilCameraYDisplacement,
+                                frontAprilCameraZDisplacement),
+                                new Rotation3d(0, frontAprilCameraPitch, frontAprilCameraYaw)),
+                        EnumSet.of(CameraCapabilities.APRIL_TAG))
+        };
     }
 }
