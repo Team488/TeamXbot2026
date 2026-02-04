@@ -6,7 +6,7 @@ import xbot.common.command.BaseCommand;
 import javax.inject.Inject;
 
 public class ShooterStopCommand extends BaseCommand {
-    ShooterSubsystem shooter;
+    final ShooterSubsystem shooter;
 
     @Inject
     public ShooterStopCommand(ShooterSubsystem shooterSubsystem) {
