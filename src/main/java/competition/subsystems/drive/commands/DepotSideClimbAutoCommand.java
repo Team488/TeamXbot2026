@@ -50,7 +50,6 @@ public class DepotSideClimbAutoCommand extends SwerveSimpleTrajectoryCommand {
         this.logic.setKeyPoints(swervePoints);
         this.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
         super.initialize();
-        log.info("DepotSideClimbAutoCommand initialized");
     }
     @Override
     public void execute() {

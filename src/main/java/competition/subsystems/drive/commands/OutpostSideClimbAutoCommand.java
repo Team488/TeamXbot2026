@@ -50,7 +50,6 @@ public class OutpostSideClimbAutoCommand extends SwerveSimpleTrajectoryCommand {
             this.logic.setKeyPoints(swervePoints);
             this.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
             super.initialize();
-            log.info("Outpost Side Climb Auto Command initialized");
 
         }
         @Override
