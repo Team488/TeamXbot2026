@@ -10,6 +10,9 @@ import xbot.common.properties.PropertyFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static edu.wpi.first.units.Units.RPM;
 
 @Singleton
@@ -17,6 +20,8 @@ public class ShooterSubsystem extends BaseSubsystem {
     public final XCANMotorController leftShooterMotor;
     public final XCANMotorController middleShooterMotor;
     public final XCANMotorController rightShooterMotor;
+
+    public final List<XCANMotorController> shooterMotors = new ArrayList<>();
 
     public DoubleProperty targetVelocity;
 
@@ -64,16 +69,8 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
 
     public void stop() {
-        if (leftShooterMotor != null) {
-            leftShooterMotor.setPower(0);
-        }
-
-        if (middleShooterMotor != null) {
-            middleShooterMotor.setPower(0);
-        }
-
-        if (rightShooterMotor != null) {
-            rightShooterMotor.setPower(0);
+        for (var motor : shooterMotors) {
+            motor.setPower(0);
         }
     }
 
@@ -91,33 +88,15 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
 
     public void runAtTargetVelocity() {
-        if (leftShooterMotor != null) {
-            leftShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
-        }
-
-        if (middleShooterMotor != null) {
-            middleShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
-        }
-
-        if (rightShooterMotor != null) {
-            rightShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        for (var motor : shooterMotors) {
+            motor.setVelocityTarget(RPM.of(targetVelocity.get()));
         }
     }
 
     public void periodic() {
-        if (leftShooterMotor != null) {
-            leftShooterMotor.periodic();
-            leftShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
-        }
-
-        if (middleShooterMotor != null) {
-            middleShooterMotor.periodic();
-            middleShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
-        }
-
-        if (rightShooterMotor != null) {
-            rightShooterMotor.periodic();
-            rightShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        for (var motor : shooterMotors) {
+            motor.periodic();
+            motor.setVelocityTarget(RPM.of(targetVelocity.get()));
         }
     }
 }
