@@ -4,7 +4,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,7 +55,7 @@ public class Landmarks {
     public static int blueTrenchDriverDepotSideFiducialId = 23;
     public static int redTrenchDriverDepotSideFiducialId = 7;
 
-    public static List<Integer> getAllianceHubCenterFiducialIds(DriverStation.Alliance alliance) {
+    public static List<Integer> getAllianceHubCenterFiducialIds(Alliance alliance) {
         return switch (alliance) {
             case Red -> List.of(redCenterHubNeutralSideFiducialId, redCenterHubDriverSideFiducialId);
             case Blue -> List.of(blueCenterHubNeutralSideFiducialId, blueCenterHubDriverSideFiducialId);
@@ -63,7 +63,7 @@ public class Landmarks {
     }
 
     // Get the average pose of the alliance hub using april tags
-    public static Pose2d getAllianceHubPose(AprilTagFieldLayout aprilTagFieldLayout, DriverStation.Alliance alliance) {
+    public static Pose2d getAllianceHubPose(AprilTagFieldLayout aprilTagFieldLayout, Alliance alliance) {
         var allianceHubCenterTags = Landmarks.getAllianceHubCenterFiducialIds(alliance);
 
         // Tags to tag poses, to 2d poses
@@ -81,7 +81,7 @@ public class Landmarks {
         return new Pose2d(xTotal / hubCenterTags.size(), yTotal / hubCenterTags.size(), Rotation2d.fromDegrees(0));
     }
 
-    public static Pose2d getTrenchDriverDepotSideFiducialIdPose(AprilTagFieldLayout aprilTagFieldLayout, DriverStation.Alliance alliance) throws RuntimeException {
+    public static Pose2d getTrenchDriverDepotSideFiducialIdPose(AprilTagFieldLayout aprilTagFieldLayout, Alliance alliance) throws RuntimeException {
         return switch (alliance) {
             case Red ->
                     aprilTagFieldLayout.getTagPose(redTrenchDriverDepotSideFiducialId).orElseThrow(RuntimeException::new).toPose2d();
