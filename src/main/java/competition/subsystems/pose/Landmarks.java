@@ -43,7 +43,7 @@ public class Landmarks {
     public static Pose2d blueClimbDepotSideEdge = new Pose2d(1.510,4.650,Rotation2d.fromDegrees(180));
 
     // Blue Hub
-    // TODO: delete this and use getAllianceHub instead
+    // TODO: delete this and use getAllianceHubPose instead
     public static Pose2d blueHub = new Pose2d(4.62, 4.040, Rotation2d.fromDegrees(0));
 
     public static int redCenterHubNeutralSideFiducialId = 4;
@@ -63,7 +63,7 @@ public class Landmarks {
     }
 
     // Get the average pose of the alliance hub using april tags
-    public static Pose2d getAllianceHub(AprilTagFieldLayout aprilTagFieldLayout, DriverStation.Alliance alliance) {
+    public static Pose2d getAllianceHubPose(AprilTagFieldLayout aprilTagFieldLayout, DriverStation.Alliance alliance) {
         var allianceHubCenterTags = Landmarks.getAllianceHubCenterFiducialIds(alliance);
 
         // Tags to tag poses, to 2d poses
@@ -81,12 +81,12 @@ public class Landmarks {
         return new Pose2d(xTotal / hubCenterTags.size(), yTotal / hubCenterTags.size(), Rotation2d.fromDegrees(0));
     }
 
-    public static Pose2d getTrenchDriverDepotSideFiducialId(AprilTagFieldLayout aprilTagFieldLayout, DriverStation.Alliance alliance) throws Exception {
+    public static Pose2d getTrenchDriverDepotSideFiducialIdPose(AprilTagFieldLayout aprilTagFieldLayout, DriverStation.Alliance alliance) throws RuntimeException {
         return switch (alliance) {
             case Red ->
-                    aprilTagFieldLayout.getTagPose(blueTrenchDriverDepotSideFiducialId).orElseThrow(Exception::new).toPose2d();
+                    aprilTagFieldLayout.getTagPose(redTrenchDriverDepotSideFiducialId).orElseThrow(RuntimeException::new).toPose2d();
             case Blue ->
-                    aprilTagFieldLayout.getTagPose(redTrenchDriverDepotSideFiducialId).orElseThrow(Exception::new).toPose2d();
+                    aprilTagFieldLayout.getTagPose(blueTrenchDriverDepotSideFiducialId).orElseThrow(RuntimeException::new).toPose2d();
         };
     }
 }

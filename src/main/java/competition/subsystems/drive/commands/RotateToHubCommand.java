@@ -24,6 +24,7 @@ public class RotateToHubCommand extends BaseCommand {
      */
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
+    private DriverStation.Alliance alliance;
     private Pose2d targetPose;
     private final BooleanProperty autoAimWhenNotInZone;
 
@@ -41,25 +42,19 @@ public class RotateToHubCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        DriverStation.Alliance alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
-        targetPose = Landmarks.getAllianceHub(this.aprilTagFieldLayout, alliance);
+        alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
+        targetPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance);
     }
 
     @Override
     public void execute() {
-        DriverStation.Alliance alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
         drive.setLookAtPointTarget(targetPose.getTranslation());
-        double xTrenchLocation;
-        try {
-            xTrenchLocation = Landmarks.getTrenchDriverDepotSideFiducialId(this.aprilTagFieldLayout, alliance).getX();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        double xTrenchLocation = Landmarks.getTrenchDriverDepotSideFiducialIdPose(this.aprilTagFieldLayout, alliance).getX();
         boolean areWeInAllianceZone;
         if (alliance == DriverStation.Alliance.Blue) {
-            areWeInAllianceZone = pose.getCurrentPose2d().getX() >= xTrenchLocation;
-        } else {
             areWeInAllianceZone = pose.getCurrentPose2d().getX() <= xTrenchLocation;
+        } else {
+            areWeInAllianceZone = pose.getCurrentPose2d().getX() >= xTrenchLocation;
         }
 
         drive.setLookAtPointTargetActive(areWeInAllianceZone || autoAimWhenNotInZone.get());
@@ -71,4 +66,5 @@ public class RotateToHubCommand extends BaseCommand {
         drive.setLookAtPointTargetActive(false);
     }
 }
+
 
