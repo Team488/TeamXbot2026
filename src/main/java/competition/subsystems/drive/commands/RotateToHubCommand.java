@@ -25,7 +25,7 @@ public class RotateToHubCommand extends BaseCommand {
      */
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
-    private DriverStation.Alliance alliance;
+    private Alliance alliance;
     private Pose2d targetPose;
     private final BooleanProperty autoAimWhenNotInZone;
 
