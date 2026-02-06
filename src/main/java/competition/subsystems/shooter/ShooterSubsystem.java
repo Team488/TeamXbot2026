@@ -1,20 +1,18 @@
 package competition.subsystems.shooter;
 
 import competition.electrical_contract.ElectricalContract;
-import edu.wpi.first.units.AngularAccelerationUnit;
 import edu.wpi.first.units.measure.AngularVelocity;
 import xbot.common.command.BaseSetpointSubsystem;
-import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
-import xbot.common.controls.actuators.XSpeedController;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.List;
 
 import static edu.wpi.first.units.Units.RPM;
 
@@ -26,7 +24,6 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         public ElectricalContract electricalContract;
 
     public DoubleProperty targetVelocity;
-    double rotationAtZero = 0;
 
     @Inject
     public ShooterSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
@@ -72,16 +69,8 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     }
 
     public void stop() {
-        if (leftShooterMotor != null) {
-            leftShooterMotor.setPower(0);
-        }
-
-        if (middleShooterMotor != null) {
-            middleShooterMotor.setPower(0);
-        }
-
-        if (rightShooterMotor != null) {
-            rightShooterMotor.setPower(0);
+        for (var motor : getShooterMotors()) {
+            motor.setPower(0);
         }
     }
 
@@ -99,30 +88,30 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     }
 
     public void runAtTargetVelocity() {
-        if (leftShooterMotor != null) {
-            leftShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
-        }
-
-        if (middleShooterMotor != null) {
-            middleShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
-        }
-
-        if (rightShooterMotor != null) {
-            rightShooterMotor.setVelocityTarget(RPM.of(targetVelocity.get()));
+        for (var motor : getShooterMotors()) {
+            motor.setVelocityTarget(RPM.of(targetVelocity.get()));
         }
     }
 
-    public void periodic() {
+    public List<XCANMotorController> getShooterMotors() {
+        var motors = new ArrayList<XCANMotorController>(3);
         if (leftShooterMotor != null) {
-            leftShooterMotor.periodic();
+            motors.add(leftShooterMotor);
         }
 
         if (middleShooterMotor != null) {
-            middleShooterMotor.periodic();
+            motors.add(middleShooterMotor);
         }
 
         if (rightShooterMotor != null) {
-            rightShooterMotor.periodic();
+            motors.add(rightShooterMotor);
+        }
+        return motors;
+    }
+
+    public void periodic() {
+        for (var motor : getShooterMotors()) {
+            motor.periodic();
         }
     }
 
@@ -145,7 +134,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
     @Override
     public AngularVelocity getTargetValue() {
-       return RPM.of(targetVelocity.get());
+        return RPM.of(targetVelocity.get());
     }
 
 
@@ -156,16 +145,8 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
     @Override
     public void setPower(Double power) {
-        if (leftShooterMotor != null) {
-            leftShooterMotor.setPower(power);
-        }
-
-        if (rightShooterMotor != null) {
-            rightShooterMotor.setPower(power);
-        }
-
-        if (middleShooterMotor != null) {
-            middleShooterMotor.setPower(power);
+        for (var motor : getShooterMotors()) {
+            motor.setPower(power);
         }
     }
 
@@ -176,6 +157,6 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
     @Override
     protected boolean areTwoTargetsEquivalent(AngularVelocity target1, AngularVelocity target2) {
-        return target1.isEquivalent(target2);
+        return Math.abs(target1.in(RPM) - target2.in(RPM)) < 0.00001;
     }
 }
