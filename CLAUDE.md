@@ -14,8 +14,8 @@ Team 488 FRC robot code for the 2026 season. Built with Java, WPILib, and Dagger
 ./gradlew deploy             # Deploy to robot (roboRIO-488-frc.local)
 ./gradlew simulateJava       # Run robot simulator with GUI
 
-# Force using Maven dependency (skip local SeriouslyCommonLib even if it exists)
-./gradlew build -DuseLocalCommonLib=false
+# Use local SeriouslyCommonLib for development (requires ../SeriouslyCommonLib)
+./gradlew build -DuseLocalCommonLib=true
 ```
 
 ### Testing
@@ -107,14 +107,14 @@ subsystems/subsystem_name/
 
 Team 488's shared library, available from Maven at `xbot.common:SeriouslyCommonLib:20250220.1`.
 
-**Composite Build Support**: If `../SeriouslyCommonLib` exists locally, Gradle automatically uses it instead of Maven for easier testing of library changes. To explicitly control this behavior:
-- Force local: `./gradlew build -DuseLocalCommonLib=true`
-- Force Maven: `./gradlew build -DuseLocalCommonLib=false`
+**Composite Build Support**: By default, uses Maven. To test local library changes, enable composite build:
+- Use local: `./gradlew build -DuseLocalCommonLib=true`
+- Use Maven (default): `./gradlew build`
 - Environment variable: `export USE_LOCAL_COMMON_LIB=true`
 
 When working on SeriouslyCommonLib:
 1. Clone both repos side-by-side: `git clone <url> ../SeriouslyCommonLib`
-2. Build normally - Gradle will automatically detect and use the local version
+2. Build with flag: `./gradlew build -DuseLocalCommonLib=true`
 3. Changes to SeriouslyCommonLib are rebuilt automatically
 
 The library provides:
@@ -208,7 +208,7 @@ The library provides:
 - **Log4j config**: Deployed to robot via `copyResources` task (requires local `../SeriouslyCommonLib/lib/log4jConfig/log4j.xml`)
 
 ### For Students (Simple Setup)
-Just clone this repo and run `./gradlew build`. SeriouslyCommonLib will be fetched from Maven automatically.
+Just clone this repo and run `./gradlew build`. SeriouslyCommonLib is fetched from Maven automatically.
 
 ### For Developers (Library Development)
 Clone both repos side-by-side to enable local library development:
@@ -216,5 +216,5 @@ Clone both repos side-by-side to enable local library development:
 git clone <this-repo-url> TeamXbot2026
 git clone <library-url> SeriouslyCommonLib
 cd TeamXbot2026
-./gradlew build  # Automatically uses local SeriouslyCommonLib
+./gradlew build -DuseLocalCommonLib=true  # Uses local SeriouslyCommonLib
 ```

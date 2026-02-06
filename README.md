@@ -23,14 +23,9 @@ If you're working on changes to SeriouslyCommonLib and want to test them in this
 git clone <this-repo-url> TeamXbot2026
 git clone <library-repo-url> SeriouslyCommonLib
 
-# Build - automatically uses local SeriouslyCommonLib
+# Build with local library (add the flag to use local instead of Maven)
 cd TeamXbot2026
-./gradlew build
+./gradlew build -DuseLocalCommonLib=true
 ```
 
-Gradle will automatically detect the local SeriouslyCommonLib and use it instead of Maven. All changes to the library are rebuilt automatically.
-
-**To force Maven dependency** (even if local directory exists):
-```bash
-./gradlew build -DuseLocalCommonLib=false
-```
+All changes to the local SeriouslyCommonLib are rebuilt automatically when using the flag.

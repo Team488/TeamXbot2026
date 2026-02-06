@@ -27,18 +27,22 @@ pluginManagement {
 }
 
 // Composite build support for local SeriouslyCommonLib development
+// Only activates when explicitly requested via -DuseLocalCommonLib=true or USE_LOCAL_COMMON_LIB=true
 def localCommonLibPath = file('../SeriouslyCommonLib')
 def useLocalCommonLib = System.getProperty('useLocalCommonLib', 'false').toBoolean() ||
-                        System.getenv('USE_LOCAL_COMMON_LIB') == 'true' ||
-                        (localCommonLibPath.exists() && !System.getenv('CI'))
+                        System.getenv('USE_LOCAL_COMMON_LIB') == 'true'
 
-if (useLocalCommonLib && localCommonLibPath.exists()) {
-    includeBuild('../SeriouslyCommonLib') {
-        dependencySubstitution {
-            substitute module('xbot.common:SeriouslyCommonLib') using project(':')
+if (useLocalCommonLib) {
+    if (localCommonLibPath.exists()) {
+        includeBuild('../SeriouslyCommonLib') {
+            dependencySubstitution {
+                substitute module('xbot.common:SeriouslyCommonLib') using project(':')
+            }
         }
+        println "✓ Using local SeriouslyCommonLib from ../SeriouslyCommonLib for development"
+    } else {
+        throw new GradleException("useLocalCommonLib=true but ../SeriouslyCommonLib directory not found. Clone it first.")
     }
-    println "✓ Using local SeriouslyCommonLib from ../SeriouslyCommonLib for development"
 } else {
     println "→ Using SeriouslyCommonLib from Maven repository"
 }
