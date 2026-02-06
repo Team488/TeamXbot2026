@@ -114,6 +114,8 @@ public class Contract2026 extends ElectricalContract {
 
     }
 
+
+
     @Override
     public boolean isHoodReady() {return false;}
 
@@ -124,6 +126,15 @@ public class Contract2026 extends ElectricalContract {
                 1000,
                 PDHPort.PDH00, // TODO: Change port
                 new CANMotorControllerOutputConfig());
+    }
+
+    @Override
+    public boolean isHoodAbsoluteEncoderReady() { return false; }
+
+    @Override
+    public DeviceInfo getHoodAbsoluteEncoderMotor() {
+        return new DeviceInfo("HoodAbsoluteEncoderReady",101);
+
     }
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
