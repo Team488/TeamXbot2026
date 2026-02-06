@@ -21,15 +21,39 @@ public class RoboxContract extends Contract2026 {
     public boolean areCanCodersReady() { return false; }
 
     @Override
-    public boolean isShooterReady() { return true; }
+    public boolean isLeftShooterReady() { return false; }
 
     @Override
-    public CANMotorControllerInfo getShooterMotor() {
+    public boolean isMiddleShooterReady() { return false; }
+
+    @Override
+    public boolean isRightShooterReady() { return false; }
+
+    @Override
+    public CANMotorControllerInfo getLeftShooterMotor() {
         return new CANMotorControllerInfo("ShooterMotor",
-                MotorControllerType.SparkMax,
+                MotorControllerType.TalonFx,
                 CANBusId.RIO,
-                32,
-                new SparkMaxMotorControllerOutputConfig()
-                        .withSmartCurrentLimit(Amps.of(80)));
+                918,
+                PDHPort.PDH00,
+                new CANMotorControllerOutputConfig());
+    }
+
+    @Override
+    public CANMotorControllerInfo getMiddleShooterMotor() {
+        return new CANMotorControllerInfo("ShooterMotor",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                211,
+                new CANMotorControllerOutputConfig());
+    }
+
+    @Override
+    public CANMotorControllerInfo getRightShooterMotor() {
+        return new CANMotorControllerInfo("ShooterMotor",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                900,
+                new CANMotorControllerOutputConfig());
     }
 }
