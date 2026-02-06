@@ -203,7 +203,7 @@ The library provides:
 
 - **Main class**: `competition.Main` (defined in `build.gradle`)
 - **Team number**: Loaded from `.wpilib/wpilib_preferences.json`
-- **Checkstyle**: Requires local `../SeriouslyCommonLib` directory (uses `xbotcheckstyle.xml`)
+- **Checkstyle**: Config at `config/checkstyle/checkstyle.xml` (runs in CI and locally)
 - **Loop interval**: 20ms (defined in `Robot.LOOP_INTERVAL`)
 - **Log4j config**: Deployed to robot via `copyResources` task (requires local `../SeriouslyCommonLib/lib/log4jConfig/log4j.xml`)
 

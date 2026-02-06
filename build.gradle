@@ -155,26 +155,19 @@ task('copyResources') {
 
 checkstyle {
     toolVersion = '10.6.0'
-    def localCommonLib = file('../SeriouslyCommonLib')
-    if (localCommonLib.exists()) {
-        configFile = file('../SeriouslyCommonLib/xbotcheckstyle.xml')
-    } else {
-        // Skip checkstyle if local SeriouslyCommonLib not available
-        // Students using Maven dependency don't need to run checkstyle locally
-        println "⚠ Checkstyle config not found - skipping. Clone SeriouslyCommonLib to ../SeriouslyCommonLib to enable."
-    }
+    configFile = file('config/checkstyle/checkstyle.xml')
 }
 
 task checkstyle(type: Checkstyle) {
-    def localCommonLib = file('../SeriouslyCommonLib')
-    if (!localCommonLib.exists()) {
-        // Skip if config not available
-        enabled = false
-        return
-    }
-
     source 'src/main/java'
-    configProperties.basedir = file('../SeriouslyCommonLib')
+
+    // Set basedir for checkstyle config - use local SeriouslyCommonLib if available, otherwise this repo
+    def localCommonLib = file('../SeriouslyCommonLib')
+    if (localCommonLib.exists()) {
+        configProperties.basedir = localCommonLib
+    } else {
+        configProperties.basedir = projectDir
+    }
 
     // Empty classpath
     classpath = files()
