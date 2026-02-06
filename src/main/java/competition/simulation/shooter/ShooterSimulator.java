@@ -61,7 +61,7 @@ public class ShooterSimulator {
 
         this.intakeSimulator = intakeSimulator;
 
-        this.pidManager = pidManagerFactory.create("ShooterSimulationPID"); // TODO: Add defaults
+        this.pidManager = pidManagerFactory.create(pf.getPrefix() + "ShooterSimulationPID", 0.2, 0.001, 0.0, 0.0, 1.0, -1.0); // TODO: Add defaults
 
         this.ballsPerSecond = pf.createPersistentProperty("ballsPerSecond", 10);
         this.random = new Random();
