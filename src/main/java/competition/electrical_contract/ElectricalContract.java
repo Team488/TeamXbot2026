@@ -39,6 +39,10 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract CANMotorControllerInfo getHoodMotor();
 
+    public abstract boolean isHoodAbsoluteEncoderReady();
+
+    public abstract DeviceInfo getHoodAbsoluteEncoderMotor();
+
     public abstract boolean isIntakeDeployReady();
 
     public abstract CANMotorControllerInfo getIntakeDeployMotor();
