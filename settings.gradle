@@ -26,4 +26,19 @@ pluginManagement {
     }
 }
 
-include(':SeriouslyCommonLib')
+// Composite build support for local SeriouslyCommonLib development
+def localCommonLibPath = file('../SeriouslyCommonLib')
+def useLocalCommonLib = System.getProperty('useLocalCommonLib', 'false').toBoolean() ||
+                        System.getenv('USE_LOCAL_COMMON_LIB') == 'true' ||
+                        (localCommonLibPath.exists() && !System.getenv('CI'))
+
+if (useLocalCommonLib && localCommonLibPath.exists()) {
+    includeBuild('../SeriouslyCommonLib') {
+        dependencySubstitution {
+            substitute module('xbot.common:SeriouslyCommonLib') using project(':')
+        }
+    }
+    println "✓ Using local SeriouslyCommonLib from ../SeriouslyCommonLib for development"
+} else {
+    println "→ Using SeriouslyCommonLib from Maven repository"
+}

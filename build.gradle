@@ -53,17 +53,13 @@ def includeDesktopSupport = false
 // Maven central needed for JUnit
 repositories {
     mavenCentral()
-    
+
     maven {
         url "https://mvnrepository.com/artifact/com.google.dagger/dagger"
         url "https://mvnrepository.com/artifact/com.google.dagger/dagger-compiler"
     }
 
     mavenLocal()
-    
-    flatDir {
-       dirs 'SeriouslyCommonLib/build/libs'
-   }
 }
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
@@ -90,7 +86,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:3.12.4"
 
-    implementation project(':SeriouslyCommonLib')
+    // SeriouslyCommonLib - automatically uses local build when available via composite build (see settings.gradle)
+    implementation 'xbot.common:SeriouslyCommonLib:20250220.1'
     implementation group: 'org.json', name:'json', version: '20220924'
 
     implementation 'org.apache.logging.log4j:log4j-api:2.19.0'
@@ -135,11 +132,15 @@ remotes {
 
 task('copyResources') {
     doLast {
+        def localCommonLib = file('../SeriouslyCommonLib')
+        if (!localCommonLib.exists()) {
+            throw new GradleException("copyResources task requires local SeriouslyCommonLib. Clone it to ../SeriouslyCommonLib")
+        }
         ssh.run {
             session(remotes.rio) {
                 // execute 'mkdir ~/449_resources', ignoreError: true
                 // execute 'mkdir /488Logs', ignoreError: true
-                put from: fileTree('SeriouslyCommonLib/lib/log4jConfig/log4j.xml'), into: '/home/lvuser/'
+                put from: fileTree('../SeriouslyCommonLib/lib/log4jConfig/log4j.xml'), into: '/home/lvuser/'
                 //execute ". /etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
             }
         }
@@ -148,13 +149,27 @@ task('copyResources') {
 
 checkstyle {
     toolVersion = '10.6.0'
-    configFile = file('SeriouslyCommonLib/xbotcheckstyle.xml')
+    def localCommonLib = file('../SeriouslyCommonLib')
+    if (localCommonLib.exists()) {
+        configFile = file('../SeriouslyCommonLib/xbotcheckstyle.xml')
+    } else {
+        // Skip checkstyle if local SeriouslyCommonLib not available
+        // Students using Maven dependency don't need to run checkstyle locally
+        println "⚠ Checkstyle config not found - skipping. Clone SeriouslyCommonLib to ../SeriouslyCommonLib to enable."
+    }
 }
 
 task checkstyle(type: Checkstyle) {
+    def localCommonLib = file('../SeriouslyCommonLib')
+    if (!localCommonLib.exists()) {
+        // Skip if config not available
+        enabled = false
+        return
+    }
+
     source 'src/main/java'
-    configProperties.basedir = file('SeriouslyCommonLib')
-    
+    configProperties.basedir = file('../SeriouslyCommonLib')
+
     // Empty classpath
     classpath = files()
 }

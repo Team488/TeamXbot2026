@@ -13,6 +13,9 @@ Team 488 FRC robot code for the 2026 season. Built with Java, WPILib, and Dagger
 ./gradlew build              # Build and run tests
 ./gradlew deploy             # Deploy to robot (roboRIO-488-frc.local)
 ./gradlew simulateJava       # Run robot simulator with GUI
+
+# Force using Maven dependency (skip local SeriouslyCommonLib even if it exists)
+./gradlew build -DuseLocalCommonLib=false
 ```
 
 ### Testing
@@ -102,7 +105,19 @@ subsystems/subsystem_name/
 
 ### SeriouslyCommonLib
 
-Team 488's shared library at `./SeriouslyCommonLib` (git submodule). Provides:
+Team 488's shared library, available from Maven at `xbot.common:SeriouslyCommonLib:20250220.1`.
+
+**Composite Build Support**: If `../SeriouslyCommonLib` exists locally, Gradle automatically uses it instead of Maven for easier testing of library changes. To explicitly control this behavior:
+- Force local: `./gradlew build -DuseLocalCommonLib=true`
+- Force Maven: `./gradlew build -DuseLocalCommonLib=false`
+- Environment variable: `export USE_LOCAL_COMMON_LIB=true`
+
+When working on SeriouslyCommonLib:
+1. Clone both repos side-by-side: `git clone <url> ../SeriouslyCommonLib`
+2. Build normally - Gradle will automatically detect and use the local version
+3. Changes to SeriouslyCommonLib are rebuilt automatically
+
+The library provides:
 
 **Core Framework**:
 - `BaseRobot` - Main robot loop, handles initialization and periodic updates
@@ -188,6 +203,18 @@ Team 488's shared library at `./SeriouslyCommonLib` (git submodule). Provides:
 
 - **Main class**: `competition.Main` (defined in `build.gradle`)
 - **Team number**: Loaded from `.wpilib/wpilib_preferences.json`
-- **Checkstyle**: Uses `SeriouslyCommonLib/xbotcheckstyle.xml`
+- **Checkstyle**: Requires local `../SeriouslyCommonLib` directory (uses `xbotcheckstyle.xml`)
 - **Loop interval**: 20ms (defined in `Robot.LOOP_INTERVAL`)
-- **Log4j config**: Deployed to robot via `copyResources` task (from `SeriouslyCommonLib/lib/log4jConfig/log4j.xml`)
+- **Log4j config**: Deployed to robot via `copyResources` task (requires local `../SeriouslyCommonLib/lib/log4jConfig/log4j.xml`)
+
+### For Students (Simple Setup)
+Just clone this repo and run `./gradlew build`. SeriouslyCommonLib will be fetched from Maven automatically.
+
+### For Developers (Library Development)
+Clone both repos side-by-side to enable local library development:
+```bash
+git clone <this-repo-url> TeamXbot2026
+git clone <library-url> SeriouslyCommonLib
+cd TeamXbot2026
+./gradlew build  # Automatically uses local SeriouslyCommonLib
+```
