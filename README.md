@@ -13,7 +13,6 @@ cd TeamXbot2026
 ./gradlew build
 ```
 
-That's it! SeriouslyCommonLib will be automatically fetched from Maven.
 
 ### For Library Developers (Advanced Setup)
 If you're working on changes to SeriouslyCommonLib and want to test them in this robot code:
