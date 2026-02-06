@@ -158,16 +158,14 @@ checkstyle {
     configFile = file('config/checkstyle/checkstyle.xml')
 }
 
+// Configure basedir for all checkstyle tasks (main, test, and custom)
+tasks.withType(Checkstyle) {
+    configProperties.basedir = file('config/checkstyle')
+}
+
 task checkstyle(type: Checkstyle) {
     source 'src/main/java'
-
-    // Set basedir for checkstyle config - use local SeriouslyCommonLib if available, otherwise this repo
-    def localCommonLib = file('../SeriouslyCommonLib')
-    if (localCommonLib.exists()) {
-        configProperties.basedir = localCommonLib
-    } else {
-        configProperties.basedir = projectDir
-    }
+    configProperties.basedir = file('config/checkstyle')
 
     // Empty classpath
     classpath = files()
