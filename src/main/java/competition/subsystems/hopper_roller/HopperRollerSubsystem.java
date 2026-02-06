@@ -2,24 +2,30 @@ package competition.subsystems.hopper_roller;
 
 import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.wpilibj2.command.Command;
+import xbot.common.advantage.DataFrameRefreshable;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.NamedRunCommand;
 import xbot.common.controls.actuators.XCANMotorController;
+import xbot.common.controls.sensors.XAbsoluteEncoder;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class HopperRollerSubsystem extends BaseSubsystem {
 
-    public HopperRollerSubsystem hopperRollerSubsystem;
     public ElectricalContract electricalContract;
     public XCANMotorController hopperRollerMotor;
     public PropertyFactory pf;
     DoubleProperty forwardPower;
     DoubleProperty reversePower;
 
-    public HopperRollerSubsystem (ElectricalContract electricalContract,
-                                  XCANMotorController.XCANMotorControllerFactory motorFactory,
-                                  PropertyFactory pf) {
+    @Inject
+    public HopperRollerSubsystem(ElectricalContract electricalContract,
+                                 XCANMotorController.XCANMotorControllerFactory motorFactory,
+                                 PropertyFactory pf) {
 
         pf.setPrefix(this);
         this.electricalContract = electricalContract;
@@ -58,6 +64,13 @@ public class HopperRollerSubsystem extends BaseSubsystem {
             return;
         }
         hopperRollerMotor.setPower(0);
+    }
+
+    @Override
+    public void periodic() {
+        if (hopperRollerMotor != null) {
+            hopperRollerMotor.periodic();
+        }
     }
 
     public Command getFowardCommand() {

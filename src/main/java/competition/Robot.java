@@ -9,6 +9,7 @@ import competition.injection.components.DaggerRoboxComponent;
 import competition.injection.components.DaggerSimulationComponent;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
@@ -53,6 +54,7 @@ public class Robot extends BaseRobot {
         dataFrameRefreshables.add(getInjectorComponent().shooterFeederSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().lightsSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().hoodSubsystem());
+        dataFrameRefreshables.add(getInjectorComponent().hopperRollerSubsystem());
     }
 
     protected BaseRobotComponent createDaggerComponent() {
