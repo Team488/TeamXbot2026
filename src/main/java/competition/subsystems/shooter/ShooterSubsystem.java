@@ -21,8 +21,6 @@ public class ShooterSubsystem extends BaseSubsystem {
     public final XCANMotorController middleShooterMotor;
     public final XCANMotorController rightShooterMotor;
 
-    public final List<XCANMotorController> shooterMotors = new ArrayList<>();
-
     public DoubleProperty targetVelocity;
 
     @Inject
@@ -44,7 +42,6 @@ public class ShooterSubsystem extends BaseSubsystem {
         if (eletricalContract.isLeftShooterReady()) {
             this.leftShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getLeftShooterMotor(),
                     getPrefix(), "ShooterMotor", defaultPIDProperties);
-            shooterMotors.add(leftShooterMotor);
             this.registerDataFrameRefreshable(leftShooterMotor);
         } else {
             this.leftShooterMotor = null;
@@ -53,7 +50,6 @@ public class ShooterSubsystem extends BaseSubsystem {
         if (eletricalContract.isMiddleShooterReady()) {
             this.middleShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getMiddleShooterMotor(),
                     getPrefix(), "ShooterMotor", defaultPIDProperties);
-            shooterMotors.add(middleShooterMotor);
             this.registerDataFrameRefreshable(middleShooterMotor);
         } else {
             this.middleShooterMotor = null;
@@ -62,7 +58,6 @@ public class ShooterSubsystem extends BaseSubsystem {
         if (eletricalContract.isRightShooterReady()) {
             this.rightShooterMotor = xcanMotorControllerFactory.create(eletricalContract.getRightShooterMotor(),
                     getPrefix(), "ShooterMotor", defaultPIDProperties);
-            shooterMotors.add(rightShooterMotor);
             this.registerDataFrameRefreshable(rightShooterMotor);
         } else {
             this.rightShooterMotor = null;
@@ -72,7 +67,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
 
     public void stop() {
-        for (var motor : shooterMotors) {
+        for (var motor : getShooterMotors()) {
             motor.setPower(0);
         }
     }
@@ -83,7 +78,6 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     public void decreaseTargetVelocity() {
         targetVelocity.set(targetVelocity.get() - 25);
-
     }
 
     public void setTargetVelocity(double velocity) {
@@ -91,13 +85,27 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
 
     public void runAtTargetVelocity() {
-        for (var motor : shooterMotors) {
+        for (var motor : getShooterMotors()) {
             motor.setVelocityTarget(RPM.of(targetVelocity.get()));
         }
     }
 
+    public List<XCANMotorController> getShooterMotors() {
+        var motors = new ArrayList<XCANMotorController>(3);
+        if (leftShooterMotor != null) {
+            motors.add(leftShooterMotor);
+        }
+        if (middleShooterMotor != null) {
+            motors.add(middleShooterMotor);
+        }
+        if (rightShooterMotor != null) {
+            motors.add(rightShooterMotor);
+        }
+        return motors;
+    }
+
     public void periodic() {
-        for (var motor : shooterMotors) {
+        for (var motor : getShooterMotors()) {
             motor.periodic();
         }
     }
