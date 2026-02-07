@@ -20,7 +20,7 @@ public class LightsSubsystem extends BaseSubsystem {
                            ElectricalContract electricalContract) {
         if (electricalContract.isLightsReady()) {
             this.lights = lightsFactory.create(
-                    electricalContract.getLightControlerInfo());
+                    electricalContract.getLightControllerInfo());
         } else {
             this.lights = null;
         }
