@@ -135,7 +135,8 @@ public class GenericSubsystemTest extends BaseCompetitionTest {
      */
     private void failOnMethodException(Object subsystem, Method method, Throwable e) {
         // Unwrap InvocationTargetException if present to get the root cause
-        if (e.getClass() == InvocationTargetException.class) {
+        // Use instanceof to handle subclasses and recursively unwrap multiple layers
+        while (e instanceof InvocationTargetException && ((InvocationTargetException) e).getTargetException() != null) {
             e = ((InvocationTargetException) e).getTargetException();
         }
 
