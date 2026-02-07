@@ -5,17 +5,17 @@ import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
-public class CloseHoodCommand extends BaseCommand {
+public class HoodToZeroCommand extends BaseCommand {
     final HoodSubsystem hood;
 
     @Inject
-    public CloseHoodCommand(HoodSubsystem hoodSubsystem) {
+    public HoodToZeroCommand(HoodSubsystem hoodSubsystem) {
         this.hood = hoodSubsystem;
         addRequirements(hoodSubsystem);
     }
 
     @Override
     public void initialize() {
-        hood.closeHood();
+        hood.stopServo();
     }
 }

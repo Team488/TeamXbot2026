@@ -1,21 +1,22 @@
 package competition.subsystems.hood.commands;
 
 import competition.subsystems.hood.HoodSubsystem;
+
 import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
-public class StopHoodCommand extends BaseCommand {
+public class HoodToGoalCommand extends BaseCommand {
     final HoodSubsystem hood;
 
     @Inject
-    public StopHoodCommand(HoodSubsystem hoodSubsystem) {
+    public HoodToGoalCommand(HoodSubsystem hoodSubsystem) {
         this.hood = hoodSubsystem;
         addRequirements(hoodSubsystem);
     }
 
     @Override
     public void initialize() {
-        hood.stopHood();
+        hood.runServo();
     }
 }

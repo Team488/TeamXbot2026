@@ -3,6 +3,7 @@ package competition.electrical_contract;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
+import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.electrical_contract.SparkMaxMotorControllerOutputConfig;
 
@@ -30,4 +31,8 @@ public class RoboxContract extends Contract2026 {
                 new SparkMaxMotorControllerOutputConfig()
                         .withSmartCurrentLimit(Amps.of(80)));
     }
+
+    @Override
+    public boolean isHoodReady() { return true; }
+
 }

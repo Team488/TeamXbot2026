@@ -117,13 +117,8 @@ public class Contract2026 extends ElectricalContract {
     @Override
     public boolean isHoodReady() {return false;}
 
-    public CANMotorControllerInfo getHoodMotor() {
-        return new CANMotorControllerInfo("hoodMotor",
-                MotorControllerType.TalonFx,
-                CANBusId.RIO,
-                1000,
-                PDHPort.PDH00, // TODO: Change port
-                new CANMotorControllerOutputConfig());
+    public DeviceInfo getHoodServo() {
+        return new DeviceInfo("HoodServo", 0);
     }
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {

@@ -7,6 +7,8 @@ import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
+import xbot.common.controls.actuators.XServo;
+import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -17,83 +19,34 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class HoodSubsystem extends BaseSetpointSubsystem<Angle, Double> {
-    public final XCANMotorController hoodMotor;
+public class HoodSubsystem extends BaseSubsystem {
+    public final XServo hoodServo;
     public ElectricalContract electricalContract;
 
-    private Angle targetAngle = Rotations.of(0);
-    private boolean isCalibrated = false;
-    public DoubleProperty openPower;
-    public DoubleProperty closePower;
+    public DoubleProperty servoDistance;
 
     @Inject
-    public HoodSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
+    public HoodSubsystem(XServo.XServoFactory servoFactory,
                          ElectricalContract electricalContract, PropertyFactory propertyFactory) {
 
         propertyFactory.setPrefix(this);
         this.electricalContract = electricalContract;
 
         if (electricalContract.isHoodReady()) {
-            this.hoodMotor = xcanMotorControllerFactory.create(electricalContract.getHoodMotor(),
-                    this.getPrefix(),
-                    "HoodMotorPID",
-                    new XCANMotorControllerPIDProperties());
+           this.hoodServo = servoFactory.create(electricalContract.getHoodServo().channel,
+                   getName() + "/Servo");
         } else {
-            this.hoodMotor = null;
-        };
-        openPower = propertyFactory.createPersistentProperty("open hood", 0.1);
-        closePower = propertyFactory.createPersistentProperty("close hood", -0.1);
-
-    };
-
-    public void openHood() {
-        if (hoodMotor != null) {
-            hoodMotor.setPower(openPower.get());
+            this.hoodServo = null;
         }
-    }
-    public void closeHood() {
-        if (hoodMotor != null) {
-            hoodMotor.setPower(openPower.get());
-        }
-    }
-    public void stopHood() {
-        if (hoodMotor != null) {
-            hoodMotor.setPower(0);
-        }
+
+        this.servoDistance = propertyFactory.createPersistentProperty("Servo Distance Goal", 1);
     }
 
-    @Override
-    public Angle getCurrentValue() {
-        if (electricalContract.isHoodReady()){
-            return Degrees.of(hoodMotor.getPosition().in(Rotations));
-        }
-        return Degrees.of(0);
+    public void runServo() {
+        hoodServo.set(servoDistance.get());
     }
 
-    @Override
-    public Angle getTargetValue() {
-        return targetAngle;
-    }
-
-    @Override
-    public void setTargetValue(Angle value) {
-        targetAngle = value;
-    }
-
-    @Override
-    public void setPower(Double power) {
-        if (electricalContract.isHoodReady()) {
-            hoodMotor.setPower(power);
-        }
-    }
-
-    @Override
-    public boolean isCalibrated() {
-        return isCalibrated;
-    }
-
-    @Override
-    protected boolean areTwoTargetsEquivalent(Angle target1, Angle target2) {
-        return target1.isEquivalent(target2);
+    public void stopServo() {
+        hoodServo.set(0);
     }
 }

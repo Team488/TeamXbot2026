@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
+import competition.subsystems.hood.commands.HoodToGoalCommand;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
@@ -27,11 +28,14 @@ public class OperatorCommandMap {
             OperatorInterface operatorInterface,
             ShooterOutputCommand shooterOutputCommand,
             TrimShooterVelocityUp trimShooterVelocityUp,
-            TrimShooterVelocityDown trimShooterVelocityDown
+            TrimShooterVelocityDown trimShooterVelocityDown,
+            HoodToGoalCommand hoodToGoalCommand
     ) {
         operatorInterface.debugGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(shooterOutputCommand);
         operatorInterface.debugGamepad.getifAvailable(XXboxController.XboxButton.X).onTrue(trimShooterVelocityDown);
         operatorInterface.debugGamepad.getifAvailable(XXboxController.XboxButton.Y).onTrue(trimShooterVelocityUp);
+        operatorInterface.debugGamepad.getifAvailable(XXboxController.XboxButton.B).onTrue(hoodToGoalCommand);
+
     }
 
     @Inject
