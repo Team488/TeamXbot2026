@@ -38,6 +38,7 @@ public class ClimberSubsystem extends BaseSubsystem {
             this.climberEncoder = absoluteEncoder.create(
                     electricalContract.getClimberAbsoluteEncoder(),
             getPrefix());
+            this.registerDataFrameRefreshable(climberEncoder);
         } else {
             this.climberEncoder = null;
         }
