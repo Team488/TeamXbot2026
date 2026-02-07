@@ -1,6 +1,7 @@
 package competition.simulation.intake_deploy;
 
 import competition.Robot;
+import competition.simulation.SimulatorConstants;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -56,8 +57,8 @@ public class IntakeDeploySimulator {
         this.motorSim = new DCMotorSim(
                 LinearSystemId.createDCMotorSystem(
                         intakeDeployGearBox,
-                        0.005,
-                        60
+                        SimulatorConstants.intakeDeployJKgMetersSquared,
+                        SimulatorConstants.intakeDeployGearing
                 ),
                 intakeDeployGearBox
         );
@@ -69,7 +70,7 @@ public class IntakeDeploySimulator {
 
     public boolean isDeployed() {
         // TODO: Extract
-        return getAngularPosition().isNear(Degrees.of(80), Degrees.of(3));
+        return getAngularPosition().isNear(SimulatorConstants.intakeDeployedAngle, Degrees.of(5));
     }
 
     public void update() {
