@@ -1,17 +1,13 @@
 package competition.subsystems;
 
 import competition.BaseCompetitionTest;
-import org.apache.logging.log4j.core.util.StringBuilderWriter;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
-import org.mockito.invocation.Invocation;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
