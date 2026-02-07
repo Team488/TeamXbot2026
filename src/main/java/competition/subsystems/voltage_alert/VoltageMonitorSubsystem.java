@@ -15,9 +15,9 @@ public class VoltageMonitorSubsystem extends BaseSubsystem {
     private final Alert voltageAlert = new Alert("The Voltage is Low!", Alert.AlertType.kWarning);
 
     @Inject
-    public VoltageMonitorSubsystem(XPowerDistributionPanel powerDistribution) {
+    public VoltageMonitorSubsystem(XPowerDistributionPanel.XPowerDistributionPanelFactory powerDistributionPanelFactory) {
 
-        this.powerDistribution = powerDistribution;
+        powerDistribution = powerDistributionPanelFactory.create();
     }
 
     @Override
