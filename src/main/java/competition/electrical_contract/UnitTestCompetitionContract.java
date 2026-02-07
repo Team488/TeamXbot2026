@@ -12,10 +12,12 @@ public class UnitTestCompetitionContract extends Contract2026 {
         return true;
     }
 
+    @Override
     public boolean isMiddleShooterReady() {
         return true;
     }
 
+    @Override
     public boolean isRightShooterReady() {
         return true;
     }
