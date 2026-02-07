@@ -70,6 +70,5 @@ public class ClimberSubsystem extends BaseSubsystem {
             climberMotor.periodic();
         }
     }
-
-    }
+}
 
