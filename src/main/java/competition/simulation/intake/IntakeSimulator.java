@@ -10,8 +10,6 @@ import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static edu.wpi.first.units.Units.Inches;
-
 @Singleton
 public class IntakeSimulator {
     final IntakeSubsystem intake;
