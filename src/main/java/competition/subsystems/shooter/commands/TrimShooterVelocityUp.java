@@ -19,8 +19,7 @@ public class TrimShooterVelocityUp extends BaseCommand {
 
     @Override
     public void initialize() {
-        shooter.increaseTargetVelocity();
-        log.info("Decreasing target velocity to " + shooter.targetVelocity.get());
+        shooter.increaseShooterOffset();
     }
 
     @Override
