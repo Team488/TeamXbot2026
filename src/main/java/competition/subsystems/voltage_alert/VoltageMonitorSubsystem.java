@@ -1,7 +1,5 @@
 package competition.subsystems.voltage_alert;
 
-
-import competition.subsystems.climber.ClimberSubsystem;
 import edu.wpi.first.wpilibj.Alert;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.sensors.XPowerDistributionPanel;
