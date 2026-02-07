@@ -9,6 +9,6 @@ public class HopperAndIntakeCommandGroup extends BaseParallelCommandGroup {
     public HopperAndIntakeCommandGroup(FuelIntakeCommand intake, HopperRollerSubsystem hopper) {
         addCommands(
                 intake,
-                hopper.getReverseCommand());
+                hopper.getEjectCommand());
     }
 }
