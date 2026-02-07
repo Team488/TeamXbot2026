@@ -21,9 +21,10 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public final XCANMotorController leftShooterMotor;
     public final XCANMotorController middleShooterMotor;
     public final XCANMotorController rightShooterMotor;
-        public ElectricalContract electricalContract;
+    public ElectricalContract electricalContract;
 
     public DoubleProperty targetVelocity;
+    public double shooterOffset = 0;
 
     @Inject
     public ShooterSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
@@ -74,12 +75,12 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         }
     }
 
-    public void increaseTargetVelocity() {
-        targetVelocity.set(targetVelocity.get() + 25);
+    public void increaseShooterOffset() {
+        shooterOffset = shooterOffset + 15;
     }
 
-    public void decreaseTargetVelocity() {
-        targetVelocity.set(targetVelocity.get() - 25);
+    public void decreaseShooterOffset() {
+        shooterOffset = shooterOffset - 15;
 
     }
 
