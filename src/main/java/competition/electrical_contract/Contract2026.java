@@ -52,6 +52,15 @@ public class Contract2026 extends ElectricalContract {
                 PDHPort.PDH00,
                 new CANMotorControllerOutputConfig());
     }
+
+    @Override
+    public boolean isClimberAbsoluteEncoderReady(){ return false; }
+
+    @Override
+    public DeviceInfo getClimberAbsoluteEncoder() {
+        return new DeviceInfo("ClimberAbsoluteEncoderReady",101);
+
+    }
                                           
     @Override                                    
     public boolean isShooterFeederReady() { return false; }
