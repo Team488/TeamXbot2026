@@ -132,7 +132,7 @@ public class Contract2026 extends ElectricalContract {
     public boolean isHoodAbsoluteEncoderReady() { return false; }
 
     @Override
-    public DeviceInfo getHoodAbsoluteEncoderMotor() {
+    public DeviceInfo getHoodAbsoluteEncoder() {
         return new DeviceInfo("HoodAbsoluteEncoderReady",101);
 
     }

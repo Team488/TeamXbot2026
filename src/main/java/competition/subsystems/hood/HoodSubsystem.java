@@ -5,9 +5,7 @@ import competition.electrical_contract.ElectricalContract;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
-import xbot.common.controls.io_inputs.XCANCoderInputs;
 import xbot.common.controls.sensors.XAbsoluteEncoder;
-import xbot.common.controls.sensors.XCANCoder;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -40,7 +38,7 @@ public class HoodSubsystem extends BaseSubsystem {
         }
 
         if (electricalContract.isHoodAbsoluteEncoderReady()) {
-            this.hoodEncoder = xAbsoluteEncoderFactory.create(electricalContract.getHoodAbsoluteEncoderMotor(),
+            this.hoodEncoder = xAbsoluteEncoderFactory.create(electricalContract.getHoodAbsoluteEncoder(),
                     getPrefix());
                     registerDataFrameRefreshable(hoodEncoder);
         } else {
