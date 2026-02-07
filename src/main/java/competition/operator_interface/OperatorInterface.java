@@ -18,6 +18,7 @@ import xbot.common.properties.PropertyFactory;
 public class OperatorInterface {
     public XXboxController driverGamepad;
     public XXboxController debugGamepad;
+    public XXboxController victorSubsystemTestingGamepad;
 
     final DoubleProperty driverDeadband;
     final DoubleProperty operatorDeadband;
@@ -32,6 +33,10 @@ public class OperatorInterface {
         debugGamepad = controllerFactory.create(1);
         debugGamepad.setLeftInversion(false,true);
         debugGamepad.setRightInversion(true,true);
+
+        victorSubsystemTestingGamepad = controllerFactory.create(2);
+        victorSubsystemTestingGamepad.setLeftInversion(false,true);
+        victorSubsystemTestingGamepad.setRightInversion(true,true);
 
         pf.setPrefix("OperatorInterface");
         pf.setDefaultLevel(Property.PropertyLevel.Debug);

@@ -3,8 +3,16 @@ package competition.operator_interface;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import competition.subsystems.climber.commands.ClimberExtendCommand;
+import competition.subsystems.climber.commands.ClimberRetractCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
+import competition.subsystems.fuel_intake.commands.FuelEjectCommand;
+import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
+import competition.subsystems.hood.commands.CloseHoodCommand;
+import competition.subsystems.hood.commands.OpenHoodCommand;
+import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
+import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
@@ -47,4 +55,31 @@ public class OperatorCommandMap {
         operatorInterface.driverGamepad.getPovIfAvailable(90).onTrue(changeActiveModule);
         operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(typicalSwerveDrive);
     }
+    @Inject
+    public void victorsDebugCommandsForSubsystems(OperatorInterface operatorInterface,
+                                     ClimberExtendCommand climberExtendCommand,
+                                     ClimberRetractCommand climberRetractCommand,
+                                     ShooterOutputCommand shooterOutputCommand,
+                                     TrimShooterVelocityUp trimShooterVelocityUp,
+                                     TrimShooterVelocityDown trimShooterVelocityDown,
+                                     FuelIntakeCommand fuelIntakeCommand,
+                                     OpenHoodCommand openHoodCommand,
+                                     CloseHoodCommand closeHoodCommand,
+                                     IntakeDeployExtendCommand intakeDeployExtendCommand,
+                                     IntakeDeployRetractCommand intakeDeployRetractCommand
+    ) {
+        operatorInterface.victorSubsystemTestingGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(climberExtendCommand);
+        operatorInterface.victorSubsystemTestingGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(climberRetractCommand);
+        operatorInterface.victorSubsystemTestingGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger).whileTrue(trimShooterVelocityUp);
+        operatorInterface.victorSubsystemTestingGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger).whileTrue(trimShooterVelocityDown);
+        operatorInterface.victorSubsystemTestingGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(shooterOutputCommand);
+        operatorInterface.victorSubsystemTestingGamepad.getifAvailable(XXboxController.XboxButton.Y).onTrue(fuelIntakeCommand);
+        operatorInterface.victorSubsystemTestingGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(intakeDeployExtendCommand);
+        operatorInterface.victorSubsystemTestingGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(intakeDeployRetractCommand);
+        operatorInterface.victorSubsystemTestingGamepad.getifAvailable(XXboxController.XboxButton.RightJoystickYAxisPositive).whileTrue(openHoodCommand);
+        operatorInterface.victorSubsystemTestingGamepad.getifAvailable(XXboxController.XboxButton.RightJoystickYAxisNegative).whileTrue(closeHoodCommand);
+    }
+
+
+
 }
