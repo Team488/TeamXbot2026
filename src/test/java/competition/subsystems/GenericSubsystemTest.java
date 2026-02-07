@@ -82,11 +82,16 @@ public class GenericSubsystemTest extends BaseCompetitionTest {
             for (Field field : subsystem.getClass().getFields()) {
                 if (XCANMotorController.class.isAssignableFrom(field.getType())) {
                     field.setAccessible(true);
-                    // This isn't safe for parallel test execution, so we need to force
-                    // tests in this class to run sequentially
-                    field.set(subsystem, Mockito.spy(field.get(subsystem)));
-                    // Replace the original motor controllers with the mocked ones
-                    motorControllers.add(field.get(subsystem));
+                    var originalMotorController = field.get(subsystem);
+                    if (originalMotorController == null) {
+                        fail("Subsystem " + subsystem.getClass().getName() + " has a null motor controller "
+                                + "field: " + field.getName() + ". Did you forget to mark the subsystem as ready "
+                                + "in UnitTestCompetitionContract?");
+                    }
+
+                    var mockedMotorController = Mockito.spy((XCANMotorController)originalMotorController);
+                    field.set(subsystem, mockedMotorController);
+                    motorControllers.add(mockedMotorController);
                 }
             }
             subsystemMotorControllerMap.put(subsystem, motorControllers);
