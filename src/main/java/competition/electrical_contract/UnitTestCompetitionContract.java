@@ -8,6 +8,11 @@ public class UnitTestCompetitionContract extends Contract2026 {
     public UnitTestCompetitionContract() {}
 
     @Override
+    public boolean isShooterFeederReady() {
+        return true;
+    }
+
+    @Override
     public boolean isLeftShooterReady() {
         return true;
     }
@@ -49,6 +54,11 @@ public class UnitTestCompetitionContract extends Contract2026 {
 
     @Override
     public boolean isHoodReady() {
+        return true;
+    }
+
+    @Override
+    public boolean isHopperRollerReady() {
         return true;
     }
 }
