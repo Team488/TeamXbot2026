@@ -29,8 +29,8 @@ public class RoboxContract extends Contract2026 {
         return new CANMotorControllerInfo("ShooterMotor",
                 MotorControllerType.SparkMax,
                 CANBusId.RIO,
-                918,
-                PDHPort.PDH00,
-                new CANMotorControllerOutputConfig());
+                32,
+                new SparkMaxMotorControllerOutputConfig()
+                        .withSmartCurrentLimit(Amps.of(80)));
     }
 }
