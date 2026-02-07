@@ -32,11 +32,17 @@ public abstract class BaseRobotComponent extends BaseComponent {
 
     public abstract ShooterSubsystem shooterSubsystem();
 
+    public abstract ShooterFeederSubsystem shooterFeederSubsystem();
+
+    public abstract HoodSubsystem hoodSubsystem();
+
     public abstract GameField gameField();
 
     public abstract LightsSubsystem lightsSubsystem();
 
     public abstract IntakeDeploySubsystem intakeDeploySubsystem();
+
+    public abstract IntakeSubsystem intakeSubsystem();
 
     public abstract HopperRollerSubsystem hopperRollerSubsystem();
 
