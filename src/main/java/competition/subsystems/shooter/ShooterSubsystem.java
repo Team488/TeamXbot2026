@@ -113,7 +113,19 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         for (var motor : getShooterMotors()) {
             motor.periodic();
         }
+
+        setMaintainerIsAtGoal(isShooterReady());
     }
+
+    public boolean isShooterReady() {
+        for (var motor : getShooterMotors()) {
+            if (motor.getVelocity().in(RPM) < targetVelocity.get()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     @Override
     public AngularVelocity getCurrentValue() {
