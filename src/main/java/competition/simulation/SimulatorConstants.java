@@ -8,9 +8,9 @@ import static edu.wpi.first.units.Units.Meters;
 public class SimulatorConstants {
 
     // Shooter
-    public final static Distance shooterHeight = Inches.of(20); // TODO: Tune
-    public final static Distance flywheelRadius = Meters.of(0.025); // TODO: Tune
-    public final static double positionVariance = 0.50;
-    public final static double flywheelJKgMetersSquared = 0.0025;
-    public final static double flywheelGearing = 1;
+    public static final Distance shooterHeight = Inches.of(20); // TODO: Tune
+    public static final Distance flywheelRadius = Meters.of(0.025); // TODO: Tune
+    public static final double positionVariance = 0.50;
+    public static final double flywheelJKgMetersSquared = 0.0025;
+    public static final double flywheelGearing = 1;
 }
