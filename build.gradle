@@ -93,7 +93,7 @@ dependencies {
     testImplementation "org.mockito:mockito-core:3.12.4"
 
     // SeriouslyCommonLib - automatically uses local build when available via composite build (see settings.gradle)
-    implementation 'xbot.common:SeriouslyCommonLib:20260206.7'
+    implementation 'xbot.common:SeriouslyCommonLib:20260206.10'
     implementation group: 'org.json', name:'json', version: '20220924'
 
     implementation 'org.apache.logging.log4j:log4j-api:2.19.0'
