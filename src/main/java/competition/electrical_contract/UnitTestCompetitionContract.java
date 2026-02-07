@@ -31,4 +31,24 @@ public class UnitTestCompetitionContract extends Contract2026 {
     public boolean isIntakeDeployReady() {
         return true;
     }
+
+    @Override
+    public boolean isLightsReady() {
+        return true;
+    }
+
+    @Override
+    public boolean isClimberReady() {
+        return true;
+    }
+
+    @Override
+    public boolean isIntakeDeployAbsoluteEncoderReady() {
+        return true;
+    }
+
+    @Override
+    public boolean isHoodReady() {
+        return true;
+    }
 }
