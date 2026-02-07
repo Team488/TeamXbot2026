@@ -9,12 +9,20 @@ import static edu.wpi.first.units.Units.Meters;
 
 public class SimulatorConstants {
 
+    /** General **/
+    public static final int fuelCapacity = 30;
+
     /** Shooter **/
     public static final Distance shooterHeight = Inches.of(20); // TODO: Tune
     public static final Distance flywheelRadius = Meters.of(0.025); // TODO: Tune
-    public static final double positionVariance = 0.50;
+    public static final double shooterXVariance = 0.1;
+    public static final double shooterYVariance = 0.5;
     public static final double flywheelJKgMetersSquared = 0.0025;
     public static final double flywheelGearing = 1;
+
+    /** Intake **/
+    public static final Distance intakeWidth = Inches.of(28);
+    public static final Distance intakeLengthExtended = Inches.of(12);
 
     /** Intake Deploy **/
     public static final Angle intakeDeployedAngle = Degrees.of(80);

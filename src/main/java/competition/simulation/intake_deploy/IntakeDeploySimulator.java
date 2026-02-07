@@ -64,7 +64,6 @@ public class IntakeDeploySimulator {
     }
 
     public boolean isDeployed() {
-        // TODO: Extract
         return getAngularPosition().isNear(SimulatorConstants.intakeDeployedAngle, Degrees.of(5));
     }
 
@@ -81,6 +80,6 @@ public class IntakeDeploySimulator {
         this.motor.setPosition(getAngularPosition());
         this.motor.setVelocity(prevPosition.minus(this.motor.getPosition()).per(Second).times(Robot.LOOP_INTERVAL));
 
-        aKitLog.record("Intake Deployed", isDeployed());
+        aKitLog.record("IntakeDeployed", isDeployed());
     }
 }
