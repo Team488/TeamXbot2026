@@ -38,6 +38,8 @@ public class Robot extends BaseRobot {
         getInjectorComponent().swerveDefaultCommandMap();
         getInjectorComponent().shooterSubsystem();
         getInjectorComponent().lightsSubsystem();
+        getInjectorComponent().hopperRollerSubsystem();
+        getInjectorComponent().intakeDeploySubsystem();
 
         if (BaseRobot.isSimulation()) {
             simulator = getInjectorComponent().simulator();
@@ -46,13 +48,13 @@ public class Robot extends BaseRobot {
         dataFrameRefreshables.add((DriveSubsystem)getInjectorComponent().driveSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().poseSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().aprilTagVisionSubsystemExtended());
-        dataFrameRefreshables.add((ShooterSubsystem)getInjectorComponent().shooterSubsystem());
-        dataFrameRefreshables.add(getInjectorComponent().intakeDeploySubsystem());
-        dataFrameRefreshables.add(getInjectorComponent().climberSubsystem());
-        dataFrameRefreshables.add(getInjectorComponent().intakeSubsystem());
+        dataFrameRefreshables.add(getInjectorComponent().shooterSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().shooterFeederSubsystem());
-        dataFrameRefreshables.add(getInjectorComponent().lightsSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().hoodSubsystem());
+        dataFrameRefreshables.add(getInjectorComponent().intakeSubsystem());
+        dataFrameRefreshables.add(getInjectorComponent().intakeDeploySubsystem());
+        dataFrameRefreshables.add(getInjectorComponent().lightsSubsystem());
+        dataFrameRefreshables.add(getInjectorComponent().hopperRollerSubsystem());
     }
 
     protected BaseRobotComponent createDaggerComponent() {
