@@ -1,12 +1,14 @@
 package competition.simulation.shooter;
 
 import competition.Robot;
+import competition.simulation.SimulatorConstants;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
@@ -26,8 +28,10 @@ import java.util.Random;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 @Singleton
 public class ShooterSimulator {
@@ -61,7 +65,15 @@ public class ShooterSimulator {
 
         this.intakeSimulator = intakeSimulator;
 
-        this.pidManager = pidManagerFactory.create(pf.getPrefix() + "ShooterSimulationPID", 0.2, 0.001, 0.0, 0.0, 1.0, -1.0); // TODO: Add defaults
+        this.pidManager = pidManagerFactory.create(
+                pf.getPrefix() + "ShooterSimulationPID",
+                0.2,
+                0.001,
+                0.0,
+                0.0,
+                1.0,
+                -1.0
+        ); // TODO: Adjust
 
         this.ballsPerSecond = pf.createPersistentProperty("ballsPerSecond", 10);
         this.random = new Random();
@@ -70,8 +82,8 @@ public class ShooterSimulator {
         this.shooterSim = new FlywheelSim(
                 LinearSystemId.createFlywheelSystem(
                         shooterGearBox,
-                        0.0025,
-                        1.0
+                        SimulatorConstants.flywheelJKgMetersSquared,
+                        SimulatorConstants.flywheelGearing
                 ),
                 shooterGearBox
         );
@@ -114,15 +126,15 @@ public class ShooterSimulator {
                 return;
             }
 
-            // TODO: Extract constants/magic-numbers later
+            double speed = getShooterVelocity().in(RadiansPerSecond) * SimulatorConstants.flywheelRadius.in(Meters);
             arena.addPieceWithVariance(
-                    pose.getCurrentPose2d().getTranslation(),
+                    pose.getCurrentPose2d().getTranslation(), // TODO: Offset so it is coming out from shooter
                     pose.getCurrentHeading(),
-                    Inches.of(20), // TODO: Shooter height
-                    MetersPerSecond.of(10.0), // TODO: Angular velocity DIV flywheel radius
-                    Degrees.of(80), // TODO: Hood
-                    0.30,
-                    0.30,
+                    SimulatorConstants.shooterHeight,
+                    MetersPerSecond.of(speed),
+                    Degrees.of(80), // TODO: Read from hood sim
+                    SimulatorConstants.positionVariance,
+                    SimulatorConstants.positionVariance,
                     2.0,
                     1.0,
                     2.0

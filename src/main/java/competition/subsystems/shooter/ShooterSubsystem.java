@@ -21,7 +21,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public final XCANMotorController leftShooterMotor;
     public final XCANMotorController middleShooterMotor;
     public final XCANMotorController rightShooterMotor;
-        public ElectricalContract electricalContract;
+    public ElectricalContract electricalContract;
 
     public DoubleProperty targetVelocity;
 
