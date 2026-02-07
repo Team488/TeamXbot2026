@@ -113,35 +113,22 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         for (var motor : getShooterMotors()) {
             motor.periodic();
         }
-
-        setMaintainerIsAtGoal(isShooterReady());
-    }
-
-    public boolean isShooterReady() {
-        for (var motor : getShooterMotors()) {
-            if (motor.getVelocity().in(RPM) < targetVelocity.get()) {
-                return false;
-            }
-        }
-        return true;
     }
 
 
     @Override
     public AngularVelocity getCurrentValue() {
-        if (electricalContract.isMiddleShooterReady()) {
-            return middleShooterMotor.getVelocity();
+        // This avoids division by zero.
+        if (getShooterMotors().isEmpty()) {
+            return RPM.zero();
         }
 
-        if (electricalContract.isLeftShooterReady()) {
-            return leftShooterMotor.getVelocity();
+        double total = 0;
+        for (var motor : getShooterMotors()) {
+            total += motor.getVelocity().in(RPM);
         }
-
-        if (electricalContract.isRightShooterReady()) {
-            return rightShooterMotor.getVelocity();
-        }
-
-        return RPM.zero(); //rpm = rotation per minute
+        double averageSpeed = total / getShooterMotors().size();
+        return RPM.of(averageSpeed);
     }
 
     @Override
