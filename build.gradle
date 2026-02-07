@@ -11,6 +11,10 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
+// When in doubt, use the latest version from
+// https://dev.azure.com/Team488/Team%20488%20Builds/_artifacts/feed/XBot
+def SeriouslyCommonLibVersion = '20260207.21'
+
 def ROBOT_MAIN_CLASS = "competition.Main"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
@@ -93,7 +97,7 @@ dependencies {
     testImplementation "org.mockito:mockito-core:3.12.4"
 
     // SeriouslyCommonLib - automatically uses local build when available via composite build (see settings.gradle)
-    implementation 'xbot.common:SeriouslyCommonLib:20260206.10'
+    implementation group: 'xbot.common', name:'SeriouslyCommonLib', version: SeriouslyCommonLibVersion
     implementation group: 'org.json', name:'json', version: '20220924'
 
     implementation 'org.apache.logging.log4j:log4j-api:2.19.0'
