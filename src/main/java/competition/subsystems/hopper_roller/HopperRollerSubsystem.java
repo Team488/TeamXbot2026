@@ -16,8 +16,8 @@ public class HopperRollerSubsystem extends BaseSubsystem {
 
     public final ElectricalContract electricalContract;
     public final XCANMotorController hopperRollerMotor;
-    final DoubleProperty forwardPower;
-    final DoubleProperty reversePower;
+    final DoubleProperty ejectPower;
+    final DoubleProperty intakePower;
 
     @Inject
     public HopperRollerSubsystem(ElectricalContract electricalContract,
@@ -37,8 +37,8 @@ public class HopperRollerSubsystem extends BaseSubsystem {
             this.hopperRollerMotor = null;
         }
 
-        reversePower = pf.createPersistentProperty("Reverse Power", 0.1);
-        forwardPower = pf.createPersistentProperty("Forward Power", -0.1);
+        intakePower = pf.createPersistentProperty("Intake Power", 0.1);
+        ejectPower = pf.createPersistentProperty("Eject Power", -0.1);
 
     }
 
@@ -46,14 +46,14 @@ public class HopperRollerSubsystem extends BaseSubsystem {
         if (hopperRollerMotor == null) {
             return;
         }
-        hopperRollerMotor.setPower(forwardPower.get());
+        hopperRollerMotor.setPower(ejectPower.get());
     }
 
     public void setIntakePower() {
         if (hopperRollerMotor == null) {
             return;
         }
-        hopperRollerMotor.setPower(reversePower.get());
+        hopperRollerMotor.setPower(intakePower.get());
     }
 
     public void stop() {
