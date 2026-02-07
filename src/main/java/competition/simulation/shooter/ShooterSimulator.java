@@ -5,6 +5,7 @@ import competition.simulation.SimulatorConstants;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -77,7 +78,6 @@ public class ShooterSimulator {
         this.ballsPerSecond = pf.createPersistentProperty("ballsPerSecond", 10);
         this.random = new Random();
 
-        // TODO: Figure out these constants
         this.shooterSim = new FlywheelSim(
                 LinearSystemId.createFlywheelSystem(
                         shooterGearBox,
@@ -126,14 +126,16 @@ public class ShooterSimulator {
             }
 
             double speed = getShooterVelocity().in(RadiansPerSecond) * SimulatorConstants.flywheelRadius.in(Meters);
+            Translation2d robotPose = pose.getCurrentPose2d().getTranslation();
+            Translation2d shooterOffset = new Translation2d(0.25, 0);
             arena.addPieceWithVariance(
-                    pose.getCurrentPose2d().getTranslation(), // TODO: Offset so it is coming out from shooter
+                    robotPose.plus(shooterOffset.rotateBy(pose.getCurrentHeading())),
                     pose.getCurrentHeading(),
                     SimulatorConstants.shooterHeight,
                     MetersPerSecond.of(speed),
                     Degrees.of(80), // TODO: Read from hood sim
-                    SimulatorConstants.positionVariance,
-                    SimulatorConstants.positionVariance,
+                    SimulatorConstants.shooterXVariance,
+                    SimulatorConstants.shooterYVariance,
                     2.0,
                     1.0,
                     2.0
