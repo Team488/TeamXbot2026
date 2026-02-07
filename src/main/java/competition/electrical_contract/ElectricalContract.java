@@ -64,4 +64,8 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public abstract boolean isLightsReady();
 
     public abstract CANLightControllerInfo getLightControlerInfo();
+
+    public abstract boolean isHopperRollerReady();
+
+    public abstract CANMotorControllerInfo getHopperRollerMotor();
 }
