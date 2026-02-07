@@ -16,11 +16,10 @@ import javax.inject.Singleton;
 @Singleton
 public class HopperRollerSubsystem extends BaseSubsystem {
 
-    public ElectricalContract electricalContract;
-    public XCANMotorController hopperRollerMotor;
-    public PropertyFactory pf;
-    DoubleProperty forwardPower;
-    DoubleProperty reversePower;
+    public final ElectricalContract electricalContract;
+    public final XCANMotorController hopperRollerMotor;
+    final DoubleProperty forwardPower;
+    final DoubleProperty reversePower;
 
     @Inject
     public HopperRollerSubsystem(ElectricalContract electricalContract,
