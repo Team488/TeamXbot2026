@@ -1,5 +1,6 @@
 package competition.simulation.intake;
 
+import competition.simulation.intake_deploy.IntakeDeploySimulator;
 import competition.subsystems.fuel_intake.IntakeSubsystem;
 import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.drivesims.AbstractDriveTrainSimulation;
@@ -12,16 +13,17 @@ import static edu.wpi.first.units.Units.Inches;
 
 @Singleton
 public class IntakeSimulator {
-
     final IntakeSubsystem intake;
+    final IntakeDeploySimulator intakeDeploySim;
     IntakeSimulation simulation;
 
     final MockCANMotorController intakeMotor;
 
     @Inject
-    public IntakeSimulator(IntakeSubsystem intake) {
+    public IntakeSimulator(IntakeSubsystem intake, IntakeDeploySimulator intakeDeploySim) {
         this.intake = intake;
         this.intakeMotor = (MockCANMotorController) intake.intakeMotor;
+        this.intakeDeploySim = intakeDeploySim;
     }
 
     public void initialize(AbstractDriveTrainSimulation driveTrainSimulation) {
@@ -36,8 +38,7 @@ public class IntakeSimulator {
     }
 
     public boolean isIntaking() {
-        // TODO: Make sure that we have deployed our intake, too.
-        return intakeMotor.getPower() > 0;
+        return intakeDeploySim.isDeployed() && intakeMotor.getPower() > 0;
     }
 
     public boolean getPieceFromIntake() {
