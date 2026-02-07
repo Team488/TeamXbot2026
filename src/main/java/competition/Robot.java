@@ -11,6 +11,7 @@ import competition.simulation.BaseSimulator;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
+import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import org.apache.logging.log4j.LogManager;
@@ -40,6 +41,7 @@ public class Robot extends BaseRobot {
         getInjectorComponent().lightsSubsystem();
         getInjectorComponent().hopperRollerSubsystem();
         getInjectorComponent().intakeDeploySubsystem();
+        getInjectorComponent().voltageMonitorSubsystem();
 
         if (BaseRobot.isSimulation()) {
             simulator = getInjectorComponent().simulator();
@@ -55,6 +57,7 @@ public class Robot extends BaseRobot {
         dataFrameRefreshables.add(getInjectorComponent().intakeDeploySubsystem());
         dataFrameRefreshables.add(getInjectorComponent().lightsSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().hopperRollerSubsystem());
+        dataFrameRefreshables.add(getInjectorComponent().voltageMonitorSubsystem());
     }
 
     protected BaseRobotComponent createDaggerComponent() {
