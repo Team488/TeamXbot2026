@@ -11,6 +11,7 @@ import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.lights.LightsSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
+import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
 import xbot.common.injection.components.BaseComponent;
 import xbot.common.injection.swerve.SwerveComponentHolder;
 import xbot.common.subsystems.drive.swerve.SwerveDefaultCommandMap;
@@ -46,4 +47,5 @@ public abstract class BaseRobotComponent extends BaseComponent {
 
     public abstract HopperRollerSubsystem hopperRollerSubsystem();
 
-}
+    public abstract VoltageMonitorSubsystem voltageMonitorSubsystem();
+    }
