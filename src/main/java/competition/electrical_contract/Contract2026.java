@@ -52,6 +52,15 @@ public class Contract2026 extends ElectricalContract {
                 PDHPort.PDH00,
                 new CANMotorControllerOutputConfig());
     }
+
+    @Override
+    public boolean isClimberAbsoluteEncoderReady(){ return false; }
+
+    @Override
+    public DeviceInfo getClimberAbsoluteEncoder() {
+        return new DeviceInfo("ClimberAbsoluteEncoderReady",101);
+
+    }
                                           
     @Override                                    
     public boolean isShooterFeederReady() { return false; }
@@ -260,6 +269,19 @@ public class Contract2026 extends ElectricalContract {
                 11, new CANLightControllerOutputConfig(LEDStripType.GRB,
                 0.15, new int[] {8}));
 
+    }
+
+    @Override
+    public boolean isHopperRollerReady() { return false; }
+
+    @Override
+    public CANMotorControllerInfo getHopperRollerMotor() {
+        return new CANMotorControllerInfo("HopperRoller",
+                MotorControllerType.TalonFx,
+                CANBusId.RIO,
+                25,
+                PDHPort.PDH00,
+                new CANMotorControllerOutputConfig());
     }
 
     @Override
