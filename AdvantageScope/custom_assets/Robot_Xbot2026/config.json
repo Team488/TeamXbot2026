@@ -15,5 +15,28 @@
     0,
     0,
     0
+  ],
+
+  "components": [
+    {
+      "zeroedRotations": [{
+        "axis": "x",
+        "degrees": 90
+      },
+    {
+        "axis": "y",
+        "degrees": 80
+    },
+        {
+          "axis": "z",
+          "degrees": 100
+        }
+      ],
+      "zeroedPosition": [
+        70,
+        100,
+        30
+      ]
+    }
   ]
 }
