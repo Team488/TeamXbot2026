@@ -1,6 +1,11 @@
 package competition.subsystems.climber;
 
 import competition.electrical_contract.ElectricalContract;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
+import edu.wpi.first.units.measure.Angle;
+import org.dyn4j.geometry.Rotation;
+import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
@@ -12,13 +17,21 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class ClimberSubsystem extends BaseSubsystem {
+public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     public final XCANMotorController climberMotor;
     public final XAbsoluteEncoder climberEncoder;
 
     public DoubleProperty extendPower;
     public DoubleProperty retractPower;
+    public DoubleProperty climberPower;
+
+    double rotationsAtZero = 0;
+
+    public Angle startingAngle;
+    public Angle targetAngle;
+
+    ElectricalContract el;
 
     @Inject
     public ClimberSubsystem(XCANMotorController.XCANMotorControllerFactory motorFactory,
@@ -69,6 +82,57 @@ public class ClimberSubsystem extends BaseSubsystem {
         if (climberMotor != null) {
             climberMotor.periodic();
         }
+    }
+
+
+    @Override
+    public Angle getCurrentValue() {
+        double currentAngle;
+        if (el.isClimberReady()){
+            return currentAngle = climberEncoder.getPosition();
+        } else
+            return startingAngle;
+    }
+
+    @Override
+    public Angle getTargetValue() {
+        return targetAngle;
+    }
+
+    @Override
+    public void setTargetValue(Angle angle) {
+
+    }
+
+    @Override
+    public void setPower(Double aDouble) {
+
+    }
+
+
+    private Angle getCalibratedPosition(){
+        return getMotorPosition().minus(Rotation.of(rotationsAtZero));
+    }
+
+    private Angle getMotorPosition(){
+        if (el.isClimberReady()) {
+            return climberEncoder.getPosition();
+        }
+        return startingAngle;
+    }
+
+    @Override
+    public boolean isCalibrated() {
+        return false;
+    }
+
+    @Override
+    protected boolean areTwoTargetsEquivalent(Angle angle, Angle targetT1) {
+        return false;
+    }
+
+    private Angle getAbsoluteAngle(){
+        Angle currentAngle =
     }
 }
 
