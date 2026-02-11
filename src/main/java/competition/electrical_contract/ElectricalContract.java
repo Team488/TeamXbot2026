@@ -53,6 +53,10 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract CANMotorControllerInfo getClimberMotor();
 
+    public abstract boolean isClimberAbsoluteEncoderReady();
+
+    public abstract DeviceInfo getClimberAbsoluteEncoder();
+
     public abstract boolean isShooterFeederReady();
 
     public abstract CANMotorControllerInfo getShooterFeederMotor();
@@ -63,5 +67,9 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract boolean isLightsReady();
 
-    public abstract CANLightControllerInfo getLightControlerInfo();
+    public abstract CANLightControllerInfo getLightControllerInfo();
+
+    public abstract boolean isHopperRollerReady();
+
+    public abstract CANMotorControllerInfo getHopperRollerMotor();
 }
