@@ -13,12 +13,15 @@ public class IntakeDeployExtendCommand extends BaseCommand {
     @Inject
     public IntakeDeployExtendCommand(IntakeDeploySubsystem intakeDeploy) {
         this.intakeDeploy = intakeDeploy;
-        this.addRequirements(intakeDeploy);
     }
 
     @Override
     public void initialize() {
-        Degree.of(90);
-        intakeDeploy.setTargetValue(Degree.of(90));
+        intakeDeploy.setTargetValue(Degree.of(intakeDeploy.extendedPositionInDegree.get()));
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }

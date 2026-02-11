@@ -13,12 +13,15 @@ public class IntakeDeployRetractCommand extends BaseCommand {
     @Inject
     public IntakeDeployRetractCommand(IntakeDeploySubsystem intakeDeploy) {
         this.intakeDeploy = intakeDeploy;
-        this.addRequirements(intakeDeploy);
     }
 
     @Override
     public void initialize() {
-        Degree.of(90);
-        intakeDeploy.setTargetValue(Degree.of(90));
+        intakeDeploy.setTargetValue(Degree.of(intakeDeploy.retractedPositionInDegree.get()));
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }

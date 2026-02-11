@@ -1,6 +1,7 @@
 package competition.subsystems.intake_deploy;
 
 import competition.electrical_contract.ElectricalContract;
+import edu.wpi.first.units.PerUnit;
 import edu.wpi.first.units.measure.Angle;
 import xbot.common.command.BaseSetpointSubsystem;
 
@@ -13,12 +14,17 @@ import xbot.common.controls.sensors.XAbsoluteEncoder;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static edu.wpi.first.units.Units.Degrees;
+
+
 @Singleton
 public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  {
     public final XCANMotorController intakeDeployMotor;
     public final XAbsoluteEncoder intakeDeployAbsoluteEncoder;
     public DoubleProperty retractPower;
     public DoubleProperty extendPower;
+    public DoubleProperty extendedPositionInDegree;
+    public DoubleProperty retractedPositionInDegree;
     private Angle targetRotation;
 
     @Inject
@@ -43,8 +49,8 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         } else {
             this.intakeDeployAbsoluteEncoder = null;
         }
-
-
+        this.retractedPositionInDegree = propertyFactory.createPersistentProperty("retractPosition",0);
+        this.extendedPositionInDegree = propertyFactory.createPersistentProperty("extendPosition",0);
         this.retractPower = propertyFactory.createPersistentProperty("retractPower", -0.1);
         this.extendPower = propertyFactory.createPersistentProperty("extendPower", 0.1);
     }
@@ -79,7 +85,12 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     @Override
     protected boolean areTwoTargetsEquivalent(Angle target1, Angle target2) {
-        return target1.isEquivalent(target2);
+        return Math.abs(target1.in(Degrees) - target2.in(Degrees)) < 0.00001;
+    }
+    public void stop() {
+        if (intakeDeployMotor != null) {
+            intakeDeployMotor.setPower(0);
+        }
     }
     public void periodic() {
         if (intakeDeployMotor != null) {
