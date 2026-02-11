@@ -52,14 +52,14 @@ public class HoodSubsystem extends BaseSubsystem {
     }
 
     public void runServo() {
-        if (electricalContract.isHoodServoLeftReady() && electricalContract.isHoodServoRightReady()) {
+        if (hoodServoLeft != null && hoodServoRight != null) {
             hoodServoLeft.set(((servoMax.get() - servoMin.get()) * servoDistancePercent.get()) + servoMin.get());
             hoodServoRight.set(((servoMax.get() - servoMin.get()) * servoDistancePercent.get()) + servoMin.get());
         }
     }
 
     public void servoZero() {
-        if (electricalContract.isHoodServoLeftReady() && electricalContract.isHoodServoRightReady()) {
+        if (hoodServoLeft != null && hoodServoRight != null) {
             hoodServoLeft.set(servoMin.get());
             hoodServoRight.set(servoMin.get());
         }
