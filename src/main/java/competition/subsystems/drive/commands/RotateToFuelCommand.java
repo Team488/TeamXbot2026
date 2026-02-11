@@ -45,7 +45,7 @@ public class RotateToFuelCommand extends BaseCommand {
                 .getDoubleArray(new double[0]);
 
         if (boxData.length != 0) {
-            double positionX = boxData[0];
+            double positionX = boxData[1];
             System.out.println(Arrays.toString(boxData));
 
             if (positionX >= -0.3 && positionX <= 0.3) {
@@ -53,9 +53,9 @@ public class RotateToFuelCommand extends BaseCommand {
             } else {
                 double appliedRotation = Math.abs(rotation.get());
                 if (positionX >= 0) {
-                    drive.drive(new XYPair(0, 0), appliedRotation);
-                } else {
                     drive.drive(new XYPair(0, 0), -appliedRotation);
+                } else {
+                    drive.drive(new XYPair(0, 0), appliedRotation);
                 }
             }
         } else {
