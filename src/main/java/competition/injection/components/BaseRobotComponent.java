@@ -3,9 +3,15 @@ package competition.injection.components;
 import competition.operator_interface.OperatorCommandMap;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.SubsystemDefaultCommandMap;
+import competition.subsystems.climber.ClimberSubsystem;
+import competition.subsystems.fuel_intake.IntakeSubsystem;
+import competition.subsystems.hood.HoodSubsystem;
+import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.lights.LightsSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
+import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
+import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
 import xbot.common.injection.components.BaseComponent;
 import xbot.common.injection.swerve.SwerveComponentHolder;
 import xbot.common.subsystems.drive.swerve.SwerveDefaultCommandMap;
@@ -27,18 +33,19 @@ public abstract class BaseRobotComponent extends BaseComponent {
 
     public abstract ShooterSubsystem shooterSubsystem();
 
+    public abstract ShooterFeederSubsystem shooterFeederSubsystem();
+
+    public abstract HoodSubsystem hoodSubsystem();
+
     public abstract GameField gameField();
 
     public abstract LightsSubsystem lightsSubsystem();
 
     public abstract IntakeDeploySubsystem intakeDeploySubsystem();
 
-    public abstract IntakeDeploySubsystem climberSubsystem();
+    public abstract IntakeSubsystem intakeSubsystem();
 
-    public abstract IntakeDeploySubsystem intakeSubsystem();
+    public abstract HopperRollerSubsystem hopperRollerSubsystem();
 
-    public abstract IntakeDeploySubsystem shooterFeederSubsystem();
-
-    public abstract IntakeDeploySubsystem hoodSubsystem();
-
-}
+    public abstract VoltageMonitorSubsystem voltageMonitorSubsystem();
+    }

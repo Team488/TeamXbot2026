@@ -52,4 +52,11 @@ public class HoodSubsystem extends BaseSubsystem {
         }
     }
 
+    @Override
+    public void periodic() {
+        super.periodic();
+        if (hoodMotor != null) {
+            hoodMotor.periodic();
+        }
+    }
 }

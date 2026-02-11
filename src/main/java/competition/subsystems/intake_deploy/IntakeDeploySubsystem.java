@@ -36,7 +36,8 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         }
 
         if (electricalContract.isIntakeDeployAbsoluteEncoderReady()) {
-            this.intakeDeployAbsoluteEncoder = xAbsoluteEncoderFactory.create(electricalContract.getIntakeDeployAbsoluteEncoderMotor(),
+            this.intakeDeployAbsoluteEncoder = xAbsoluteEncoderFactory.create
+                    (electricalContract.getIntakeDeployAbsoluteEncoderMotor(),
                     getPrefix());
             registerDataFrameRefreshable(intakeDeployAbsoluteEncoder);
         } else {
