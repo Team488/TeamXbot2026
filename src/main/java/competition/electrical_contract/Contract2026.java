@@ -115,10 +115,17 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public boolean isHoodReady() {return false;}
+    public boolean isHoodServoLeftReady() {return false;}
 
-    public DeviceInfo getHoodServo() {
-        return new DeviceInfo("HoodServo", 0);
+    public DeviceInfo getHoodServoLeft() {
+        return new DeviceInfo("HoodServoLeft", 0);
+    }
+
+    @Override
+    public boolean isHoodServoRightReady() {return false;}
+
+    public DeviceInfo getHoodServoRight() {
+        return new DeviceInfo("HoodServoRight", 1);
     }
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {

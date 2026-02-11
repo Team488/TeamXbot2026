@@ -1,12 +1,17 @@
 package competition.subsystems.hood.commands;
 
 import competition.subsystems.hood.HoodSubsystem;
+
+import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
 public class HoodToZeroCommand extends BaseCommand {
     final HoodSubsystem hood;
+    final Logger log = LogManager.getLogger(HoodToZeroCommand.class);
 
     @Inject
     public HoodToZeroCommand(HoodSubsystem hoodSubsystem) {
@@ -16,6 +21,12 @@ public class HoodToZeroCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        hood.stopServo();
+        hood.servoZero();
+        log.info("running servo to " + hood.servoMin.get());
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }

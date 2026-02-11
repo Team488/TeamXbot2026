@@ -31,8 +31,4 @@ public class RoboxContract extends Contract2026 {
                 new SparkMaxMotorControllerOutputConfig()
                         .withSmartCurrentLimit(Amps.of(80)));
     }
-
-    @Override
-    public boolean isHoodReady() { return true; }
-
 }
