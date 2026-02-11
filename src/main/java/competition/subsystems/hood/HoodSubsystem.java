@@ -18,7 +18,7 @@ public class HoodSubsystem extends BaseSubsystem {
 
     public DoubleProperty servoMax;
     public DoubleProperty servoMin;
-    public DoubleProperty servoDistancePercent;
+    public DoubleProperty servoDistanceRatio;
 
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
@@ -48,20 +48,18 @@ public class HoodSubsystem extends BaseSubsystem {
 
         this.servoMin = propertyFactory.createPersistentProperty("Servo Min", 0.2);
 
-        this.servoDistancePercent = propertyFactory.createPersistentProperty("Servo Distance Percent", 0);
+        this.servoDistanceRatio = propertyFactory.createPersistentProperty("Servo Distance Ratio", 0);
     }
 
     public void runServo() {
         if (hoodServoLeft != null && hoodServoRight != null) {
-            hoodServoLeft.set(((servoMax.get() - servoMin.get()) * servoDistancePercent.get()) + servoMin.get());
-            hoodServoRight.set(((servoMax.get() - servoMin.get()) * servoDistancePercent.get()) + servoMin.get());
+            double distanceGoal = ((servoMax.get() - servoMin.get()) * servoDistanceRatio.get()) + servoMin.get();
+            hoodServoLeft.set(distanceGoal);
+            hoodServoRight.set(distanceGoal);
         }
     }
 
     public void servoZero() {
-        if (hoodServoLeft != null && hoodServoRight != null) {
-            hoodServoLeft.set(servoMin.get());
-            hoodServoRight.set(servoMin.get());
-        }
+        servoDistanceRatio.set(0);
     }
 }
