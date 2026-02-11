@@ -43,11 +43,6 @@ public class SubsystemDefaultCommandMap {
     }
 
     @Inject
-    public void setupHoodSubsystem(HoodSubsystem hood, StopHoodCommand command) {
-        hood.setDefaultCommand(command);
-    }
-
-    @Inject
     public void setupClimberSubsystem(ClimberSubsystem climber, ClimberStopCommand command) {
         climber.setDefaultCommand(command);
     }

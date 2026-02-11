@@ -30,6 +30,7 @@ public class HoodSubsystem extends BaseSubsystem {
         if (electricalContract.isHoodServoLeftReady()) {
            this.hoodServoLeft = servoFactory.create(electricalContract.getHoodServoLeft().channel,
                    getName() + "/Servo");
+            registerDataFrameRefreshable(hoodServoLeft);
         } else {
             this.hoodServoLeft = null;
         }
@@ -37,23 +38,30 @@ public class HoodSubsystem extends BaseSubsystem {
         if (electricalContract.isHoodServoRightReady()) {
             this.hoodServoRight = servoFactory.create(electricalContract.getHoodServoRight().channel,
                     getName() + "/Servo");
+            registerDataFrameRefreshable(hoodServoRight);
         } else {
             this.hoodServoRight = null;
         }
 
-        registerDataFrameRefreshable(hoodServoLeft);
-        registerDataFrameRefreshable(hoodServoRight);
-
         this.servoMax = propertyFactory.createPersistentProperty("Servo Max", 0.8);
+        //3 and 14/16 inches away from base
+
         this.servoMin = propertyFactory.createPersistentProperty("Servo Min", 0.2);
-        this.servoDistancePercent = propertyFactory.createPersistentProperty("Servo Distance Percent", 1);
+
+        this.servoDistancePercent = propertyFactory.createPersistentProperty("Servo Distance Percent", 0);
     }
 
     public void runServo() {
-        hoodServoLeft.set(((servoMax.get() - servoMin.get()) * servoDistancePercent.get()) + servoMin.get());
+        if (electricalContract.isHoodServoLeftReady() && electricalContract.isHoodServoRightReady()) {
+            hoodServoLeft.set(((servoMax.get() - servoMin.get()) * servoDistancePercent.get()) + servoMin.get());
+            hoodServoRight.set(((servoMax.get() - servoMin.get()) * servoDistancePercent.get()) + servoMin.get());
+        }
     }
 
     public void servoZero() {
-        hoodServoLeft.set(servoMin.get());
+        if (electricalContract.isHoodServoLeftReady() && electricalContract.isHoodServoRightReady()) {
+            hoodServoLeft.set(servoMin.get());
+            hoodServoRight.set(servoMin.get());
+        }
     }
 }

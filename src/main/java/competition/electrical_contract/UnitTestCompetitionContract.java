@@ -59,4 +59,10 @@ public class UnitTestCompetitionContract extends Contract2026 {
     public boolean isHopperRollerReady() {
         return true;
     }
+
+    @Override
+    public boolean isHoodServoLeftReady() {return true;}
+
+    @Override
+    public boolean isHoodServoRightReady() {return true;}
 }
