@@ -98,7 +98,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public void periodic() {
         if (intakeDeployMotor != null) {
             intakeDeployMotor.periodic();
-            // akit.record a pose3d to see how it translate & then drag to model for the component
+            // akit.record a pose3d to translate & then drag to model for the component
         }
         aKitLog.record("Intake", new Pose3d(0, 0, 0, new Rotation3d()));
     }
