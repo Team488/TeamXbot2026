@@ -4,7 +4,10 @@ import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import xbot.common.command.BaseCommand;
 import javax.inject.Inject;
 
-//This is supposed to be the command to calibrate it when the intake has already deployed (when it is down)
+/**
+ * This is supposed to calibrate the intake when it has already deployed (when it is down)
+ */
+
 public class CalibrateOffsetDown extends BaseCommand {
 
     final IntakeDeploySubsystem intakeDeploySubsystem;
