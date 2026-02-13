@@ -17,7 +17,7 @@ src/main/java/competition/subsystems/IntakeDeploySubsystem/ @JunNing0701 @Team48
 
 src/main/java/competition/subsystems/LightsSubsystem/ @JonahIsFake @Team488/core-robot-maintainers
 
-src/main/java/competition/subsystems/PosSubsystem/ @pwbriggs @Team488/core-robot-maintainers
+src/main/java/competition/subsystems/PoseSubsystem/ @pwbriggs @Team488/core-robot-maintainers
 
 src/main/java/competition/subsystems/ShooterSubsystem/ @Clulogh @Team488/core-robot-maintainers
 
