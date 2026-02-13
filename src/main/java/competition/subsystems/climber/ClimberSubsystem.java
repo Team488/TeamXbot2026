@@ -13,6 +13,7 @@ import xbot.common.properties.PropertyFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
 
@@ -31,7 +32,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     private boolean isCalibrated;
 
-    public MutAngle targetAngle = Degrees.mutable(0);
+    private final MutAngle targetAngle = Degrees.mutable(0);
 
 
 
@@ -91,7 +92,6 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         }
     }
 
-
     @Override
     public Angle getCurrentValue() {
         double currentAngle = 0;
@@ -103,7 +103,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     @Override
     public Angle getTargetValue() {
-        return targetAngle;
+        return targetAngle.copy();
     }
 
     @Override
@@ -131,14 +131,13 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     }
 
     private Angle getAbsoluteAngle() {
-        Angle currentAngle = Degrees.of(0);
         if (climberMotor != null) {
-            currentAngle = climberEncoder.getPosition();
+            return climberEncoder.getPosition();
         }
-        return currentAngle;
+        return Degree.zero();
     }
 
-    private void forceCalibration(){
+    private void forceCalibration() {
         if (climberEncoder != null) {
             encoderZeroOffset = climberEncoder.getAbsolutePosition().in(Rotations);
             isCalibrated = true;
