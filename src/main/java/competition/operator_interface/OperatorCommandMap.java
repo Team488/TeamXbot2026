@@ -8,8 +8,8 @@ import competition.subsystems.climber.commands.ClimberRetractCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
-import competition.subsystems.hood.commands.CloseHoodCommand;
-import competition.subsystems.hood.commands.OpenHoodCommand;
+import competition.subsystems.hood.commands.HoodToGoalCommand;
+import competition.subsystems.hood.commands.HoodToZeroCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
@@ -60,8 +60,8 @@ public class OperatorCommandMap {
                                      TrimShooterVelocityUp trimShooterVelocityUp,
                                      TrimShooterVelocityDown trimShooterVelocityDown,
                                      FuelIntakeCommand fuelIntakeCommand,
-                                     OpenHoodCommand openHoodCommand,
-                                     CloseHoodCommand closeHoodCommand,
+                                     HoodToGoalCommand hoodToGoalCommand,
+                                     HoodToZeroCommand hoodToZeroCommand,
                                      IntakeDeployExtendCommand intakeDeployExtendCommand,
                                      IntakeDeployRetractCommand intakeDeployRetractCommand
     ) {
@@ -73,8 +73,8 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Y).onTrue(fuelIntakeCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(intakeDeployExtendCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(intakeDeployRetractCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightJoystickYAxisPositive).whileTrue(openHoodCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightJoystickYAxisNegative).whileTrue(closeHoodCommand);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightJoystickYAxisPositive).whileTrue(hoodToGoalCommand);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightJoystickYAxisNegative).whileTrue(hoodToZeroCommand);
     }
 
 

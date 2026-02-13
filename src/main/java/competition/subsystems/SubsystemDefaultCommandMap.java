@@ -11,8 +11,6 @@ import competition.subsystems.fuel_intake.IntakeSubsystem;
 import competition.subsystems.fuel_intake.commands.FuelStopCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployStopCommand;
 import competition.subsystems.shooter.ShooterSubsystem;
-import competition.subsystems.hood.HoodSubsystem;
-import competition.subsystems.hood.commands.StopHoodCommand;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.shooter.commands.ShooterWheelMaintainerCommand;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
@@ -40,11 +38,6 @@ public class SubsystemDefaultCommandMap {
     @Inject
     public void setupShooterSubsystem(ShooterSubsystem shooter, ShooterWheelMaintainerCommand command) {
         shooter.setDefaultCommand(command);
-    }
-
-    @Inject
-    public void setupHoodSubsystem(HoodSubsystem hood, StopHoodCommand command) {
-        hood.setDefaultCommand(command);
     }
 
     @Inject
