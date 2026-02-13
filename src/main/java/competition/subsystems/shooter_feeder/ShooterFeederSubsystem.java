@@ -40,7 +40,11 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
         if (shooterFeederMotor != null) {
             shooterFeederMotor.setPower(firePower.get());
         }
-        shooterFeederMotor.setPower(0);
     }
 
+    public void stop() {
+        if (shooterFeederMotor != null) {
+            shooterFeederMotor.setPower(0);
+        }
+    }
 }
