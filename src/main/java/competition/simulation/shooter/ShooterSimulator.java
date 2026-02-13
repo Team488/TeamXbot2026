@@ -2,6 +2,7 @@ package competition.simulation.shooter;
 
 import competition.Robot;
 import competition.simulation.SimulatorConstants;
+import competition.simulation.hood.HoodSimulator;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
@@ -43,6 +44,7 @@ public class ShooterSimulator {
     final MockCANMotorController shooterFeederMotor;
 
     final IntakeSimulator intakeSimulator;
+    final HoodSimulator hoodSimulator;
 
     final PIDManager pidManager;
 
@@ -54,7 +56,8 @@ public class ShooterSimulator {
 
     @Inject
     public ShooterSimulator(PoseSubsystem pose, ShooterSubsystem shooter, ShooterFeederSubsystem shooterFeeder,
-                            PropertyFactory pf, IntakeSimulator intakeSimulator, PIDManagerFactory pidManagerFactory) {
+                            PropertyFactory pf, IntakeSimulator intakeSimulator, PIDManagerFactory pidManagerFactory,
+                            HoodSimulator hoodSimulator) {
         pf.setPrefix("Simulator/");
         this.pose = pose;
         this.shooter = shooter;
@@ -64,6 +67,7 @@ public class ShooterSimulator {
         this.shooterFeederMotor = (MockCANMotorController) shooterFeeder.shooterFeederMotor;
 
         this.intakeSimulator = intakeSimulator;
+        this.hoodSimulator = hoodSimulator;
 
         this.pidManager = pidManagerFactory.create(
                 pf.getPrefix() + "ShooterSimulationPID",
@@ -133,7 +137,7 @@ public class ShooterSimulator {
                     pose.getCurrentHeading(),
                     SimulatorConstants.shooterHeight,
                     MetersPerSecond.of(speed),
-                    Degrees.of(80), // TODO: Read from hood sim
+                    hoodSimulator.getShootingAngle(),
                     SimulatorConstants.shooterXVariance,
                     SimulatorConstants.shooterYVariance,
                     2.0,
