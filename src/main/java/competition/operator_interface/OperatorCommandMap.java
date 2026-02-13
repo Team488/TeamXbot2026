@@ -1,6 +1,7 @@
 package competition.operator_interface;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import competition.subsystems.climber.commands.ClimberExtendCommand;
@@ -12,7 +13,7 @@ import competition.subsystems.hood.commands.HoodToGoalCommand;
 import competition.subsystems.hood.commands.HoodToZeroCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
-import competition.subsystems.shooter.commands.ShooterOutputCommand;
+import competition.subsystems.shooter.commands.ShooterStopCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import xbot.common.controls.sensors.XXboxController;
@@ -32,11 +33,12 @@ public class OperatorCommandMap {
     @Inject
     public void setupOperatorCommands(
             OperatorInterface operatorInterface,
-            ShooterOutputCommand shooterOutputCommand,
+//            Provider<ShooterStopCommand> c,
             TrimShooterVelocityUp trimShooterVelocityUp,
             TrimShooterVelocityDown trimShooterVelocityDown
     ) {
-
+//        var myCommand = c.get();
+//        myCommand.setTargetVelocity(90);
     }
 
     @Inject
