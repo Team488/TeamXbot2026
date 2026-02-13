@@ -19,6 +19,7 @@ public class HoodSubsystem extends BaseSubsystem {
     public DoubleProperty servoMax;
     public DoubleProperty servoMin;
     public DoubleProperty servoDistanceRatio;
+    public DoubleProperty trimValue;
 
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
@@ -47,8 +48,8 @@ public class HoodSubsystem extends BaseSubsystem {
         //3 and 14/16 inches away from base
 
         this.servoMin = propertyFactory.createPersistentProperty("Servo Min", 0.2);
-
         this.servoDistanceRatio = propertyFactory.createPersistentProperty("Servo Distance Ratio", 0);
+        this.trimValue = propertyFactory.createPersistentProperty("Hood Trim Value", 0);
     }
 
     public void runServo() {
@@ -61,5 +62,13 @@ public class HoodSubsystem extends BaseSubsystem {
 
     public void servoZero() {
         servoDistanceRatio.set(0);
+    }
+
+    public void trimHoodGoalUp() {
+        trimValue.set(trimValue.get() + 0.005);
+    }
+
+    public void trimHoodGoalDown() {
+        trimValue.set(trimValue.get() - 0.005);
     }
 }
