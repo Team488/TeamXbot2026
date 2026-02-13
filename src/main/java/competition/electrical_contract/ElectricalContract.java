@@ -33,9 +33,13 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract CANMotorControllerInfo getRightShooterMotor();
 
-    public abstract boolean isHoodReady();
+    public abstract boolean isHoodServoLeftReady();
 
-    public abstract CANMotorControllerInfo getHoodMotor();
+    public abstract DeviceInfo getHoodServoLeft();
+
+    public abstract boolean isHoodServoRightReady();
+
+    public abstract DeviceInfo getHoodServoRight();
 
     public abstract boolean isIntakeDeployReady();
 
@@ -63,7 +67,7 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract boolean isLightsReady();
 
-    public abstract CANLightControllerInfo getLightControlerInfo();
+    public abstract CANLightControllerInfo getLightControllerInfo();
 
     public abstract boolean isHopperRollerReady();
 
