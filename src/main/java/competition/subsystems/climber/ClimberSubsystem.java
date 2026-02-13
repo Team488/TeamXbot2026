@@ -89,6 +89,10 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         if (climberMotor != null) {
             climberMotor.periodic();
         }
+
+        if (!isCalibrated) {
+            forceCalibration();
+        }
     }
 
 
