@@ -52,7 +52,16 @@ public class Contract2026 extends ElectricalContract {
                 PDHPort.PDH00,
                 new CANMotorControllerOutputConfig());
     }
-                                          
+
+    @Override
+    public boolean isClimberAbsoluteEncoderReady(){ return false; }
+
+    @Override
+    public DeviceInfo getClimberAbsoluteEncoder() {
+        return new DeviceInfo("ClimberAbsoluteEncoderReady",101);
+
+    }
+
     @Override                                    
     public boolean isShooterFeederReady() { return false; }
 
@@ -125,16 +134,19 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public boolean isHoodReady() {return false;}
+    public boolean isHoodServoLeftReady() {return false;}
 
     @Override
-    public CANMotorControllerInfo getHoodMotor() {
-        return new CANMotorControllerInfo("hoodMotor",
-                MotorControllerType.TalonFx,
-                CANBusId.RIO,
-                1000,
-                PDHPort.PDH00, // TODO: Change port
-                new CANMotorControllerOutputConfig());
+    public DeviceInfo getHoodServoLeft() {
+        return new DeviceInfo("HoodServoLeft", 0);
+    }
+
+    @Override
+    public boolean isHoodServoRightReady() {return false;}
+
+    @Override
+    public DeviceInfo getHoodServoRight() {
+        return new DeviceInfo("HoodServoRight", 1);
     }
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
@@ -254,7 +266,7 @@ public class Contract2026 extends ElectricalContract {
     public boolean isLightsReady() { return false; }
 
     @Override
-    public CANLightControllerInfo getLightControlerInfo() {
+    public CANLightControllerInfo getLightControllerInfo() {
         return new CANLightControllerInfo("Lights",
                 LightControllerType.Candle, CANBusId.Canivore,
                 11, new CANLightControllerOutputConfig(LEDStripType.GRB,

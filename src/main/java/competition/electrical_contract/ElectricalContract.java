@@ -1,8 +1,6 @@
 package competition.electrical_contract;
 
-import com.revrobotics.AbsoluteEncoder;
 import edu.wpi.first.math.geometry.Translation2d;
-import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
@@ -35,9 +33,13 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract CANMotorControllerInfo getRightShooterMotor();
 
-    public abstract boolean isHoodReady();
+    public abstract boolean isHoodServoLeftReady();
 
-    public abstract CANMotorControllerInfo getHoodMotor();
+    public abstract DeviceInfo getHoodServoLeft();
+
+    public abstract boolean isHoodServoRightReady();
+
+    public abstract DeviceInfo getHoodServoRight();
 
     public abstract boolean isIntakeDeployReady();
 
@@ -51,6 +53,10 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract CANMotorControllerInfo getClimberMotor();
 
+    public abstract boolean isClimberAbsoluteEncoderReady();
+
+    public abstract DeviceInfo getClimberAbsoluteEncoder();
+
     public abstract boolean isShooterFeederReady();
 
     public abstract CANMotorControllerInfo getShooterFeederMotor();
@@ -61,7 +67,7 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract boolean isLightsReady();
 
-    public abstract CANLightControllerInfo getLightControlerInfo();
+    public abstract CANLightControllerInfo getLightControllerInfo();
 
     public abstract boolean isHopperRollerReady();
 

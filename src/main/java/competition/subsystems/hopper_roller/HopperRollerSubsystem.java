@@ -2,11 +2,9 @@ package competition.subsystems.hopper_roller;
 
 import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.wpilibj2.command.Command;
-import xbot.common.advantage.DataFrameRefreshable;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.NamedRunCommand;
 import xbot.common.controls.actuators.XCANMotorController;
-import xbot.common.controls.sensors.XAbsoluteEncoder;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -18,8 +16,8 @@ public class HopperRollerSubsystem extends BaseSubsystem {
 
     public final ElectricalContract electricalContract;
     public final XCANMotorController hopperRollerMotor;
-    final DoubleProperty forwardPower;
-    final DoubleProperty reversePower;
+    final DoubleProperty ejectPower;
+    final DoubleProperty intakePower;
 
     @Inject
     public HopperRollerSubsystem(ElectricalContract electricalContract,
@@ -39,23 +37,23 @@ public class HopperRollerSubsystem extends BaseSubsystem {
             this.hopperRollerMotor = null;
         }
 
-        reversePower = pf.createPersistentProperty("Reverse Power", 0.1);
-        forwardPower = pf.createPersistentProperty("Forward Power", -0.1);
+        intakePower = pf.createPersistentProperty("Intake Power", 0.1);
+        ejectPower = pf.createPersistentProperty("Eject Power", -0.1);
 
     }
 
-    public void setForwardPower() {
+    public void setEjectPower() {
         if (hopperRollerMotor == null) {
             return;
         }
-        hopperRollerMotor.setPower(forwardPower.get());
+        hopperRollerMotor.setPower(ejectPower.get());
     }
 
-    public void setReversePower() {
+    public void setIntakePower() {
         if (hopperRollerMotor == null) {
             return;
         }
-        hopperRollerMotor.setPower(reversePower.get());
+        hopperRollerMotor.setPower(intakePower.get());
     }
 
     public void stop() {
@@ -72,12 +70,12 @@ public class HopperRollerSubsystem extends BaseSubsystem {
         }
     }
 
-    public Command getFowardCommand() {
-        return new NamedRunCommand(getName() + "-forward", this::setForwardPower, this);
+    public Command getEjectCommand() {
+        return new NamedRunCommand(getName() + "-eject", this::setEjectPower, this);
     }
 
-    public Command getReverseCommand() {
-        return new NamedRunCommand(getName() + "-reverse", this::setReversePower, this);
+    public Command getIntakeCommand() {
+        return new NamedRunCommand(getName() + "-intake", this::setIntakePower, this);
     }
 
     public Command getStopCommand() {
