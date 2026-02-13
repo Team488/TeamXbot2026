@@ -7,22 +7,24 @@ src/main/java/competition/subsystems/ClimberSubsystem/ @AlanYuan99 @Team488/core
 
 src/main/java/competition/subsystems/DriveSubsystem/ @JonahIsFake @Team488/core-robot-maintainers
 
-src/main/java/competition/subsystems/IntakeSubsystem/ @Amy Tan @Team488/core-robot-maintainers
+src/main/java/competition/subsystems/IntakeSubsystem/ @Clulogh @Team488/core-robot-maintainers
 
 src/main/java/competition/subsystems/HoodSubsystem/ @Yiting-Hu @Team488/core-robot-maintainers
 
-src/main/java/competition/subsystems/HopperRollerSubsystem/ @Amy Tan @Team488/core-robot-maintainers
+src/main/java/competition/subsystems/HopperRollerSubsystem/ @Clulogh @Team488/core-robot-maintainers
 
 src/main/java/competition/subsystems/IntakeDeploySubsystem/ @JunNing0701 @Team488/core-robot-maintainers
 
 src/main/java/competition/subsystems/LightsSubsystem/ @JonahIsFake @Team488/core-robot-maintainers
 
-src/main/java/competition/subsystems/PosSubsystem/ @Peter Briggs @Team488/core-robot-maintainers
+src/main/java/competition/subsystems/PosSubsystem/ @pwbriggs @Team488/core-robot-maintainers
 
-src/main/java/competition/subsystems/ShooterSubsystem/ @Amy Tan @Team488/core-robot-maintainers
+src/main/java/competition/subsystems/ShooterSubsystem/ @Clulogh @Team488/core-robot-maintainers
 
 src/main/java/competition/subsystems/ShooterFeederSubsystem/ @JonahIsFake @Team488/core-robot-maintainers
 
-src/main/java/competition/subsystems/AprilTagVisionSubsystem/ @Peter Briggs @Team488/core-robot-maintainers
+src/main/java/competition/subsystems/AprilTagVisionSubsystem/ @pwbriggs @Team488/core-robot-maintainers
 
-src/main/java/competition/subsystems/VoltageMonitorSubsystem/ @Victor C @Team488/core-robot-maintainers
+src/main/java/competition/subsystems/VoltageMonitorSubsystem/ @VictorChen1-1 @Team488/core-robot-maintainers
+
+src/main/java/competition/auto_programs/ @GlowDisk @Team488/core-robot-maintainers
