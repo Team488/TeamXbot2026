@@ -11,6 +11,7 @@ import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
 import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.MotorControllerType;
+import xbot.common.injection.electrical_contract.TalonFxMotorControllerOutputConfig;
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.subsystems.vision.CameraCapabilities;
 
@@ -51,14 +52,14 @@ public class Contract2025 extends Contract2026 {
         return "DriveSubsystem/" + swerveInstance.label() + "/SteeringEncoder";
     }
 
-    CANMotorControllerOutputConfig regularDriveMotorConfig =
-            new CANMotorControllerOutputConfig()
+    TalonFxMotorControllerOutputConfig regularDriveMotorConfig =
+            new TalonFxMotorControllerOutputConfig()
                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Normal)
                     .withStatorCurrentLimit(Amps.of(80))
                     .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake);
 
-    CANMotorControllerOutputConfig invertedDriveMotorConfig =
-            new CANMotorControllerOutputConfig()
+    TalonFxMotorControllerOutputConfig invertedDriveMotorConfig =
+            new TalonFxMotorControllerOutputConfig()
                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
                     .withStatorCurrentLimit(Amps.of(80))
                     .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake);
@@ -97,8 +98,8 @@ public class Contract2025 extends Contract2026 {
     @Override
     public CANMotorControllerInfo getSteeringMotor(SwerveInstance swerveInstance) {
 
-        CANMotorControllerOutputConfig invertedSteeringMotorConfig =
-                new CANMotorControllerOutputConfig()
+        TalonFxMotorControllerOutputConfig invertedSteeringMotorConfig =
+                new TalonFxMotorControllerOutputConfig()
                         .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
                         .withStatorCurrentLimit(Amps.of(45))
                         .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake);
@@ -177,6 +178,7 @@ public class Contract2025 extends Contract2026 {
     private static double frontAprilCameraPitch = Math.toRadians(-21);
     private static double frontAprilCameraYaw = Math.toRadians(0);
 
+    @Override
     public CameraInfo[] getCameraInfo() {
         return new CameraInfo[] {// {};
 
