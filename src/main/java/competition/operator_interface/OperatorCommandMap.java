@@ -59,7 +59,7 @@ public class OperatorCommandMap {
     }
   
     @Inject
-    public void setupSimulatorCommands(
+    public void setupAutoCommands(
             ResetSimulatedPoseCommand resetSimulatorPositionCommand,
             DriveToOutpostCommand driveToOutpostCommand
     ) {

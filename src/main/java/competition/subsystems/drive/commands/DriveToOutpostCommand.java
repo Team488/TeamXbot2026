@@ -43,16 +43,6 @@ public class DriveToOutpostCommand extends SwerveSimpleTrajectoryCommand {
     }
 
     @Override
-    public void execute() {
-        super.execute();
-    }
-
-    @Override
-    public boolean isFinished() {
-        return super.isFinished();
-    }
-
-    @Override
     public void end(boolean interrupted) {
         log.info("end");
     }
