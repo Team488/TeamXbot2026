@@ -7,17 +7,26 @@ import edu.wpi.first.units.measure.Angle;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.properties.AngleProperty;
+import edu.wpi.first.units.PerUnit;
+import edu.wpi.first.units.measure.Angle;
+import xbot.common.command.BaseSetpointSubsystem;
+
+import xbot.common.controls.actuators.XCANMotorController;
+import xbot.common.math.PIDManager;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.controls.sensors.XAbsoluteEncoder;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Rotation;
+import static edu.wpi.first.units.Units.Degrees;
+
 
 @Singleton
-public class IntakeDeploySubsystem extends BaseSubsystem {
+public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  {
     public final XCANMotorController intakeDeployMotor;
     public final XAbsoluteEncoder intakeDeployAbsoluteEncoder;
     public DoubleProperty retractPower;
@@ -25,12 +34,16 @@ public class IntakeDeploySubsystem extends BaseSubsystem {
     public AngleProperty limbRange;
     public Angle offset;
     public boolean isCalibrated = false;
+    public DoubleProperty extendedPositionInDegree;
+    public DoubleProperty retractedPositionInDegree;
+    private Angle targetRotation;
 
     @Inject
     public IntakeDeploySubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
-              ElectricalContract electricalContract, PropertyFactory propertyFactory,
+                                 ElectricalContract electricalContract, PropertyFactory propertyFactory, PIDManager.PIDManagerFactory pidManagerFactory,
                                  XAbsoluteEncoder.XAbsoluteEncoderFactory xAbsoluteEncoderFactory) {
         propertyFactory.setPrefix(this);
+
         if (electricalContract.isIntakeDeployReady()) {
             this.intakeDeployMotor = xcanMotorControllerFactory.create(electricalContract.getIntakeDeployMotor(),
                     getPrefix(),"intakeDeploy");
@@ -48,22 +61,49 @@ public class IntakeDeploySubsystem extends BaseSubsystem {
             this.intakeDeployAbsoluteEncoder = null;
         }
 
+        this.retractedPositionInDegree = propertyFactory.createPersistentProperty("retractPosition",0);
+        this.extendedPositionInDegree = propertyFactory.createPersistentProperty("extendPosition",0);
         this.retractPower = propertyFactory.createPersistentProperty("retractPower", -0.1);
         this.extendPower = propertyFactory.createPersistentProperty("extendPower", 0.1);
     }
 
-    public void retract() {
-        intakeDeployMotor.setPower(retractPower.get());
+
+
+    @Override
+    public Angle getCurrentValue() {
+        return intakeDeployAbsoluteEncoder.getAbsolutePosition();
     }
 
-    public void extend() {
-        intakeDeployMotor.setPower(extendPower.get());
+
+    @Override
+    public Angle getTargetValue() {
+        return targetRotation;
     }
 
+    @Override
+    public void setTargetValue(Angle value) {
+        this.targetRotation = value;
+    }
+
+    @Override
+    public void setPower(Double power) {
+        intakeDeployMotor.setPower(power);
+    }
+
+    @Override
+    public boolean isCalibrated() {
+        return true;
+    }
+
+    @Override
+    protected boolean areTwoTargetsEquivalent(Angle target1, Angle target2) {
+        return Math.abs(target1.in(Degrees) - target2.in(Degrees)) < 0.00001;
+    }
     public void stop() {
-        intakeDeployMotor.setPower(0);
+        if (intakeDeployMotor != null) {
+            intakeDeployMotor.setPower(0);
+        }
     }
-
     public void periodic() {
         if (intakeDeployMotor != null) {
             intakeDeployMotor.periodic();
