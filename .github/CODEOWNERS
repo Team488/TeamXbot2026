@@ -1,0 +1,28 @@
+# This will assign and alert the "code owners" of each subsystem.
+# The code owners are who wrote most of the code or who wrote the skeleton.
+
+*       @Team488/core-robot-maintainers
+
+src/main/java/competition/subsystems/ClimberSubsystem/ @AlanYuan99 @Team488/core-robot-maintainers
+
+src/main/java/competition/subsystems/DriveSubsystem/ @JonahIsFake @Team488/core-robot-maintainers
+
+src/main/java/competition/subsystems/IntakeSubsystem/ @Amy Tan @Team488/core-robot-maintainers
+
+src/main/java/competition/subsystems/HoodSubsystem/ @Yiting-Hu @Team488/core-robot-maintainers
+
+src/main/java/competition/subsystems/HopperRollerSubsystem/ @Amy Tan @Team488/core-robot-maintainers
+
+src/main/java/competition/subsystems/IntakeDeploySubsystem/ @JunNing0701 @Team488/core-robot-maintainers
+
+src/main/java/competition/subsystems/LightsSubsystem/ @JonahIsFake @Team488/core-robot-maintainers
+
+src/main/java/competition/subsystems/PosSubsystem/ @Peter Briggs @Team488/core-robot-maintainers
+
+src/main/java/competition/subsystems/ShooterSubsystem/ @Amy Tan @Team488/core-robot-maintainers
+
+src/main/java/competition/subsystems/ShooterFeederSubsystem/ @JonahIsFake @Team488/core-robot-maintainers
+
+src/main/java/competition/subsystems/AprilTagVisionSubsystem/ @Peter Briggs @Team488/core-robot-maintainers
+
+src/main/java/competition/subsystems/VoltageMonitorSubsystem/ @Victor C @Team488/core-robot-maintainers
