@@ -40,7 +40,8 @@ public class IntakeDeploySubsystem extends BaseSubsystem {
         }
 
         if (electricalContract.isIntakeDeployAbsoluteEncoderReady()) {
-            this.intakeDeployAbsoluteEncoder = xAbsoluteEncoderFactory.create(electricalContract.getIntakeDeployAbsoluteEncoderMotor(),
+            this.intakeDeployAbsoluteEncoder = xAbsoluteEncoderFactory.create
+                    (electricalContract.getIntakeDeployAbsoluteEncoderMotor(),
                     getPrefix());
             registerDataFrameRefreshable(intakeDeployAbsoluteEncoder);
         } else {

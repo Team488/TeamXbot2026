@@ -9,8 +9,10 @@ import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +56,7 @@ public class GenericSubsystemTest extends BaseCompetitionTest {
             try {
                 periodicMethod.invoke(subsystem);
             } catch (Exception e) {
-                fail("Subsystem " + subsystem.getClass().getName() + " failed to call periodic:\n" + e);
+                failOnMethodException(subsystem, periodicMethod, e);
             }
         }
     }
@@ -82,11 +84,16 @@ public class GenericSubsystemTest extends BaseCompetitionTest {
             for (Field field : subsystem.getClass().getFields()) {
                 if (XCANMotorController.class.isAssignableFrom(field.getType())) {
                     field.setAccessible(true);
-                    // This isn't safe for parallel test execution, so we need to force
-                    // tests in this class to run sequentially
-                    field.set(subsystem, Mockito.spy(field.get(subsystem)));
-                    // Replace the original motor controllers with the mocked ones
-                    motorControllers.add(field.get(subsystem));
+                    var originalMotorController = field.get(subsystem);
+                    if (originalMotorController == null) {
+                        fail("Subsystem " + subsystem.getClass().getName() + " has a null motor controller "
+                                + "field: " + field.getName() + ". Did you forget to mark the subsystem as ready "
+                                + "in UnitTestCompetitionContract?");
+                    }
+
+                    var mockedMotorController = Mockito.spy((XCANMotorController)originalMotorController);
+                    field.set(subsystem, mockedMotorController);
+                    motorControllers.add(mockedMotorController);
                 }
             }
             subsystemMotorControllerMap.put(subsystem, motorControllers);
@@ -99,7 +106,7 @@ public class GenericSubsystemTest extends BaseCompetitionTest {
             try {
                 refreshDataFrameMethod.invoke(subsystem);
             } catch (Exception e) {
-                fail("Subsystem " + subsystem.getClass().getName() + " failed to call refreshDataFrame:\n" + e);
+                failOnMethodException(subsystem, refreshDataFrameMethod, e);
             }
         }
 
@@ -110,7 +117,7 @@ public class GenericSubsystemTest extends BaseCompetitionTest {
             try {
                 periodicMethod.invoke(subsystem);
             } catch (Exception e) {
-                fail("Subsystem " + subsystem.getClass().getName() + " failed to call periodic:\n" + e);
+                failOnMethodException(subsystem, periodicMethod, e);
             }
         }
 
@@ -121,5 +128,36 @@ public class GenericSubsystemTest extends BaseCompetitionTest {
                         .description("Subsystem " + subsystem.getClass().getName() + " did not call periodic on a motor controller.")).periodic();
             }
         }
+    }
+
+    /**
+     * Helper method to fail a test with a detailed message when a subsystem method throws an exception.
+     */
+    private void failOnMethodException(Object subsystem, Method method, Throwable e) {
+        // Unwrap InvocationTargetException if present to get the root cause
+        // Use instanceof to handle subclasses and recursively unwrap multiple layers
+        while (e instanceof InvocationTargetException && ((InvocationTargetException) e).getTargetException() != null) {
+            e = ((InvocationTargetException) e).getTargetException();
+        }
+
+        // Build a detailed error message with the exception and the first 10 stack trace elements
+        var stringBuilder = new StringBuilder();
+        stringBuilder.append("An exception was thrown when calling ");
+        stringBuilder.append(method.getName());
+        stringBuilder.append("() on subsystem ");
+        stringBuilder.append(subsystem.getClass().getName());
+        stringBuilder.append(":\n");
+
+        stringBuilder.append(e.toString());
+        stringBuilder.append("\n");
+
+        Arrays.stream(e.getStackTrace()).limit(10).forEach(element -> {
+            stringBuilder.append("\t");
+            stringBuilder.append(element.toString());
+            stringBuilder.append("\n");
+        });
+
+        // Fail the test with the detailed error message
+        fail(stringBuilder.toString());
     }
 }
