@@ -21,9 +21,10 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public final XCANMotorController leftShooterMotor;
     public final XCANMotorController middleShooterMotor;
     public final XCANMotorController rightShooterMotor;
-        public ElectricalContract electricalContract;
+    public ElectricalContract electricalContract;
 
     public DoubleProperty targetVelocity;
+    public DoubleProperty trimValue;
 
     @Inject
     public ShooterSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
@@ -66,6 +67,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         }
 
         this.targetVelocity = propertyFactory.createPersistentProperty("Target Velocity", 3000);
+        this.trimValue = propertyFactory.createPersistentProperty("Shooter Trim Value", 0);
     }
 
     public void stop() {
@@ -74,13 +76,12 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         }
     }
 
-    public void increaseTargetVelocity() {
-        targetVelocity.set(targetVelocity.get() + 25);
+    public void increaseShooterOffset() {
+        trimValue.set(trimValue.get() + 15);
     }
 
-    public void decreaseTargetVelocity() {
-        targetVelocity.set(targetVelocity.get() - 25);
-
+    public void decreaseShooterOffset() {
+        trimValue.set(trimValue.get() - 15);
     }
 
     public void setTargetVelocity(double velocity) {
@@ -115,21 +116,20 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         }
     }
 
+
     @Override
     public AngularVelocity getCurrentValue() {
-        if (electricalContract.isMiddleShooterReady()) {
-            return middleShooterMotor.getVelocity();
+        // This avoids division by zero.
+        if (getShooterMotors().isEmpty()) {
+            return RPM.zero();
         }
 
-        if (electricalContract.isLeftShooterReady()) {
-            return leftShooterMotor.getVelocity();
+        double total = 0;
+        for (var motor : getShooterMotors()) {
+            total += motor.getVelocity().in(RPM);
         }
-
-        if (electricalContract.isRightShooterReady()) {
-            return rightShooterMotor.getVelocity();
-        }
-
-        return RPM.zero(); //rpm = rotation per minute
+        double averageSpeed = total / getShooterMotors().size();
+        return RPM.of(averageSpeed);
     }
 
     @Override
