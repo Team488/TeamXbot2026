@@ -24,4 +24,9 @@ public class IntakeDeployRetractCommand extends BaseCommand {
     public boolean isFinished() {
         return true;
     }
+
+    @Override
+    public void execute() {
+        log.info("Intake is retracting!");
+    }
 }

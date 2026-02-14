@@ -18,4 +18,9 @@ public class FuelIntakeCommand extends BaseCommand {
     public void initialize() {
         intakeSubsystem.intake();
     }
+
+    @Override
+    public void execute() {
+        log.info("Intaking fuel!");
+    }
 }

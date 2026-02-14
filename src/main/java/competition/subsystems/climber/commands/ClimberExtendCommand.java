@@ -18,4 +18,9 @@ public class ClimberExtendCommand extends BaseCommand {
     public void initialize() {
         climber.extend();
     }
+
+    @Override
+    public void execute() {
+        log.info("Climber is extending!");
+    }
 }

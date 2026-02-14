@@ -18,4 +18,9 @@ public class FuelEjectCommand extends BaseCommand {
     public void initialize() {
         intakeSubsystem.eject();
     }
+
+    @Override
+    public void execute() {
+        log.info("Ejecting fuel!");
+    }
 }
