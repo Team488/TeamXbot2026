@@ -2,6 +2,7 @@ package competition.subsystems.hood;
 
 import competition.electrical_contract.ElectricalContract;
 
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Time;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.TimedAndBoundedServo;
@@ -12,6 +13,7 @@ import xbot.common.properties.PropertyFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
@@ -88,5 +90,13 @@ public class HoodSubsystem extends BaseSubsystem {
     public void periodic() {
         aKitLog.record("LeftServoPosition", hoodServoLeft.getNormalizedCurrentPosition());
         aKitLog.record("RightServoPosition", hoodServoRight.getNormalizedCurrentPosition());
+    }
+
+    public TimedAndBoundedServo getHoodServoLeft() {
+        return hoodServoLeft;
+    }
+
+    public TimedAndBoundedServo getHoodServoRight() {
+        return hoodServoRight;
     }
 }
