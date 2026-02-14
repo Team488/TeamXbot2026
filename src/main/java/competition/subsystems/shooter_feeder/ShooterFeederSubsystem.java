@@ -47,16 +47,4 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
     public void eject() {
         shooterFeederMotor.setPower(shooterFeederMotorPower.get());
     }
-
-    public void fire() {
-        if (shooterFeederMotor != null) {
-            shooterFeederMotor.setPower(firePower.get());
-        }
-    }
-
-    public void stop() {
-        if (shooterFeederMotor != null) {
-            shooterFeederMotor.setPower(0);
-        }
-    }
 }
