@@ -80,7 +80,7 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/kP",
+                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/0/kP",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -94,7 +94,7 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/kI",
+                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/0/kI",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -108,7 +108,7 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/kD",
+                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/0/kD",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -143,20 +143,6 @@
                 }
               },
               {
-                "title": "kGravityFeedForward",
-                "x": 768.0,
-                "y": 640.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/kGravityFeedForward",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
                 "title": "kVelocityFeedForward",
                 "x": 768.0,
                 "y": 640.0,
@@ -164,7 +150,21 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/kVelocityFeedForward",
+                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/0/kVelocityFeedForward",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "kGravityFeedForward",
+                "x": 768.0,
+                "y": 640.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/0/kGravityFeedForward",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -191,7 +191,7 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/kP",
+                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/0/kP",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -205,7 +205,7 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/kI",
+                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/0/kI",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -219,7 +219,7 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/kD",
+                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/0/kD",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -254,20 +254,6 @@
                 }
               },
               {
-                "title": "kGravityFeedForward",
-                "x": 1024.0,
-                "y": 640.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/kGravityFeedForward",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
                 "title": "kVelocityFeedForward",
                 "x": 1152.0,
                 "y": 640.0,
@@ -275,7 +261,21 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/kVelocityFeedForward",
+                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/0/kVelocityFeedForward",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "kGravityFeedForward",
+                "x": 1024.0,
+                "y": 640.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/0/kGravityFeedForward",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -337,12 +337,12 @@
           {
             "title": "kGravityFeedForward",
             "x": 896.0,
-            "y": 256.0,
+            "y": 384.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/Preferences/ShooterMotor/kGravityFeedForward",
+              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kGravityFeedForward",
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": true
@@ -356,7 +356,7 @@
             "height": 128.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/Preferences/ShooterMotor/kMaxOutput",
+              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/kMaxOutput",
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": true
@@ -370,7 +370,7 @@
             "height": 128.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/Preferences/ShooterMotor/kMinOutput",
+              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/kMinOutput",
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": true
@@ -384,7 +384,7 @@
             "height": 128.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/Preferences/ShooterMotor/kP",
+              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kP",
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": true
@@ -398,7 +398,7 @@
             "height": 128.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/Preferences/ShooterMotor/kD",
+              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kD",
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": true
@@ -412,7 +412,7 @@
             "height": 128.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/Preferences/ShooterMotor/kVelocityFeedForward",
+              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kVelocityFeedForward",
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": true
@@ -440,7 +440,21 @@
             "height": 128.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/Preferences/ShooterMotor/kI",
+              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kI",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kStaticFeedForward",
+            "x": 896.0,
+            "y": 256.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kStaticFeedForward",
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": true
