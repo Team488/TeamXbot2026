@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import xbot.common.advantage.AKitLogger;
 import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
+import xbot.common.controls.sensors.mock_adapters.MockAbsoluteEncoder;
 import xbot.common.math.PIDManager;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.simulation.MotorInternalPIDHelper;
@@ -31,6 +32,7 @@ public class IntakeDeploySimulator {
 
     final IntakeDeploySubsystem intakeDeploy;
     final MockCANMotorController motor;
+    final MockAbsoluteEncoder absoluteEncoder;
 
     @Inject
     public IntakeDeploySimulator(IntakeDeploySubsystem intakeDeploy, PIDManager.PIDManagerFactory pidManagerFactory,
@@ -39,6 +41,7 @@ public class IntakeDeploySimulator {
         aKitLog = new AKitLogger(pf.getPrefix());
         this.intakeDeploy = intakeDeploy;
         this.motor = (MockCANMotorController) intakeDeploy.intakeDeployMotor;
+        this.absoluteEncoder = (MockAbsoluteEncoder) intakeDeploy.intakeDeployAbsoluteEncoder;
         this.pidManager = pidManagerFactory.create(
                 pf.getPrefix() + "IntakeDeploySimulatorPID",
                 0.2,
@@ -68,7 +71,10 @@ public class IntakeDeploySimulator {
     }
 
     public void update() {
+        // Update motor power
         MotorInternalPIDHelper.updateInternalPID(motor, pidManager);
+
+        // Update the internal motorSim using our motor power
         if (DriverStation.isEnabled()) {
             this.motorSim.setInputVoltage(this.motor.getPower() * RobotController.getBatteryVoltage());
         } else {
@@ -76,10 +82,16 @@ public class IntakeDeploySimulator {
         }
         this.motorSim.update(Robot.LOOP_INTERVAL);
 
+        // Update motor position and velocity with the motorSim
         var prevPosition = this.motor.getPosition();
         this.motor.setPosition(getAngularPosition());
         this.motor.setVelocity(prevPosition.minus(this.motor.getPosition()).per(Second).times(Robot.LOOP_INTERVAL));
 
+        if (this.absoluteEncoder != null) {
+            this.absoluteEncoder.setPosition(this.motor.getPosition());
+        }
+
+        aKitLog.record("IntakeDeployPosition", this.motor.getPosition().in(Degrees));
         aKitLog.record("IntakeDeployed", isDeployed());
     }
 }

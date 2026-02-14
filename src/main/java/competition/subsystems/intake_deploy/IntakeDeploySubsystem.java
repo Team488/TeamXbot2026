@@ -68,13 +68,10 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         this.limbRange = propertyFactory.createPersistentProperty("limbRange", Degrees.of(85));
     }
 
-
-
     @Override
     public Angle getCurrentValue() {
         return intakeDeployAbsoluteEncoder.getAbsolutePosition();
     }
-
 
     @Override
     public Angle getTargetValue() {
@@ -89,6 +86,10 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     @Override
     public void setPower(Double power) {
         intakeDeployMotor.setPower(power);
+    }
+
+    public void setPositionGoal(Angle goal) {
+        intakeDeployMotor.setPositionTarget(goal);
     }
 
     @Override
