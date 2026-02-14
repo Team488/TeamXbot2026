@@ -33,14 +33,15 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         propertyFactory.setPrefix(this);
         this.electricalContract = electricalContract;
 
-        var defaultPIDProperties = new XCANMotorControllerPIDProperties(
-                0.1,
-                0.01,
-                0.25,
-                0.0002,
-                0.750,
-                1,
-                0);
+        var defaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
+                .withP(0.0)
+                .withI(0.0)
+                .withD(0.0)
+                .withStaticFeedForward(0)
+                .withVelocityFeedForward(0.1)
+                .withMinPowerOutput(-1.0)
+                .withMaxPowerOutput(1.0)
+                .build();
 
         if (electricalContract.isLeftShooterReady()) {
             this.leftShooterMotor = xcanMotorControllerFactory.create(electricalContract.getLeftShooterMotor(),
@@ -93,6 +94,16 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
             motor.setVelocityTarget(RPM.of(targetVelocity.get()));
         }
     }
+
+    public boolean isReadyToFire() {
+        return isMaintainerAtGoal() && hasNonIdleTarget();
+    }
+
+
+    public boolean hasNonIdleTarget() {
+        return targetVelocity.get() > 300;
+    }
+
 
     public List<XCANMotorController> getShooterMotors() {
         var motors = new ArrayList<XCANMotorController>(3);
@@ -159,4 +170,15 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     protected boolean areTwoTargetsEquivalent(AngularVelocity target1, AngularVelocity target2) {
         return Math.abs(target1.in(RPM) - target2.in(RPM)) < 0.00001;
     }
+
+    public double getSpeedForRange() {
+        return 10.0;
+    }
+
+    public void setTargetValue(double rpm) {
+        this.setTargetValue(RPM.of(rpm));
+
+        this.runAtTargetVelocity();
+    }
+
 }
