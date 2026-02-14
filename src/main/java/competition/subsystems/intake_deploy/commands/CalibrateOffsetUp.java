@@ -20,5 +20,7 @@ public class CalibrateOffsetUp extends BaseCommand{
     @Override
     public void initialize() {
         intakeDeploySubsystem.calibrateOffsetUp();
+        log.info("Initialized CalibrateOffsetUp");
     }
+
 }
