@@ -5,17 +5,17 @@ import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
-public class EnableShooterFeederCommand extends BaseCommand {
+public class ShooterFeederStop extends BaseCommand {
     final ShooterFeederSubsystem shooterFeeder;
 
     @Inject
-    public EnableShooterFeederCommand(ShooterFeederSubsystem shooterFeeder) {
+    public ShooterFeederStop (ShooterFeederSubsystem shooterFeeder) {
         this.shooterFeeder = shooterFeeder;
         this.addRequirements(shooterFeeder);
     }
-    
+
     @Override
     public void initialize() {
-        // TODO: Fill in later
+        shooterFeeder.stop();
     }
 }
