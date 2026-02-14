@@ -21,4 +21,7 @@ public class CalibrateOffsetUp extends BaseCommand{
     public void initialize() {
         intakeDeploySubsystem.calibrateOffsetUp();
     }
+    public boolean isFinished() {
+        return true;
+    }
 }
