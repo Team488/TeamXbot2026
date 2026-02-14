@@ -13,6 +13,10 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
     public final XCANMotorController shooterFeederMotor;
 
     public DoubleProperty shooterFeederMotorPower;
+    public DoubleProperty pointOnePower;
+    public DoubleProperty pointTwoPower;
+    public DoubleProperty pointThreePower;
+    public DoubleProperty pointFourPower;
 
     @Inject
     public ShooterFeederSubsystem(ElectricalContract electricalContract,
@@ -26,6 +30,10 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
             this.shooterFeederMotor = null;
         }
         this.shooterFeederMotorPower = pf.createPersistentProperty("ShooterFeederMotorPower", 1);
+        this.pointOnePower = pf.createPersistentProperty("one", 0.4); //to do change value
+        this.pointTwoPower = pf.createPersistentProperty("Two", 0.6); //to do change value
+        this.pointThreePower = pf.createPersistentProperty("Three", 0.8); //to do change value
+        this.pointFourPower = pf.createPersistentProperty("Four", 1.0); //to do change value
     }
 
     @Override
