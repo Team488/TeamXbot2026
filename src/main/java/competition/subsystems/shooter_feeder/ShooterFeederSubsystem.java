@@ -13,6 +13,7 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
     public final XCANMotorController shooterFeederMotor;
 
     public DoubleProperty shooterFeederMotorPower;
+    public DoubleProperty firePower;
 
     @Inject
     public ShooterFeederSubsystem(ElectricalContract electricalContract,
@@ -35,4 +36,15 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
         }
     }
 
+    public void fire() {
+        if (shooterFeederMotor != null) {
+            shooterFeederMotor.setPower(firePower.get());
+        }
+    }
+
+    public void stop() {
+        if (shooterFeederMotor != null) {
+            shooterFeederMotor.setPower(0);
+        }
+    }
 }
