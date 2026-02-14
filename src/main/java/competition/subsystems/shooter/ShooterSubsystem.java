@@ -94,6 +94,16 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         }
     }
 
+    public boolean isReadyToFire() {
+        return isMaintainerAtGoal() && hasNonIdleTarget();
+    }
+
+
+    public boolean hasNonIdleTarget() {
+        return targetVelocity.get() > 300;
+    }
+
+
     public List<XCANMotorController> getShooterMotors() {
         var motors = new ArrayList<XCANMotorController>(3);
         if (leftShooterMotor != null) {
