@@ -20,6 +20,7 @@ public class CalibrateOffsetDown extends BaseCommand {
     @Override
     public void initialize() {
         intakeDeploySubsystem.calibrateOffsetDown();
+        log.info("Initialized CalibrateOffsetDown");
     }
 
 }
