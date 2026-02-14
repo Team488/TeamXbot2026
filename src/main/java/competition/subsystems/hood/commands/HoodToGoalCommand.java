@@ -10,7 +10,6 @@ import javax.inject.Inject;
 
 public class HoodToGoalCommand extends BaseCommand {
     final HoodSubsystem hood;
-    final Logger log = LogManager.getLogger(HoodToGoalCommand.class);
 
     @Inject
     public HoodToGoalCommand(HoodSubsystem hoodSubsystem) {

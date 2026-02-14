@@ -18,10 +18,12 @@ public class IntakeDeployExtendCommand extends BaseCommand {
     @Override
     public void initialize() {
         intakeDeploy.setTargetValue(Degree.of(intakeDeploy.extendedPositionInDegree.get()));
+        log.info("Initialized IntakeDeployExtend");
     }
 
     @Override
     public boolean isFinished() {
         return true;
     }
+
 }
