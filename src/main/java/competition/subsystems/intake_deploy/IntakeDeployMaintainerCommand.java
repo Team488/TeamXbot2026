@@ -40,7 +40,6 @@ public class IntakeDeployMaintainerCommand extends BaseMaintainerCommand<Angle, 
 
     @Override
     protected double getErrorMagnitude() {
-        System.out.println(Math.abs(this.subsystem.getTargetValue().minus(this.subsystem.getCurrentValue()).in(Units.Degrees)));
         return Math.abs(this.subsystem.getTargetValue().minus(this.subsystem.getCurrentValue()).in(Units.Degrees));
     }
 
