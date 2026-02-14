@@ -85,7 +85,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public CANMotorControllerInfo getLeftShooterMotor() {
-        return new CANMotorControllerInfo("ShooterMotor",
+        return new CANMotorControllerInfo("ShooterLeftMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 918,
@@ -95,19 +95,21 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public CANMotorControllerInfo getMiddleShooterMotor() {
-        return new CANMotorControllerInfo("ShooterMotor",
+        return new CANMotorControllerInfo("ShooterMiddleMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 211,
+                PDHPort.PDH00,
                 new CANMotorControllerOutputConfig());
     }
 
     @Override
     public CANMotorControllerInfo getRightShooterMotor() {
-        return new CANMotorControllerInfo("ShooterMotor",
+        return new CANMotorControllerInfo("ShooterRightMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.RIO,
                 900,
+                PDHPort.PDH00,
                 new CANMotorControllerOutputConfig());
     }
 
