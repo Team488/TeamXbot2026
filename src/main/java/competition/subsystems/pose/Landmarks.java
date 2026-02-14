@@ -106,6 +106,9 @@ public class Landmarks {
     }
 
     private static Pose2d getAprilTagPose(AprilTagFieldLayout aprilTagFieldLayout, int aprilTag) {
-        return aprilTagFieldLayout.getTagPose(aprilTag).orElseThrow(RuntimeException::new).toPose2d();
+        return aprilTagFieldLayout
+                .getTagPose(aprilTag)
+                .orElseThrow(() -> new RuntimeException("AprilTag " + aprilTag + " not found in field layout"))
+                .toPose2d();
     }
 }
