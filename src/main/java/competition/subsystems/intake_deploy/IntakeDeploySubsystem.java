@@ -1,6 +1,12 @@
 package competition.subsystems.intake_deploy;
 
 import competition.electrical_contract.ElectricalContract;
+import competition.subsystems.intake_deploy.commands.CalibrateOffsetDown;
+import competition.subsystems.intake_deploy.commands.CalibrateOffsetUp;
+import edu.wpi.first.units.measure.Angle;
+import xbot.common.command.BaseSubsystem;
+import xbot.common.controls.actuators.XCANMotorController;
+import xbot.common.properties.AngleProperty;
 import edu.wpi.first.units.PerUnit;
 import edu.wpi.first.units.measure.Angle;
 import xbot.common.command.BaseSetpointSubsystem;
@@ -14,6 +20,8 @@ import xbot.common.controls.sensors.XAbsoluteEncoder;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Rotation;
 import static edu.wpi.first.units.Units.Degrees;
 
 
@@ -23,6 +31,9 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public final XAbsoluteEncoder intakeDeployAbsoluteEncoder;
     public DoubleProperty retractPower;
     public DoubleProperty extendPower;
+    public AngleProperty limbRange;
+    public Angle offset;
+    public boolean isCalibrated = false;
     public DoubleProperty extendedPositionInDegree;
     public DoubleProperty retractedPositionInDegree;
     private Angle targetRotation;
@@ -49,6 +60,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         } else {
             this.intakeDeployAbsoluteEncoder = null;
         }
+
         this.retractedPositionInDegree = propertyFactory.createPersistentProperty("retractPosition",0);
         this.extendedPositionInDegree = propertyFactory.createPersistentProperty("extendPosition",0);
         this.retractPower = propertyFactory.createPersistentProperty("retractPower", -0.1);
@@ -96,5 +108,15 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         if (intakeDeployMotor != null) {
             intakeDeployMotor.periodic();
         }
+    }
+
+    public void calibrateOffsetDown() {
+        offset = intakeDeployMotor.getPosition().minus(limbRange.get());
+        isCalibrated = true;
+    }
+
+    public void calibrateOffsetUp() {
+        offset = intakeDeployMotor.getPosition();
+        isCalibrated = true;
     }
 }
