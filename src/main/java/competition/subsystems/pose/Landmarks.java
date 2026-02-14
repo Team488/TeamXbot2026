@@ -105,7 +105,7 @@ public class Landmarks {
         return currentPose.getX() >= minX && currentPose.getX() <= maxX;
     }
 
-    private static Pose2d getAprilTagPose(AprilTagFieldLayout aprilTagFieldLayout, int aprilTag) throws RuntimeException {
+    private static Pose2d getAprilTagPose(AprilTagFieldLayout aprilTagFieldLayout, int aprilTag) {
         return aprilTagFieldLayout.getTagPose(aprilTag).orElseThrow(RuntimeException::new).toPose2d();
     }
 }
