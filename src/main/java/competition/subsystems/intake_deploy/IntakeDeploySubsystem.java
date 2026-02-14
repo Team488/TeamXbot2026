@@ -29,13 +29,13 @@ import static edu.wpi.first.units.Units.Degrees;
 public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  {
     public final XCANMotorController intakeDeployMotor;
     public final XAbsoluteEncoder intakeDeployAbsoluteEncoder;
-    public DoubleProperty retractPower;
-    public DoubleProperty extendPower;
-    public AngleProperty limbRange;
+    public final DoubleProperty retractPower;
+    public final DoubleProperty extendPower;
+    public final AngleProperty limbRange;
     public Angle offset;
     public boolean isCalibrated = false;
-    public DoubleProperty extendedPositionInDegree;
-    public DoubleProperty retractedPositionInDegree;
+    public final DoubleProperty extendedPositionInDegree;
+    public final DoubleProperty retractedPositionInDegree;
     private Angle targetRotation;
 
     @Inject
@@ -65,6 +65,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         this.extendedPositionInDegree = propertyFactory.createPersistentProperty("extendPosition",0);
         this.retractPower = propertyFactory.createPersistentProperty("retractPower", -0.1);
         this.extendPower = propertyFactory.createPersistentProperty("extendPower", 0.1);
+        this.limbRange = propertyFactory.createPersistentProperty("limbRange", Degrees.of(85));
     }
 
 
