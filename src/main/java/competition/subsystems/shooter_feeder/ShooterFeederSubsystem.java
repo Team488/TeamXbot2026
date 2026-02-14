@@ -39,11 +39,11 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
         shooterFeederMotor.setPower(shooterFeederMotorPower.get());
     }
 
-    public void forward() {
+    public void fire() {
         shooterFeederMotor.setPower(shooterFeederMotorPower.get());
     }
 
-    public void reverse() {
+    public void eject() {
         shooterFeederMotor.setPower(shooterFeederMotorPower.get());
     }
 
