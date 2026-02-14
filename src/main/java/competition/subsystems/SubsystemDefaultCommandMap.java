@@ -14,7 +14,6 @@ import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.shooter.commands.ShooterWheelMaintainerCommand;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
-import competition.subsystems.shooter_feeder.commands.DisableShooterFeederCommand;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederStop;
 
 /**
