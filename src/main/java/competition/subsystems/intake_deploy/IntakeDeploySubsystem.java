@@ -47,7 +47,6 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         if (electricalContract.isIntakeDeployReady()) {
             this.intakeDeployMotor = xcanMotorControllerFactory.create(electricalContract.getIntakeDeployMotor(),
                     getPrefix(),"intakeDeploy");
-            this.registerDataFrameRefreshable(this.intakeDeployMotor);
         } else {
             this.intakeDeployMotor = null;
         }
@@ -56,7 +55,6 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             this.intakeDeployAbsoluteEncoder = xAbsoluteEncoderFactory.create
                     (electricalContract.getIntakeDeployAbsoluteEncoderMotor(),
                     getPrefix());
-            registerDataFrameRefreshable(intakeDeployAbsoluteEncoder);
         } else {
             this.intakeDeployAbsoluteEncoder = null;
         }

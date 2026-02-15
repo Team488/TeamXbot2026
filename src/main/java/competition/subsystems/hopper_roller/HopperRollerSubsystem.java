@@ -32,7 +32,6 @@ public class HopperRollerSubsystem extends BaseSubsystem {
                     getPrefix(),
                     "HopperRollerPID"
             );
-            this.registerDataFrameRefreshable(hopperRollerMotor);
         } else {
             this.hopperRollerMotor = null;
         }

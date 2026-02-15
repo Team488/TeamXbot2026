@@ -31,7 +31,6 @@ public class HoodSubsystem extends BaseSubsystem {
         if (electricalContract.isHoodServoLeftReady()) {
            this.hoodServoLeft = servoFactory.create(electricalContract.getHoodServoLeft().channel,
                    getName() + "/Servo");
-            registerDataFrameRefreshable(hoodServoLeft);
         } else {
             this.hoodServoLeft = null;
         }
@@ -39,7 +38,6 @@ public class HoodSubsystem extends BaseSubsystem {
         if (electricalContract.isHoodServoRightReady()) {
             this.hoodServoRight = servoFactory.create(electricalContract.getHoodServoRight().channel,
                     getName() + "/Servo");
-            registerDataFrameRefreshable(hoodServoRight);
         } else {
             this.hoodServoRight = null;
         }

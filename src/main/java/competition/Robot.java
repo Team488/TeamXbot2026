@@ -48,16 +48,8 @@ public class Robot extends BaseRobot {
         }
 
         dataFrameRefreshables.add((DriveSubsystem)getInjectorComponent().driveSubsystem());
-        dataFrameRefreshables.add(getInjectorComponent().poseSubsystem());
+        
         dataFrameRefreshables.add(getInjectorComponent().aprilTagVisionSubsystemExtended());
-        dataFrameRefreshables.add(getInjectorComponent().shooterSubsystem());
-        dataFrameRefreshables.add(getInjectorComponent().shooterFeederSubsystem());
-        dataFrameRefreshables.add(getInjectorComponent().hoodSubsystem());
-        dataFrameRefreshables.add(getInjectorComponent().intakeSubsystem());
-        dataFrameRefreshables.add(getInjectorComponent().intakeDeploySubsystem());
-        dataFrameRefreshables.add(getInjectorComponent().lightsSubsystem());
-        dataFrameRefreshables.add(getInjectorComponent().hopperRollerSubsystem());
-        dataFrameRefreshables.add(getInjectorComponent().voltageMonitorSubsystem());
     }
 
     protected BaseRobotComponent createDaggerComponent() {

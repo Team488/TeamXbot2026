@@ -37,7 +37,6 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
         if (electricalContract.isShooterFeederReady()) {
             this.shooterFeederMotor = motorFactory.create(electricalContract.getShooterFeederMotor(),
                     getPrefix(), "ShooterFeederMotorPID", defaultPIDProperties);
-            this.registerDataFrameRefreshable(shooterFeederMotor);
         } else {
             this.shooterFeederMotor = null;
         }

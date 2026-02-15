@@ -30,7 +30,6 @@ public class ClimberSubsystem extends BaseSubsystem {
             this.climberMotor = motorFactory.create(
                     electricalContract.getClimberMotor(), this.getPrefix(), "ClimberMotorPID",
                     new XCANMotorControllerPIDProperties());
-            this.registerDataFrameRefreshable(climberMotor);
         } else {
             this.climberMotor = null;
         }
@@ -38,7 +37,6 @@ public class ClimberSubsystem extends BaseSubsystem {
             this.climberEncoder = absoluteEncoder.create(
                     electricalContract.getClimberAbsoluteEncoder(),
             getPrefix());
-            this.registerDataFrameRefreshable(climberEncoder);
         } else {
             this.climberEncoder = null;
         }

@@ -36,7 +36,6 @@ public class IntakeSubsystem extends BaseSubsystem {
                     getPrefix(),
                     "FuelIntakePID"
             );
-            this.registerDataFrameRefreshable(intakeMotor);
         } else {
             this.intakeMotor = null;
         }
