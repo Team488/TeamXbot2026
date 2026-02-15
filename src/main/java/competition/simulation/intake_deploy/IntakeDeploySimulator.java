@@ -13,6 +13,7 @@ import xbot.common.advantage.AKitLogger;
 import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
 import xbot.common.controls.sensors.mock_adapters.MockAbsoluteEncoder;
 import xbot.common.math.PIDManager;
+import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.simulation.MotorInternalPIDHelper;
 
@@ -20,6 +21,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Second;
 
 @Singleton
@@ -83,15 +87,17 @@ public class IntakeDeploySimulator {
         this.motorSim.update(Robot.LOOP_INTERVAL);
 
         // Update motor position and velocity with the motorSim
-        var prevPosition = this.motor.getPosition();
-        this.motor.setPosition(getAngularPosition());
-        this.motor.setVelocity(prevPosition.minus(this.motor.getPosition()).per(Second).times(Robot.LOOP_INTERVAL));
+        var mechanismAngle = getAngularPosition();
+        double motorRotation = mechanismAngle.in(Degrees) / intakeDeploy.degreesPerRotation.get();
 
-        if (this.absoluteEncoder != null) {
-            this.absoluteEncoder.setPosition(this.motor.getPosition());
+        this.motor.setPosition(Rotations.of(motorRotation));
+
+        if (absoluteEncoder != null) {
+            absoluteEncoder.setPosition(mechanismAngle);
+            aKitLog.record("IntakeDeployEncoderPos", this.absoluteEncoder.getPosition().in(Degrees));
         }
 
-        aKitLog.record("IntakeDeployPosition", this.motor.getPosition().in(Degrees));
+        aKitLog.record("IntakeDeployMotorPos", this.motor.getPosition().in(Rotations));
         aKitLog.record("IntakeDeployed", isDeployed());
     }
 }
