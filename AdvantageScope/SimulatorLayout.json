@@ -36,11 +36,12 @@
             "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/RobotPosesRejected",
             "/AdvantageKit/RealOutputs/PoseSubsystem/RobotPose",
             "/AdvantageKit/RealOutputs/PoseSubsystem/SwerveVisionEnhancedPose",
-            "/AdvantageKit/RealOutputs/PoseSubsystem/VisionEnhancedPose"
+            "/AdvantageKit/RealOutputs/PoseSubsystem/VisionEnhancedPose",
+            "/AdvantageKit/ShooterRightMotor/CANMotorController"
           ]
         },
         "tabs": {
-          "selected": 2,
+          "selected": 1,
           "tabs": [
             {
               "type": 0,
@@ -143,16 +144,81 @@
                 "cameraIndex": -1,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  4.425421275840583,
-                  8.604053791095486,
-                  -7.714279173044558
+                  -0.6547130166187289,
+                  5.835649761227683,
+                  -6.111545785305621
                 ],
                 "cameraTarget": [
-                  -0.5651997241045817,
-                  -2.2754560705009603,
-                  -0.8423091444061894
+                  -0.4750224254835664,
+                  -1.9141772758047795,
+                  0.8981926656629698
                 ]
               },
+              "controlsHeight": 200
+            },
+            {
+              "type": 1,
+              "title": "Line Graph",
+              "controller": {
+                "leftSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/ShooterLeftMotor/CANMotorController/AngularVelocity",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/ShooterRightMotor/CANMotorController/AngularVelocity",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#e5b31b",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/ShooterMiddleMotor/CANMotorController/AngularVelocity",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#af2437",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/Preferences/ShooterSubsystem/Target Velocity",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#80588e",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [],
+                "discreteSources": [],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "rightUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "yjypbsrwuuujci4o8aqz5idmkjha4vve",
+              "renderer": null,
               "controlsHeight": 200
             },
             {

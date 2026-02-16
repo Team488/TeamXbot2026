@@ -9,17 +9,17 @@ import javax.inject.Inject;
 
 public class TrimShooterVelocityUp extends BaseCommand {
     final ShooterSubsystem shooter;
-    final Logger log = LogManager.getLogger(TrimShooterVelocityUp.class);
 
     @Inject
     public TrimShooterVelocityUp(ShooterSubsystem shooterSubsystem) {
         shooter = shooterSubsystem;
-        this.addRequirements(shooter);
+        this.addRequirements(shooter.getTrimSetpointLock());
     }
 
     @Override
     public void initialize() {
         shooter.increaseShooterOffset();
+        log.info("Increasing shooter trim to " + shooter.trimValue.get());
     }
 
     @Override
