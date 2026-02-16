@@ -5,23 +5,21 @@ import javax.inject.Singleton;
 
 import competition.subsystems.climber.commands.ClimberExtendCommand;
 import competition.subsystems.climber.commands.ClimberRetractCommand;
-import competition.subsystems.climber.commands.ClimberStopCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.fuel_intake.commands.FuelEjectCommand;
 import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
-import competition.subsystems.hood.commands.HoodToGoalCommand;
-import competition.subsystems.hood.commands.HoodToZeroCommand;
+import competition.subsystems.hood.commands.TrimHoodDownCommand;
+import competition.subsystems.hood.commands.TrimHoodUpCommand;
+import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.commands.CalibrateOffsetDown;
 import competition.subsystems.intake_deploy.commands.CalibrateOffsetUp;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
-import competition.subsystems.shooter.commands.FireWhenShooterReady;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederEject;
-import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
@@ -67,29 +65,35 @@ public class OperatorCommandMap {
                                      TrimShooterVelocityUp trimShooterVelocityUp,
                                      TrimShooterVelocityDown trimShooterVelocityDown,
                                      FuelIntakeCommand fuelIntakeCommand,
-                                     HoodToGoalCommand hoodToGoalCommand,
-                                     HoodToZeroCommand hoodToZeroCommand,
+                                     TrimHoodUpCommand trimHoodUpCommand,
+                                     TrimHoodDownCommand trimHoodDownCommand,
                                      IntakeDeployExtendCommand intakeDeployExtendCommand,
                                      IntakeDeployRetractCommand intakeDeployRetractCommand,
                                      FuelEjectCommand fuelEjectCommand,
                                      ShooterFeederEject shooterFeederEject,
+                                     HopperRollerSubsystem hopperRollerSubsystem,
                                      CalibrateOffsetDown calibrateOffsetDown,
                                      CalibrateOffsetUp calibrateOffsetUp
     ) {
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(climberExtendCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(climberRetractCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger).whileTrue(trimShooterVelocityUp);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger).whileTrue(trimShooterVelocityDown);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(climberRetractCommand);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(climberExtendCommand);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger).onTrue(trimShooterVelocityDown);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger).onTrue(trimShooterVelocityUp);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(shooterOutputCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(fuelIntakeCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(intakeDeployExtendCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(intakeDeployRetractCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightJoystickYAxisPositive).whileTrue(hoodToGoalCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightJoystickYAxisNegative).whileTrue(hoodToZeroCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftJoystickYAxisNegative).whileTrue(fuelEjectCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftJoystickYAxisPositive).whileTrue(shooterFeederEject);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Start).whileTrue(calibrateOffsetDown);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Back).whileTrue(calibrateOffsetUp);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Back).whileTrue(calibrateOffsetDown);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Start).whileTrue(calibrateOffsetUp);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftStick).whileTrue(hopperRollerSubsystem.getEjectCommand());
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightStick).whileTrue(hopperRollerSubsystem.getIntakeCommand());
+
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(0).onTrue(trimHoodDownCommand);
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(90).whileTrue(fuelEjectCommand);
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(180).onTrue(trimHoodUpCommand);
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(270).onTrue(shooterFeederEject);
+
+
     }
 
 
