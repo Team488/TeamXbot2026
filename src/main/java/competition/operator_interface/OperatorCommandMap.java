@@ -40,12 +40,23 @@ public class OperatorCommandMap {
 
     // Example for setting up a command to fire when a button is pressed:
     @Inject
-    public void setupOperatorCommands(
-            OperatorInterface operatorInterface,
+    public void setupOperatorCommands(OperatorInterface oi,
+            ClimberExtendCommand climberExtendCommand,
+            ClimberRetractCommand climberRetractCommand,
             ShooterOutputCommand shooterOutputCommand,
-            TrimShooterVelocityUp trimShooterVelocityUp,
-            TrimShooterVelocityDown trimShooterVelocityDown
+            FuelIntakeCommand fuelIntakeCommand,
+            IntakeDeployExtendCommand intakeDeployExtendCommand,
+            IntakeDeployRetractCommand intakeDeployRetractCommand,
+            FuelEjectCommand fuelEjectCommand,
+            ShooterFeederEject shooterFeederEject,
+            HopperRollerSubsystem hopperRollerSubsystem,
+            CalibrateOffsetDown calibrateOffsetDown,
+            CalibrateOffsetUp calibrateOffsetUp
     ) {
+        oi.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).onTrue(climberRetractCommand);
+        oi.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).onTrue(climberExtendCommand);
+        oi.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(shooterOutputCommand);
+        oi.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(fuelIntakeCommand);
 
     }
 
