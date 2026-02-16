@@ -9,7 +9,7 @@ import xbot.common.properties.PropertyFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-@Singleton// when its magically given, get only one
+@Singleton
 public class IntakeSubsystem extends BaseSubsystem {
 
     public enum IntakeState {
@@ -23,7 +23,7 @@ public class IntakeSubsystem extends BaseSubsystem {
     DoubleProperty intakePower;
     DoubleProperty ejectPower;
 
-    @Inject //a method for things to magically to be given to us
+    @Inject
     public IntakeSubsystem(ElectricalContract electricalContract,
                            XCANMotorController.XCANMotorControllerFactory motorFactory,
                            PropertyFactory pf) {
@@ -41,7 +41,6 @@ public class IntakeSubsystem extends BaseSubsystem {
             this.intakeMotor = null;
         }
 
-        //set intake and eject values, eject is - and intake is +
         intakePower = pf.createPersistentProperty("FuelIntakePower", 1);
         ejectPower = pf.createPersistentProperty("FuelEjectPower", -1);
     }
@@ -67,7 +66,7 @@ public class IntakeSubsystem extends BaseSubsystem {
         intakeMotor.setPower(0);
     }
 
-    @Override // A function that replaces/overrides the extended
+    @Override
     public void periodic() {
         if (electricalContract.isFuelIntakeMotorReady()) {
             intakeMotor.periodic();

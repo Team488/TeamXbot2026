@@ -1,6 +1,9 @@
 package competition.simulation;
 
 import competition.Robot;
+import competition.simulation.intake.IntakeSimulator;
+import competition.simulation.intake_deploy.IntakeDeploySimulator;
+import competition.simulation.shooter.ShooterSimulator;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
@@ -11,6 +14,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 import org.ironmaple.simulation.drivesims.COTS;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import xbot.common.advantage.AKitLogger;
 import xbot.common.controls.sensors.mock_adapters.MockGyro;
 import xbot.common.logic.TimeStableValidator;
@@ -21,7 +25,6 @@ import static edu.wpi.first.units.Units.Seconds;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
@@ -39,12 +42,16 @@ public class MapleSimulator implements BaseSimulator {
 
     // maple-sim stuff ----------------------------
     final DriveTrainSimulationConfig config;
-    final IntakeSimulation intakeSimulation;
-    final SimulatedArena arena;
+    final Arena2026Rebuilt arena;
     final SelfControlledSwerveDriveSimulation swerveDriveSimulation;
 
+    final ShooterSimulator shooterSimulator;
+    final IntakeSimulator intakeSimulator;
+    final IntakeDeploySimulator intakeDeploySimulator;
+
     @Inject
-    public MapleSimulator(PoseSubsystem pose, DriveSubsystem drive) {
+    public MapleSimulator(PoseSubsystem pose, DriveSubsystem drive, ShooterSimulator shooterSimulator,
+                          IntakeSimulator intakeSimulator, IntakeDeploySimulator intakeDeploySimulator) {
         this.pose = pose;
         this.drive = drive;
 
@@ -92,25 +99,21 @@ public class MapleSimulator implements BaseSimulator {
 
         arena.addDriveTrainSimulation(swerveDriveSimulation.getDriveTrainSimulation());
 
-        intakeSimulation = IntakeSimulation.OverTheBumperIntake(
-            "Fuel",
-            this.swerveDriveSimulation.getDriveTrainSimulation(),
-            // How big the intake is
-            Units.Inches.of(28),
-            Units.Inches.of(12),
-            IntakeSimulation.IntakeSide.FRONT,
-            100
-        );
-
         // TODO: this should depend on when we actually deploy and run our collector
         // but for now just auto deploy it right away
-        intakeSimulation.startIntake();
+        this.shooterSimulator = shooterSimulator;
+        this.intakeSimulator = intakeSimulator;
+        this.intakeSimulator.initialize(this.swerveDriveSimulation.getDriveTrainSimulation());
+        this.intakeDeploySimulator = intakeDeploySimulator;
 
         SimulatedArena.overrideSimulationTimings(Seconds.of(Robot.LOOP_INTERVAL), 5);
     }
 
     public void update() {
         this.updateDriveSimulation();
+        intakeSimulator.update();
+        shooterSimulator.update(this.arena);
+        intakeDeploySimulator.update();
     }
 
     protected void updateDriveSimulation() {
@@ -127,7 +130,7 @@ public class MapleSimulator implements BaseSimulator {
         // this is where the robot really is in the sim
         aKitLog.record("FieldSimulation/Robot", swerveDriveSimulation.getActualPoseInSimulationWorld());
 
-        // tell the pose subystem about where the robot has moved based on odometry
+        // tell the pose subsystem about where the robot has moved based on odometry
         pose.ingestSimulatedSwerveModulePositions(swerveDriveSimulation.getLatestModulePositions());
 
         aKitLog.record("RobotVelocity", swerveDriveSimulation.getActualSpeedsFieldRelative());

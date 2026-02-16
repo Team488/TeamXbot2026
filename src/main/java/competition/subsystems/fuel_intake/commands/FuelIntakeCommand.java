@@ -6,16 +6,17 @@ import xbot.common.command.BaseCommand;
 import javax.inject.Inject;
 
 public class FuelIntakeCommand extends BaseCommand {
-    IntakeSubsystem fuelIntake;
+    final IntakeSubsystem intakeSubsystem;
 
     @Inject
-    public FuelIntakeCommand (IntakeSubsystem intakeSubsystem) {
-        fuelIntake = intakeSubsystem ;
-        this.addRequirements(fuelIntake);
+    public FuelIntakeCommand(IntakeSubsystem intakeSubsystem) {
+        this.intakeSubsystem = intakeSubsystem ;
+        this.addRequirements(this.intakeSubsystem);
     }
 
     @Override
     public void initialize() {
-        fuelIntake.intake();
+        intakeSubsystem.intake();
+        log.info("Initialized FuelIntake");
     }
 }

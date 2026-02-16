@@ -1,30 +1,54 @@
 {
   "hubs": [
     {
-      "x": -7,
-      "y": -7,
-      "width": 1142,
-      "height": 718,
+      "x": 14,
+      "y": 51,
+      "width": 1100,
+      "height": 650,
       "state": {
         "sidebar": {
           "width": 300,
           "expanded": [
             "/AdvantageKit",
             "/AdvantageKit/RealOutputs",
-            "/AdvantageKit/RealOutputs/PoseSubsystem",
             "/AdvantageKit/RealOutputs/Simulator",
-            "/AdvantageKit/RealOutputs/Simulator/FieldSimulation"
+            "/AdvantageKit/RealOutputs/Simulator/FieldSimulation",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState",
+            "/Preferences",
+            "/Preferences/SwerveSteeringSubsystem",
+            "/AdvantageKit/SwerveSteeringSubsystem",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/0",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/1",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/2",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/3",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState/3",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState/0",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState/1",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState/2",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState/0/angle",
+            "/AdvantageKit/RealOutputs/PoseSubsystem",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/RobotPoses",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/RobotPosesAccepted",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/TagPoses",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/RobotPosesRejected",
+            "/AdvantageKit/RealOutputs/PoseSubsystem/RobotPose",
+            "/AdvantageKit/RealOutputs/PoseSubsystem/SwerveVisionEnhancedPose",
+            "/AdvantageKit/RealOutputs/PoseSubsystem/VisionEnhancedPose",
+            "/AdvantageKit/ShooterRightMotor/CANMotorController"
           ]
         },
         "tabs": {
-          "selected": 2,
+          "selected": 1,
           "tabs": [
             {
               "type": 0,
               "title": "",
               "controller": null,
               "controllerUUID": "oltsw5wa6pb97d3zpuli6g0zbr1nn798",
-              "renderer": "#/",
+              "renderer": "",
               "controlsHeight": 0
             },
             {
@@ -70,7 +94,7 @@
                     "logType": "Pose2d",
                     "visible": true,
                     "options": {
-                      "model": "2026 KitBot",
+                      "model": "Xbot 2026",
                       "color": "#00ff00"
                     }
                   },
@@ -80,7 +104,17 @@
                     "logType": "Pose2d",
                     "visible": true,
                     "options": {
-                      "model": "2026 KitBot"
+                      "model": "Xbot 2026"
+                    }
+                  },
+                  {
+                    "type": "vision",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/TagPoses",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {
+                      "color": "#00ff00",
+                      "size": "normal"
                     }
                   },
                   {
@@ -91,6 +125,16 @@
                     "options": {
                       "variant": "Fuel"
                     }
+                  },
+                  {
+                    "type": "ghost",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/PoseSubsystem/VisionEnhancedPose",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "model": "Xbot 2026",
+                      "color": "#ff8c00"
+                    }
                   }
                 ],
                 "game": "FRC:2026 Field"
@@ -100,16 +144,116 @@
                 "cameraIndex": -1,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  -0.9878454092227529,
-                  9.947570443154682,
-                  -9.735659848749354
+                  -0.6547130166187289,
+                  5.835649761227683,
+                  -6.111545785305621
                 ],
                 "cameraTarget": [
-                  -0.3357071152822095,
-                  -2.2147502970890423,
-                  -0.5696208183979151
+                  -0.4750224254835664,
+                  -1.9141772758047795,
+                  0.8981926656629698
                 ]
               },
+              "controlsHeight": 200
+            },
+            {
+              "type": 1,
+              "title": "Line Graph",
+              "controller": {
+                "leftSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/ShooterLeftMotor/CANMotorController/AngularVelocity",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/ShooterRightMotor/CANMotorController/AngularVelocity",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#e5b31b",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/ShooterMiddleMotor/CANMotorController/AngularVelocity",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#af2437",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/Preferences/ShooterSubsystem/Target Velocity",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#80588e",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [],
+                "discreteSources": [],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "rightUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "yjypbsrwuuujci4o8aqz5idmkjha4vve",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 9,
+              "title": "Swerve",
+              "controller": {
+                "sources": [
+                  {
+                    "type": "states",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState",
+                    "logType": "SwerveModuleState[]",
+                    "visible": true,
+                    "options": {
+                      "color": "#ff0000",
+                      "arrangement": "0,1,2,3"
+                    }
+                  },
+                  {
+                    "type": "states",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState",
+                    "logType": "SwerveModuleState[]",
+                    "visible": true,
+                    "options": {
+                      "color": "#0000ff",
+                      "arrangement": "0,1,2,3"
+                    }
+                  }
+                ],
+                "maxSpeed": 5,
+                "sizeX": 0.56,
+                "sizeY": 0.508,
+                "orientation": 1
+              },
+              "controllerUUID": "vdejqk3ppthmvhtk6ixg5eg5pzzyihfb",
+              "renderer": null,
               "controlsHeight": 200
             },
             {

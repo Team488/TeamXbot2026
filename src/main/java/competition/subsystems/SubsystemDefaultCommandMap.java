@@ -3,14 +3,19 @@ package competition.subsystems;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import competition.subsystems.climber.ClimberSubsystem;
+import competition.subsystems.climber.commands.ClimberStopCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
-import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.subsystems.fuel_intake.IntakeSubsystem;
-import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
 import competition.subsystems.fuel_intake.commands.FuelStopCommand;
-import competition.subsystems.hood.HoodSubsystem;
-import competition.subsystems.hood.commands.StopHoodCommand;
+import competition.subsystems.intake_deploy.IntakeDeployMaintainerCommand;
+import competition.subsystems.intake_deploy.commands.IntakeDeployStopCommand;
+import competition.subsystems.shooter.ShooterSubsystem;
+import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
+import competition.subsystems.shooter.commands.ShooterWheelMaintainerCommand;
+import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
+import competition.subsystems.shooter_feeder.commands.ShooterFeederStop;
 
 /**
  * For setting the default commands on subsystems
@@ -27,12 +32,27 @@ public class SubsystemDefaultCommandMap {
     }
 
     @Inject
-    public void intakeStopCommand(IntakeSubsystem intakeSubsystem, FuelStopCommand command) {
-        intakeSubsystem.setDefaultCommand(command);
+    public void setupIntakeSubsystem(IntakeSubsystem intake, FuelStopCommand command) {
+        intake.setDefaultCommand(command);
     }
 
     @Inject
-    public void hoodSubSystem(HoodSubsystem hoodSubsystem, StopHoodCommand command) {
-        hoodSubsystem.setDefaultCommand(command);
+    public void setupShooterSubsystem(ShooterSubsystem shooter, ShooterWheelMaintainerCommand command) {
+        shooter.setDefaultCommand(command);
+    }
+
+    @Inject
+    public void setupClimberSubsystem(ClimberSubsystem climber, ClimberStopCommand command) {
+        climber.setDefaultCommand(command);
+    }
+
+    @Inject
+    public void setupShooterFeederSubsystem(ShooterFeederSubsystem shooterFeeder, ShooterFeederStop command) {
+        shooterFeeder.setDefaultCommand(command);
+    }
+
+    @Inject
+    public void setupIntakeDeploySubsystem(IntakeDeploySubsystem intakeDeploy, IntakeDeployMaintainerCommand command) {
+        intakeDeploy.setDefaultCommand(command);
     }
 }

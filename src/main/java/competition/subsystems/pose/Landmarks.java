@@ -1,9 +1,13 @@
 package competition.subsystems.pose;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import xbot.common.subsystems.pose.BasePoseSubsystem;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
+import java.util.List;
+import java.util.Optional;
 import javax.inject.Singleton;
 
 @Singleton
@@ -33,8 +37,56 @@ public class Landmarks {
 
     // Blue Tower
     public static Pose2d blueClimbOutpostEdge = new Pose2d(1.510,2.780,Rotation2d.fromDegrees(180));
-    public static Pose2d BlueClimbMiddleOutpostSide = new Pose2d(1.510,3.120,Rotation2d.fromDegrees(180));
-    public static Pose2d BlueClimbCenter = new Pose2d(1.510,3.750,Rotation2d.fromDegrees(180));
-    public static Pose2d BlueClimbMiddleDepotSide = new Pose2d(1.510,4.380,Rotation2d.fromDegrees(180));
-    public static Pose2d BlueClimbDepotSideEdge = new Pose2d(1.510,4.650,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbMiddleOutpostSide = new Pose2d(1.510,3.120,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbCenter = new Pose2d(1.510,3.750,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbMiddleDepotSide = new Pose2d(1.510,4.380,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbDepotSideEdge = new Pose2d(1.510,4.650,Rotation2d.fromDegrees(180));
+
+    // Blue Hub
+    // TODO: delete this and use getAllianceHubPose instead
+    public static Pose2d blueHub = new Pose2d(4.62, 4.040, Rotation2d.fromDegrees(0));
+
+    public static int redCenterHubNeutralSideFiducialId = 4;
+    public static int redCenterHubDriverSideFiducialId = 10;
+
+    public static int blueCenterHubNeutralSideFiducialId = 20;
+    public static int blueCenterHubDriverSideFiducialId = 26;
+
+    public static int blueTrenchDriverDepotSideFiducialId = 23;
+    public static int redTrenchDriverDepotSideFiducialId = 7;
+
+    public static List<Integer> getAllianceHubCenterFiducialIds(Alliance alliance) {
+        return switch (alliance) {
+            case Red -> List.of(redCenterHubNeutralSideFiducialId, redCenterHubDriverSideFiducialId);
+            case Blue -> List.of(blueCenterHubNeutralSideFiducialId, blueCenterHubDriverSideFiducialId);
+        };
+    }
+
+    // Get the average pose of the alliance hub using april tags
+    public static Pose2d getAllianceHubPose(AprilTagFieldLayout aprilTagFieldLayout, Alliance alliance) {
+        var allianceHubCenterTags = Landmarks.getAllianceHubCenterFiducialIds(alliance);
+
+        // Tags to tag poses, to 2d poses
+        List<Pose2d> hubCenterTags = allianceHubCenterTags.stream()
+                .map(aprilTagFieldLayout::getTagPose)
+                .filter(Optional::isPresent)
+                .flatMap(Optional::stream)
+                .map(Pose3d::toPose2d)
+                .toList();
+
+        // Sum across poses to a total X value, same y
+        double xTotal = hubCenterTags.stream().map(Pose2d::getX).reduce(0.0, Double::sum);
+        double yTotal = hubCenterTags.stream().map(Pose2d::getY).reduce(0.0, Double::sum);
+
+        return new Pose2d(xTotal / hubCenterTags.size(), yTotal / hubCenterTags.size(), Rotation2d.fromDegrees(0));
+    }
+
+    public static Pose2d getTrenchDriverDepotSideFiducialIdPose(AprilTagFieldLayout aprilTagFieldLayout, Alliance alliance) throws RuntimeException {
+        return switch (alliance) {
+            case Red ->
+                    aprilTagFieldLayout.getTagPose(redTrenchDriverDepotSideFiducialId).orElseThrow(RuntimeException::new).toPose2d();
+            case Blue ->
+                    aprilTagFieldLayout.getTagPose(blueTrenchDriverDepotSideFiducialId).orElseThrow(RuntimeException::new).toPose2d();
+        };
+    }
 }
