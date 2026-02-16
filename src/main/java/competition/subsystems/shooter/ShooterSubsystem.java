@@ -155,6 +155,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     }
 
     public AngularVelocity getTrimmedTargetValue() {
+        if (currentTargetVelocity.isEquivalent(RPM.zero())) {
+            return currentTargetVelocity;
+        }
         return currentTargetVelocity.plus(RPM.of(trimValue.get()));
     }
 
