@@ -15,6 +15,8 @@ import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
+import competition.subsystems.shooter_feeder.commands.DisableShooterFeederCommand;
+import competition.subsystems.shooter_feeder.commands.EnableShooterFeederCommand;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
@@ -63,7 +65,9 @@ public class OperatorCommandMap {
                                      HoodToGoalCommand hoodToGoalCommand,
                                      HoodToZeroCommand hoodToZeroCommand,
                                      IntakeDeployExtendCommand intakeDeployExtendCommand,
-                                     IntakeDeployRetractCommand intakeDeployRetractCommand
+                                     IntakeDeployRetractCommand intakeDeployRetractCommand,
+                                    EnableShooterFeederCommand enableShooterFeederCommand,
+                                    DisableShooterFeederCommand disableShooterFeederCommand
     ) {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(climberExtendCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(climberRetractCommand);
@@ -73,8 +77,12 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Y).onTrue(fuelIntakeCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(intakeDeployExtendCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(intakeDeployRetractCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightJoystickYAxisPositive).whileTrue(hoodToGoalCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightJoystickYAxisNegative).whileTrue(hoodToZeroCommand);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Start).whileTrue(enableShooterFeederCommand);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Back).whileTrue(disableShooterFeederCommand);
+
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(90).onTrue(hoodToGoalCommand);
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(270).onTrue(hoodToZeroCommand);
+
     }
 
 
