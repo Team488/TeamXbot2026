@@ -23,6 +23,7 @@ import javax.inject.Singleton;
 import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Rotation;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 
 
 @Singleton
@@ -37,6 +38,8 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public final DoubleProperty extendedPositionInDegree;
     public final DoubleProperty retractedPositionInDegree;
     private Angle targetRotation;
+
+    public final DoubleProperty degreesPerRotation;
 
     @Inject
     public IntakeDeploySubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
@@ -66,15 +69,14 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         this.retractPower = propertyFactory.createPersistentProperty("retractPower", -0.1);
         this.extendPower = propertyFactory.createPersistentProperty("extendPower", 0.1);
         this.limbRange = propertyFactory.createPersistentProperty("limbRange", Degrees.of(85));
+
+        this.degreesPerRotation = propertyFactory.createPersistentProperty("DegreesPerRotation", 10);
     }
-
-
 
     @Override
     public Angle getCurrentValue() {
         return intakeDeployAbsoluteEncoder.getAbsolutePosition();
     }
-
 
     @Override
     public Angle getTargetValue() {
@@ -91,6 +93,12 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         intakeDeployMotor.setPower(power);
     }
 
+    public void setPositionGoal(Angle goal) {
+        intakeDeployMotor.setPositionTarget(
+                Rotations.of(goal.in(Degrees) / degreesPerRotation.get())
+        );
+    }
+
     @Override
     public boolean isCalibrated() {
         return true;
@@ -100,6 +108,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     protected boolean areTwoTargetsEquivalent(Angle target1, Angle target2) {
         return Math.abs(target1.in(Degrees) - target2.in(Degrees)) < 0.00001;
     }
+
     public void stop() {
         if (intakeDeployMotor != null) {
             intakeDeployMotor.setPower(0);
