@@ -43,7 +43,7 @@ public class UnitTestCompetitionContract extends Contract2026 {
     }
 
     @Override
-    public boolean isClimberReady() {
+    public boolean isClimberRightReady() {
         return true;
     }
 
