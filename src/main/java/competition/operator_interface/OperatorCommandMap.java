@@ -65,13 +65,12 @@ public class OperatorCommandMap {
   
     @Inject
     public void setupAutoCommands(
-            ResetSimulatedPoseCommand resetSimulatorPositionCommand,
             DriveToOutpostCommand driveToOutpostCommand
     ) {
-        resetSimulatorPositionCommand.includeOnSmartDashboard("Reset Simulator Position");
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
     }
+
     public void setupDebugGamepad(OperatorInterface operatorInterface,
                                      ClimberExtendCommand climberExtendCommand,
                                      ClimberRetractCommand climberRetractCommand,

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 public class DriveToOutpostCommand extends SwerveSimpleTrajectoryCommand {
     final DriveSubsystem drive;
+    final PoseSubsystem pose;
 
     public Pose2d outpostPose;
     @Inject
@@ -27,6 +28,7 @@ public class DriveToOutpostCommand extends SwerveSimpleTrajectoryCommand {
         pf.setPrefix("DriveToOutpost");
         this.drive = drive;
         this.addRequirements(drive);
+        this.pose = pose;
     }
 
     @Override
@@ -39,7 +41,6 @@ public class DriveToOutpostCommand extends SwerveSimpleTrajectoryCommand {
         this.logic.setKeyPoints(swervePoints);
         this.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
         super.initialize();
-
     }
 
     @Override
