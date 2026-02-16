@@ -9,12 +9,13 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.fuel_intake.IntakeSubsystem;
 import competition.subsystems.fuel_intake.commands.FuelStopCommand;
+import competition.subsystems.intake_deploy.IntakeDeployMaintainerCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployStopCommand;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.shooter.commands.ShooterWheelMaintainerCommand;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
-import competition.subsystems.shooter_feeder.commands.DisableShooterFeederCommand;
+import competition.subsystems.shooter_feeder.commands.ShooterFeederStop;
 
 /**
  * For setting the default commands on subsystems
@@ -46,12 +47,12 @@ public class SubsystemDefaultCommandMap {
     }
 
     @Inject
-    public void setupShooterFeederSubsystem(ShooterFeederSubsystem shooterFeeder, DisableShooterFeederCommand command) {
+    public void setupShooterFeederSubsystem(ShooterFeederSubsystem shooterFeeder, ShooterFeederStop command) {
         shooterFeeder.setDefaultCommand(command);
     }
 
     @Inject
-    public void setupIntakeDeploySubsystem(IntakeDeploySubsystem intakeDeploy, IntakeDeployStopCommand command) {
+    public void setupIntakeDeploySubsystem(IntakeDeploySubsystem intakeDeploy, IntakeDeployMaintainerCommand command) {
         intakeDeploy.setDefaultCommand(command);
     }
 }

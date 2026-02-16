@@ -18,10 +18,12 @@ public class IntakeDeployRetractCommand extends BaseCommand {
     @Override
     public void initialize() {
         intakeDeploy.setTargetValue(Degree.of(intakeDeploy.retractedPositionInDegree.get()));
+        log.info("Initialized IntakeDeployRetract");
     }
 
     @Override
     public boolean isFinished() {
         return true;
     }
+
 }

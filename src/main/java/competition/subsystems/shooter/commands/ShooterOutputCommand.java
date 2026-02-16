@@ -7,23 +7,22 @@ import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
-public class TrimShooterVelocityUp extends BaseCommand {
+public class ShooterOutputCommand extends BaseCommand {
     final ShooterSubsystem shooter;
 
     @Inject
-    public TrimShooterVelocityUp(ShooterSubsystem shooterSubsystem) {
+    public ShooterOutputCommand(ShooterSubsystem shooterSubsystem) {
         shooter = shooterSubsystem;
         this.addRequirements(shooter);
     }
 
     @Override
     public void initialize() {
-        shooter.increaseShooterOffset();
-        log.info("Increasing hood trim to " + shooter.trimValue.get());
+        log.info("Shooting at " + shooter.targetVelocity.get() + " RPM");
     }
 
     @Override
-    public boolean isFinished() {
-        return true;
+    public void execute() {
+        shooter.runAtTargetVelocity();
     }
 }
