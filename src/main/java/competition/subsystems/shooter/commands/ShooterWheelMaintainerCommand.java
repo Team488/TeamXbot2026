@@ -45,7 +45,7 @@ public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<Angular
     @Override
     protected double getErrorMagnitude() {
         var current = shooterWheel.getCurrentValue();
-        var target = shooterWheel.getTargetValue();
+        var target = shooterWheel.getTrimmedTargetValue();
         var error = target.minus(current);
         return error.in(RPM);
     }
