@@ -108,7 +108,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     @Override
     public void setTargetValue(Angle angle) {
-
+       targetAngle.mut_replace(angle);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     @Override
     protected boolean areTwoTargetsEquivalent(Angle target1, Angle target2) {
-        return target1.equals(target2);
+        return Math.abs(target1.in(Rotations)-target2.in(Rotations)) < .01;
     }
 
     private Angle getAbsoluteAngle() {

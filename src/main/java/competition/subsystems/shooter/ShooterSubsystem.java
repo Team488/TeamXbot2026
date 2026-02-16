@@ -142,6 +142,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     @Override
     public void setTargetValue(AngularVelocity value) {
         targetVelocity.set(value.in(RPM));
+        return null;
     }
 
     @Override
