@@ -12,6 +12,8 @@ import competition.subsystems.fuel_intake.commands.FuelEjectCommand;
 import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
 import competition.subsystems.hood.commands.HoodToGoalCommand;
 import competition.subsystems.hood.commands.HoodToZeroCommand;
+import competition.subsystems.hood.commands.TrimHoodDownCommand;
+import competition.subsystems.hood.commands.TrimHoodUpCommand;
 import competition.subsystems.intake_deploy.commands.CalibrateOffsetDown;
 import competition.subsystems.intake_deploy.commands.CalibrateOffsetUp;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
@@ -69,6 +71,8 @@ public class OperatorCommandMap {
                                      FuelIntakeCommand fuelIntakeCommand,
                                      HoodToGoalCommand hoodToGoalCommand,
                                      HoodToZeroCommand hoodToZeroCommand,
+                                     TrimHoodUpCommand trimHoodUpCommand,
+                                     TrimHoodDownCommand trimHoodDownCommand,
                                      IntakeDeployExtendCommand intakeDeployExtendCommand,
                                      IntakeDeployRetractCommand intakeDeployRetractCommand,
                                      FuelEjectCommand fuelEjectCommand,
@@ -76,20 +80,25 @@ public class OperatorCommandMap {
                                      CalibrateOffsetDown calibrateOffsetDown,
                                      CalibrateOffsetUp calibrateOffsetUp
     ) {
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(climberExtendCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(climberRetractCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger).whileTrue(trimShooterVelocityUp);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger).whileTrue(trimShooterVelocityDown);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(climberRetractCommand);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(climberExtendCommand);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger).onTrue(trimShooterVelocityDown);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger).onTrue(trimShooterVelocityUp);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(shooterOutputCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(fuelIntakeCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(intakeDeployExtendCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(intakeDeployRetractCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightJoystickYAxisPositive).whileTrue(hoodToGoalCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightJoystickYAxisNegative).whileTrue(hoodToZeroCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftJoystickYAxisNegative).whileTrue(fuelEjectCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftJoystickYAxisPositive).whileTrue(shooterFeederEject);
+
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(0).whileTrue(trimHoodDownCommand);
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(90).whileTrue(hoodToGoalCommand);
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(180).whileTrue(trimHoodUpCommand);
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(270).onTrue(hoodToZeroCommand);
+
+
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Start).whileTrue(calibrateOffsetDown);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Back).whileTrue(calibrateOffsetUp);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftStick).whileTrue(fuelEjectCommand);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightStick).whileTrue(shooterFeederEject);
     }
 
 
