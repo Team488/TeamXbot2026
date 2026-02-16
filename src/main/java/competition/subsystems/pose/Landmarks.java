@@ -55,11 +55,25 @@ public class Landmarks {
     public static int blueTrenchDriverDepotSideFiducialId = 23;
     public static int redTrenchDriverDepotSideFiducialId = 7;
 
+    public static int blueOutpostFiducialId = 29;
+    public static int redOutpostFiducialId = 13;
+
     public static List<Integer> getAllianceHubCenterFiducialIds(Alliance alliance) {
         return switch (alliance) {
             case Red -> List.of(redCenterHubNeutralSideFiducialId, redCenterHubDriverSideFiducialId);
             case Blue -> List.of(blueCenterHubNeutralSideFiducialId, blueCenterHubDriverSideFiducialId);
         };
+    }
+    public static int getTrenchDriverDepotSideId(Alliance alliance) {
+        return alliance == Alliance.Blue
+                ? blueTrenchDriverDepotSideFiducialId
+                : redTrenchDriverDepotSideFiducialId;
+    }
+
+    public static int getOutpostId(Alliance alliance) {
+        return alliance == Alliance.Blue
+                ? blueOutpostFiducialId
+                : redOutpostFiducialId;
     }
 
     // Get the average pose of the alliance hub using april tags
@@ -81,12 +95,20 @@ public class Landmarks {
         return new Pose2d(xTotal / hubCenterTags.size(), yTotal / hubCenterTags.size(), Rotation2d.fromDegrees(0));
     }
 
-    public static Pose2d getTrenchDriverDepotSideFiducialIdPose(AprilTagFieldLayout aprilTagFieldLayout, Alliance alliance) throws RuntimeException {
-        return switch (alliance) {
-            case Red ->
-                    aprilTagFieldLayout.getTagPose(redTrenchDriverDepotSideFiducialId).orElseThrow(RuntimeException::new).toPose2d();
-            case Blue ->
-                    aprilTagFieldLayout.getTagPose(blueTrenchDriverDepotSideFiducialId).orElseThrow(RuntimeException::new).toPose2d();
-        };
+    public static boolean isBetweenIdX(AprilTagFieldLayout aprilTagFieldLayout, int id1, int id2, Pose2d currentPose) {
+        Pose2d id1Pose = getAprilTagPose(aprilTagFieldLayout, id1);
+        Pose2d id2Pose = getAprilTagPose(aprilTagFieldLayout, id2);
+
+        double minX = Math.min(id1Pose.getX(), id2Pose.getX());
+        double maxX = Math.max(id1Pose.getX(), id2Pose.getX());
+
+        return currentPose.getX() >= minX && currentPose.getX() <= maxX;
+    }
+
+    private static Pose2d getAprilTagPose(AprilTagFieldLayout aprilTagFieldLayout, int aprilTag) {
+        return aprilTagFieldLayout
+                .getTagPose(aprilTag)
+                .orElseThrow(() -> new RuntimeException("AprilTag " + aprilTag + " not found in field layout"))
+                .toPose2d();
     }
 }

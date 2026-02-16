@@ -17,5 +17,7 @@ public class ClimberRetractCommand extends BaseCommand {
     @Override
     public void initialize() {
         climber.retract();
+        log.info("Initialized ClimberRetract");
     }
+
 }
