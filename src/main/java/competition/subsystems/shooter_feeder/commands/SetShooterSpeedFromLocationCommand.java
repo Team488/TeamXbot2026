@@ -5,6 +5,8 @@ import xbot.common.command.BaseSetpointCommand;
 
 import javax.inject.Inject;
 
+import static edu.wpi.first.units.Units.RPM;
+
 public class SetShooterSpeedFromLocationCommand extends BaseSetpointCommand {
     private final ShooterSubsystem shooter;
 
@@ -22,7 +24,7 @@ public class SetShooterSpeedFromLocationCommand extends BaseSetpointCommand {
     @Override
     public void execute() {
         double speed = shooter.getSpeedForRange();
-        shooter.setTargetValue(speed);
+        shooter.setTargetValue(RPM.of(speed));
     }
 
     @Override

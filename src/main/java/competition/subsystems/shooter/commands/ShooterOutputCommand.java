@@ -1,27 +1,37 @@
 package competition.subsystems.shooter.commands;
 
 import competition.subsystems.shooter.ShooterSubsystem;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import xbot.common.command.BaseCommand;
+import edu.wpi.first.units.measure.AngularVelocity;
+import xbot.common.command.BaseSetpointCommand;
 
 import javax.inject.Inject;
 
-public class ShooterOutputCommand extends BaseCommand {
-    final ShooterSubsystem shooter;
+import static edu.wpi.first.units.Units.RPM;
+
+public class ShooterOutputCommand extends BaseSetpointCommand {
+    private final ShooterSubsystem shooter;
+    private boolean usingCustomGoal = false;
+    private AngularVelocity targetVelocity;
 
     @Inject
     public ShooterOutputCommand(ShooterSubsystem shooterSubsystem) {
-        shooter = shooterSubsystem;
-        this.addRequirements(shooter);
+        super(shooterSubsystem);
+        this.shooter = shooterSubsystem;
+        this.targetVelocity = RPM.of(shooterSubsystem.shootingTargetVelocity.get());
+    }
+
+    public void setTargetVelocity(AngularVelocity targetVelocity) {
+        this.targetVelocity = targetVelocity;
+        this.usingCustomGoal = true;
     }
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+        if (!this.usingCustomGoal) {
+            this.targetVelocity = RPM.of(this.shooter.shootingTargetVelocity.get());
+        }
 
-    @Override
-    public void execute() {
-        shooter.runAtTargetVelocity();
-        log.info("Shooting at " + shooter.targetVelocity.get() + " RPM");
+        log.info("Shooting at {} RPM", this.targetVelocity.in(RPM));
+        this.shooter.setTargetValue(this.targetVelocity);
     }
 }
