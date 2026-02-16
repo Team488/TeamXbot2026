@@ -89,4 +89,12 @@ public class HoodSubsystem extends BaseSubsystem {
         aKitLog.record("LeftServoPosition", hoodServoLeft.getNormalizedCurrentPosition());
         aKitLog.record("RightServoPosition", hoodServoRight.getNormalizedCurrentPosition());
     }
+
+    public TimedAndBoundedServo getHoodServoLeft() {
+        return hoodServoLeft;
+    }
+
+    public TimedAndBoundedServo getHoodServoRight() {
+        return hoodServoRight;
+    }
 }
