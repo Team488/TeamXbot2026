@@ -42,9 +42,9 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
                             XAbsoluteEncoder.XAbsoluteEncoderFactory absoluteEncoder) {
         propertyFactory.setPrefix(this);
 
-        if (electricalContract.isClimberReady()) {
+        if (electricalContract.isClimberRightReady()) {
             this.climberMotor = motorFactory.create(
-                    electricalContract.getClimberMotor(), this.getPrefix(), "ClimberMotorPID",
+                    electricalContract.getClimberMotorRight(), this.getPrefix(), "ClimberMotorPID",
                     new XCANMotorControllerPIDProperties());
             this.registerDataFrameRefreshable(climberMotor);
         } else {

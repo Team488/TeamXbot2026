@@ -1,5 +1,6 @@
 package competition.simulation.intake;
 
+import competition.simulation.SimulatorConstants;
 import competition.simulation.intake_deploy.IntakeDeploySimulator;
 import competition.subsystems.fuel_intake.IntakeSubsystem;
 import org.ironmaple.simulation.IntakeSimulation;
@@ -8,8 +9,6 @@ import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import static edu.wpi.first.units.Units.Inches;
 
 @Singleton
 public class IntakeSimulator {
@@ -30,10 +29,10 @@ public class IntakeSimulator {
         this.simulation = IntakeSimulation.OverTheBumperIntake(
                 "Fuel",
                 driveTrainSimulation,
-                Inches.of(28),
-                Inches.of(12),
-                IntakeSimulation.IntakeSide.FRONT,
-                30
+                SimulatorConstants.intakeWidth,
+                SimulatorConstants.intakeLengthExtended,
+                IntakeSimulation.IntakeSide.BACK,
+                SimulatorConstants.fuelCapacity
         );
     }
 

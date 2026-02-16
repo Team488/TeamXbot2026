@@ -13,7 +13,7 @@ targetCompatibility = JavaVersion.VERSION_17
 
 // When in doubt, use the latest version from
 // https://dev.azure.com/Team488/Team%20488%20Builds/_artifacts/feed/XBot
-def SeriouslyCommonLibVersion = '20260207.21'
+def SeriouslyCommonLibVersion = '20260214.33'
 
 def ROBOT_MAIN_CLASS = "competition.Main"
 

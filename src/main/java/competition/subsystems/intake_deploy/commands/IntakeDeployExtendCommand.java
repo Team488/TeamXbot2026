@@ -5,17 +5,25 @@ import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
+import static edu.wpi.first.units.Units.Degree;
+
 public class IntakeDeployExtendCommand extends BaseCommand {
     final IntakeDeploySubsystem intakeDeploy;
 
     @Inject
     public IntakeDeployExtendCommand(IntakeDeploySubsystem intakeDeploy) {
         this.intakeDeploy = intakeDeploy;
-        this.addRequirements(intakeDeploy);
     }
 
     @Override
     public void initialize() {
-        intakeDeploy.extend();
+        intakeDeploy.setTargetValue(Degree.of(intakeDeploy.extendedPositionInDegree.get()));
+        log.info("Initialized IntakeDeployExtend");
     }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
+
 }
