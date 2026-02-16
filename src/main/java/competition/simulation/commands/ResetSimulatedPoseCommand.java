@@ -10,7 +10,6 @@ import xbot.common.command.BaseCommand;
 public class ResetSimulatedPoseCommand extends BaseCommand {
     BaseSimulator simulator;
 
-
     @Inject
     public ResetSimulatedPoseCommand(BaseSimulator simulator) {
         this.simulator = simulator;
