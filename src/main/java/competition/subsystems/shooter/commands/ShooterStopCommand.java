@@ -5,6 +5,8 @@ import xbot.common.command.BaseSetpointCommand;
 
 import javax.inject.Inject;
 
+import static edu.wpi.first.units.Units.RPM;
+
 public class ShooterStopCommand extends BaseSetpointCommand {
     private final ShooterSubsystem subsystem;
 
@@ -16,7 +18,7 @@ public class ShooterStopCommand extends BaseSetpointCommand {
 
     @Override
     public void initialize() {
-        this.subsystem.setTargetVelocity(0);
+        this.subsystem.setTargetValue(RPM.of(0));
     }
 
     @Override
