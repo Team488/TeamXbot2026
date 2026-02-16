@@ -1,30 +1,26 @@
 package competition.subsystems.shooter.commands;
 
 import competition.subsystems.shooter.ShooterSubsystem;
-import xbot.common.command.BaseCommand;
+import xbot.common.command.BaseSetpointCommand;
 
 import javax.inject.Inject;
 
-public class ShooterStopCommand extends BaseCommand {
-    final ShooterSubsystem shooter;
-    private double targetVelocity = 0;
+public class ShooterStopCommand extends BaseSetpointCommand {
+    private final ShooterSubsystem subsystem;
 
     @Inject
     public ShooterStopCommand(ShooterSubsystem shooterSubsystem) {
-        shooter = shooterSubsystem;
-    }
-
-    public void setTargetVelocity(double targetVelocity) {
-        this.targetVelocity = targetVelocity;
+        super(shooterSubsystem);
+        this.subsystem = shooterSubsystem;
     }
 
     @Override
     public void initialize() {
-        shooter.setTargetVelocity(targetVelocity);
+        this.subsystem.setTargetVelocity(0);
     }
 
     @Override
-    public boolean isFinished() {
+    public boolean runsWhenDisabled() {
         return true;
     }
 }
