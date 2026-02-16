@@ -1,13 +1,14 @@
 package competition.subsystems.shooter.commands;
 
 import competition.subsystems.shooter.ShooterSubsystem;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import xbot.common.command.BaseMaintainerCommand;
 import xbot.common.logic.HumanVsMachineDecider;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
+
+import static edu.wpi.first.units.Units.RPM;
 
 public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<AngularVelocity, Double> {
 
@@ -32,7 +33,13 @@ public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<Angular
 
     @Override
     protected void calibratedMachineControlAction() {
-        shooterWheel.runAtTargetVelocity();
+        var targetValue = shooterWheel.getTrimmedTargetValue();
+        if (targetValue.isEquivalent(RPM.of(0))) {
+            shooterWheel.runMotorsAtVelocity(targetValue);
+        } else {
+            // When stopped, don't use PID
+            shooterWheel.setPower(0.0);
+        }
     }
 
     @Override
@@ -40,7 +47,7 @@ public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<Angular
         var current = shooterWheel.getCurrentValue();
         var target = shooterWheel.getTargetValue();
         var error = target.minus(current);
-        return error.in(Units.RPM);
+        return error.in(RPM);
     }
 
     @Override
