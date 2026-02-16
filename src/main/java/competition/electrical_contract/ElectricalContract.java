@@ -49,9 +49,13 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract DeviceInfo getIntakeDeployAbsoluteEncoderMotor();
 
-    public abstract boolean isClimberReady();
+    public abstract boolean isClimberLeftReady();
 
-    public abstract CANMotorControllerInfo getClimberMotor();
+    public abstract  CANMotorControllerInfo getClimberMotorLeft();
+
+    public abstract boolean isClimberRightReady();
+
+    public abstract CANMotorControllerInfo getClimberMotorRight();
 
     public abstract boolean isClimberAbsoluteEncoderReady();
 
