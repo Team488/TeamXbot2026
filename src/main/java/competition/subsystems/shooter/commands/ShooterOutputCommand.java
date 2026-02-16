@@ -9,7 +9,6 @@ import javax.inject.Inject;
 
 public class ShooterOutputCommand extends BaseCommand {
     final ShooterSubsystem shooter;
-    final Logger log = LogManager.getLogger(ShooterOutputCommand.class);
 
     @Inject
     public ShooterOutputCommand(ShooterSubsystem shooterSubsystem) {
@@ -18,11 +17,12 @@ public class ShooterOutputCommand extends BaseCommand {
     }
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+        log.info("Shooting at " + shooter.targetVelocity.get() + " RPM");
+    }
 
     @Override
     public void execute() {
         shooter.runAtTargetVelocity();
-        log.info("Shooting at " + shooter.targetVelocity.get() + " RPM");
     }
 }

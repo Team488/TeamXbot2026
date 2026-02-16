@@ -9,7 +9,6 @@ import javax.inject.Inject;
 
 public class TrimShooterVelocityDown extends BaseCommand {
     final ShooterSubsystem shooter;
-    final Logger log = LogManager.getLogger(TrimShooterVelocityDown.class);
 
     @Inject
     public TrimShooterVelocityDown(ShooterSubsystem shooterSubsystem) {
@@ -20,6 +19,7 @@ public class TrimShooterVelocityDown extends BaseCommand {
     @Override
     public void initialize() {
         shooter.decreaseShooterOffset();
+        log.info("Decreasing hood trim to " + shooter.trimValue.get());
     }
 
     @Override
