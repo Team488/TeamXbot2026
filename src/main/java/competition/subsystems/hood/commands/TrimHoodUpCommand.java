@@ -1,27 +1,26 @@
 package competition.subsystems.hood.commands;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import competition.subsystems.hood.HoodSubsystem;
-
-import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
-public class HoodToZeroCommand extends BaseCommand {
+public class TrimHoodUpCommand extends BaseCommand {
     final HoodSubsystem hood;
 
     @Inject
-    public HoodToZeroCommand(HoodSubsystem hoodSubsystem) {
+    public TrimHoodUpCommand(HoodSubsystem hoodSubsystem) {
         this.hood = hoodSubsystem;
         addRequirements(hoodSubsystem);
     }
 
     @Override
     public void initialize() {
-        hood.servoZero();
-        log.info("running servo to " + HoodSubsystem.servoMinBound);
+        hood.trimHoodGoalUp();
+        log.info("Increasing hood trim to " + hood.trimValue.get());
     }
 
     @Override
