@@ -34,7 +34,7 @@ public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<Angular
     @Override
     protected void calibratedMachineControlAction() {
         var targetValue = shooterWheel.getTrimmedTargetValue();
-        if (targetValue.isEquivalent(RPM.of(0))) {
+        if (!targetValue.isEquivalent(RPM.of(0))) {
             shooterWheel.runMotorsAtVelocity(targetValue);
         } else {
             // When stopped, don't use PID
