@@ -4,15 +4,11 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import xbot.common.command.BaseCommand;
 import xbot.common.properties.BooleanProperty;
-import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.Property;
 import xbot.common.properties.PropertyFactory;
 
@@ -31,7 +27,6 @@ public class RotateToHubCommand extends BaseCommand {
 
     private Alliance alliance;
     private Pose2d targetPose;
-    private final DoubleProperty acceptedMarginOfError;
     private final BooleanProperty autoAimWhenNotInZone;
 
     @Inject
@@ -43,7 +38,6 @@ public class RotateToHubCommand extends BaseCommand {
         this.pf = pf;
         pf.setPrefix(this);
         pf.setDefaultLevel(Property.PropertyLevel.Important);
-        acceptedMarginOfError = pf.createPersistentProperty("AcceptedMarginOfError", 2);
         autoAimWhenNotInZone = pf.createPersistentProperty("AutoAimWhenNotInZone", true);
     }
 
@@ -55,7 +49,7 @@ public class RotateToHubCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        if (!isFacingHub()) {
+        if (!pose.isFacingTarget(targetPose)) {
             drive.setLookAtPointTarget(targetPose.getTranslation());
             boolean areWeInAllianceZone = Landmarks.isBetweenIdX(
                     this.aprilTagFieldLayout,
@@ -66,21 +60,6 @@ public class RotateToHubCommand extends BaseCommand {
 
             drive.setLookAtPointTargetActive(areWeInAllianceZone || autoAimWhenNotInZone.get());
         }
-    }
-
-    public boolean isFacingHub() {
-        Pose2d currentPose = pose.getCurrentPose2d();
-
-        Translation2d vectorToHub = targetPose.getTranslation().minus(currentPose.getTranslation());
-        if (vectorToHub.getNorm() < 0.01) {
-            return true;
-        }
-
-        Rotation2d desiredHeading = vectorToHub.getAngle();
-        double rawError = desiredHeading.getRadians() - pose.getCurrentHeading().getRadians();
-        double angleError = Math.abs(MathUtil.angleModulus(rawError));
-
-        return Math.toDegrees(angleError) < acceptedMarginOfError.get();
     }
 
     @Override
