@@ -2,6 +2,7 @@ package competition.subsystems.hood;
 
 import competition.electrical_contract.ElectricalContract;
 
+import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XServo;
 import xbot.common.properties.DoubleProperty;
@@ -11,7 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class HoodSubsystem extends BaseSubsystem {
+public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public final XServo hoodServoLeft;
     public final XServo hoodServoRight;
     public ElectricalContract electricalContract;
@@ -70,5 +71,35 @@ public class HoodSubsystem extends BaseSubsystem {
 
     public void trimHoodGoalDown() {
         trimValue.set(trimValue.get() - 0.005);
+    }
+
+    @Override
+    public Double getCurrentValue() {
+        return 0.0;
+    }
+
+    @Override
+    public Double getTargetValue() {
+        return 0.0;
+    }
+
+    @Override
+    public void setTargetValue(Double aDouble) {
+
+    }
+
+    @Override
+    public void setPower(Double aDouble) {
+
+    }
+
+    @Override
+    public boolean isCalibrated() {
+        return false;
+    }
+
+    @Override
+    protected boolean areTwoTargetsEquivalent(Double aDouble, Double targetT1) {
+        return false;
     }
 }
