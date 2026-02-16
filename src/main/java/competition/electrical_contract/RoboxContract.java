@@ -31,7 +31,6 @@ public class RoboxContract extends Contract2026 {
                 MotorControllerType.SparkMax,
                 CANBusId.RIO,
                 32,
-                new SparkMaxMotorControllerOutputConfig()
-                        .withSmartCurrentLimit(Amps.of(80)));
+                new SparkMaxMotorControllerOutputConfig().withSmartCurrentLimit(Amps.of(40)));
     }
 }
