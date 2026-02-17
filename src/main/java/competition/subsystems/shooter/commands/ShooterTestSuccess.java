@@ -25,7 +25,9 @@ public class ShooterTestSuccess extends BaseCommand {
     public void initialize() {
         log.info("Robot current position: " + pose.getCurrentPose2d());
         log.info("Shooter's RPM is: " + shooter.getTargetValue());
-        log.info("Hood position is " + hood.getHoodServoRight());
-        log.info("Hood position is " + hood.getHoodServoLeft());
+        if (hood.getHoodServoLeft().isPresent() && hood.getHoodServoRight().isPresent()) {
+            log.info("Hood position is " + hood.getHoodServoRight().get().getNormalizedCurrentPosition());
+            log.info("Hood position is " + hood.getHoodServoLeft().get().getNormalizedCurrentPosition());
+        }
     }
 }

@@ -12,6 +12,8 @@ import xbot.common.properties.PropertyFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import java.util.Optional;
+
 import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
@@ -86,15 +88,26 @@ public class HoodSubsystem extends BaseSubsystem {
 
     @Override
     public void periodic() {
-        aKitLog.record("LeftServoPosition", hoodServoLeft.getNormalizedCurrentPosition());
-        aKitLog.record("RightServoPosition", hoodServoRight.getNormalizedCurrentPosition());
+        if (this.hoodServoLeft != null && this.hoodServoRight != null) {
+            aKitLog.record("LeftServoPosition", hoodServoLeft.getNormalizedCurrentPosition());
+            aKitLog.record("RightServoPosition", hoodServoRight.getNormalizedCurrentPosition());
+        }
     }
 
-    public TimedAndBoundedServo getHoodServoLeft() {
-        return hoodServoLeft;
+    public Optional<TimedAndBoundedServo> getHoodServoLeft() {
+
+        if (hoodServoLeft == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(hoodServoLeft);
+        }
     }
 
-    public TimedAndBoundedServo getHoodServoRight() {
-        return hoodServoRight;
+    public Optional<TimedAndBoundedServo> getHoodServoRight() {
+        if (hoodServoRight == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(hoodServoRight);
+        }
     }
 }
