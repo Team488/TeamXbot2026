@@ -1,14 +1,25 @@
 package competition.simulation.shooter;
 
-import competition.simulation.intake.IntakeSimulator;
+import competition.Robot;
+import competition.simulation.SimulatorConstants;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
-import org.ironmaple.simulation.IntakeSimulation;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import competition.simulation.intake.IntakeSimulator;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
+import xbot.common.math.PIDManager;
+import xbot.common.math.PIDManager.PIDManagerFactory;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
+import xbot.common.simulation.MotorInternalPIDHelper;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -16,12 +27,13 @@ import javax.inject.Singleton;
 import java.util.Random;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 @Singleton
 public class ShooterSimulator {
-
     final PoseSubsystem pose;
     final ShooterSubsystem shooter;
     final ShooterFeederSubsystem shooterFeeder;
@@ -31,12 +43,17 @@ public class ShooterSimulator {
 
     final IntakeSimulator intakeSimulator;
 
+    final PIDManager pidManager;
+
     final DoubleProperty ballsPerSecond;
     final Random random;
 
+    final DCMotor shooterGearBox = DCMotor.getKrakenX60(1);
+    final FlywheelSim shooterSim;
+
     @Inject
     public ShooterSimulator(PoseSubsystem pose, ShooterSubsystem shooter, ShooterFeederSubsystem shooterFeeder,
-                            PropertyFactory pf, IntakeSimulator intakeSimulator) {
+                            PropertyFactory pf, IntakeSimulator intakeSimulator, PIDManagerFactory pidManagerFactory) {
         pf.setPrefix("Simulator/");
         this.pose = pose;
         this.shooter = shooter;
@@ -47,8 +64,27 @@ public class ShooterSimulator {
 
         this.intakeSimulator = intakeSimulator;
 
+        this.pidManager = pidManagerFactory.create(
+                pf.getPrefix() + "ShooterSimulationPID",
+                0.2,
+                0.001,
+                0.0,
+                0.0,
+                1.0,
+                -1.0
+        ); // TODO: Adjust
+
         this.ballsPerSecond = pf.createPersistentProperty("ballsPerSecond", 10);
         this.random = new Random();
+
+        this.shooterSim = new FlywheelSim(
+                LinearSystemId.createFlywheelSystem(
+                        shooterGearBox,
+                        SimulatorConstants.flywheelJKgMetersSquared,
+                        SimulatorConstants.flywheelGearing
+                ),
+                shooterGearBox
+        );
     }
 
     public boolean isShooting() {
@@ -56,26 +92,49 @@ public class ShooterSimulator {
         return shooterMotor.getPower() > 0;
     }
 
-    public void update(Arena2026Rebuilt arena) {
-        if (!isShooting()) {
-            return;
-        }
+    public AngularVelocity getShooterVelocity() {
+        return this.shooterSim.getAngularVelocity();
+    }
 
-        // TODO: Extract constants later
-        if (random.nextDouble() < ballsPerSecond.get() / 50.0) {
+    public void update(Arena2026Rebuilt arena) {
+        this.updateShooterSimAndMotor();
+        this.updateShootingProjectile(arena);
+    }
+
+    public void updateShooterSimAndMotor() {
+        // Update the power of the motor based on our current velocity and goal
+        MotorInternalPIDHelper.updateInternalPIDWithVelocity(
+                this.shooterMotor, pidManager, shooter.getTrimmedTargetValue());
+
+        // Update the sim with our new power
+        if (DriverStation.isEnabled()) {
+            this.shooterSim.setInputVoltage(this.shooterMotor.getPower() * RobotController.getBatteryVoltage());
+        } else {
+            this.shooterSim.setInputVoltage(0);
+        }
+        this.shooterSim.update(Robot.LOOP_INTERVAL);
+
+        // Reflect our new velocity in the sim to our motor
+        this.shooterMotor.setVelocity(getShooterVelocity());
+    }
+
+    public void updateShootingProjectile(Arena2026Rebuilt arena) {
+        if (isShooting() && random.nextDouble() < ballsPerSecond.get() / 50.0) {
             if (!intakeSimulator.getPieceFromIntake()) {
                 return;
             }
 
-            // Note: All magic numbers here are generated by ChatGPT
+            double speed = getShooterVelocity().in(RadiansPerSecond) * SimulatorConstants.flywheelRadius.in(Meters);
+            Translation2d robotPose = pose.getCurrentPose2d().getTranslation();
+            Translation2d shooterOffset = new Translation2d(0.25, 0);
             arena.addPieceWithVariance(
-                    pose.getCurrentPose2d().getTranslation(),
+                    robotPose.plus(shooterOffset.rotateBy(pose.getCurrentHeading())),
                     pose.getCurrentHeading(),
-                    Inches.of(20),
-                    MetersPerSecond.of(10.0),
-                    Degrees.of(80),
-                    0.30,
-                    0.30,
+                    SimulatorConstants.shooterHeight,
+                    MetersPerSecond.of(speed),
+                    Degrees.of(80), // TODO: Read from hood sim
+                    SimulatorConstants.shooterXVariance,
+                    SimulatorConstants.shooterYVariance,
                     2.0,
                     1.0,
                     2.0

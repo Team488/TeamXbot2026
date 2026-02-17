@@ -5,17 +5,25 @@ import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
+import static edu.wpi.first.units.Units.Degree;
+
 public class IntakeDeployRetractCommand extends BaseCommand {
     final IntakeDeploySubsystem intakeDeploy;
 
     @Inject
     public IntakeDeployRetractCommand(IntakeDeploySubsystem intakeDeploy) {
         this.intakeDeploy = intakeDeploy;
-        this.addRequirements(intakeDeploy);
     }
 
     @Override
     public void initialize() {
-        intakeDeploy.retract();
+        intakeDeploy.setTargetValue(Degree.of(intakeDeploy.retractedPositionInDegree.get()));
+        log.info("Initialized IntakeDeployRetract");
     }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
+
 }

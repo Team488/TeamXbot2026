@@ -9,14 +9,15 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.fuel_intake.IntakeSubsystem;
 import competition.subsystems.fuel_intake.commands.FuelStopCommand;
-import competition.subsystems.intake_deploy.commands.IntakeDeployStopCommand;
-import competition.subsystems.shooter.ShooterSubsystem;
-import competition.subsystems.shooter.commands.ShooterStopCommand;
 import competition.subsystems.hood.HoodSubsystem;
-import competition.subsystems.hood.commands.StopHoodCommand;
+import competition.subsystems.hood.commands.HoodToGoalCommand;
+import competition.subsystems.intake_deploy.IntakeDeployMaintainerCommand;
+import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
+import competition.subsystems.shooter.commands.ShooterStopCommand;
+import competition.subsystems.shooter.commands.ShooterWheelMaintainerCommand;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
-import competition.subsystems.shooter_feeder.commands.DisableShooterFeederCommand;
+import competition.subsystems.shooter_feeder.commands.ShooterFeederStop;
 
 /**
  * For setting the default commands on subsystems
@@ -38,33 +39,30 @@ public class SubsystemDefaultCommandMap {
     }
 
     @Inject
-    public void setupShooterSubsystem(ShooterSubsystem shooter, ShooterStopCommand command) {
+    public void setupShooterSubsystem(ShooterSubsystem shooter,
+                                      ShooterWheelMaintainerCommand command,
+                                      ShooterStopCommand stopCommand) {
         shooter.setDefaultCommand(command);
+        shooter.getSetpointLock().setDefaultCommand(stopCommand);
     }
 
     @Inject
-    public void setupHoodSubsystem(HoodSubsystem hood, StopHoodCommand command) {
+    public void setupClimberSubsystem(ClimberSubsystem climber, ClimberStopCommand command) {
+        climber.setDefaultCommand(command);
+    }
+
+    @Inject
+    public void setupShooterFeederSubsystem(ShooterFeederSubsystem shooterFeeder, ShooterFeederStop command) {
+        shooterFeeder.setDefaultCommand(command);
+    }
+
+    @Inject
+    public void setupIntakeDeploySubsystem(IntakeDeploySubsystem intakeDeploy, IntakeDeployMaintainerCommand command) {
+        intakeDeploy.setDefaultCommand(command);
+    }
+
+    @Inject
+    public void setupHoodSubsystem(HoodSubsystem hood, HoodToGoalCommand command) {
         hood.setDefaultCommand(command);
-    }
-
-    @Inject
-    public void climberStopCommand(ClimberSubsystem climberSubsystem, ClimberStopCommand command) {
-        climberSubsystem.setDefaultCommand(command);
-    }
-
-    @Inject
-    public void shooterStopCommand(ShooterSubsystem shooterSubsystem, ShooterStopCommand command) {
-        shooterSubsystem.setDefaultCommand(command);
-    }
-
-    @Inject
-    public void disableShooterFeederCommand(ShooterFeederSubsystem shooterFeederSubsystem,
-                                            DisableShooterFeederCommand command) {
-        shooterFeederSubsystem.setDefaultCommand(command);
-    }
-
-    @Inject
-    public void intakeDeployStopCommand(IntakeDeploySubsystem intakeDeploySubsystem, IntakeDeployStopCommand command) {
-        intakeDeploySubsystem.setDefaultCommand(command);
     }
 }

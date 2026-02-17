@@ -178,6 +178,7 @@ public class Contract2025 extends Contract2026 {
     private static double frontAprilCameraPitch = Math.toRadians(-21);
     private static double frontAprilCameraYaw = Math.toRadians(0);
 
+    @Override
     public CameraInfo[] getCameraInfo() {
         return new CameraInfo[] {// {};
 

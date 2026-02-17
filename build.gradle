@@ -11,6 +11,10 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
+// When in doubt, use the latest version from
+// https://dev.azure.com/Team488/Team%20488%20Builds/_artifacts/feed/XBot
+def SeriouslyCommonLibVersion = '20260214.33'
+
 def ROBOT_MAIN_CLASS = "competition.Main"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
@@ -53,17 +57,19 @@ def includeDesktopSupport = false
 // Maven central needed for JUnit
 repositories {
     mavenCentral()
-    
+
     maven {
         url "https://mvnrepository.com/artifact/com.google.dagger/dagger"
         url "https://mvnrepository.com/artifact/com.google.dagger/dagger-compiler"
     }
 
     mavenLocal()
-    
-    flatDir {
-       dirs 'SeriouslyCommonLib/build/libs'
-   }
+
+    // Azure Artifacts feed for SeriouslyCommonLib
+    maven {
+        url "https://pkgs.dev.azure.com/Team488/2ef6eee3-1df0-441a-9af8-5edc5c3cb203/_packaging/2b1ba3b9-5dd7-47c4-ab96-d5c0a1d8af48/maven/v1"
+        name "AzureArtifacts"
+    }
 }
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
@@ -90,7 +96,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:3.12.4"
 
-    implementation project(':SeriouslyCommonLib')
+    // SeriouslyCommonLib - automatically uses local build when available via composite build (see settings.gradle)
+    implementation group: 'xbot.common', name:'SeriouslyCommonLib', version: SeriouslyCommonLibVersion
     implementation group: 'org.json', name:'json', version: '20220924'
 
     implementation 'org.apache.logging.log4j:log4j-api:2.19.0'
@@ -135,11 +142,15 @@ remotes {
 
 task('copyResources') {
     doLast {
+        def localCommonLib = file('../SeriouslyCommonLib')
+        if (!localCommonLib.exists()) {
+            throw new GradleException("copyResources task requires local SeriouslyCommonLib. Clone it to ../SeriouslyCommonLib")
+        }
         ssh.run {
             session(remotes.rio) {
                 // execute 'mkdir ~/449_resources', ignoreError: true
                 // execute 'mkdir /488Logs', ignoreError: true
-                put from: fileTree('SeriouslyCommonLib/lib/log4jConfig/log4j.xml'), into: '/home/lvuser/'
+                put from: fileTree('../SeriouslyCommonLib/lib/log4jConfig/log4j.xml'), into: '/home/lvuser/'
                 //execute ". /etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
             }
         }
@@ -148,13 +159,18 @@ task('copyResources') {
 
 checkstyle {
     toolVersion = '10.6.0'
-    configFile = file('SeriouslyCommonLib/xbotcheckstyle.xml')
+    configFile = file('config/checkstyle/checkstyle.xml')
+}
+
+// Configure basedir for all checkstyle tasks (main, test, and custom)
+tasks.withType(Checkstyle) {
+    configProperties.basedir = file('config/checkstyle')
 }
 
 task checkstyle(type: Checkstyle) {
     source 'src/main/java'
-    configProperties.basedir = file('SeriouslyCommonLib')
-    
+    configProperties.basedir = file('config/checkstyle')
+
     // Empty classpath
     classpath = files()
 }
