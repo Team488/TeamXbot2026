@@ -17,8 +17,8 @@ public class DepotClimbCommandGroup extends BaseSequentialCommandGroup {
                                   IntakeDeployRetractCommand intakeDeployRetractCommand) {
         addCommands(
                 readyDepotSideClimbAutoCommand,
-                climberExtendCommand,
                 intakeDeployRetractCommand,
+                climberExtendCommand,
                 depotSideClimbAutoCommand,
                 climberRetractCommand
         );
