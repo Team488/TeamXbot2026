@@ -7,6 +7,7 @@ import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.fuel_intake.IntakeSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
+import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
 import competition.subsystems.climber.commands.ClimberRetractCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
@@ -81,7 +82,8 @@ public class OperatorCommandMap {
         operatorInterface.driverGamepad.getPovIfAvailable(90).onTrue(changeActiveModule);
         operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(typicalSwerveDrive);
     }
-  
+ 
+
     @Inject
     public void setupAutoCommands(
             DriveToOutpostCommand driveToOutpostCommand
@@ -102,7 +104,7 @@ public class OperatorCommandMap {
                                      IntakeDeployExtendCommand intakeDeployExtendCommand,
                                      IntakeDeployRetractCommand intakeDeployRetractCommand,
                                      FuelEjectCommand fuelEjectCommand,
-                                     ShooterFeederEject shooterFeederEject,
+                                     ShooterFeederFire shooterFeederFire,
                                      HopperRollerSubsystem hopperRollerSubsystem,
                                      CalibrateOffsetDown calibrateOffsetDown,
                                      CalibrateOffsetUp calibrateOffsetUp
@@ -123,9 +125,7 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getPovIfAvailable(0).onTrue(trimHoodDownCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(90).whileTrue(fuelEjectCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(180).onTrue(trimHoodUpCommand);
-        operatorInterface.setupDebugGamepad.getPovIfAvailable(270).onTrue(shooterFeederEject);
-
-
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(270).whileTrue(shooterFeederFire);
     }
 
 

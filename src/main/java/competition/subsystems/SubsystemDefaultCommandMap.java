@@ -68,7 +68,7 @@ public class SubsystemDefaultCommandMap {
     }
 
     @Inject
-    public void setupHopperRollerSubsystem(HopperRollerSubsystem hopperRoller){
+    public void setupHopperRollerSubsystem(HopperRollerSubsystem hopperRoller) {
         hopperRoller.setDefaultCommand(hopperRoller.getStopCommand());
     }
 }
