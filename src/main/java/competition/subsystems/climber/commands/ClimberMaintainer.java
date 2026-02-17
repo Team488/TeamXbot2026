@@ -62,4 +62,11 @@ public class ClimberMaintainer extends BaseMaintainerCommand <Angle, Double> {
     protected double getHumanInputMagnitude() {
         return 0; //No human input
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        if (interrupted) {
+            climber.stop();
+        }
+    }
 }
