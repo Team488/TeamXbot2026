@@ -75,7 +75,10 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     @Override
     public Angle getCurrentValue() {
-        return intakeDeployAbsoluteEncoder.getAbsolutePosition();
+        if (intakeDeployAbsoluteEncoder != null) {
+            return intakeDeployAbsoluteEncoder.getAbsolutePosition();
+        }
+        return Degrees.zero();
     }
 
     @Override
@@ -90,13 +93,17 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     @Override
     public void setPower(Double power) {
-        intakeDeployMotor.setPower(power);
+        if (intakeDeployMotor != null) {
+            intakeDeployMotor.setPower(power);
+        }
     }
 
     public void setPositionGoal(Angle goal) {
-        intakeDeployMotor.setPositionTarget(
-                Rotations.of(goal.in(Degrees) / degreesPerRotation.get())
-        );
+        if (intakeDeployMotor != null) {
+            intakeDeployMotor.setPositionTarget(
+                    Rotations.of(goal.in(Degrees) / degreesPerRotation.get())
+            );
+        }
     }
 
     @Override
@@ -121,12 +128,16 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     }
 
     public void calibrateOffsetDown() {
-        offset = intakeDeployMotor.getPosition().minus(limbRange.get());
-        isCalibrated = true;
+        if (intakeDeployMotor != null) {
+            offset = intakeDeployMotor.getPosition().minus(limbRange.get());
+            isCalibrated = true;
+        }
     }
 
     public void calibrateOffsetUp() {
-        offset = intakeDeployMotor.getPosition();
-        isCalibrated = true;
+        if (intakeDeployMotor != null) {
+            offset = intakeDeployMotor.getPosition();
+            isCalibrated = true;
+        }
     }
 }

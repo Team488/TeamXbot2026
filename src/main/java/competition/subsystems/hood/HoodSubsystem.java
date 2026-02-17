@@ -12,6 +12,8 @@ import xbot.common.properties.PropertyFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import java.util.Optional;
+
 import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
@@ -27,6 +29,7 @@ public class HoodSubsystem extends BaseSubsystem {
 
     public DoubleProperty servoTargetNormalized;
     public DoubleProperty trimValue;
+    public DoubleProperty trimStep;
 
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
@@ -63,6 +66,7 @@ public class HoodSubsystem extends BaseSubsystem {
         this.servoTargetNormalized = propertyFactory.createPersistentProperty(
                 "ServoTargetPositionNormalized", 0);
         this.trimValue = propertyFactory.createPersistentProperty("HoodTrimValue", 0);
+        this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.1);
     }
 
     public void runServo() {
@@ -77,24 +81,35 @@ public class HoodSubsystem extends BaseSubsystem {
     }
 
     public void trimHoodGoalUp() {
-        trimValue.set(trimValue.get() + 0.005);
+        trimValue.set(trimValue.get() + trimStep.get());
     }
 
     public void trimHoodGoalDown() {
-        trimValue.set(trimValue.get() - 0.005);
+        trimValue.set(trimValue.get() - trimStep.get());
     }
 
     @Override
     public void periodic() {
-        aKitLog.record("LeftServoPosition", hoodServoLeft.getNormalizedCurrentPosition());
-        aKitLog.record("RightServoPosition", hoodServoRight.getNormalizedCurrentPosition());
+        if (this.hoodServoLeft != null && this.hoodServoRight != null) {
+            aKitLog.record("LeftServoPosition", hoodServoLeft.getNormalizedCurrentPosition());
+            aKitLog.record("RightServoPosition", hoodServoRight.getNormalizedCurrentPosition());
+        }
     }
 
-    public TimedAndBoundedServo getHoodServoLeft() {
-        return hoodServoLeft;
+    public Optional<TimedAndBoundedServo> getHoodServoLeft() {
+
+        if (hoodServoLeft == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(hoodServoLeft);
+        }
     }
 
-    public TimedAndBoundedServo getHoodServoRight() {
-        return hoodServoRight;
+    public Optional<TimedAndBoundedServo> getHoodServoRight() {
+        if (hoodServoRight == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(hoodServoRight);
+        }
     }
 }
