@@ -49,16 +49,17 @@ public class RotateToHubCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        drive.setLookAtPointTarget(targetPose.getTranslation());
-        double xTrenchLocation = Landmarks.getTrenchDriverDepotSideFiducialIdPose(this.aprilTagFieldLayout, alliance).getX();
-        boolean areWeInAllianceZone;
-        if (alliance == Alliance.Blue) {
-            areWeInAllianceZone = pose.getCurrentPose2d().getX() <= xTrenchLocation;
-        } else {
-            areWeInAllianceZone = pose.getCurrentPose2d().getX() >= xTrenchLocation;
-        }
+        if (!pose.isFacingTarget(targetPose)) {
+            drive.setLookAtPointTarget(targetPose.getTranslation());
+            boolean areWeInAllianceZone = Landmarks.isBetweenIdX(
+                    this.aprilTagFieldLayout,
+                    Landmarks.getTrenchDriverDepotSideId(alliance),
+                    Landmarks.getOutpostId(alliance),
+                    pose.getCurrentPose2d()
+            );
 
-        drive.setLookAtPointTargetActive(areWeInAllianceZone || autoAimWhenNotInZone.get());
+            drive.setLookAtPointTargetActive(areWeInAllianceZone || autoAimWhenNotInZone.get());
+        }
     }
 
     @Override
@@ -67,5 +68,3 @@ public class RotateToHubCommand extends BaseCommand {
         drive.setLookAtPointTargetActive(false);
     }
 }
-
-

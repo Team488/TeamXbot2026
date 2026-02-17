@@ -31,17 +31,15 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     private final MutAngle targetAngle = Degrees.mutable(0);
 
-
-
     @Inject
     public ClimberSubsystem(XCANMotorController.XCANMotorControllerFactory motorFactory,
                             ElectricalContract electricalContract, PropertyFactory propertyFactory,
                             XAbsoluteEncoder.XAbsoluteEncoderFactory absoluteEncoder) {
         propertyFactory.setPrefix(this);
 
-        if (electricalContract.isClimberReady()) {
+        if (electricalContract.isClimberRightReady()) {
             this.climberMotor = motorFactory.create(
-                    electricalContract.getClimberMotor(), this.getPrefix(), "ClimberMotorPID",
+                    electricalContract.getClimberMotorRight(), this.getPrefix(), "ClimberMotorPID",
                     new XCANMotorControllerPIDProperties());
             this.registerDataFrameRefreshable(climberMotor);
         } else {
@@ -91,7 +89,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     @Override
     public void setTargetValue(Angle angle) {
-
+       targetAngle.mut_replace(angle);
     }
 
     @Override
@@ -110,7 +108,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     @Override
     protected boolean areTwoTargetsEquivalent(Angle target1, Angle target2) {
-        return target1.equals(target2);
+        return Math.abs(target1.in(Rotations)-target2.in(Rotations)) < .01;
     }
 
     private Angle getAbsoluteAngle() {

@@ -9,7 +9,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
@@ -105,7 +104,7 @@ public class ShooterSimulator {
     public void updateShooterSimAndMotor() {
         // Update the power of the motor based on our current velocity and goal
         MotorInternalPIDHelper.updateInternalPIDWithVelocity(
-                this.shooterMotor, pidManager, RPM.of(shooter.targetVelocity.get()));
+                this.shooterMotor, pidManager, shooter.getTrimmedTargetValue());
 
         // Update the sim with our new power
         if (DriverStation.isEnabled()) {
