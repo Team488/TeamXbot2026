@@ -1,4 +1,21 @@
 package competition.command_groups;
 
-public class OutpostClimbCommandGroup {
+import competition.subsystems.climber.commands.ClimberExtendCommand;
+import competition.subsystems.climber.commands.ClimberRetractCommand;
+import competition.subsystems.drive.commands.OutpostSideClimbAutoCommand;
+import competition.subsystems.drive.commands.ReadyOutpostSideClimbAutoCommand;
+import xbot.common.command.BaseSequentialCommandGroup;
+
+public class OutpostClimbCommandGroup extends BaseSequentialCommandGroup {
+    public OutpostClimbCommandGroup(OutpostSideClimbAutoCommand outpostSideClimbAutoCommand,
+                                    ReadyOutpostSideClimbAutoCommand readyOutpostSideClimbAutoCommand,
+                                    ClimberExtendCommand climberExtendCommand,
+                                    ClimberRetractCommand climberRetractCommand) {
+        addCommands(
+                readyOutpostSideClimbAutoCommand,
+                climberExtendCommand,
+                outpostSideClimbAutoCommand,
+                climberRetractCommand
+        );
+    }
 }

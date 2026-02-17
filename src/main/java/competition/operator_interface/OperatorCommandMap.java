@@ -3,9 +3,12 @@ package competition.operator_interface;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
 import competition.subsystems.climber.commands.ClimberRetractCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
+import competition.subsystems.drive.commands.ReadyDepotSideClimbAutoCommand;
+import competition.subsystems.drive.commands.ReadyOutpostSideClimbAutoCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.fuel_intake.commands.FuelEjectCommand;
 import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
@@ -96,6 +99,15 @@ public class OperatorCommandMap {
 
     }
 
-
+    @Inject
+    public void setupSimulatorCommands(
+            ResetSimulatedPoseCommand resetSimulatorPositionCommand,
+            ReadyDepotSideClimbAutoCommand depotSideClimbAutoCommand,
+            ReadyOutpostSideClimbAutoCommand outpostSideClimbAutoCommand
+    ) {
+        resetSimulatorPositionCommand.includeOnSmartDashboard("Reset Simulator Position");
+        depotSideClimbAutoCommand.includeOnSmartDashboard("Depot climb");
+        outpostSideClimbAutoCommand.includeOnSmartDashboard("Outpost climb");
+    }
 
 }
