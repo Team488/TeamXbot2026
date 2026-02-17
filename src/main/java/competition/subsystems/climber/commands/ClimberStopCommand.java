@@ -1,17 +1,18 @@
 package competition.subsystems.climber.commands;
 
 import competition.subsystems.climber.ClimberSubsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
 public class ClimberStopCommand extends BaseCommand {
-    ClimberMaintainer climber;
+    ClimberSubsystem climber;
 
     @Inject
-    public ClimberStopCommand(ClimberMaintainer climberMaintainer) {
-        climber = climberMaintainer;
-        this.addRequirements(climber);
+    public ClimberStopCommand(ClimberSubsystem climberSubsystem) {
+        climber = climberSubsystem;
+        this.addRequirements((Subsystem) climber);
     }
 
     @Override
