@@ -20,7 +20,8 @@ import static edu.wpi.first.units.Units.Rotations;
 @Singleton
 public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
-    public final XCANMotorController climberMotor;
+    public final XCANMotorController climberMotorLeft;
+    public final XCANMotorController climberMotorRight;
     public final XAbsoluteEncoder climberEncoder;
 
     public final DoubleProperty extendPower;
@@ -42,14 +43,24 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
                             XAbsoluteEncoder.XAbsoluteEncoderFactory absoluteEncoder) {
         propertyFactory.setPrefix(this);
 
+        if (electricalContract.isClimberLeftReady()) {
+            this.climberMotorLeft = motorFactory.create(
+                    electricalContract.getClimberMotorLeft(), this.getPrefix(), "ClimberMotorPID",
+                    new XCANMotorControllerPIDProperties());
+            this.registerDataFrameRefreshable(climberMotorLeft);
+        } else {
+            this.climberMotorLeft = null;
+        }
+
         if (electricalContract.isClimberRightReady()) {
-            this.climberMotor = motorFactory.create(
+            this.climberMotorRight = motorFactory.create(
                     electricalContract.getClimberMotorRight(), this.getPrefix(), "ClimberMotorPID",
                     new XCANMotorControllerPIDProperties());
-            this.registerDataFrameRefreshable(climberMotor);
+            this.registerDataFrameRefreshable(climberMotorRight);
         } else {
-            this.climberMotor = null;
+            this.climberMotorRight = null;
         }
+
         if (electricalContract.isClimberAbsoluteEncoderReady()) {
             this.climberEncoder = absoluteEncoder.create(
                     electricalContract.getClimberAbsoluteEncoder(),
@@ -65,26 +76,38 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     }
 
     public void extend() {
-        if (climberMotor != null) {
-            climberMotor.setPower(extendPower.get());
+        if (climberMotorLeft != null) {
+            climberMotorLeft.setPower(extendPower.get());
+        }
+        if (climberMotorRight != null) {
+            climberMotorRight.setPower(extendPower.get());
         }
     }
 
     public void retract() {
-        if (climberMotor != null) {
-            climberMotor.setPower(retractPower.get());
+        if (climberMotorLeft != null) {
+            climberMotorLeft.setPower(retractPower.get());
+        }
+        if (climberMotorRight != null) {
+            climberMotorRight.setPower(retractPower.get());
         }
     }
 
     public void stop() {
-        if (climberMotor != null) {
-            climberMotor.setPower(0);
+        if (climberMotorLeft != null) {
+            climberMotorLeft.setPower(0);
+        }
+        if (climberMotorRight != null) {
+            climberMotorRight.setPower(0);
         }
     }
 
     public void periodic() {
-        if (climberMotor != null) {
-            climberMotor.periodic();
+        if (climberMotorLeft != null) {
+            climberMotorLeft.periodic();
+        }
+        if (climberMotorRight != null) {
+            climberMotorRight.periodic();
         }
 
         if (!isCalibrated) {
@@ -131,7 +154,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     }
 
     private Angle getAbsoluteAngle() {
-        if (climberMotor != null) {
+        if (climberMotorLeft != null) {
             return climberEncoder.getPosition();
         }
         return Degree.zero();

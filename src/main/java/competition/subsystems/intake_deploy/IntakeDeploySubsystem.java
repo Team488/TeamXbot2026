@@ -93,7 +93,9 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     @Override
     public void setPower(Double power) {
-        intakeDeployMotor.setPower(power);
+        if (intakeDeployMotor != null) {
+            intakeDeployMotor.setPower(power);
+        }
     }
 
     public void setPositionGoal(Angle goal) {
