@@ -4,6 +4,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import competition.simulation.commands.ResetSimulatedPoseCommand;
+import competition.subsystems.drive.commands.DriveToOutpostCommand;
+import competition.subsystems.fuel_intake.IntakeSubsystem;
+import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
 import competition.subsystems.climber.commands.ClimberRetractCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
@@ -23,6 +26,7 @@ import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederEject;
 import xbot.common.controls.sensors.XXboxController;
+import xbot.common.simulation.ResetSimulatorPositionCommand;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
@@ -70,7 +74,15 @@ public class OperatorCommandMap {
         depotCollectionAutoCommand.includeOnSmartDashboard("Depot collection");
 
     }
+  
     @Inject
+    public void setupAutoCommands(
+            DriveToOutpostCommand driveToOutpostCommand
+    ) {
+        driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
+
+    }
+
     public void setupDebugGamepad(OperatorInterface operatorInterface,
                                      ClimberExtendCommand climberExtendCommand,
                                      ClimberRetractCommand climberRetractCommand,
