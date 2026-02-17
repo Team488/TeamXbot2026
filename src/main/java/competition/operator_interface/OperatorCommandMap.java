@@ -24,6 +24,7 @@ import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederEject;
+import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.simulation.ResetSimulatorPositionCommand;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
@@ -48,15 +49,22 @@ public class OperatorCommandMap {
             IntakeDeployExtendCommand intakeDeployExtendCommand,
             IntakeDeployRetractCommand intakeDeployRetractCommand,
             FuelEjectCommand fuelEjectCommand,
+            ShooterFeederFire shooterFeederFireCommand,
             ShooterFeederEject shooterFeederEject,
-            HopperRollerSubsystem hopperRollerSubsystem,
-            CalibrateOffsetDown calibrateOffsetDown,
-            CalibrateOffsetUp calibrateOffsetUp
+            HopperRollerSubsystem hopperRollerSubsystem
     ) {
         oi.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).onTrue(climberRetractCommand);
         oi.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).onTrue(climberExtendCommand);
-        oi.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(shooterOutputCommand);
-        oi.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(fuelIntakeCommand);
+        oi.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger).whileTrue(shooterOutputCommand);
+        oi.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger).whileTrue(fuelIntakeCommand);
+        oi.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).onTrue(intakeDeployExtendCommand);
+        oi.operatorGamepad.getifAvailable(XXboxController.XboxButton.B).onTrue(intakeDeployRetractCommand);
+        oi.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(fuelEjectCommand);
+        oi.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(shooterFeederEject);
+
+        oi.operatorGamepad.getPovIfAvailable(0).whileTrue(hopperRollerSubsystem.getIntakeCommand());
+        oi.operatorGamepad.getPovIfAvailable(180).whileTrue(hopperRollerSubsystem.getEjectCommand());
+
 
     }
 
