@@ -6,11 +6,11 @@ import xbot.common.command.BaseCommand;
 import javax.inject.Inject;
 
 public class ClimberExtendCommand extends BaseCommand {
-    ClimberSubsystem climber;
+    ClimberMaintainer climber;
 
     @Inject
-    public ClimberExtendCommand(ClimberSubsystem climberSubsystem) {
-        climber = climberSubsystem;
+    public ClimberExtendCommand(ClimberMaintainer climberMaintainer) {
+        climber = climberMaintainer;
         this.addRequirements(climber);
     }
 

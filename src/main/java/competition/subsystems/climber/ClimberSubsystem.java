@@ -22,9 +22,6 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     public final XCANMotorController climberMotor;
     public final XAbsoluteEncoder climberEncoder;
-
-    public final DoubleProperty extendPower;
-    public final DoubleProperty retractPower;
     private final DoubleProperty degreesPerRotation;
     public DoubleProperty climberPower;
 
@@ -59,21 +56,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
             this.climberEncoder = null;
         }
 
-        extendPower = propertyFactory.createPersistentProperty("Extend Power", 0.1);
-        retractPower = propertyFactory.createPersistentProperty("Retract Power", -0.1);
         degreesPerRotation = propertyFactory.createPersistentProperty("Degrees Per Rotation", 0); // TODO: find degrees per rotation
-    }
-
-    public void extend() {
-        if (climberMotor != null) {
-            climberMotor.setPower(extendPower.get());
-        }
-    }
-
-    public void retract() {
-        if (climberMotor != null) {
-            climberMotor.setPower(retractPower.get());
-        }
     }
 
     public void stop() {
