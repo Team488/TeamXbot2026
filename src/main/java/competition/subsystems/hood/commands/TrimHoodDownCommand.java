@@ -5,17 +5,23 @@ import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
-public class StopHoodCommand extends BaseCommand {
+public class TrimHoodDownCommand extends BaseCommand {
     final HoodSubsystem hood;
 
     @Inject
-    public StopHoodCommand(HoodSubsystem hoodSubsystem) {
+    public TrimHoodDownCommand(HoodSubsystem hoodSubsystem) {
         this.hood = hoodSubsystem;
         addRequirements(hoodSubsystem);
     }
 
     @Override
     public void initialize() {
-        hood.stopHood();
+        hood.trimHoodGoalDown();
+        log.info("Decreasing hood trim to " + hood.trimValue.get());
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }
