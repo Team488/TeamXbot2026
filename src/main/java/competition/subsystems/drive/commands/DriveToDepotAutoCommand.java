@@ -14,12 +14,12 @@ import xbot.common.trajectory.XbotSwervePoint;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
-public class DepotCollectionAutoCommand extends SwerveSimpleTrajectoryCommand {
+public class DriveToDepotAutoCommand extends SwerveSimpleTrajectoryCommand {
     final DriveSubsystem drive;
 
     public Pose2d outpostPose;
     @Inject
-    public DepotCollectionAutoCommand(DriveSubsystem drive, BaseSwerveDriveSubsystem baseSwerveDriveSubsystem,
+    public DriveToDepotAutoCommand(DriveSubsystem drive, BaseSwerveDriveSubsystem baseSwerveDriveSubsystem,
                                    PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
                                    PoseSubsystem pose, RobotAssertionManager robotAssertionManager) {
         super(drive,pose,pf,headingModuleFactory,robotAssertionManager);
@@ -30,12 +30,13 @@ public class DepotCollectionAutoCommand extends SwerveSimpleTrajectoryCommand {
 
     @Override
     public void initialize() {
-        Pose2d depotTowerSidePose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueDepotTowerSide);
+        Pose2d depotWallSidePose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueDepotWallSide);
+
 
         ArrayList<XbotSwervePoint> swervePoints = new ArrayList<>();
-
         swervePoints.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(
-                depotTowerSidePose, 3));
+                depotWallSidePose, 3));
+
         this.logic.setKeyPoints(swervePoints);
         this.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
         super.initialize();
