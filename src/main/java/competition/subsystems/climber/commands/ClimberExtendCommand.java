@@ -16,7 +16,7 @@ public class ClimberExtendCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        climber.setPower(climber.extendPower.get());
+        climber.setPower(climber.extendPower);
         log.info("Initialized ClimberRetract");
     }
 }

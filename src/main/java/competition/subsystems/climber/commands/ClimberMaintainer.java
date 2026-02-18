@@ -16,9 +16,6 @@ import static edu.wpi.first.units.Units.Rotations;
 public class ClimberMaintainer extends BaseMaintainerCommand <Angle, Double> {
 
     public ClimberSubsystem climber;
-    public DoubleProperty extendPower;
-    public DoubleProperty retractPower;
-    public XCANMotorController climberMotor;
 
     @Inject
     public ClimberMaintainer(ClimberSubsystem climber,
@@ -36,11 +33,13 @@ public class ClimberMaintainer extends BaseMaintainerCommand <Angle, Double> {
 
     @Override
     protected void calibratedMachineControlAction() {
-        Angle target = climber.getTargetValue();
-        if ((target.in(Rotations) >= 0.02)) {
-            climber.setPower(0.0);
+        Angle targetValue = climber.getTargetValue();
+        Angle current = this.climber.getCurrentValue();
+
+        if ((targetValue.in(Rotations) >= 0.02)) {
+            climber.setPower(current.in(Rotations) * 0.02);
         } else {
-            climber.setPower(0.02);
+            climber.setPower(0.0);
         }
     }
 

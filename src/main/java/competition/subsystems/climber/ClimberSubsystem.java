@@ -24,14 +24,21 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public final XAbsoluteEncoder climberEncoder;
     private final DoubleProperty degreesPerRotation;
     public DoubleProperty climberPower;
-    public DoubleProperty extendPower;
-    public DoubleProperty retractPower;
+    public double extendPower;
+    public double retractPower;
+    public ClimberState climberState;
 
     double encoderZeroOffset = 0;
 
     private boolean isCalibrated;
 
     private final MutAngle targetAngle = Degrees.mutable(0);
+
+    public enum ClimberState {
+        EXTENDING,
+        RETRACTING,
+        STOPPED
+    }
 
     @Inject
     public ClimberSubsystem(XCANMotorController.XCANMotorControllerFactory motorFactory,
@@ -55,25 +62,23 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         } else {
             this.climberEncoder = null;
         }
-        degreesPerRotation = propertyFactory.createPersistentProperty("Degrees Per Rotation", 0); // TODO: find degrees per rotation
+        degreesPerRotation = propertyFactory.createPersistentProperty("Degrees Per Rotation", 0);
+        // TODO: find degrees per rotation
     }
 
     public void retract() {
-        if (climberMotor != null) {
-            climberMotor.setPower(retractPower.get());
-        }
+        setPower(retractPower);
+        climberState = ClimberState.RETRACTING;
     }
 
     public void extend() {
-        if (climberMotor != null) {
-            climberMotor.setPower(extendPower.get());
-        }
+        setPower(extendPower);
+        climberState = ClimberState.EXTENDING;
     }
 
     public void stop() {
-        if (climberMotor != null) {
-            climberMotor.setPower(0);
-        }
+        setPower(0.0);
+        climberState = ClimberState.STOPPED;
     }
 
     public void periodic() {
