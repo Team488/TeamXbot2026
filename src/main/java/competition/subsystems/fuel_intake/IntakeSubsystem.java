@@ -19,7 +19,8 @@ public class IntakeSubsystem extends BaseSubsystem {
     }
 
     public final ElectricalContract electricalContract;
-    public final XCANMotorController intakeMotor;
+    public final XCANMotorController intakeMotorLeft;
+    public final XCANMotorController intakeMotorRight;
     DoubleProperty intakePower;
     DoubleProperty ejectPower;
 
@@ -30,46 +31,64 @@ public class IntakeSubsystem extends BaseSubsystem {
 
         pf.setPrefix(this);
         this.electricalContract = electricalContract;
-        if (electricalContract.isFuelIntakeMotorReady()) {
-            this.intakeMotor = motorFactory.create(
-                    electricalContract.getFuelIntakeMotor(),
+        if (electricalContract.isFuelIntakeMotorLeftReady()) {
+            this.intakeMotorLeft = motorFactory.create(
+                    electricalContract.getFuelIntakeMotorLeft(),
                     getPrefix(),
                     "FuelIntakePID"
             );
-            this.registerDataFrameRefreshable(intakeMotor);
+            this.registerDataFrameRefreshable(intakeMotorLeft);
         } else {
-            this.intakeMotor = null;
+            this.intakeMotorLeft = null;
         }
-
+        if (electricalContract.isFuelIntakeMotorRightReady()){
+            this.intakeMotorRight = motorFactory.create(
+                    electricalContract.getFuelIntakeMotorRight(),
+                    getPrefix(),
+                    "FuelIntakePID"
+            );
+            this.registerDataFrameRefreshable(intakeMotorRight);
+        } else {
+            this.intakeMotorRight = null;
+        }
         intakePower = pf.createPersistentProperty("FuelIntakePower", 1);
         ejectPower = pf.createPersistentProperty("FuelEjectPower", -1);
     }
 
     public void intake() {
-        if (intakeMotor == null) {
-            return;
+        if (intakeMotorLeft != null) {
+            intakeMotorLeft.setPower(intakePower.get());
         }
-        intakeMotor.setPower(intakePower.get());
+        if (intakeMotorRight != null) {
+            intakeMotorRight.setPower(intakePower.get());
+        }
     }
 
     public void eject() {
-        if (intakeMotor == null) {
-            return;
+        if (intakeMotorLeft != null) {
+            intakeMotorLeft.setPower(ejectPower.get());
         }
-        intakeMotor.setPower(ejectPower.get());
+        if (intakeMotorRight != null) {
+            intakeMotorRight.setPower(ejectPower.get());
+        }
     }
 
     public void stop() {
-        if (intakeMotor == null) {
-            return;
+        if (intakeMotorLeft != null) {
+            intakeMotorRight.setPower(0);
         }
-        intakeMotor.setPower(0);
+        if (intakeMotorRight != null) {
+            intakeMotorRight.setPower(0);
+        }
     }
 
     @Override
     public void periodic() {
-        if (electricalContract.isFuelIntakeMotorReady()) {
-            intakeMotor.periodic();
+        if (electricalContract.isFuelIntakeMotorLeftReady()) {
+            intakeMotorLeft.periodic();
+        }
+        if (electricalContract.isFuelIntakeMotorRightReady()){
+            intakeMotorRight.periodic();
         }
     }
 }

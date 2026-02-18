@@ -1,6 +1,7 @@
 package competition.electrical_contract;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.CAN;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
@@ -61,9 +62,13 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract CANMotorControllerInfo getShooterFeederMotor();
 
-    public abstract boolean isFuelIntakeMotorReady();
+    public abstract boolean isFuelIntakeMotorLeftReady();
 
-    public abstract CANMotorControllerInfo getFuelIntakeMotor();
+    public abstract boolean isFuelIntakeMotorRightReady();
+
+    public abstract CANMotorControllerInfo getFuelIntakeMotorLeft();
+
+    public abstract CANMotorControllerInfo getFuelIntakeMotorRight();
 
     public abstract boolean isLightsReady();
 

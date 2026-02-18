@@ -28,7 +28,11 @@ public class UnitTestCompetitionContract extends Contract2026 {
     }
 
     @Override
-    public boolean isFuelIntakeMotorReady() {
+    public boolean isFuelIntakeMotorLeftReady() {
+        return true;
+    }
+
+    public boolean isFuelIntakeMotorRightReady() {
         return true;
     }
 

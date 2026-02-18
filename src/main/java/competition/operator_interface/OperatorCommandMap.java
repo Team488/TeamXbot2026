@@ -12,6 +12,9 @@ import competition.subsystems.fuel_intake.commands.FuelEjectCommand;
 import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
 import competition.subsystems.hood.commands.HoodToGoalCommand;
 import competition.subsystems.hood.commands.HoodToZeroCommand;
+import competition.subsystems.hopper_roller.HopperRollerSubsystem;
+import competition.subsystems.hopper_roller.commands.HopperEjectCommand;
+import competition.subsystems.hopper_roller.commands.HopperIntakeCommand;
 import competition.subsystems.intake_deploy.commands.CalibrateOffsetDown;
 import competition.subsystems.intake_deploy.commands.CalibrateOffsetUp;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
@@ -38,10 +41,10 @@ public class OperatorCommandMap {
     // Example for setting up a command to fire when a button is pressed:
     @Inject
     public void setupOperatorCommands(
-            OperatorInterface operatorInterface,
-            ShooterOutputCommand shooterOutputCommand,
-            TrimShooterVelocityUp trimShooterVelocityUp,
-            TrimShooterVelocityDown trimShooterVelocityDown
+            OperatorInterface operatorInterface //,
+            //ShooterOutputCommand shooterOutputCommand,
+            //TrimShooterVelocityUp trimShooterVelocityUp,
+            //TrimShooterVelocityDown trimShooterVelocityDown
     ) {
 
     }
@@ -74,7 +77,9 @@ public class OperatorCommandMap {
                                      FuelEjectCommand fuelEjectCommand,
                                      ShooterFeederEject shooterFeederEject,
                                      CalibrateOffsetDown calibrateOffsetDown,
-                                     CalibrateOffsetUp calibrateOffsetUp
+                                     CalibrateOffsetUp calibrateOffsetUp,
+                                     HopperEjectCommand hopperEjectCommand,
+                                     HopperIntakeCommand hopperIntakeCommand
     ) {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(climberExtendCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(climberRetractCommand);
@@ -88,8 +93,10 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightJoystickYAxisNegative).whileTrue(hoodToZeroCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftJoystickYAxisNegative).whileTrue(fuelEjectCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftJoystickYAxisPositive).whileTrue(shooterFeederEject);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Start).whileTrue(calibrateOffsetDown);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Back).whileTrue(calibrateOffsetUp);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Start).whileTrue(hopperEjectCommand);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Back).whileTrue(hopperIntakeCommand);
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(180).whileTrue(calibrateOffsetDown);
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(0).whileTrue(calibrateOffsetUp);
     }
 
 
