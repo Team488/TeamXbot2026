@@ -12,9 +12,10 @@ import javax.inject.Singleton;
 
 @Singleton
 public class Landmarks {
-    private final static double climbMiddleOutpostSideY = 3.3;
-    private final static double climbMiddleDepotSideY = 4.175;
-    private final static double climbMiddleY = 3.730;
+    private static final double climbMiddleOutpostSideY = 3.3;
+    private static final double climbMiddleY = 3.730;
+    private static final double climbMiddleDepotSideY = 4.175;
+
 
 
     // Starting on blue alliance towards outpost
