@@ -207,7 +207,16 @@ public class Contract2025 extends Contract2026 {
                                 6.3 / PoseSubsystem.INCHES_IN_A_METER),
                                 new Rotation3d(0, Math.toRadians(-14.5), Math.PI)),
                         EnumSet.of(CameraCapabilities.APRIL_TAG),
-                        false)
+                        false),
+
+                new CameraInfo("color_camera_ov9782",
+                        "AprilTagBack",
+                        new Transform3d(new Translation3d(
+                                -0.55 / PoseSubsystem.INCHES_IN_A_METER,
+                                -0.25 / PoseSubsystem.INCHES_IN_A_METER,
+                                6.3 / PoseSubsystem.INCHES_IN_A_METER),
+                                new Rotation3d(0, Math.toRadians(-14.5), Math.PI)),
+                        EnumSet.of(CameraCapabilities.GAME_SPECIFIC)),
         };
     }
 }

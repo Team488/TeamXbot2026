@@ -10,9 +10,9 @@ import edu.wpi.first.math.geometry.Translation3d;
 import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.properties.PropertyFactory;
-import xbot.common.subsystems.vision.AprilTagVisionIO;
-import xbot.common.subsystems.vision.AprilTagVisionIOFactory;
-import xbot.common.subsystems.vision.AprilTagVisionSubsystem;
+import xbot.common.subsystems.vision.april_tag.AprilTagVisionIO;
+import xbot.common.subsystems.vision.april_tag.AprilTagVisionIOFactory;
+import xbot.common.subsystems.vision.april_tag.AprilTagVisionSubsystem;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
