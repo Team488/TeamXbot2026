@@ -8,8 +8,14 @@ import xbot.common.command.BaseSequentialCommandGroup;
 
 public class FireWhenShooterReadyCommandGroup extends BaseSequentialCommandGroup {
 
-    public FireWhenShooterReadyCommandGroup(ShooterOutputCommand shootCommand, ShooterSubsystem shooterSubsystem, ShooterFeederFire shooterFeederFireCommand, HopperRollerSubsystem hopper) {
-        if (shootCommand == null || shooterSubsystem == null || shooterFeederFireCommand == null || hopper == null) {
+    public FireWhenShooterReadyCommandGroup(ShooterOutputCommand shootCommand,
+                                            ShooterSubsystem shooterSubsystem,
+                                            ShooterFeederFire shooterFeederFireCommand,
+                                            HopperRollerSubsystem hopper) {
+        if (shootCommand == null
+                || shooterSubsystem == null
+                || shooterFeederFireCommand == null
+                || hopper == null) {
             return;
         }
         this.addCommands(
