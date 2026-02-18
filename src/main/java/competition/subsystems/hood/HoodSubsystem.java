@@ -69,6 +69,33 @@ public class HoodSubsystem extends BaseSubsystem {
         this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.1);
     }
 
+    public void extend() {
+        if (hoodServoLeft != null) {
+            hoodServoLeft.setNormalizedTargetPosition(trimValue.get());
+        }
+        if (hoodServoRight != null) {
+            hoodServoRight.setNormalizedTargetPosition(trimStep.get());
+        }
+    }
+
+    public void retract() {
+        if (hoodServoLeft != null) {
+            hoodServoLeft.setNormalizedTargetPosition(trimValue.get());
+        }
+        if (hoodServoRight != null) {
+            hoodServoRight.setNormalizedTargetPosition(trimStep.get());
+        }
+    }
+
+    public void stop() {
+        if (hoodServoLeft != null) {
+            hoodServoLeft.setNormalizedTargetPosition(0);
+        }
+        if (hoodServoRight != null) {
+            hoodServoRight.setNormalizedTargetPosition(0);
+        }
+    }
+
     public void runServo() {
         if (hoodServoLeft != null && hoodServoRight != null) {
             hoodServoLeft.setNormalizedTargetPosition(servoTargetNormalized.get());
