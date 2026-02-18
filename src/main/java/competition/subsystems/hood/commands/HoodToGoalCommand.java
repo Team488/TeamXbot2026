@@ -20,7 +20,6 @@ public class HoodToGoalCommand extends BaseCommand {
     @Override
     public void initialize() {
         hood.runServo();
-        log.info("running servo to " + (((hood.servoMax.get() - hood.servoMin.get()) * hood.servoDistanceRatio.get()) + hood.servoMin.get()));
     }
 
     @Override

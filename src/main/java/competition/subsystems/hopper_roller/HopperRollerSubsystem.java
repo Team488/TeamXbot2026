@@ -40,6 +40,8 @@ public class HopperRollerSubsystem extends BaseSubsystem {
         intakePower = pf.createPersistentProperty("Intake Power", 1);
         ejectPower = pf.createPersistentProperty("Eject Power", -1);
 
+        intakePower = pf.createPersistentProperty("Intake Power", 0.8);
+        ejectPower = pf.createPersistentProperty("Eject Power", -0.8);
     }
 
     public void setEjectPower() {

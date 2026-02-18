@@ -13,12 +13,11 @@ import xbot.common.properties.PropertyFactory;
 import javax.inject.Inject;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Rotations;
 
 public class IntakeDeployMaintainerCommand extends BaseMaintainerCommand<Angle, Double> {
     private final IntakeDeploySubsystem subsystem;
-
-    final PIDManager pidManager;
 
     @Inject
     public IntakeDeployMaintainerCommand(IntakeDeploySubsystem subsystemToMaintain, PropertyFactory pf,
@@ -27,13 +26,6 @@ public class IntakeDeployMaintainerCommand extends BaseMaintainerCommand<Angle, 
         super(subsystemToMaintain, pf, hvmFactory,0.01,0.01);
         pf.setPrefix(this);
         this.subsystem = subsystemToMaintain;
-        this.pidManager = pidManagerFactory.create(
-                pf.getPrefix() + "/IntakeDeployMaintainerPID",
-                0,
-                0,
-                0,
-                0,
-                0);
     }
 
     @Override
@@ -43,11 +35,7 @@ public class IntakeDeployMaintainerCommand extends BaseMaintainerCommand<Angle, 
 
     @Override
     protected void calibratedMachineControlAction() {
-        double power = pidManager.calculate(
-                subsystem.getCurrentValue().in(Degrees),
-                subsystem.getTargetValue().in(Degrees)
-        );
-        subsystem.setPower(power);
+        subsystem.setPositionGoal(subsystem.getTargetValue());
     }
 
     @Override
