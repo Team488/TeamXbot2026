@@ -3,11 +3,17 @@ package competition.operator_interface;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import competition.command_groups.DepotClimbCommandGroup;
+import competition.command_groups.OutpostClimbCommandGroup;
 import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
 import competition.subsystems.climber.commands.ClimberRetractCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
+import competition.subsystems.drive.commands.DepotSideClimbAutoCommand;
+import competition.subsystems.drive.commands.MiddleClimbAutoCommand;
+import competition.subsystems.drive.commands.OutpostSideClimbAutoCommand;
 import competition.subsystems.drive.commands.ReadyDepotSideClimbAutoCommand;
+import competition.subsystems.drive.commands.ReadyMiddleClimbAutoCommand;
 import competition.subsystems.drive.commands.ReadyOutpostSideClimbAutoCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.fuel_intake.commands.FuelEjectCommand;
@@ -102,12 +108,21 @@ public class OperatorCommandMap {
     @Inject
     public void setupSimulatorCommands(
             ResetSimulatedPoseCommand resetSimulatorPositionCommand,
-            ReadyDepotSideClimbAutoCommand depotSideClimbAutoCommand,
-            ReadyOutpostSideClimbAutoCommand outpostSideClimbAutoCommand
+            ReadyDepotSideClimbAutoCommand readyDepotSideClimbAutoCommand,
+            ReadyOutpostSideClimbAutoCommand readyOutpostSideClimbAutoCommand,
+            DepotSideClimbAutoCommand depotSideClimbAutoCommand,
+            OutpostSideClimbAutoCommand outpostSideClimbAutoCommand,
+            MiddleClimbAutoCommand middleClimbAutoCommand,
+            ReadyMiddleClimbAutoCommand readyMiddleClimbAutoCommand
+
     ) {
         resetSimulatorPositionCommand.includeOnSmartDashboard("Reset Simulator Position");
-        depotSideClimbAutoCommand.includeOnSmartDashboard("Depot climb");
-        outpostSideClimbAutoCommand.includeOnSmartDashboard("Outpost climb");
+        readyDepotSideClimbAutoCommand.includeOnSmartDashboard("Depot climb ready");
+        readyMiddleClimbAutoCommand.includeOnSmartDashboard("Middle climb ready");
+        readyOutpostSideClimbAutoCommand.includeOnSmartDashboard("Outpost climb ready");
+        depotSideClimbAutoCommand.includeOnSmartDashboard("Depot Climb");
+        outpostSideClimbAutoCommand.includeOnSmartDashboard("Outpost Climb");
+        middleClimbAutoCommand.includeOnSmartDashboard("Middle climb");
     }
 
 }

@@ -13,15 +13,16 @@ import xbot.common.trajectory.XbotSwervePoint;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
-import static competition.subsystems.pose.Landmarks.blueClimbMiddleDepotSide;
+import static competition.subsystems.pose.Landmarks.blueClimbDepotSideReadyPose;
+import static competition.subsystems.pose.Landmarks.blueMiddleReadyPose;
 
-public class DepotSideClimbAutoCommand extends SwerveSimpleTrajectoryCommand {
+public class ReadyMiddleClimbAutoCommand extends SwerveSimpleTrajectoryCommand {
 
     @Inject
-    public DepotSideClimbAutoCommand(DriveSubsystem drive, PoseSubsystem pose, PropertyFactory pf,
-                                     HeadingModule.HeadingModuleFactory headingModuleFactory,
-                                     RobotAssertionManager robotAssertionManager,
-                                     BaseSwerveDriveSubsystem baseSwerveDriveSubsystem) {
+    public ReadyMiddleClimbAutoCommand(DriveSubsystem drive, PoseSubsystem pose, PropertyFactory pf,
+                                          HeadingModule.HeadingModuleFactory headingModuleFactory,
+                                          RobotAssertionManager robotAssertionManager,
+                                          BaseSwerveDriveSubsystem baseSwerveDriveSubsystem) {
         super(drive,pose, pf, headingModuleFactory, robotAssertionManager);
         this.addRequirements(drive);
         this.drive = drive;
@@ -29,19 +30,18 @@ public class DepotSideClimbAutoCommand extends SwerveSimpleTrajectoryCommand {
 
     @Override
     public void initialize() {
-        Pose2d depotSideClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(blueClimbMiddleDepotSide);
-
+        Pose2d readyPose = PoseSubsystem.convertBlueToRedIfNeeded(blueMiddleReadyPose);
 
         ArrayList<XbotSwervePoint> swervePoints = new ArrayList<>();
 
         swervePoints.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
-                (depotSideClimbPose,4));
+                (readyPose,3));
 
         this.logic.setKeyPoints(swervePoints);
         this.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
         super.initialize();
     }
-
+    
     @Override
     public void end(boolean interrupted) {
         log.info("end");

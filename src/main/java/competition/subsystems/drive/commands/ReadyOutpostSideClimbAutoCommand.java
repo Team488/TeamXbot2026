@@ -28,27 +28,19 @@ public class ReadyOutpostSideClimbAutoCommand extends SwerveSimpleTrajectoryComm
 
     @Override
     public void initialize() {
-        Pose2d blueClimbMiddleOutpostSideReadyPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbMiddleOutpostSideReadyPose);
+        Pose2d readyPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbMiddleOutpostSideReadyPose);
 
         ArrayList<XbotSwervePoint> swervePoints = new ArrayList<>();
 
         swervePoints.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
-                (blueClimbMiddleOutpostSideReadyPose,3));
+                (readyPose,3));
 
         this.logic.setKeyPoints(swervePoints);
         this.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
         super.initialize();
 
     }
-    @Override
-    public void execute() {
-        super.execute();
-    }
 
-    @Override
-    public boolean isFinished() {
-        return super.isFinished();
-    }
 
     @Override
     public void end(boolean interrupted) {
