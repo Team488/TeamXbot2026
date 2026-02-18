@@ -37,9 +37,8 @@ public class HopperRollerSubsystem extends BaseSubsystem {
             this.hopperRollerMotor = null;
         }
 
-        intakePower = pf.createPersistentProperty("Intake Power", 0.1);
-        ejectPower = pf.createPersistentProperty("Eject Power", -0.1);
-
+        intakePower = pf.createPersistentProperty("Intake Power", 0.5);
+        ejectPower = pf.createPersistentProperty("Eject Power", -0.5);
     }
 
     public void setEjectPower() {
