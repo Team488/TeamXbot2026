@@ -78,7 +78,8 @@ public class OperatorCommandMap {
                                      ShooterFeederFire shooterFeederFire,
                                      HopperRollerSubsystem hopperRollerSubsystem) {
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(shooterOutputCommand);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(hopperRollerSubsystem.getIntakeCommand().alongWith(shooterFeederFire));
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(hopperRollerSubsystem.getIntakeCommand()
+                .alongWith(shooterFeederFire));
     }
 
     @Inject
