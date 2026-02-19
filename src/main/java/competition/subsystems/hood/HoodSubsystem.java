@@ -80,6 +80,16 @@ public class HoodSubsystem extends BaseSubsystem {
         servoTargetNormalized.set(0);
     }
 
+    public void extend() {
+        servoTargetNormalized.set(servoTargetNormalized.get() + trimValue.get());
+        runServo();
+    }
+
+    public void retract() {
+        servoTargetNormalized.set(servoTargetNormalized.get() - trimValue.get());
+        runServo();
+    }
+
     public void trimHoodGoalUp() {
         trimValue.set(trimValue.get() + trimStep.get());
     }

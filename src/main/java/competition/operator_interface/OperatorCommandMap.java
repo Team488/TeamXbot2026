@@ -12,6 +12,8 @@ import competition.subsystems.fuel_intake.commands.FuelEjectCommand;
 import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
 import competition.subsystems.hood.commands.TrimHoodDownCommand;
 import competition.subsystems.hood.commands.TrimHoodUpCommand;
+import competition.subsystems.hood.commands.HoodExtendCommand;
+import competition.subsystems.hood.commands.HoodRetractCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.commands.CalibrateOffsetDown;
 import competition.subsystems.intake_deploy.commands.CalibrateOffsetUp;
@@ -77,6 +79,8 @@ public class OperatorCommandMap {
                                      FuelIntakeCommand fuelIntakeCommand,
                                      TrimHoodUpCommand trimHoodUpCommand,
                                      TrimHoodDownCommand trimHoodDownCommand,
+                                     HoodExtendCommand hoodExtendCommand,
+                                     HoodRetractCommand hoodRetractCommand,
                                      IntakeDeployExtendCommand intakeDeployExtendCommand,
                                      IntakeDeployRetractCommand intakeDeployRetractCommand,
                                      FuelEjectCommand fuelEjectCommand,
@@ -102,6 +106,8 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getPovIfAvailable(90).whileTrue(fuelEjectCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(180).onTrue(trimHoodUpCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(270).whileTrue(shooterFeederFire);
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(1).whileTrue(hoodExtendCommand);
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(2).whileTrue(hoodRetractCommand);
     }
 
 
