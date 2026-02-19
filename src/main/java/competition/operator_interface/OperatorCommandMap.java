@@ -12,6 +12,8 @@ import competition.subsystems.fuel_intake.commands.FuelEjectCommand;
 import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
 import competition.subsystems.hood.commands.TrimHoodDownCommand;
 import competition.subsystems.hood.commands.TrimHoodUpCommand;
+import competition.subsystems.hood.commands.HoodExtendCommand;
+import competition.subsystems.hood.commands.HoodRetractCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.commands.CalibrateOffsetDown;
 import competition.subsystems.intake_deploy.commands.CalibrateOffsetUp;
@@ -71,9 +73,14 @@ public class OperatorCommandMap {
     public void setupOperatorGamepad(OperatorInterface operatorInterface,
                                      ShooterOutputCommand shooterOutputCommand,
                                      ShooterFeederFire shooterFeederFire,
+                                     HoodExtendCommand hoodExtendCommand,
+                                     HoodRetractCommand hoodRetractCommand,
                                      HopperRollerSubsystem hopperRollerSubsystem) {
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(shooterOutputCommand);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(hopperRollerSubsystem.getIntakeCommand().alongWith(shooterFeederFire));
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A)
+                .whileTrue(hopperRollerSubsystem.getIntakeCommand().alongWith(shooterFeederFire));
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(hoodExtendCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(hoodRetractCommand);
     }
 
     @Inject
