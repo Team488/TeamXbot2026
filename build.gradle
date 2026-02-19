@@ -187,6 +187,12 @@ task(replayWatch, type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
+// Configuration for Electrical Report
+task(electricalReport, type: JavaExec) {
+    mainClass = "electrical.report.Main"
+    classpath = sourceSets.main.runtimeClasspath
+}
+
 tasks.withType(Test) {
     testLogging.showStandardStreams = true
     
