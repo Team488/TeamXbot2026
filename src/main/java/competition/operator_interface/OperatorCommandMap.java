@@ -73,9 +73,14 @@ public class OperatorCommandMap {
     public void setupOperatorGamepad(OperatorInterface operatorInterface,
                                      ShooterOutputCommand shooterOutputCommand,
                                      ShooterFeederFire shooterFeederFire,
+                                     HoodExtendCommand hoodExtendCommand,
+                                     HoodRetractCommand hoodRetractCommand,
                                      HopperRollerSubsystem hopperRollerSubsystem) {
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(shooterOutputCommand);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(hopperRollerSubsystem.getIntakeCommand().alongWith(shooterFeederFire));
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A)
+                .whileTrue(hopperRollerSubsystem.getIntakeCommand().alongWith(shooterFeederFire));
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(hoodExtendCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(hoodRetractCommand);
     }
 
     @Inject
@@ -88,8 +93,6 @@ public class OperatorCommandMap {
                                      FuelIntakeCommand fuelIntakeCommand,
                                      TrimHoodUpCommand trimHoodUpCommand,
                                      TrimHoodDownCommand trimHoodDownCommand,
-                                     HoodExtendCommand hoodExtendCommand,
-                                     HoodRetractCommand hoodRetractCommand,
                                      IntakeDeployExtendCommand intakeDeployExtendCommand,
                                      IntakeDeployRetractCommand intakeDeployRetractCommand,
                                      FuelEjectCommand fuelEjectCommand,
@@ -115,8 +118,6 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getPovIfAvailable(90).whileTrue(fuelEjectCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(180).onTrue(trimHoodUpCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(270).whileTrue(shooterFeederFire);
-        operatorInterface.setupDebugGamepad.getPovIfAvailable(1).whileTrue(hoodExtendCommand);
-        operatorInterface.setupDebugGamepad.getPovIfAvailable(2).whileTrue(hoodRetractCommand);
     }
 
 
