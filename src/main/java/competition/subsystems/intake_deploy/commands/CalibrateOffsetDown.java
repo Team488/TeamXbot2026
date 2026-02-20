@@ -23,4 +23,8 @@ public class CalibrateOffsetDown extends BaseCommand {
         log.info("Initialized CalibrateOffsetDown");
     }
 
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 }

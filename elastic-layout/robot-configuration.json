@@ -143,20 +143,6 @@
                 }
               },
               {
-                "title": "kVelocityFeedForward",
-                "x": 768.0,
-                "y": 640.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/0/kVelocityFeedForward",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
                 "title": "kGravityFeedForward",
                 "x": 768.0,
                 "y": 640.0,
@@ -165,6 +151,20 @@
                 "type": "Text Display",
                 "properties": {
                   "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/0/kGravityFeedForward",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "kVelocityFeedForward",
+                "x": 768.0,
+                "y": 640.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/0/kVelocityFeedForward",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -254,20 +254,6 @@
                 }
               },
               {
-                "title": "kVelocityFeedForward",
-                "x": 1152.0,
-                "y": 640.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/0/kVelocityFeedForward",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
                 "title": "kGravityFeedForward",
                 "x": 1024.0,
                 "y": 640.0,
@@ -276,6 +262,20 @@
                 "type": "Text Display",
                 "properties": {
                   "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/0/kGravityFeedForward",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "kVelocityFeedForward",
+                "x": 1152.0,
+                "y": 640.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/0/kVelocityFeedForward",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -306,9 +306,9 @@
       "grid_layout": {
         "layouts": [
           {
-            "title": "ShooterFeederSubsystem",
+            "title": "Shooter Goals",
             "x": 128.0,
-            "y": 256.0,
+            "y": 128.0,
             "width": 256.0,
             "height": 256.0,
             "type": "List Layout",
@@ -317,14 +317,69 @@
             },
             "children": [
               {
-                "title": "ShooterFeederMotorPower",
-                "x": 0.0,
-                "y": 0.0,
+                "title": "Shooting Target Velocity",
+                "x": 128.0,
+                "y": 128.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/ShooterFeederSubsystem/ShooterFeederMotorPower",
+                  "topic": "/Preferences/ShooterSubsystem/Shooting Target Velocity",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Shooter Trim Value",
+                "x": 128.0,
+                "y": 256.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/ShooterSubsystem/Shooter Trim Value",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              }
+            ]
+          },
+          {
+            "title": "Hood Goals",
+            "x": 384.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "ServoTargetPositionNormalized",
+                "x": 512.0,
+                "y": 128.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/HoodSubsystem/ServoTargetPositionNormalized",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "HoodTrimValue",
+                "x": 384.0,
+                "y": 256.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/HoodSubsystem/HoodTrimValue",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -337,7 +392,7 @@
           {
             "title": "kGravityFeedForward",
             "x": 896.0,
-            "y": 384.0,
+            "y": 256.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
@@ -449,7 +504,7 @@
           {
             "title": "kStaticFeedForward",
             "x": 896.0,
-            "y": 256.0,
+            "y": 384.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
