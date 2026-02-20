@@ -4,26 +4,24 @@ import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
-import xbot.common.command.BaseSequentialCommandGroup;
+import xbot.common.command.BaseParallelCommandGroup;
 
-public class FireWhenShooterReadyCommandGroup extends BaseSequentialCommandGroup {
+import javax.inject.Inject;
 
-    public FireWhenShooterReadyCommandGroup(ShooterOutputCommand shootCommand,
-                                            ShooterSubsystem shooterSubsystem,
-                                            ShooterFeederFire shooterFeederFireCommand,
-                                            HopperRollerSubsystem hopper) {
-        if (shootCommand == null
-                || shooterSubsystem == null
-                || shooterFeederFireCommand == null
-                || hopper == null) {
-            return;
-        }
+
+public class FireWhenShooterReadyCommandGroup extends BaseParallelCommandGroup {
+
+    @Inject
+    public FireWhenShooterReadyCommandGroup(HopperRollerSubsystem hopper, ShooterSubsystem shooterSubsystem,
+                                            ShooterOutputCommand shooterOutputCommand,
+                                            ShooterFeederFire shooterFeederFireCommand) {
+
+        var waitForShooterCommand = shooterSubsystem.getWaitForAtGoalCommand();
+        var hopperIntakeCommand = hopper.getIntakeCommand();
         this.addCommands(
-                hopper.getIntakeCommand(),
-                shootCommand,
-                shooterSubsystem.getWaitForAtGoalCommand(),
-                shooterFeederFireCommand);
+                shooterOutputCommand,
+                waitForShooterCommand.andThen(hopperIntakeCommand.alongWith(shooterFeederFireCommand))
+        );
     }
 }
-
 
