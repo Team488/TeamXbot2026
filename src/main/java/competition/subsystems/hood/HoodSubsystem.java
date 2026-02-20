@@ -75,29 +75,27 @@ public class HoodSubsystem extends BaseSubsystem {
     }
 
     public void extend() {
-        if (hoodServoLeft != null) {
-            hoodServoLeft.setNormalizedTargetPosition(extract.get());
-        }
-        if (hoodServoRight != null) {
-            hoodServoRight.setNormalizedTargetPosition(extract.get());
+        if (hoodServoRight != null && hoodServoLeft != null) {
+            double extractPosition = extract.get();
+
+            hoodServoRight.setNormalizedTargetPosition(extractPosition);
+            hoodServoLeft.setNormalizedTargetPosition(extractPosition);
         }
     }
 
     public void retract() {
-        if (hoodServoLeft != null) {
-            hoodServoLeft.setNormalizedTargetPosition(retract.get());
-        }
-        if (hoodServoRight != null) {
-            hoodServoRight.setNormalizedTargetPosition(retract.get());
+        if (hoodServoRight != null && hoodServoLeft != null) {
+            double retractPosition = retract.get();
+
+            hoodServoRight.setNormalizedTargetPosition(retractPosition);
+            hoodServoLeft.setNormalizedTargetPosition(retractPosition);
         }
     }
 
     public void stop() {
-        if (hoodServoLeft != null) {
-            hoodServoLeft.setAbsoluteTargetPosition(0);
-        }
-        if (hoodServoRight != null) {
-            hoodServoRight.setNormalizedTargetPosition(0);
+        if (hoodServoRight != null && hoodServoLeft != null) {
+            hoodServoRight.setNormalizedTargetPosition(0.0);
+            hoodServoLeft.setNormalizedTargetPosition(0.0);
         }
     }
 
