@@ -156,7 +156,7 @@ public class Contract2026 extends ElectricalContract {
         return new CANMotorControllerInfo("IntakeDeployMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.Canivore,
-                33578, //placeholder value to avoid conflicts with existing motor controller IDs
+                34,
                 PDHPort.PDH14,
                 new CANMotorControllerOutputConfig());
     }
