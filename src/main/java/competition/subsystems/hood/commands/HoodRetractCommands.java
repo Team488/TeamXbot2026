@@ -1,6 +1,5 @@
 package competition.subsystems.hood.commands;
 
-import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.hood.HoodSubsystem;
 import xbot.common.command.BaseCommand;
 
@@ -18,6 +17,11 @@ public class HoodRetractCommands extends BaseCommand {
     @Override
     public void initialize() {
         hood.retract();
-        log.info("Initialized ClimberRetract");
+        log.info("Initialized HoodRetract");
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }

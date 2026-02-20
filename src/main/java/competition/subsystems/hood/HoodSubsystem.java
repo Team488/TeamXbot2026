@@ -31,6 +31,9 @@ public class HoodSubsystem extends BaseSubsystem {
     public DoubleProperty trimValue;
     public DoubleProperty trimStep;
 
+    public DoubleProperty extract;
+    public DoubleProperty retract;
+
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
                          ElectricalContract electricalContract, PropertyFactory propertyFactory) {
@@ -67,29 +70,31 @@ public class HoodSubsystem extends BaseSubsystem {
                 "ServoTargetPositionNormalized", 0);
         this.trimValue = propertyFactory.createPersistentProperty("HoodTrimValue", 0);
         this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.1);
+        this.extract = propertyFactory.createPersistentProperty("HoodExtractPower", 0);
+        this.retract = propertyFactory.createPersistentProperty("HoodRetractPower", 0.1);
     }
 
     public void extend() {
         if (hoodServoLeft != null) {
-            hoodServoLeft.setNormalizedTargetPosition(trimValue.get());
+            hoodServoLeft.setNormalizedTargetPosition(extract.get());
         }
         if (hoodServoRight != null) {
-            hoodServoRight.setNormalizedTargetPosition(trimStep.get());
+            hoodServoRight.setNormalizedTargetPosition(extract.get());
         }
     }
 
     public void retract() {
         if (hoodServoLeft != null) {
-            hoodServoLeft.setNormalizedTargetPosition(trimValue.get());
+            hoodServoLeft.setNormalizedTargetPosition(retract.get());
         }
         if (hoodServoRight != null) {
-            hoodServoRight.setNormalizedTargetPosition(trimStep.get());
+            hoodServoRight.setNormalizedTargetPosition(retract.get());
         }
     }
 
     public void stop() {
         if (hoodServoLeft != null) {
-            hoodServoLeft.setNormalizedTargetPosition(0);
+            hoodServoLeft.setAbsoluteTargetPosition(0);
         }
         if (hoodServoRight != null) {
             hoodServoRight.setNormalizedTargetPosition(0);
