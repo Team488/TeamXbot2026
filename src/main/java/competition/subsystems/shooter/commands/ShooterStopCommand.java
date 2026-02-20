@@ -1,21 +1,28 @@
 package competition.subsystems.shooter.commands;
 
 import competition.subsystems.shooter.ShooterSubsystem;
-import xbot.common.command.BaseCommand;
+import xbot.common.command.BaseSetpointCommand;
 
 import javax.inject.Inject;
 
-public class ShooterStopCommand extends BaseCommand {
-    final ShooterSubsystem shooter;
+import static edu.wpi.first.units.Units.RPM;
+
+public class ShooterStopCommand extends BaseSetpointCommand {
+    private final ShooterSubsystem subsystem;
 
     @Inject
     public ShooterStopCommand(ShooterSubsystem shooterSubsystem) {
-        shooter = shooterSubsystem;
-        this.addRequirements(shooter);
+        super(shooterSubsystem);
+        this.subsystem = shooterSubsystem;
     }
 
     @Override
     public void initialize() {
-        shooter.stop();
+        this.subsystem.setTargetValue(RPM.of(0));
+    }
+
+    @Override
+    public boolean runsWhenDisabled() {
+        return true;
     }
 }

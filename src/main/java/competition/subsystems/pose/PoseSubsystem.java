@@ -9,11 +9,14 @@ import javax.inject.Singleton;
 import competition.electrical_contract.ElectricalContract;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.vision.AprilTagVisionSubsystemExtended;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.units.measure.Distance;
 
@@ -25,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import xbot.common.controls.sensors.XGyro.XGyroFactory;
 import xbot.common.math.WrappedRotation2d;
 import xbot.common.properties.BooleanProperty;
+import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.Property;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
@@ -39,6 +43,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
     private final AprilTagVisionSubsystemExtended aprilTagVisionSubsystem;
     private final BooleanProperty useVisionAssistedPose;
     private final BooleanProperty reportCameraPoses;
+    private final DoubleProperty isFacingTargetMarginOfError;
 
     private boolean preferOdometryToVision = false;
 
@@ -63,6 +68,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
         propManager.setDefaultLevel(Property.PropertyLevel.Important);
         useVisionAssistedPose = propManager.createPersistentProperty("UseVisionAssistedPose", true);
         reportCameraPoses = propManager.createPersistentProperty("ReportCameraPoses", false);
+        isFacingTargetMarginOfError = propManager.createPersistentProperty("IsFacingTargetMarginOfError", 2);
     }
 
     private SwerveDrivePoseEstimator initializeSwerveOdometry() {
@@ -194,6 +200,21 @@ public class PoseSubsystem extends BasePoseSubsystem {
                 drive.getRearRightSwerveModuleSubsystem().getCurrentPosition()
 
         };
+    }
+
+    public boolean isFacingTarget(Pose2d target) {
+        Pose2d currentPose = this.getCurrentPose2d();
+
+        Translation2d vectorToTarget = target.getTranslation().minus(currentPose.getTranslation());
+        if (vectorToTarget.getNorm() < 0.01) {
+            return true;
+        }
+
+        Rotation2d desiredHeading = vectorToTarget.getAngle();
+        double rawError = desiredHeading.getRadians() - this.getCurrentHeading().getRadians();
+        double angleError = Math.abs(MathUtil.angleModulus(rawError));
+
+        return Math.toDegrees(angleError) < isFacingTargetMarginOfError.get();
     }
 
     // Override methods remain unchanged
