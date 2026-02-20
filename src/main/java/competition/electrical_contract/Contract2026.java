@@ -18,11 +18,14 @@ import xbot.common.injection.electrical_contract.LEDStripType;
 import xbot.common.injection.electrical_contract.LightControllerType;
 import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.electrical_contract.PDHPort;
+import xbot.common.injection.electrical_contract.PowerSource;
 import xbot.common.injection.electrical_contract.TalonFxMotorControllerOutputConfig;
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.subsystems.vision.CameraCapabilities;
 
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
@@ -183,6 +186,11 @@ public class Contract2026 extends ElectricalContract {
     @Override
     public DeviceInfo getHoodServoRight() {
         return new DeviceInfo("HoodServoRight", 1);
+    }
+
+    // Example: OrangePi single board computer powered by VRM1's 5V 2A port
+    public DeviceInfo getOrangePi1() {
+        return new DeviceInfo("OrangePi1", -1, PowerSource.VRM1_5V_2A);
     }
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
@@ -362,6 +370,14 @@ public class Contract2026 extends ElectricalContract {
     @Override
     public double getDriveGearRatio() {
         return 6.48; // Documented value for WCP x2i with X3 10t gears.
+    }
+
+    @Override
+    public Map<PDHPort, String> getAdditionalPDHConnections() {
+        Map<PDHPort, String> connections = new HashMap<>();
+        connections.put(PDHPort.PDH05, "VRM1");  // Example: VRM1 powered by PDH port 5
+        // Add more non-motor PDH connections here as needed
+        return connections;
     }
 
     @Override

@@ -233,6 +233,12 @@ public class Main {
         // Collect subsystem motors (auto-discovery handles most motors)
         // Only manually collect motors that need special handling here if needed
         
+        // Collect additional PDH connections (VRMs, PCMs, etc.)
+        Map<PDHPort, String> additionalConnections = contract.getAdditionalPDHConnections();
+        for (Map.Entry<PDHPort, String> entry : additionalConnections.entrySet()) {
+            pdhUsage.put(entry.getKey(), entry.getValue());
+        }
+        
         // Print PDH usage in port order
         System.out.println("-".repeat(80));
         System.out.println("PDH Port Assignments");
@@ -302,10 +308,19 @@ public class Main {
                             devicesByPowerSource.computeIfAbsent(device.powerFrom, k -> new ArrayList<>()).add(device.name);
                         }
                         
-                        // Categorize device based on properties
-                        if (device.canBusId != null && device.channel != 0) {
-                            // CAN device (has explicit channel set, including -1 for master)
-                            // Devices with channel=0 are using defaults and not real CAN devices
+                        // Categorize device based on method name and properties
+                        String methodName = method.getName().toLowerCase();
+                        
+                        // PWM devices - identified by method name patterns (servo, pwm in name)
+                        if (methodName.contains("servo") || methodName.contains("pwm")) {
+                            pwmDevices.add(device);
+                        }
+                        // DIO devices - explicitly powered from RIO
+                        else if (device.powerFrom != null && device.powerFrom.equals(PowerSource.RIO)) {
+                            dioDevices.add(device);
+                        }
+                        // CAN devices - have CAN bus ID and channel > 0
+                        else if (device.canBusId != null && device.channel > 0) {
                             CANDevice canDevice = new CANDevice(
                                 device.name,
                                 device.canBusId,
@@ -315,12 +330,6 @@ public class Main {
                                 device.powerFrom
                             );
                             devicesByBus.computeIfAbsent(device.canBusId, k -> new ArrayList<>()).add(canDevice);
-                        } else if (device.powerFrom != null && device.powerFrom.equals(PowerSource.RIO)) {
-                            // DIO device (powered from RIO)
-                            dioDevices.add(device);
-                        } else if (device.canBusId == null && device.channel >= 0) {
-                            // PWM device (no CAN bus, has channel >= 0)
-                            pwmDevices.add(device);
                         }
                     }
                 }

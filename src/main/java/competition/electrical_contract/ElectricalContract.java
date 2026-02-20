@@ -4,9 +4,13 @@ import edu.wpi.first.math.geometry.Translation2d;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
+import xbot.common.injection.electrical_contract.PDHPort;
 import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.injection.swerve.SwerveInstance;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class ElectricalContract implements XSwerveDriveElectricalContract, XCameraElectricalContract {
     public abstract boolean isDriveReady();
@@ -76,4 +80,12 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public abstract boolean isHopperRollerReady();
 
     public abstract CANMotorControllerInfo getHopperRollerMotor();
+
+    /**
+     * Returns additional PDH connections for non-motor devices (e.g., VRMs, PCMs, etc.)
+     * Override this method in specific contract implementations to specify these connections.
+     */
+    public Map<PDHPort, String> getAdditionalPDHConnections() {
+        return new HashMap<>();
+    }
 }
