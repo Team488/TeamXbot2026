@@ -80,7 +80,7 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/kP",
+                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/0/kP",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -94,7 +94,7 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/kI",
+                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/0/kI",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -108,7 +108,7 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/kD",
+                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/0/kD",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -150,7 +150,7 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/kGravityFeedForward",
+                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/0/kGravityFeedForward",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -164,7 +164,7 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/kVelocityFeedForward",
+                  "topic": "/Preferences/SwerveDriveSubsystem/DrivePID/0/kVelocityFeedForward",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -191,7 +191,7 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/kP",
+                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/0/kP",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -205,7 +205,7 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/kI",
+                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/0/kI",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -219,7 +219,7 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/kD",
+                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/0/kD",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -261,7 +261,7 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/kGravityFeedForward",
+                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/0/kGravityFeedForward",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -275,7 +275,7 @@
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/kVelocityFeedForward",
+                  "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/0/kVelocityFeedForward",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -295,6 +295,223 @@
             "properties": {
               "topic": "/Preferences/ContractToUse",
               "period": 0.06,
+              "show_submit_button": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Shooter tuning",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "Shooter Goals",
+            "x": 128.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Shooting Target Velocity",
+                "x": 128.0,
+                "y": 128.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/ShooterSubsystem/Shooting Target Velocity",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Shooter Trim Value",
+                "x": 128.0,
+                "y": 256.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/ShooterSubsystem/Shooter Trim Value",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              }
+            ]
+          },
+          {
+            "title": "Hood Goals",
+            "x": 384.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "ServoTargetPositionNormalized",
+                "x": 512.0,
+                "y": 128.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/HoodSubsystem/ServoTargetPositionNormalized",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "HoodTrimValue",
+                "x": 384.0,
+                "y": 256.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/HoodSubsystem/HoodTrimValue",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              }
+            ]
+          }
+        ],
+        "containers": [
+          {
+            "title": "kGravityFeedForward",
+            "x": 896.0,
+            "y": 256.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kGravityFeedForward",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kMaxOutput",
+            "x": 768.0,
+            "y": 256.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/kMaxOutput",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kMinOutput",
+            "x": 768.0,
+            "y": 384.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/kMinOutput",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kP",
+            "x": 640.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kP",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kD",
+            "x": 896.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kD",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kVelocityFeedForward",
+            "x": 640.0,
+            "y": 256.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kVelocityFeedForward",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Target Velocity",
+            "x": 640.0,
+            "y": 384.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/Target Velocity",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kI",
+            "x": 768.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kI",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kStaticFeedForward",
+            "x": 896.0,
+            "y": 384.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kStaticFeedForward",
+              "period": 0.06,
+              "data_type": "double",
               "show_submit_button": true
             }
           }

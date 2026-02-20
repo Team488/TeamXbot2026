@@ -1,8 +1,6 @@
 package competition.subsystems.shooter.commands;
 
 import competition.subsystems.shooter.ShooterSubsystem;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
@@ -13,13 +11,13 @@ public class TrimShooterVelocityUp extends BaseCommand {
     @Inject
     public TrimShooterVelocityUp(ShooterSubsystem shooterSubsystem) {
         shooter = shooterSubsystem;
-        this.addRequirements(shooter);
+        this.addRequirements(shooter.getTrimSetpointLock());
     }
 
     @Override
     public void initialize() {
         shooter.increaseShooterOffset();
-        log.info("Increasing hood trim to " + shooter.trimValue.get());
+        log.info("Increasing shooter trim to " + shooter.trimValue.get());
     }
 
     @Override
