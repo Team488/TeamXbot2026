@@ -8,7 +8,11 @@ import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import xbot.common.command.BaseSequentialCommandGroup;
 
+import javax.inject.Inject;
+
 public class OutpostClimbCommandGroup extends BaseSequentialCommandGroup {
+
+    @Inject
     public OutpostClimbCommandGroup(OutpostSideClimbAutoCommand outpostSideClimbAutoCommand,
                                     ReadyOutpostSideClimbAutoCommand readyOutpostSideClimbAutoCommand,
                                     ClimberExtendCommand climberExtendCommand,
