@@ -43,11 +43,11 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         this.electricalContract = electricalContract;
 
         var defaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
-                .withP(0.0)
+                .withP(0.05)
                 .withI(0.0)
                 .withD(0.0)
-                .withStaticFeedForward(0)
-                .withVelocityFeedForward(0.1)
+                .withStaticFeedForward(0.02)
+                .withVelocityFeedForward(0.0095)
                 .withMinPowerOutput(-1.0)
                 .withMaxPowerOutput(1.0)
                 .build();
