@@ -286,31 +286,18 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public boolean isFuelIntakeMotorLeftReady() { return true; }
+    public boolean isFuelIntakeMotorReady() { return true; }
 
     @Override
-    public boolean isFuelIntakeMotorRightReady() { return true; }
-
-    @Override
-    public CANMotorControllerInfo getFuelIntakeMotorLeft() {
-        return new CANMotorControllerInfo("FuelIntakeMotorLeft",
-                MotorControllerType.TalonFx,
-                CANBusId.Canivore,
-                34,
-                PDHPort.PDH12,
-                new CANMotorControllerOutputConfig());
-    }
-
-    @Override
-    public CANMotorControllerInfo getFuelIntakeMotorRight() {
-        return new CANMotorControllerInfo("FuelIntakeMotorRight ",
+    public CANMotorControllerInfo getFuelIntakeMotor() {
+        return new CANMotorControllerInfo("FuelIntakeMotor",
                 MotorControllerType.TalonFx,
                 CANBusId.Canivore,
                 32,
                 PDHPort.PDH12,
-                new CANMotorControllerOutputConfig()
-                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
+                new CANMotorControllerOutputConfig());
     }
+
     @Override
     public boolean isLightsReady() { return true; }
 

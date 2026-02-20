@@ -66,13 +66,9 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract CANMotorControllerInfo getShooterFeederMotor();
 
-    public abstract boolean isFuelIntakeMotorLeftReady();
+    public abstract boolean isFuelIntakeMotorReady();
 
-    public abstract boolean isFuelIntakeMotorRightReady();
-
-    public abstract CANMotorControllerInfo getFuelIntakeMotorLeft();
-
-    public abstract CANMotorControllerInfo getFuelIntakeMotorRight();
+    public abstract CANMotorControllerInfo getFuelIntakeMotor();
 
     public abstract boolean isLightsReady();
 

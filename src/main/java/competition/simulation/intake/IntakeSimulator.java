@@ -21,7 +21,7 @@ public class IntakeSimulator {
     @Inject
     public IntakeSimulator(IntakeSubsystem intake, IntakeDeploySimulator intakeDeploySim) {
         this.intake = intake;
-        this.intakeMotor = (MockCANMotorController) intake.intakeMotorLeft;
+        this.intakeMotor = (MockCANMotorController) intake.intakeMotor;
         this.intakeDeploySim = intakeDeploySim;
     }
 
