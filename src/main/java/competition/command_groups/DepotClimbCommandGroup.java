@@ -7,6 +7,7 @@ import competition.subsystems.drive.commands.OutpostSideClimbAutoCommand;
 import competition.subsystems.drive.commands.ReadyDepotSideClimbAutoCommand;
 import competition.subsystems.drive.commands.ReadyOutpostSideClimbAutoCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import xbot.common.command.BaseSequentialCommandGroup;
 
 public class DepotClimbCommandGroup extends BaseSequentialCommandGroup {
@@ -17,8 +18,10 @@ public class DepotClimbCommandGroup extends BaseSequentialCommandGroup {
                                   IntakeDeployRetractCommand intakeDeployRetractCommand) {
         addCommands(
                 readyDepotSideClimbAutoCommand,
-                intakeDeployRetractCommand,
-                climberExtendCommand,
+                new ParallelCommandGroup(
+                        intakeDeployRetractCommand,
+                        climberExtendCommand
+                ),
                 depotSideClimbAutoCommand,
                 climberRetractCommand
         );
