@@ -67,6 +67,16 @@ public class OperatorCommandMap {
         operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(typicalSwerveDrive);
     }
     @Inject
+    public void setupOperatorGamepad(OperatorInterface operatorInterface,
+                                     ShooterOutputCommand shooterOutputCommand,
+                                     ShooterFeederFire shooterFeederFire,
+                                     HopperRollerSubsystem hopperRollerSubsystem) {
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(shooterOutputCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A)
+                .whileTrue(hopperRollerSubsystem.getIntakeCommand().alongWith(shooterFeederFire));
+    }
+
+    @Inject
     public void setupDebugGamepad(OperatorInterface operatorInterface,
                                      ClimberExtendCommand climberExtendCommand,
                                      ClimberRetractCommand climberRetractCommand,
