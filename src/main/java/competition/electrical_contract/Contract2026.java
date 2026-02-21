@@ -152,7 +152,7 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public boolean isIntakeDeployReady() { return false; }
+    public boolean isIntakeDeployReady() { return true; }
 
     @Override
     public CANMotorControllerInfo getIntakeDeployMotor() {
@@ -161,7 +161,8 @@ public class Contract2026 extends ElectricalContract {
                 CANBusId.Canivore,
                 34,
                 PDHPort.PDH14,
-                new CANMotorControllerOutputConfig());
+                new TalonFxMotorControllerOutputConfig()
+                        .withStatorCurrentLimit(Amps.of(60)));
     }
 
     @Override
