@@ -12,7 +12,8 @@ import competition.subsystems.fuel_intake.commands.FuelStopCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.HoodToGoalCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
-import competition.subsystems.intake_deploy.IntakeDeployMaintainerCommand;
+import competition.subsystems.intake_deploy.commands.IntakeDeployMaintainerCommand;
+import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.shooter.commands.ShooterStopCommand;
@@ -58,8 +59,11 @@ public class SubsystemDefaultCommandMap {
     }
 
     @Inject
-    public void setupIntakeDeploySubsystem(IntakeDeploySubsystem intakeDeploy, IntakeDeployMaintainerCommand command) {
+    public void setupIntakeDeploySubsystem(IntakeDeploySubsystem intakeDeploy,
+                                           IntakeDeployMaintainerCommand command,
+                                           IntakeDeployRetractCommand retractCommand) {
         intakeDeploy.setDefaultCommand(command);
+        intakeDeploy.getSetpointLock().setDefaultCommand(retractCommand);
     }
 
     @Inject
