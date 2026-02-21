@@ -79,20 +79,22 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     public void extend() {
         if (climberMotorLeft != null) {
-            climberMotorLeft.setPower(extendPower.get());
+            climberMotorLeft.setPower(extendPower);
         }
         if (climberMotorRight != null) {
-            climberMotorRight.setPower(extendPower.get());
+            climberMotorRight.setPower(extendPower);
         }
+        climberState = ClimberState.EXTENDING;
     }
 
     public void retract() {
         if (climberMotorLeft != null) {
-            climberMotorLeft.setPower(retractPower.get());
+            climberMotorLeft.setPower(retractPower);
         }
         if (climberMotorRight != null) {
-            climberMotorRight.setPower(retractPower.get());
+            climberMotorRight.setPower(retractPower);
         }
+        climberState = ClimberState.RETRACTING;
     }
 
     public void stop() {
@@ -102,6 +104,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         if (climberMotorRight != null) {
             climberMotorRight.setPower(0);
         }
+        climberState = ClimberState.STOPPED;
     }
 
     public void periodic() {
