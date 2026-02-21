@@ -5,6 +5,7 @@ import competition.simulation.intake.IntakeSimulator;
 import competition.simulation.intake_deploy.IntakeDeploySimulator;
 import competition.simulation.shooter.ShooterSimulator;
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -88,9 +89,8 @@ public class MapleSimulator implements BaseSimulator {
                 drive.getRearRightSwerveModuleSubsystem().getModuleTranslation()
         });
 
-        // starting middle ish of the field on blue
-        var startingPose = new Pose2d(7, 7 , new Rotation2d());
-
+        // starting
+        var startingPose = Landmarks.blueStartTrenchToOutpost;
         // Creating the SelfControlledSwerveDriveSimulation instance
         this.swerveDriveSimulation = new SelfControlledSwerveDriveSimulation(
                 new SwerveDriveSimulation(config, startingPose));
