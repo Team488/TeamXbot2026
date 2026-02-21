@@ -180,4 +180,5 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         this.runAtTargetVelocity();
     }
+
 }

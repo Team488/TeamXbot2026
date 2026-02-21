@@ -13,13 +13,13 @@ public class TrimShooterVelocityUp extends BaseCommand {
     @Inject
     public TrimShooterVelocityUp(ShooterSubsystem shooterSubsystem) {
         shooter = shooterSubsystem;
-        this.addRequirements(shooter);
+        this.addRequirements(shooter.getTrimSetpointLock());
     }
 
     @Override
     public void initialize() {
         shooter.increaseShooterOffset();
-        log.info("Increasing hood trim to " + shooter.trimValue.get());
+        log.info("Increasing shooter trim to " + shooter.trimValue.get());
     }
 
     @Override
