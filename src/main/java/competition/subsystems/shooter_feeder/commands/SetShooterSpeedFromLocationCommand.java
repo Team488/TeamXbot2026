@@ -18,7 +18,6 @@ public class SetShooterSpeedFromLocationCommand extends BaseSetpointCommand {
     public void initialize() {
         double speed = shooter.getSpeedForRange();
         shooter.setTargetValue(speed);
-
     }
 
     @Override
