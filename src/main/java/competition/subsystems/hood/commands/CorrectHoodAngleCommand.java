@@ -12,7 +12,7 @@ import competition.subsystems.hood.HoodSubsystem;
 import edu.wpi.first.wpilibj.Filesystem;
 import xbot.common.command.BaseCommand;
 
-public class CorrectHoodAngle extends BaseCommand {
+public class CorrectHoodAngleCommand extends BaseCommand {
     
     final HoodSubsystem hood;
     //essentially holds all the values for the json to fill hashmap
@@ -21,11 +21,12 @@ public class CorrectHoodAngle extends BaseCommand {
         public double theta;
         public double velocity;
     }
+
     //hashmap holding all the values
     private HashMap<Double, HoodTrajectory> trajectoryMap = null;
     
     @Inject
-    public CorrectHoodAngle(HoodSubsystem hoodSubsystem) {
+    public CorrectHoodAngleCommand(HoodSubsystem hoodSubsystem) {
         this.hood = hoodSubsystem;
         this.addRequirements(hoodSubsystem); 
     }
@@ -43,6 +44,7 @@ public class CorrectHoodAngle extends BaseCommand {
     public void execute() {
 
         double currentDistance = 0; // placeholder value
+        log.info("Current distance: " + currentDistance);
 
         HoodTrajectory bestShot = null;
         // variable to keep track of the smallest difference found so far
@@ -59,11 +61,18 @@ public class CorrectHoodAngle extends BaseCommand {
                     bestShot = trajectoryMap.get(keyDistance);
                 }
             }
+        } else {
+            log.warn("Trajectory map is null!");
         }
 
         if (bestShot != null) {
-            //placeholder for now, as theres no current method to convert to theta (if we did use bestShot.theta, it would be the angle we want to set the hood to)
+            log.info("Best shot - Distance: " + bestShot.distance + 
+                     ", Theta: " + bestShot.theta + 
+                     ", Velocity: " + bestShot.velocity +
+                     " (diff: " + minDiff + ")");
             hood.runServo();
+        } else {
+            log.warn("No matching trajectory found!");
         }
     }
 
@@ -89,5 +98,9 @@ public class CorrectHoodAngle extends BaseCommand {
         } catch (Exception e) {
             log.error("Failed to load JSON: " + e.getMessage());
         }
+    }
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }

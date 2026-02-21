@@ -10,6 +10,7 @@ import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.fuel_intake.commands.FuelEjectCommand;
 import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
+import competition.subsystems.hood.commands.CorrectHoodAngleCommand;
 import competition.subsystems.hood.commands.TrimHoodDownCommand;
 import competition.subsystems.hood.commands.TrimHoodUpCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
@@ -40,9 +41,10 @@ public class OperatorCommandMap {
             OperatorInterface operatorInterface,
             ShooterOutputCommand shooterOutputCommand,
             TrimShooterVelocityUp trimShooterVelocityUp,
-            TrimShooterVelocityDown trimShooterVelocityDown
+            TrimShooterVelocityDown trimShooterVelocityDown,
+            CorrectHoodAngleCommand correctHoodAngleCommand
     ) {
-
+        correctHoodAngleCommand.includeOnSmartDashboard("Hood Correction 😭💢");
     }
 
     @Inject
