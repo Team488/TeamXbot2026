@@ -1,7 +1,6 @@
 package competition.subsystems.intake_deploy.commands;
 
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
-import xbot.common.command.BaseCommand;
 import xbot.common.command.BaseSetpointCommand;
 
 import javax.inject.Inject;
