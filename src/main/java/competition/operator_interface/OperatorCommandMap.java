@@ -3,10 +3,8 @@ package competition.operator_interface;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import competition.simulation.commands.ResetSimulatedPoseCommand;
+import competition.command_groups.FireWhenShooterReadyCommandGroup;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
-import competition.subsystems.fuel_intake.IntakeSubsystem;
-import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
 import competition.subsystems.climber.commands.ClimberRetractCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
@@ -23,9 +21,8 @@ import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
-import competition.subsystems.shooter_feeder.commands.ShooterFeederEject;
+import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
 import xbot.common.controls.sensors.XXboxController;
-import xbot.common.simulation.ResetSimulatorPositionCommand;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
@@ -71,6 +68,17 @@ public class OperatorCommandMap {
 
     }
 
+    @Inject
+    public void setupOperatorGamepad(OperatorInterface operatorInterface,
+                                     FireWhenShooterReadyCommandGroup shooterOutputCommand,
+                                     ShooterFeederFire shooterFeederFire,
+                                     HopperRollerSubsystem hopperRollerSubsystem) {
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(shooterOutputCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A)
+                .whileTrue(hopperRollerSubsystem.getIntakeCommand().alongWith(shooterFeederFire));
+    }
+
+    @Inject
     public void setupDebugGamepad(OperatorInterface operatorInterface,
                                      ClimberExtendCommand climberExtendCommand,
                                      ClimberRetractCommand climberRetractCommand,
@@ -83,7 +91,7 @@ public class OperatorCommandMap {
                                      IntakeDeployExtendCommand intakeDeployExtendCommand,
                                      IntakeDeployRetractCommand intakeDeployRetractCommand,
                                      FuelEjectCommand fuelEjectCommand,
-                                     ShooterFeederEject shooterFeederEject,
+                                     ShooterFeederFire shooterFeederFire,
                                      HopperRollerSubsystem hopperRollerSubsystem,
                                      CalibrateOffsetDown calibrateOffsetDown,
                                      CalibrateOffsetUp calibrateOffsetUp
@@ -104,9 +112,7 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getPovIfAvailable(0).onTrue(trimHoodDownCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(90).whileTrue(fuelEjectCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(180).onTrue(trimHoodUpCommand);
-        operatorInterface.setupDebugGamepad.getPovIfAvailable(270).onTrue(shooterFeederEject);
-
-
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(270).whileTrue(shooterFeederFire);
     }
 
 

@@ -29,6 +29,7 @@ public class HoodSubsystem extends BaseSubsystem {
 
     public DoubleProperty servoTargetNormalized;
     public DoubleProperty trimValue;
+    public DoubleProperty trimStep;
 
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
@@ -65,6 +66,7 @@ public class HoodSubsystem extends BaseSubsystem {
         this.servoTargetNormalized = propertyFactory.createPersistentProperty(
                 "ServoTargetPositionNormalized", 0);
         this.trimValue = propertyFactory.createPersistentProperty("HoodTrimValue", 0);
+        this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.1);
     }
 
     public void runServo() {
@@ -79,11 +81,11 @@ public class HoodSubsystem extends BaseSubsystem {
     }
 
     public void trimHoodGoalUp() {
-        trimValue.set(trimValue.get() + 0.005);
+        trimValue.set(trimValue.get() + trimStep.get());
     }
 
     public void trimHoodGoalDown() {
-        trimValue.set(trimValue.get() - 0.005);
+        trimValue.set(trimValue.get() - trimStep.get());
     }
 
     @Override

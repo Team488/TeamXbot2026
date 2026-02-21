@@ -26,6 +26,7 @@ import java.util.EnumSet;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Seconds;
 
 public class Contract2026 extends ElectricalContract {
 
@@ -41,7 +42,7 @@ public class Contract2026 extends ElectricalContract {
     public boolean areCanCodersReady() { return true; }
 
     @Override
-    public boolean isClimberLeftReady() { return false; }
+    public boolean isClimberLeftReady() { return true; }
 
     @Override
     public CANMotorControllerInfo getClimberMotorLeft() {
@@ -50,11 +51,12 @@ public class Contract2026 extends ElectricalContract {
                 CANBusId.Canivore,
                 25,
                 PDHPort.PDH05,
-                new CANMotorControllerOutputConfig());
+                new TalonFxMotorControllerOutputConfig()
+                        .withStatorCurrentLimit(Amps.of(10)));
     }
 
     @Override
-    public boolean isClimberRightReady() { return false; }
+    public boolean isClimberRightReady() { return true; }
 
     @Override
     public CANMotorControllerInfo getClimberMotorRight() {
@@ -63,7 +65,9 @@ public class Contract2026 extends ElectricalContract {
                 CANBusId.Canivore,
                 26,
                 PDHPort.PDH06,
-                new CANMotorControllerOutputConfig());
+                new TalonFxMotorControllerOutputConfig()
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                        .withStatorCurrentLimit(Amps.of(10)));
     }
 
     @Override
@@ -76,7 +80,7 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override                                    
-    public boolean isShooterFeederReady() { return false; }
+    public boolean isShooterFeederReady() { return true; }
 
     public CANMotorControllerInfo getShooterFeederMotor() {
         return new CANMotorControllerInfo("ShooterFeederMotor",
@@ -84,17 +88,18 @@ public class Contract2026 extends ElectricalContract {
                 CANBusId.Canivore,
                 37,
                 PDHPort.PDH17,
-                new CANMotorControllerOutputConfig());
+                new CANMotorControllerOutputConfig()
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
     }
 
     @Override
-    public boolean isLeftShooterReady() { return false; }
+    public boolean isLeftShooterReady() { return true; }
 
     @Override
-    public boolean isMiddleShooterReady() { return false; }
+    public boolean isMiddleShooterReady() { return true; }
 
     @Override
-    public boolean isRightShooterReady() { return false; }
+    public boolean isRightShooterReady() { return true; }
 
     @Override
     public CANMotorControllerInfo getLeftShooterMotor() {
@@ -103,7 +108,12 @@ public class Contract2026 extends ElectricalContract {
                 CANBusId.Canivore,
                 22,
                 PDHPort.PDH02,
-                new CANMotorControllerOutputConfig());
+                new TalonFxMotorControllerOutputConfig()
+                        .withStatorCurrentLimit(Amps.of(100))
+                        .withSupplyCurrentLimit(
+                                Amps.of(60),
+                                Amps.of(80),
+                                Seconds.of(1)));
     }
 
     @Override
@@ -113,7 +123,13 @@ public class Contract2026 extends ElectricalContract {
                 CANBusId.Canivore,
                 23,
                 PDHPort.PDH03,
-                new CANMotorControllerOutputConfig());
+                new TalonFxMotorControllerOutputConfig()
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                        .withStatorCurrentLimit(Amps.of(100))
+                        .withSupplyCurrentLimit(
+                                Amps.of(60),
+                                Amps.of(80),
+                                Seconds.of(1)));
     }
 
     @Override
@@ -123,11 +139,17 @@ public class Contract2026 extends ElectricalContract {
                 CANBusId.Canivore,
                 24,
                 PDHPort.PDH04,
-                new CANMotorControllerOutputConfig());
+                new TalonFxMotorControllerOutputConfig()
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                        .withStatorCurrentLimit(Amps.of(100))
+                        .withSupplyCurrentLimit(
+                                Amps.of(60),
+                                Amps.of(80),
+                                Seconds.of(1)));
     }
 
     @Override
-    public boolean isIntakeDeployReady() { return false; }
+    public boolean isIntakeDeployReady() { return true; }
 
     @Override
     public CANMotorControllerInfo getIntakeDeployMotor() {
@@ -136,7 +158,8 @@ public class Contract2026 extends ElectricalContract {
                 CANBusId.Canivore,
                 34,
                 PDHPort.PDH14,
-                new CANMotorControllerOutputConfig());
+                new TalonFxMotorControllerOutputConfig()
+                        .withStatorCurrentLimit(Amps.of(60)));
     }
 
     @Override
@@ -145,11 +168,10 @@ public class Contract2026 extends ElectricalContract {
     @Override
     public DeviceInfo getIntakeDeployAbsoluteEncoderMotor() {
         return new DeviceInfo("IntakeDeployAbsoluteEncoderReady",58);
-
     }
 
     @Override
-    public boolean isHoodServoLeftReady() { return false; }
+    public boolean isHoodServoLeftReady() { return true; }
 
     @Override
     public DeviceInfo getHoodServoLeft() {
@@ -157,7 +179,7 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public boolean isHoodServoRightReady() { return false;}
+    public boolean isHoodServoRightReady() { return true;}
 
     @Override
     public DeviceInfo getHoodServoRight() {
@@ -265,7 +287,7 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public boolean isFuelIntakeMotorReady() { return false; }
+    public boolean isFuelIntakeMotorReady() { return true; }
 
     @Override
     public CANMotorControllerInfo getFuelIntakeMotor() {
@@ -274,7 +296,8 @@ public class Contract2026 extends ElectricalContract {
                 CANBusId.Canivore,
                 32,
                 PDHPort.PDH12,
-                new CANMotorControllerOutputConfig());
+                new CANMotorControllerOutputConfig()
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
     }
 
     @Override
@@ -290,7 +313,7 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public boolean isHopperRollerReady() { return false; }
+    public boolean isHopperRollerReady() { return true; }
 
     @Override
     public CANMotorControllerInfo getHopperRollerMotor() {
