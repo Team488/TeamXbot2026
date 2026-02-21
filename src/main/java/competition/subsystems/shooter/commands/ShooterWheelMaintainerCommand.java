@@ -17,7 +17,7 @@ public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<Angular
     @Inject
     public ShooterWheelMaintainerCommand(ShooterSubsystem shooterWheel, PropertyFactory pf,
                                          HumanVsMachineDecider.HumanVsMachineDeciderFactory hvmFactory) {
-        super(shooterWheel, pf, hvmFactory, 0.01, 0.01); // tweak number
+        super(shooterWheel, pf, hvmFactory, 300, 0.05);
         this.shooterWheel = shooterWheel;
     }
 

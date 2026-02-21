@@ -10,6 +10,7 @@ import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
+import xbot.common.resiliency.DeviceHealth;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -129,6 +130,12 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         return motors;
     }
 
+    public List<XCANMotorController> getHealthyShooterMotors() {
+        return getShooterMotors().stream()
+                .filter(motor -> motor.getHealth() == DeviceHealth.Healthy)
+                .toList();
+    }
+
     public void periodic() {
         for (var motor : getShooterMotors()) {
             motor.periodic();
@@ -137,15 +144,16 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
     @Override
     public AngularVelocity getCurrentValue() {
-        if (getShooterMotors().isEmpty()) {
+        var shooterMotors = getHealthyShooterMotors();
+        if (shooterMotors.isEmpty()) {
             return RPM.zero();
         }
 
         double total = 0;
-        for (var motor : getShooterMotors()) {
+        for (var motor : shooterMotors) {
             total += motor.getVelocity().in(RPM);
         }
-        double averageSpeed = total / getShooterMotors().size();
+        double averageSpeed = total / shooterMotors.size();
         return RPM.of(averageSpeed);
     }
 
