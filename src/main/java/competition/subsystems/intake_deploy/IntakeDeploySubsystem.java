@@ -33,6 +33,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     private final AngleProperty targetRotation;
 
 
+
     public final DoubleProperty degreesPerRotation;
 
     @Inject

@@ -3,6 +3,7 @@ package competition.subsystems.hood;
 import competition.electrical_contract.ElectricalContract;
 
 import edu.wpi.first.units.measure.Time;
+import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.TimedAndBoundedServo;
 import xbot.common.controls.actuators.XServo;
@@ -17,7 +18,7 @@ import java.util.Optional;
 import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
-public class HoodSubsystem extends BaseSubsystem {
+public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     // Constants
     public static final double servoMinBound = 0.2;
     public static final double servoMaxBound = 0.8;
@@ -30,6 +31,8 @@ public class HoodSubsystem extends BaseSubsystem {
     public DoubleProperty servoTargetNormalized;
     public DoubleProperty trimValue;
     public DoubleProperty trimStep;
+
+    public boolean isCalibrated = false;
 
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
@@ -111,5 +114,35 @@ public class HoodSubsystem extends BaseSubsystem {
         } else {
             return Optional.of(hoodServoRight);
         }
+    }
+
+    @Override
+    public Double getCurrentValue() {
+        return hoodServoLeft.getNormalizedCurrentPosition();
+    }
+
+    @Override
+    public Double getTargetValue() {
+        return servoTargetNormalized.get() + trimValue.get();
+    }
+
+    @Override
+    public void setTargetValue(Double targetRatio) {
+        servoTargetNormalized.set(targetRatio);
+    }
+
+    @Override
+    public void setPower(Double power) {
+
+    }
+
+    @Override
+    public boolean isCalibrated() {
+        return isCalibrated;
+    }
+
+    @Override
+    protected boolean areTwoTargetsEquivalent(Double target1, Double target2) {
+        return Math.abs(target1 - target2) < 0.1;
     }
 }
