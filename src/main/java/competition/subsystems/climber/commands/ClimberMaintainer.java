@@ -16,6 +16,7 @@ import static edu.wpi.first.units.Units.Rotations;
 public class ClimberMaintainer extends BaseMaintainerCommand <Angle, Double> {
 
     public ClimberSubsystem climber;
+    public PIDManager pidManager;
 
     @Inject
     public ClimberMaintainer(ClimberSubsystem climber,
@@ -24,6 +25,14 @@ public class ClimberMaintainer extends BaseMaintainerCommand <Angle, Double> {
         super(climber, pf, hvmFactory, 0.03, 0.1);
         this.climber = climber;
         addRequirements(climber);
+        this.pidManager = pidManagerFactory.create(
+                pf.getPrefix() + "ClimberMaintainerPID",
+                0.2,
+                0.001,
+                0.0,
+                0.0,
+                1.0,
+                0.0);
     }
 
     @Override

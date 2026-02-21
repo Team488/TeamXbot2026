@@ -12,7 +12,7 @@ public class ClimberStopCommand extends BaseCommand {
     @Inject
     public ClimberStopCommand(ClimberSubsystem climberSubsystem) {
         climber = climberSubsystem;
-        this.addRequirements((Subsystem) climber);
+        this.addRequirements(climber);
     }
 
     @Override
