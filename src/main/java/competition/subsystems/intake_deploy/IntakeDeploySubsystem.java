@@ -24,12 +24,13 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public final XCANMotorController intakeDeployMotor;
     public final XAbsoluteEncoder intakeDeployAbsoluteEncoder;
     public final DoubleProperty manualControlPower;
-    public final AngleProperty limbRange;
+    public final AngleProperty limbRange; //limb range is the rotations between the deploy position and the stowed position, used for calibration
     public Angle offset;
     public boolean isCalibrated = false;
     public final DoubleProperty extendedPositionInDegree;
     public final DoubleProperty retractedPositionInDegree;
     private Angle targetRotation;
+
 
     public final DoubleProperty degreesPerRotation;
 
@@ -59,7 +60,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         this.retractedPositionInDegree = propertyFactory.createPersistentProperty("RetractedPositionDegrees", 0);
         this.extendedPositionInDegree = propertyFactory.createPersistentProperty("ExtendedPositionDegrees", 90);
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
-        this.limbRange = propertyFactory.createPersistentProperty("limbRange", Degrees.of(85));
+        this.limbRange = propertyFactory.createPersistentProperty("limbRange", Rotations.of(9.5));
 
         this.degreesPerRotation = propertyFactory.createPersistentProperty("DegreesPerRotation", 360);
         this.targetRotation = getCurrentValue();
@@ -98,7 +99,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             }
 
             intakeDeployMotor.setPositionTarget(
-                    Rotations.of(goal.in(Degrees) / degreesPerRotation.get())
+                    Rotations.of(goal.in(Degrees) / degreesPerRotation.get()).plus(offset)
             );
         }
     }
