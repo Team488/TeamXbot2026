@@ -350,22 +350,44 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public CameraInfo[] getCameraInfo() {
-        // TODO: These camera positions are a placeholder for simulator-based testing.
-        double frontAprilCameraXDisplacement = 10.14 / PoseSubsystem.INCHES_IN_A_METER;
-        double frontAprilCameraYDisplacement = 0 / PoseSubsystem.INCHES_IN_A_METER;
-        double frontAprilCameraZDisplacement = 6.7 / PoseSubsystem.INCHES_IN_A_METER;
-        double frontAprilCameraPitch = Math.toRadians(-21);
-        double frontAprilCameraYaw = Math.toRadians(0);
+        double sideAprilCameraXDisplacement = 11.1004 / PoseSubsystem.INCHES_IN_A_METER;
+        double sideAprilCameraYDisplacement = 11.0 / PoseSubsystem.INCHES_IN_A_METER;
+        double sideAprilCameraZDisplacement = 6.96 / PoseSubsystem.INCHES_IN_A_METER;
+        double sideAprilCameraPitch = Math.toRadians(-25);
 
         return new CameraInfo[]{
-                new CameraInfo("Apriltag_Front",
+                new CameraInfo("Apriltag_Left_Camera",
+                        "AprilTagLeft",
+                        new Transform3d(new Translation3d(
+                                sideAprilCameraXDisplacement,
+                                sideAprilCameraYDisplacement,
+                                sideAprilCameraZDisplacement),
+                                new Rotation3d(0, sideAprilCameraPitch, Math.toRadians(270))),
+                        EnumSet.of(CameraCapabilities.APRIL_TAG)),
+                new CameraInfo("Apriltag_Right_Camera",
+                        "AprilTagRight",
+                        new Transform3d(new Translation3d(
+                                -sideAprilCameraXDisplacement,
+                                sideAprilCameraYDisplacement,
+                                sideAprilCameraZDisplacement),
+                                new Rotation3d(0, sideAprilCameraPitch, Math.toRadians(90))),
+                        EnumSet.of(CameraCapabilities.APRIL_TAG)),
+                new CameraInfo("Apriltag_Front_Camera",
                         "AprilTagFront",
                         new Transform3d(new Translation3d(
-                                frontAprilCameraXDisplacement,
-                                frontAprilCameraYDisplacement,
-                                frontAprilCameraZDisplacement),
-                                new Rotation3d(0, frontAprilCameraPitch, frontAprilCameraYaw)),
-                        EnumSet.of(CameraCapabilities.APRIL_TAG))
+                                0,
+                                -1.432327 / PoseSubsystem.INCHES_IN_A_METER,
+                                20.075958 / PoseSubsystem.INCHES_IN_A_METER),
+                                new Rotation3d(0, Math.toRadians(-23), Math.toRadians(90))),
+                        EnumSet.of(CameraCapabilities.APRIL_TAG)),
+                new CameraInfo("Apriltag_Back_Camera",
+                        "AprilTagBack",
+                        new Transform3d(new Translation3d(
+                                0,
+                                12.959212 / PoseSubsystem.INCHES_IN_A_METER,
+                                17.768664 / PoseSubsystem.INCHES_IN_A_METER),
+                                new Rotation3d(0, Math.toRadians(-15), Math.toRadians(90))),
+                        EnumSet.of(CameraCapabilities.APRIL_TAG)),
         };
     }
 }
