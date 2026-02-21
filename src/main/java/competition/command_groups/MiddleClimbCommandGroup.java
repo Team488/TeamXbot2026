@@ -4,6 +4,7 @@ import competition.subsystems.climber.commands.ClimberExtendCommand;
 import competition.subsystems.climber.commands.ClimberRetractCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
+import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -27,27 +28,30 @@ public class MiddleClimbCommandGroup extends BaseSequentialCommandGroup {
                                    ClimberRetractCommand climberRetractCommand,
                                    IntakeDeployRetractCommand intakeDeployRetractCommand) {
 
-        SwerveSimpleTrajectoryCommand readyMiddleClimb =  trajectoryProvider.get();
-        SwerveSimpleTrajectoryCommand middleClimb = trajectoryProvider.get();
+        var readyMiddleClimb =  trajectoryProvider.get();
 
         ArrayList<XbotSwervePoint> readyMiddlePoint = new ArrayList<>();
-        ArrayList<XbotSwervePoint> middlePoint = new ArrayList<>();
 
-        Pose2d readyMiddleClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(blueMiddleClimbReadyPose);
-        Pose2d middleClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(blueClimbCenter);
+        Pose2d readyMiddleClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueMiddleClimbReadyPose);
 
         readyMiddlePoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(
                 readyMiddleClimbPose,4));
 
-        middlePoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
-                (middleClimbPose,4));
-
         readyMiddleClimb.logic.setKeyPoints(readyMiddlePoint);
         readyMiddleClimb.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
 
+
+        var middleClimb = trajectoryProvider.get();
+
+        ArrayList<XbotSwervePoint> middlePoint = new ArrayList<>();
+
+        Pose2d middleClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbCenter);
+
+        middlePoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
+                (middleClimbPose,4));
+
         middleClimb.logic.setKeyPoints(middlePoint);
         middleClimb.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
-
 
         addCommands(
                 readyMiddleClimb,

@@ -4,6 +4,7 @@
     import competition.subsystems.climber.commands.ClimberRetractCommand;
     import competition.subsystems.drive.DriveSubsystem;
     import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
+    import competition.subsystems.pose.Landmarks;
     import competition.subsystems.pose.PoseSubsystem;
     import edu.wpi.first.math.geometry.Pose2d;
     import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -27,26 +28,28 @@
                                       ClimberExtendCommand climberExtendCommand,
                                       ClimberRetractCommand climberRetractCommand,
                                       IntakeDeployRetractCommand intakeDeployRetractCommand) {
-            SwerveSimpleTrajectoryCommand readyDepotClimb =  trajectoryProvider.get();
-            SwerveSimpleTrajectoryCommand depotSideClimb = trajectoryProvider.get();
+            var readyDepotClimb = trajectoryProvider.get();
 
             ArrayList<XbotSwervePoint> readyDepotPoint = new ArrayList<>();
-            ArrayList<XbotSwervePoint> climbPoint = new ArrayList<>();
 
             Pose2d readyDepotSideClimbPose =
-                    PoseSubsystem.convertBlueToRedIfNeeded(blueDepotSideClimbReadyPose);
-
-            Pose2d depotSideClimbPose =
-                    PoseSubsystem.convertBlueToRedIfNeeded(blueClimbMiddleDepotSide);
+                    PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueDepotSideClimbReadyPose);
 
             readyDepotPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
                     (readyDepotSideClimbPose,4));
 
-            climbPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
-                    (depotSideClimbPose,4));
-
             readyDepotClimb.logic.setKeyPoints(readyDepotPoint);
             readyDepotClimb.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
+
+            var depotSideClimb = trajectoryProvider.get();
+
+            ArrayList<XbotSwervePoint> climbPoint = new ArrayList<>();
+
+            Pose2d depotSideClimbPose =
+                    PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbMiddleDepotSide);
+
+            climbPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
+                    (depotSideClimbPose,4));
 
             depotSideClimb.logic.setKeyPoints(climbPoint);
             depotSideClimb.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
