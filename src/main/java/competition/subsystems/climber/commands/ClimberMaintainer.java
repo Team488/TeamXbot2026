@@ -1,10 +1,14 @@
 package competition.subsystems.climber.commands;
 
 import competition.subsystems.climber.ClimberSubsystem;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.measure.Angle;
+import xbot.common.advantage.AKitLogger;
 import xbot.common.command.BaseMaintainerCommand;
 import xbot.common.controls.actuators.XCANMotorController;
+import xbot.common.controls.sensors.XXboxController;
 import xbot.common.logic.HumanVsMachineDecider;
+import xbot.common.math.MathUtils;
 import xbot.common.math.PIDManager;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
@@ -15,8 +19,10 @@ import static edu.wpi.first.units.Units.Rotations;
 
 public class ClimberMaintainer extends BaseMaintainerCommand <Angle, Double> {
 
-    public ClimberSubsystem climber;
-    public PIDManager pidManager;
+    private ClimberSubsystem climber;
+    private PIDManager pidManager;
+    private XXboxController manualContrlGamepad;
+    private double manualControlDeadband;
 
     @Inject
     public ClimberMaintainer(ClimberSubsystem climber,
@@ -55,7 +61,11 @@ public class ClimberMaintainer extends BaseMaintainerCommand <Angle, Double> {
 
     @Override
     protected Double getHumanInput() {
-        return 0.0; //be able to have human input with joysticks
+        var humanInput = MathUtil.applyDeadband(manualContrlGamepad.getRightStickY(), manualControlDeadband);
+        aKitLog.setLogLevel(AKitLogger.LogLevel.DEBUG);
+        aKitLog.record("ManualControlInput", humanInput);
+        aKitLog.setLogLevel(AKitLogger.LogLevel.INFO);
+        return humanInput * this.climber.manualControlPower.get();
     }
 
     @Override

@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import competition.command_groups.FireWhenShooterReadyCommandGroup;
+import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
 import competition.subsystems.climber.commands.ClimberRetractCommand;
@@ -94,7 +95,9 @@ public class OperatorCommandMap {
                                      ShooterFeederFire shooterFeederFire,
                                      HopperRollerSubsystem hopperRollerSubsystem,
                                      CalibrateOffsetDown calibrateOffsetDown,
-                                     CalibrateOffsetUp calibrateOffsetUp
+                                     CalibrateOffsetUp calibrateOffsetUp,
+                                    ClimberSubsystem climberSubsystem
+
     ) {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(climberRetractCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(climberExtendCommand);
@@ -109,7 +112,7 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftStick).whileTrue(hopperRollerSubsystem.getEjectCommand());
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightStick).whileTrue(hopperRollerSubsystem.getIntakeCommand());
 
-        operatorInterface.setupDebugGamepad.getPovIfAvailable(0).onTrue(trimHoodDownCommand);
+        operatorInterface.setupDebugGamepad.getPovIfAvailable(0).whileTrue(climberSubsystem.getCalibrateOffsetRetractCommand());
         operatorInterface.setupDebugGamepad.getPovIfAvailable(90).whileTrue(fuelEjectCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(180).onTrue(trimHoodUpCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(270).whileTrue(shooterFeederFire);

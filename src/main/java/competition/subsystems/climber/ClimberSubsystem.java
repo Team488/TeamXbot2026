@@ -3,7 +3,9 @@ package competition.subsystems.climber;
 import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.MutAngle;
+import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSetpointSubsystem;
+import xbot.common.command.NamedRunCommand;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.controls.sensors.XAbsoluteEncoder;
@@ -26,6 +28,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public final XCANMotorController climberMotorRight;
     public final XAbsoluteEncoder climberEncoder;
     private final DoubleProperty degreesPerRotation;
+    public final DoubleProperty manualControlPower;
     public double extendPower;
     public double retractPower;
     public ClimberState climberState;
@@ -62,7 +65,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
         if (electricalContract.isClimberRightReady()) {
             this.climberMotorRight = motorFactory.create(
-                    electricalContract.getClimberMotorLeft(),
+                    electricalContract.getClimberMotorRight(),
                     getPrefix(), "RightMotorPID", new XCANMotorControllerPIDProperties(
                             0,
                             0,
@@ -82,6 +85,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
             this.climberEncoder = null;
         }
         degreesPerRotation = propertyFactory.createPersistentProperty("Degrees Per Rotation", 0);
+        this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
         // TODO: find degrees per rotation
     }
         //set target position for rotation
@@ -180,5 +184,9 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         climberMotorRight.setPositionTarget(
                 Rotations.of(setpoint.in(Degrees) / degreesPerRotation.get()).plus(encoderZeroOffset),
                 XCANMotorController.MotorPidMode.Voltage);
+    }
+
+    public final Command getCalibrateOffsetRetractCommand() {
+        return new NamedRunCommand( getName() + "-calibrate", this::calibrateOffsetRetracted);
     }
 }
