@@ -105,8 +105,9 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     @Override
     public boolean isCalibrated() {
-        return intakeDeployAbsoluteEncoder != null
+        boolean absoluteEncoderCalibrated = intakeDeployAbsoluteEncoder != null
                 && intakeDeployAbsoluteEncoder.getHealth() == DeviceHealth.Healthy;
+        return absoluteEncoderCalibrated || this.isCalibrated;
     }
 
     @Override
