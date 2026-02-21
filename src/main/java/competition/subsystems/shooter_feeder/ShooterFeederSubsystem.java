@@ -18,6 +18,7 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
     public final DoubleProperty shooterFeederMotorPower;
     public final DoubleProperty firePower;
     public final DoubleProperty shooterFeederVelocity;
+    public final DoubleProperty pointHubPower;
 
     @Inject
     public ShooterFeederSubsystem(ElectricalContract electricalContract,
@@ -44,6 +45,7 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
         this.shooterFeederMotorPower = pf.createPersistentProperty("ShooterFeederMotorPower", 1);
         this.firePower = pf.createPersistentProperty("firePower", 1);
         this.shooterFeederVelocity = pf.createPersistentProperty("RPMShooterFeederVelocity", 1);
+        this.pointHubPower = pf.createPersistentProperty("RPMHub", 1500); //todo to be changed
     }
 
     @Override
