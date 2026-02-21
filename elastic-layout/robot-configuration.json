@@ -310,7 +310,7 @@
             "x": 128.0,
             "y": 128.0,
             "width": 256.0,
-            "height": 256.0,
+            "height": 384.0,
             "type": "List Layout",
             "properties": {
               "label_position": "TOP"
@@ -339,6 +339,34 @@
                 "type": "Text Display",
                 "properties": {
                   "topic": "/Preferences/ShooterSubsystem/Shooter Trim Value",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Error Tolerance",
+                "x": 128.0,
+                "y": 384.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/ShooterWheelMaintainerCommand/Error Tolerance",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Error Time Stable Window",
+                "x": 256.0,
+                "y": 384.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/ShooterWheelMaintainerCommand/Error Time Stable Window",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
