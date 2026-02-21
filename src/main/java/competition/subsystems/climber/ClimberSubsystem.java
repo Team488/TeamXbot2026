@@ -176,9 +176,17 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     }
 
     public void setPositionalGoalIncludingOffset(Angle setpoint) {
-        climberMotorRight.setPositionTarget(
-                Rotations.of(setpoint.in(Degrees) / degreesPerRotation.get()).plus(encoderZeroOffset),
-                XCANMotorController.MotorPidMode.Voltage);
+        if (climberMotorRight != null) {
+            climberMotorRight.setPositionTarget(
+                    Rotations.of(setpoint.in(Degrees) / degreesPerRotation.get()).plus(encoderZeroOffset),
+                    XCANMotorController.MotorPidMode.Voltage);
+        }
+
+        if (climberMotorLeft != null) {
+            climberMotorLeft.setPositionTarget(
+                    Rotations.of(setpoint.in(Degrees) / degreesPerRotation.get()).plus(encoderZeroOffset),
+                    XCANMotorController.MotorPidMode.Voltage);
+        }
     }
 
     public final Command getCalibrateOffsetRetractCommand() {

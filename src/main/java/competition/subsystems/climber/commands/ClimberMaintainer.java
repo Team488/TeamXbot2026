@@ -65,7 +65,7 @@ public class ClimberMaintainer extends BaseMaintainerCommand <Angle, Double> {
 
     @Override
     protected double getHumanInputMagnitude() {
-        return 0; //No human input
+        return getHumanInput();
     }
 
     @Override
