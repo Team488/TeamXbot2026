@@ -136,7 +136,7 @@ public class Main {
                 if (steeringEncoder != null && steeringEncoder.canBusId != null) {
                     devicesByBus.get(steeringEncoder.canBusId).add(
                         new CANDevice(steeringEncoder.name, steeringEncoder.canBusId, 
-                                     steeringEncoder.channel, "CANCoder", null, steeringEncoder.powerFrom));
+                                     steeringEncoder.channel, "TalonFX", null, steeringEncoder.powerFrom));
                     // Track power source
                     if (steeringEncoder.powerFrom != null) {
                         devicesByPowerSource.computeIfAbsent(steeringEncoder.powerFrom, k -> new ArrayList<>()).add(steeringEncoder.name);
@@ -203,56 +203,105 @@ public class Main {
         System.out.println();
         
         // Generate PDH Port Usage Report
-        generatePDHReport(contract, swerveModules, dioDevices);
+        generatePDHReport(contract, swerveModules, dioDevices, devicesByPowerSource);
         
         // Generate VRM Port Usage Report
         generateVRMReport(devicesByPowerSource);
-        
+
+        // Generate Power Branch Report (buck converters and other intermediate converters)
+        generatePowerBranchReport(contract);
+
         // Print power source assignments
         printPowerSourceReport(devicesByPowerSource);
     }
     
-    private static void generatePDHReport(Contract2026 contract, SwerveInstance[] swerveModules, List<DeviceInfo> dioDevices) {
-        Map<PDHPort, String> pdhUsage = new TreeMap<>();
-        Map<PowerSource, String> vrmUsage = new TreeMap<>();
-        
-        // Collect swerve motors
-        for (SwerveInstance module : swerveModules) {
-            CANMotorControllerInfo driveMotor = contract.getDriveMotor(module);
-            CANMotorControllerInfo steeringMotor = contract.getSteeringMotor(module);
-            
-            if (driveMotor != null && driveMotor.pdhPort() != null) {
-                pdhUsage.put(driveMotor.pdhPort(), driveMotor.name());
-            }
-            
-            if (steeringMotor != null && steeringMotor.pdhPort() != null) {
-                pdhUsage.put(steeringMotor.pdhPort(), steeringMotor.name());
+    private static void generatePDHReport(Contract2026 contract, SwerveInstance[] swerveModules, List<DeviceInfo> dioDevices, Map<PowerSource, List<String>> devicesByPowerSource) {
+        // Track motor and additional connections separately for accurate conflict detection.
+        // Multiple non-motor devices on the same PDH port is allowed (e.g., two buck converters).
+        Map<PDHPort, List<String>> motorPDHUsage = new TreeMap<>();
+        Map<PDHPort, List<String>> additionalPDHUsage = new TreeMap<>();
+
+        // Build PDH usage from all motors collected by autoDiscoverDevices and swerve handling
+        for (PDHPort port : PDHPort.values()) {
+            try {
+                PowerSource ps = PowerSource.valueOf(port.name());
+                List<String> devices = devicesByPowerSource.get(ps);
+                if (devices != null && !devices.isEmpty()) {
+                    motorPDHUsage.computeIfAbsent(port, k -> new ArrayList<>()).addAll(devices);
+                }
+            } catch (IllegalArgumentException e) {
+                // No matching PowerSource for this PDHPort, skip
             }
         }
-        
-        // Collect subsystem motors (auto-discovery handles most motors)
-        // Only manually collect motors that need special handling here if needed
-        
-        // Collect additional PDH connections (VRMs, PCMs, etc.)
-        Map<PDHPort, String> additionalConnections = contract.getAdditionalPDHConnections();
-        for (Map.Entry<PDHPort, String> entry : additionalConnections.entrySet()) {
-            pdhUsage.put(entry.getKey(), entry.getValue());
+
+        // Collect additional PDH connections (VRMs, buck converters, etc.)
+        // Multiple non-motor devices per port are allowed and will NOT be flagged as conflicts
+        Map<PDHPort, List<String>> additionalConnections = contract.getAdditionalPDHConnections();
+        for (Map.Entry<PDHPort, List<String>> entry : additionalConnections.entrySet()) {
+            additionalPDHUsage.computeIfAbsent(entry.getKey(), k -> new ArrayList<>()).addAll(entry.getValue());
         }
-        
+
+        // Detect conflicts:
+        // - Multiple motors on same port: always a conflict
+        // - Motor + non-motor device on same port: conflict
+        // - Multiple non-motor devices on same port: allowed
+        List<String> conflicts = new ArrayList<>();
+        for (Map.Entry<PDHPort, List<String>> entry : motorPDHUsage.entrySet()) {
+            PDHPort port = entry.getKey();
+            List<String> motors = entry.getValue();
+            if (motors.size() > 1) {
+                conflicts.add(String.format("  *** CONFLICT *** %s assigned to multiple MOTORS: %s",
+                        port, String.join(", ", motors)));
+            }
+            if (additionalPDHUsage.containsKey(port)) {
+                List<String> others = additionalPDHUsage.get(port);
+                conflicts.add(String.format("  *** CONFLICT *** %s shared between motor(s) and non-motor device(s): motors=[%s], other=[%s]",
+                        port, String.join(", ", motors), String.join(", ", others)));
+            }
+        }
+
         // Print PDH usage in port order
         System.out.println("-".repeat(80));
         System.out.println("PDH Port Assignments");
         System.out.println("-".repeat(80));
-        
+
+        int usedPortCount = 0;
         for (PDHPort port : PDHPort.values()) {
-            String device = pdhUsage.getOrDefault(port, "(unused)");
-            System.out.printf("  %s: %s\n", port, device);
+            List<String> motors = motorPDHUsage.getOrDefault(port, Collections.emptyList());
+            List<String> additionals = additionalPDHUsage.getOrDefault(port, Collections.emptyList());
+            List<String> all = new ArrayList<>(motors);
+            all.addAll(additionals);
+
+            boolean isConflict = motors.size() > 1 || (!motors.isEmpty() && !additionals.isEmpty());
+
+            if (all.isEmpty()) {
+                System.out.printf("  %s: (unused)\n", port);
+            } else if (isConflict) {
+                System.out.printf("  %s: *** CONFLICT *** %s\n", port, String.join(", ", all));
+                usedPortCount++;
+            } else {
+                System.out.printf("  %s: %s\n", port, String.join(", ", all));
+                usedPortCount++;
+            }
         }
-        
+
         System.out.println();
         System.out.println("=".repeat(80));
-        System.out.println("Total PDH ports used: " + pdhUsage.size() + " / " + PDHPort.values().length);
+        System.out.println("Total PDH ports used: " + usedPortCount + " / " + PDHPort.values().length);
         System.out.println("=".repeat(80));
+
+        // Print conflict summary if any
+        if (!conflicts.isEmpty()) {
+            System.out.println();
+            System.out.println("!".repeat(80));
+            System.out.println("PDH CONFLICTS DETECTED - Fix these before deploying to the robot!");
+            System.out.println("!".repeat(80));
+            for (String conflict : conflicts) {
+                System.out.println(conflict);
+            }
+            System.out.println("!".repeat(80));
+        }
+
         System.out.println();
     }
     
@@ -315,11 +364,7 @@ public class Main {
                         if (methodName.contains("servo") || methodName.contains("pwm")) {
                             pwmDevices.add(device);
                         }
-                        // DIO devices - explicitly powered from RIO
-                        else if (device.powerFrom != null && device.powerFrom.equals(PowerSource.RIO)) {
-                            dioDevices.add(device);
-                        }
-                        // CAN devices - have CAN bus ID and channel > 0
+                        // CAN devices - have CAN bus ID (encoders are CAN devices, check before DIO)
                         else if (device.canBusId != null && device.channel > 0) {
                             CANDevice canDevice = new CANDevice(
                                 device.name,
@@ -330,6 +375,10 @@ public class Main {
                                 device.powerFrom
                             );
                             devicesByBus.computeIfAbsent(device.canBusId, k -> new ArrayList<>()).add(canDevice);
+                        }
+                        // DIO devices - powered from RIO and no CAN bus ID
+                        else if (device.powerFrom != null && device.powerFrom.equals(PowerSource.RIO)) {
+                            dioDevices.add(device);
                         }
                     }
                 }
@@ -367,19 +416,19 @@ public class Main {
     private static void generateVRMReport(Map<PowerSource, List<String>> devicesByPowerSource) {
         // Define all VRM ports in order
         PowerSource[] vrm1Ports = {
-            PowerSource.VRM1_12V_2A, PowerSource.VRM1_12V_2B, 
+            PowerSource.VRM1_12V_2A, PowerSource.VRM1_12V_2B,
             PowerSource.VRM1_12V_500MA, PowerSource.VRM1_12V_500MB,
-            PowerSource.VRM1_5V_2A, PowerSource.VRM1_5V_2B, 
+            PowerSource.VRM1_5V_2A, PowerSource.VRM1_5V_2B,
             PowerSource.VRM1_5V_500MA, PowerSource.VRM1_5V_500MB
         };
-        
+
         PowerSource[] vrm2Ports = {
-            PowerSource.VRM2_12V_2A, PowerSource.VRM2_12V_2B, 
+            PowerSource.VRM2_12V_2A, PowerSource.VRM2_12V_2B,
             PowerSource.VRM2_12V_500MA, PowerSource.VRM2_12V_500MB,
-            PowerSource.VRM2_5V_2A, PowerSource.VRM2_5V_2B, 
+            PowerSource.VRM2_5V_2A, PowerSource.VRM2_5V_2B,
             PowerSource.VRM2_5V_500MA, PowerSource.VRM2_5V_500MB
         };
-        
+
         // Check if VRM1 has any connections
         int vrm1Count = 0;
         for (PowerSource port : vrm1Ports) {
@@ -387,26 +436,46 @@ public class Main {
                 vrm1Count += devicesByPowerSource.get(port).size();
             }
         }
-        
+
         // Print VRM1 if it has connections
         if (vrm1Count > 0) {
+            List<String> vrm1Conflicts = new ArrayList<>();
             System.out.println("-".repeat(80));
             System.out.println("VRM1 Port Assignments");
             System.out.println("-".repeat(80));
-            
+
             for (PowerSource port : vrm1Ports) {
                 List<String> devices = devicesByPowerSource.get(port);
-                String deviceList = (devices != null) ? String.join(", ", devices) : "(unused)";
-                System.out.printf("  %s: %s\n", port, deviceList);
+                if (devices == null || devices.isEmpty()) {
+                    System.out.printf("  %s: (unused)\n", port);
+                } else if (devices.size() == 1) {
+                    System.out.printf("  %s: %s\n", port, devices.get(0));
+                } else {
+                    System.out.printf("  %s: *** CONFLICT *** %s\n", port, String.join(", ", devices));
+                    vrm1Conflicts.add(String.format("  *** CONFLICT *** %s has multiple devices: %s",
+                            port, String.join(", ", devices)));
+                }
             }
-            
+
             System.out.println();
             System.out.println("=".repeat(80));
             System.out.println("Total VRM1 ports used: " + vrm1Count);
             System.out.println("=".repeat(80));
+
+            if (!vrm1Conflicts.isEmpty()) {
+                System.out.println();
+                System.out.println("!".repeat(80));
+                System.out.println("VRM1 CONFLICTS DETECTED - Each VRM output port supports only one connection!");
+                System.out.println("!".repeat(80));
+                for (String conflict : vrm1Conflicts) {
+                    System.out.println(conflict);
+                }
+                System.out.println("!".repeat(80));
+            }
+
             System.out.println();
         }
-        
+
         // Check if VRM2 has any connections
         int vrm2Count = 0;
         for (PowerSource port : vrm2Ports) {
@@ -414,27 +483,88 @@ public class Main {
                 vrm2Count += devicesByPowerSource.get(port).size();
             }
         }
-        
+
         // Print VRM2 if it has connections
         if (vrm2Count > 0) {
+            List<String> vrm2Conflicts = new ArrayList<>();
             System.out.println("-".repeat(80));
             System.out.println("VRM2 Port Assignments");
             System.out.println("-".repeat(80));
-            
+
             for (PowerSource port : vrm2Ports) {
                 List<String> devices = devicesByPowerSource.get(port);
-                String deviceList = (devices != null) ? String.join(", ", devices) : "(unused)";
-                System.out.printf("  %s: %s\n", port, deviceList);
+                if (devices == null || devices.isEmpty()) {
+                    System.out.printf("  %s: (unused)\n", port);
+                } else if (devices.size() == 1) {
+                    System.out.printf("  %s: %s\n", port, devices.get(0));
+                } else {
+                    System.out.printf("  %s: *** CONFLICT *** %s\n", port, String.join(", ", devices));
+                    vrm2Conflicts.add(String.format("  *** CONFLICT *** %s has multiple devices: %s",
+                            port, String.join(", ", devices)));
+                }
             }
-            
+
             System.out.println();
             System.out.println("=".repeat(80));
             System.out.println("Total VRM2 ports used: " + vrm2Count);
             System.out.println("=".repeat(80));
+
+            if (!vrm2Conflicts.isEmpty()) {
+                System.out.println();
+                System.out.println("!".repeat(80));
+                System.out.println("VRM2 CONFLICTS DETECTED - Each VRM output port supports only one connection!");
+                System.out.println("!".repeat(80));
+                for (String conflict : vrm2Conflicts) {
+                    System.out.println(conflict);
+                }
+                System.out.println("!".repeat(80));
+            }
+
             System.out.println();
         }
     }
     
+    /**
+     * Generates power branch report for intermediate converters (buck converters, VRMs, etc.)
+     * Shows the chain: PDH port -> converter -> downstream devices.
+     */
+    private static void generatePowerBranchReport(Contract2026 contract) {
+        Map<String, List<String>> branches = contract.getAdditionalPowerBranches();
+        if (branches.isEmpty()) {
+            return;
+        }
+
+        // Build reverse map: branch/converter name -> PDH port(s) that supply it
+        Map<String, List<String>> branchToPDH = new HashMap<>();
+        Map<PDHPort, List<String>> pdhConnections = contract.getAdditionalPDHConnections();
+        for (Map.Entry<PDHPort, List<String>> entry : pdhConnections.entrySet()) {
+            for (String device : entry.getValue()) {
+                branchToPDH.computeIfAbsent(device, k -> new ArrayList<>()).add(entry.getKey().toString());
+            }
+        }
+
+        System.out.println("-".repeat(80));
+        System.out.println("Power Branch Assignments (Intermediate Converters)");
+        System.out.println("-".repeat(80));
+
+        List<String> sortedBranches = new ArrayList<>(branches.keySet());
+        Collections.sort(sortedBranches);
+
+        for (String branchName : sortedBranches) {
+            List<String> pdhPorts = branchToPDH.getOrDefault(branchName, new ArrayList<>());
+            String pdhInfo = pdhPorts.isEmpty() ? "unknown PDH port" : String.join(", ", pdhPorts);
+            for (String device : branches.get(branchName)) {
+                System.out.printf("  %s (%s) -> %s\n", branchName, pdhInfo, device);
+            }
+        }
+
+        System.out.println();
+        System.out.println("=".repeat(80));
+        System.out.println("Total power branches: " + branches.size());
+        System.out.println("=".repeat(80));
+        System.out.println();
+    }
+
     /**
      * Prints power source report showing which devices are powered by each source.
      */
@@ -449,9 +579,9 @@ public class Main {
         
         int count = 0;
         for (PowerSource source : sortedSources) {
-            // Skip MOTOR, PDH*, RIO, and VRM* power sources
+            // Skip MOTOR, PDH*, RIO, VRM*, and NONE power sources
             String sourceName = source.toString();
-            if (sourceName.equals("MOTOR") || sourceName.equals("RIO") 
+            if (sourceName.equals("MOTOR") || sourceName.equals("RIO") || sourceName.equals("NONE")
                 || sourceName.startsWith("PDH") || sourceName.startsWith("VRM")) {
                 continue;
             }

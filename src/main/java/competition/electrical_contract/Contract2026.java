@@ -23,8 +23,10 @@ import xbot.common.injection.electrical_contract.TalonFxMotorControllerOutputCon
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.subsystems.vision.CameraCapabilities;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static edu.wpi.first.units.Units.Amps;
@@ -188,9 +190,32 @@ public class Contract2026 extends ElectricalContract {
         return new DeviceInfo("HoodServoRight", 1);
     }
 
-    // Example: OrangePi single board computer powered by VRM1's 5V 2A port
+    // OrangePi single board computers - powered via buck converters (see getAdditionalPowerBranches)
     public DeviceInfo getOrangePi1() {
-        return new DeviceInfo("OrangePi1", -1, PowerSource.VRM1_5V_2A);
+        return new DeviceInfo("OrangePi1", -1, PowerSource.NONE);
+    }
+
+    public DeviceInfo getOrangePi2() {
+        return new DeviceInfo("OrangePi2", -1, PowerSource.NONE);
+    }
+
+    // Neo motor powered via BuckBoost1 (see getAdditionalPowerBranches)
+    public DeviceInfo getNeo() {
+        return new DeviceInfo("Neo", -1, PowerSource.NONE);
+    }
+
+    // VRM1 5V/2A outputs
+    public DeviceInfo getRadio() {
+        return new DeviceInfo("Radio", -1, PowerSource.VRM1_5V_2A);
+    }
+
+    public DeviceInfo getDev2() {
+        return new DeviceInfo("Dev2", -1, PowerSource.VRM1_5V_2B);
+    }
+
+    // VRM1 12V/2A output
+    public DeviceInfo getDev3() {
+        return new DeviceInfo("Dev3", -1, PowerSource.VRM1_12V_2A);
     }
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
@@ -373,11 +398,21 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public Map<PDHPort, String> getAdditionalPDHConnections() {
-        Map<PDHPort, String> connections = new HashMap<>();
-        connections.put(PDHPort.PDH05, "VRM1");  // Example: VRM1 powered by PDH port 5
-        // Add more non-motor PDH connections here as needed
+    public Map<PDHPort, List<String>> getAdditionalPDHConnections() {
+        Map<PDHPort, List<String>> connections = new HashMap<>();
+        connections.put(PDHPort.PDH16, List.of("VRM1"));
+        connections.put(PDHPort.PDH07, List.of("BuckBoost1"));
+        connections.put(PDHPort.PDH15, List.of("BuckPwr1", "BuckPwr2")); // Multiple non-motor connections are allowed
         return connections;
+    }
+
+    @Override
+    public Map<String, List<String>> getAdditionalPowerBranches() {
+        Map<String, List<String>> branches = new HashMap<>();
+        branches.put("BuckPwr1", List.of("OrangePi1"));
+        branches.put("BuckPwr2", List.of("OrangePi2"));
+        branches.put("BuckBoost1", List.of("Neo"));
+        return branches;
     }
 
     @Override
