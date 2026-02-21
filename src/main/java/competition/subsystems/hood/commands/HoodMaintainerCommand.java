@@ -31,7 +31,7 @@ public class HoodMaintainerCommand extends BaseMaintainerCommand<Double, Double>
     @Override
     protected void calibratedMachineControlAction() {
         var target = hood.getTargetValue();
-        if (target != 0) {
+        if (target != null) {
             hood.runServo();
         }
     }
