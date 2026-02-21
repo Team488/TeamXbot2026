@@ -81,22 +81,22 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupDebugGamepad(OperatorInterface operatorInterface,
-                                     ClimberExtendCommand climberExtendCommand,
-                                     ClimberRetractCommand climberRetractCommand,
-                                     ShooterOutputCommand shooterOutputCommand,
-                                     TrimShooterVelocityUp trimShooterVelocityUp,
-                                     TrimShooterVelocityDown trimShooterVelocityDown,
-                                     FuelIntakeCommand fuelIntakeCommand,
-                                     TrimHoodUpCommand trimHoodUpCommand,
-                                     TrimHoodDownCommand trimHoodDownCommand,
-                                     IntakeDeployExtendCommand intakeDeployExtendCommand,
-                                     IntakeDeployRetractCommand intakeDeployRetractCommand,
-                                     FuelEjectCommand fuelEjectCommand,
-                                     ShooterFeederFire shooterFeederFire,
-                                     HopperRollerSubsystem hopperRollerSubsystem,
-                                     CalibrateOffsetDown calibrateOffsetDown,
-                                     CalibrateOffsetUp calibrateOffsetUp,
-                                    ClimberSubsystem climberSubsystem
+                                  ClimberExtendCommand climberExtendCommand,
+                                  ClimberRetractCommand climberRetractCommand,
+                                  ShooterOutputCommand shooterOutputCommand,
+                                  TrimShooterVelocityUp trimShooterVelocityUp,
+                                  TrimShooterVelocityDown trimShooterVelocityDown,
+                                  FuelIntakeCommand fuelIntakeCommand,
+                                  TrimHoodUpCommand trimHoodUpCommand,
+                                  TrimHoodDownCommand trimHoodDownCommand,
+                                  IntakeDeployExtendCommand intakeDeployExtendCommand,
+                                  IntakeDeployRetractCommand intakeDeployRetractCommand,
+                                  FuelEjectCommand fuelEjectCommand,
+                                  ShooterFeederFire shooterFeederFire,
+                                  HopperRollerSubsystem hopperRollerSubsystem,
+                                  CalibrateOffsetDown calibrateOffsetDown,
+                                  CalibrateOffsetUp calibrateOffsetUp,
+                                  ClimberSubsystem climberSubsystem
 
     ) {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(climberRetractCommand);

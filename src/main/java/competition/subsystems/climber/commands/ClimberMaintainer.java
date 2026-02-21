@@ -15,6 +15,7 @@ import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
 
 public class ClimberMaintainer extends BaseMaintainerCommand <Angle, Double> {
@@ -42,21 +43,15 @@ public class ClimberMaintainer extends BaseMaintainerCommand <Angle, Double> {
     protected void calibratedMachineControlAction() {
         Angle targetValue = climber.getTargetValue();
         Angle current = this.climber.getCurrentValue();
-
-        if ((targetValue.in(Rotations) >= 0.02)) {
-            climber.setPower(current.in(Rotations) * 0.02);
-        } else {
-            climber.setPower(0.0);
-        }
+        climber.setPositionalGoalIncludingOffset(targetValue);
     }
 
     @Override
     protected double getErrorMagnitude() {
-        Angle current = climber.getCurrentValue();
-        Angle target = climber.getTargetValue();
-        Angle error = target.minus(current);
-
-        return error.in(Rotations);
+        Angle targetValue = climber.getTargetValue();
+        Angle current = this.climber.getCurrentValue();
+        Angle error = targetValue.minus(current);
+        return error.in(Degrees);
     }
 
     @Override
