@@ -9,12 +9,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import xbot.common.command.BaseCommand;
 import xbot.common.properties.BooleanProperty;
+import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.Property;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 
-public class RotateToHubCommand extends BaseCommand {
+public class RotateToAllianceZoneCommand extends BaseCommand {
 
     final DriveSubsystem drive;
     final PoseSubsystem pose;
@@ -25,12 +26,11 @@ public class RotateToHubCommand extends BaseCommand {
      */
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
-    private Alliance alliance;
-    private Pose2d targetPose;
-    private final BooleanProperty autoAimWhenNotInZone;
+    private final DoubleProperty interpolationFactor;
+    private final BooleanProperty autoAimWhenNotInNeutralZone;
 
     @Inject
-    public RotateToHubCommand(DriveSubsystem drive, PoseSubsystem pose, AprilTagFieldLayout aprilTagFieldLayout,
+    public RotateToAllianceZoneCommand(DriveSubsystem drive, PoseSubsystem pose, AprilTagFieldLayout aprilTagFieldLayout,
                               PropertyFactory pf) {
         this.drive = drive;
         this.pose = pose;
@@ -38,28 +38,34 @@ public class RotateToHubCommand extends BaseCommand {
         this.pf = pf;
         pf.setPrefix(this);
         pf.setDefaultLevel(Property.PropertyLevel.Important);
-        autoAimWhenNotInZone = pf.createPersistentProperty("AutoAimWhenNotInZone", true);
+        interpolationFactor = pf.createPersistentProperty("InterpolationFactor", 0.5);
+        autoAimWhenNotInNeutralZone = pf.createPersistentProperty("AutoAimWhenNotInNeutralZone", true);
     }
 
     @Override
-    public void initialize() {
-        log.info("Initializing");
-        alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-        targetPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance);
-    }
+    public void initialize() {log.info("Initializing");}
 
     @Override
     public void execute() {
+        Pose2d robotPose = pose.getCurrentPose2d();
+        Pose2d closestTrenchNeutralSideIdPose = Landmarks.getClosestTrenchNeutralSideIdPose(
+                aprilTagFieldLayout,
+                DriverStation.getAlliance().orElse(Alliance.Blue),
+                robotPose
+        );
+
+        Pose2d targetPose = robotPose.interpolate(closestTrenchNeutralSideIdPose, interpolationFactor.get());
+
         if (!pose.isFacingTarget(targetPose)) {
             drive.setLookAtPointTarget(targetPose.getTranslation());
-            boolean areWeInAllianceZone = Landmarks.isBetweenIdX(
+            boolean areWeInNeutralZone = Landmarks.isBetweenIdX(
                     this.aprilTagFieldLayout,
-                    Landmarks.getTrenchDriverDepotSideId(alliance),
-                    Landmarks.getBlueOutpostFiducialId(alliance),
-                    pose.getCurrentPose2d()
+                    Landmarks.getAllianceHubNeutralSideFiducialId(Alliance.Blue),
+                    Landmarks.getAllianceHubNeutralSideFiducialId(Alliance.Red),
+                    robotPose
             );
 
-            drive.setLookAtPointTargetActive(areWeInAllianceZone || autoAimWhenNotInZone.get());
+            drive.setLookAtPointTargetActive(areWeInNeutralZone || autoAimWhenNotInNeutralZone.get());
         }
     }
 
