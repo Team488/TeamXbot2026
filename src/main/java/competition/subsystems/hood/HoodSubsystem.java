@@ -32,6 +32,8 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public DoubleProperty trimValue;
     public DoubleProperty trimStep;
 
+    public boolean isCalibrated = false;
+
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
                          ElectricalContract electricalContract, PropertyFactory propertyFactory) {
@@ -121,26 +123,26 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
     @Override
     public Double getTargetValue() {
-        return 0.0;
+        return servoTargetNormalized.get() + trimValue.get();
     }
 
     @Override
-    public void setTargetValue(Double aDouble) {
-
+    public void setTargetValue(Double targetRatio) {
+        servoTargetNormalized.set(targetRatio);
     }
 
     @Override
-    public void setPower(Double aDouble) {
+    public void setPower(Double power) {
 
     }
 
     @Override
     public boolean isCalibrated() {
-        return false;
+        return isCalibrated;
     }
 
     @Override
-    protected boolean areTwoTargetsEquivalent(Double aDouble, Double targetT1) {
-        return false;
+    protected boolean areTwoTargetsEquivalent(Double target1, Double target2) {
+        return Math.abs(target1 - target2) < 0.1;
     }
 }
