@@ -19,15 +19,22 @@ public class SetShooterSpeedFromLocationCommand extends BaseSetpointCommand {
     @Override
     public void initialize() {
         log.info("Initializing SetShooterSpeedFromLocationCommand");
+        double speed = shooter.getSpeedForRange();
+        shooter.setTargetValue(speed);
     }
 
     @Override
     public void execute() {
         double speed = shooter.getSpeedForRange();
         shooter.setTargetValue(RPM.of(speed));
+        shooter.runAtTargetVelocity();
     }
 
     @Override
     public void end(boolean interrupted) {
+    }
+    @Override
+    public boolean isFinished() {
+        return shooter.isReadyToFire();
     }
 }
