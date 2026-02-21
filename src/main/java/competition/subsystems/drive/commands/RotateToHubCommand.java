@@ -4,7 +4,7 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import xbot.common.command.BaseCommand;
@@ -26,7 +26,7 @@ public class RotateToHubCommand extends BaseCommand {
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
     private Alliance alliance;
-    private Pose2d targetPose;
+    private Translation2d target;
     private final BooleanProperty autoAimWhenNotInZone;
 
     @Inject
@@ -45,17 +45,18 @@ public class RotateToHubCommand extends BaseCommand {
     public void initialize() {
         log.info("Initializing");
         alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-        targetPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance);
+        target = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance).getTranslation();
     }
 
     @Override
     public void execute() {
-        if (!pose.isFacingTarget(targetPose)) {
-            drive.setLookAtPointTarget(targetPose.getTranslation());
+        if (pose.isNotFacingTarget(target)) {
+            drive.setLookAtPointTarget(target);
+            log.info("im gooning im gooning");
             boolean areWeInAllianceZone = Landmarks.isBetweenIdX(
                     this.aprilTagFieldLayout,
                     Landmarks.getTrenchDriverDepotSideId(alliance),
-                    Landmarks.getBlueOutpostFiducialId(alliance),
+                    Landmarks.getOutpostFiducialId(alliance),
                     pose.getCurrentPose2d()
             );
 

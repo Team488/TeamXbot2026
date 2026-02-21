@@ -5,6 +5,7 @@ import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import xbot.common.command.BaseCommand;
@@ -26,6 +27,7 @@ public class RotateToAllianceZoneCommand extends BaseCommand {
      */
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
+    private Alliance alliance;
     private final DoubleProperty interpolationFactor;
     private final BooleanProperty autoAimWhenNotInNeutralZone;
 
@@ -43,21 +45,27 @@ public class RotateToAllianceZoneCommand extends BaseCommand {
     }
 
     @Override
-    public void initialize() {log.info("Initializing");}
+    public void initialize() {
+        log.info("Initializing");
+        alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+    }
 
     @Override
     public void execute() {
         Pose2d robotPose = pose.getCurrentPose2d();
         Pose2d closestTrenchNeutralSideIdPose = Landmarks.getClosestTrenchNeutralSideIdPose(
                 aprilTagFieldLayout,
-                DriverStation.getAlliance().orElse(Alliance.Blue),
+                alliance,
                 robotPose
         );
 
-        Pose2d targetPose = robotPose.interpolate(closestTrenchNeutralSideIdPose, interpolationFactor.get());
+        // Uses .getTranslation() for linear interpolation because the interpolation method for poses has some issues
+        Translation2d target = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance)
+                .getTranslation()
+                .interpolate(closestTrenchNeutralSideIdPose.getTranslation(), interpolationFactor.get());
 
-        if (!pose.isFacingTarget(targetPose)) {
-            drive.setLookAtPointTarget(targetPose.getTranslation());
+        if (pose.isNotFacingTarget(target)) {
+            drive.setLookAtPointTarget(target);
             boolean areWeInNeutralZone = Landmarks.isBetweenIdX(
                     this.aprilTagFieldLayout,
                     Landmarks.getAllianceHubNeutralSideFiducialId(Alliance.Blue),
