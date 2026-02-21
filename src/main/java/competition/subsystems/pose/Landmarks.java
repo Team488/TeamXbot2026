@@ -97,7 +97,7 @@ public class Landmarks {
                 : redTrenchDriverDepotSideId;
     }
 
-    public static int getBlueOutpostFiducialId(Alliance alliance) {
+    public static int getOutpostFiducialId(Alliance alliance) {
         return alliance == Alliance.Blue
                 ? blueOutpostFiducialId
                 : redOutpostFiducialId;
