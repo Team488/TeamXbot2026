@@ -194,4 +194,8 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public Command getWaitForAtGoalCommand() {
         return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
     }
+
+    public Command setShooterTo(AngularVelocity velocity) {
+        return this.runOnce(() -> this.setTargetValue(velocity));
+    }
 }

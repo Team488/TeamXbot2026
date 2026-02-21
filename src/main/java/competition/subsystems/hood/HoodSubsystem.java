@@ -3,6 +3,7 @@ package competition.subsystems.hood;
 import competition.electrical_contract.ElectricalContract;
 
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.TimedAndBoundedServo;
@@ -144,5 +145,9 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     @Override
     protected boolean areTwoTargetsEquivalent(Double target1, Double target2) {
         return Math.abs(target1 - target2) < 0.1;
+    }
+
+    public Command setHoodTo(double normalizedPosition) {
+        return this.runOnce(() -> this.setTargetValue(normalizedPosition));
     }
 }

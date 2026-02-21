@@ -12,9 +12,9 @@ public class PrepareToShootCommandGroup extends BaseParallelCommandGroup {
 
     @Inject
     public PrepareToShootCommandGroup(ShooterSubsystem shooter, HoodSubsystem hood) {
-        addCommands(
-                shooter.setTargetValue(RPM.of(0),
-                hood.servoTargetNormalized.set(0)
+        this.addCommands(
+                shooter.setShooterTo(RPM.of(0)),
+                hood.setHoodTo(0)
         );
     }
 }
