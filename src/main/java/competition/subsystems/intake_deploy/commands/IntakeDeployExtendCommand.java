@@ -2,16 +2,18 @@ package competition.subsystems.intake_deploy.commands;
 
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import xbot.common.command.BaseCommand;
+import xbot.common.command.BaseSetpointCommand;
 
 import javax.inject.Inject;
 
 import static edu.wpi.first.units.Units.Degree;
 
-public class IntakeDeployExtendCommand extends BaseCommand {
+public class IntakeDeployExtendCommand extends BaseSetpointCommand {
     final IntakeDeploySubsystem intakeDeploy;
 
     @Inject
     public IntakeDeployExtendCommand(IntakeDeploySubsystem intakeDeploy) {
+        super(intakeDeploy);
         this.intakeDeploy = intakeDeploy;
     }
 
@@ -23,7 +25,7 @@ public class IntakeDeployExtendCommand extends BaseCommand {
 
     @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
 
 }
