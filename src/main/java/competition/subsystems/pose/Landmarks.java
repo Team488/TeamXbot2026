@@ -12,8 +12,14 @@ import javax.inject.Singleton;
 
 @Singleton
 public class Landmarks {
+    private static final double climbMiddleOutpostSideY = 3.3;
+    private static final double climbMiddleY = 3.730;
+    private static final double climbMiddleDepotSideY = 4.175;
+
+
+
     // Starting on blue alliance towards outpost
-    public static Pose2d blueStartTrenchToOutpost = new Pose2d(3.57,.650, Rotation2d.fromDegrees(0.00));
+    public static Pose2d blueStartTrenchToOutpost = new Pose2d(3.57,.650, Rotation2d.fromDegrees(0));
     public static Pose2d blueStartBumpToOutpost = new Pose2d(3.57,2.3, Rotation2d.fromDegrees(0));
 
     // Starting on blue alliance towards depot
@@ -33,14 +39,19 @@ public class Landmarks {
     public static Pose2d blueDepotTowerSide = new Pose2d(0.460, 4.950, Rotation2d.fromDegrees(90));
 
     // Blue Outpost
-    public static Pose2d blueOutpost = new Pose2d(0.350, 0.650, Rotation2d.fromDegrees(0));
+    public static Pose2d blueOutpost = new Pose2d(.375, 0.650, Rotation2d.fromDegrees(0));
 
     // Blue Tower
-    public static Pose2d blueClimbOutpostEdge = new Pose2d(1.510,2.780,Rotation2d.fromDegrees(180));
-    public static Pose2d blueClimbMiddleOutpostSide = new Pose2d(1.510,3.120,Rotation2d.fromDegrees(180));
-    public static Pose2d blueClimbCenter = new Pose2d(1.510,3.750,Rotation2d.fromDegrees(180));
-    public static Pose2d blueClimbMiddleDepotSide = new Pose2d(1.510,4.380,Rotation2d.fromDegrees(180));
-    public static Pose2d blueClimbDepotSideEdge = new Pose2d(1.510,4.650,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbOutpostEdge = new Pose2d(1.545,2.780,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbMiddleOutpostSide = new Pose2d(1.545,climbMiddleOutpostSideY ,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbCenter = new Pose2d(1.545,climbMiddleY,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbMiddleDepotSide = new Pose2d(1.545,climbMiddleDepotSideY,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbDepotSideEdge = new Pose2d(1.545,4.650,Rotation2d.fromDegrees(180));
+
+    // Blue tower preclimb spot
+    public static Pose2d blueOutpostSideClimbReadyPose = new Pose2d(2.036,climbMiddleOutpostSideY, Rotation2d.fromDegrees(180));
+    public static Pose2d blueMiddleClimbReadyPose = new Pose2d(2.036,climbMiddleY, Rotation2d.fromDegrees(180));
+    public static Pose2d blueDepotSideClimbReadyPose = new Pose2d(2.321,climbMiddleDepotSideY,Rotation2d.fromDegrees(180));
 
     // Blue Hub
     // TODO: delete this and use getAllianceHubPose instead

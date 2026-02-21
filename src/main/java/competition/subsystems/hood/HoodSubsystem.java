@@ -28,6 +28,8 @@ public class HoodSubsystem extends BaseSubsystem {
     public ElectricalContract electricalContract;
 
     public DoubleProperty servoTargetNormalized;
+    public DoubleProperty targetValueChange;
+    public DoubleProperty servoTargetTrimDown;
     public DoubleProperty trimValue;
     public DoubleProperty trimStep;
 
@@ -67,6 +69,7 @@ public class HoodSubsystem extends BaseSubsystem {
                 "ServoTargetPositionNormalized", 0);
         this.trimValue = propertyFactory.createPersistentProperty("HoodTrimValue", 0);
         this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.1);
+        this.targetValueChange = propertyFactory.createPersistentProperty("TargetChangeValue", .1);
     }
 
     public void runServo() {
@@ -86,6 +89,16 @@ public class HoodSubsystem extends BaseSubsystem {
 
     public void trimHoodGoalDown() {
         trimValue.set(trimValue.get() - trimStep.get());
+    }
+
+    public void hoodTargetUp() {
+        hoodServoLeft.setNormalizedTargetPosition(servoTargetNormalized.get() + targetValueChange.get());
+        hoodServoRight.setNormalizedTargetPosition(servoTargetNormalized.get() + targetValueChange.get());
+    }
+
+    public void hoodTargetDown() {
+        hoodServoLeft.setNormalizedTargetPosition(servoTargetNormalized.get() - targetValueChange.get());
+        hoodServoRight.setNormalizedTargetPosition(servoTargetNormalized.get() - targetValueChange.get());
     }
 
     @Override
