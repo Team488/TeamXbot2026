@@ -3,6 +3,7 @@ package competition.simulation.commands;
 import javax.inject.Inject;
 
 import competition.simulation.BaseSimulator;
+import competition.subsystems.pose.Landmarks;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import xbot.common.command.BaseCommand;
