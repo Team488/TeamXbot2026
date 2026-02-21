@@ -15,7 +15,9 @@ import javax.inject.Singleton;
 
 import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 @Singleton
 public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
@@ -27,8 +29,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public double extendPower;
     public double retractPower;
     public ClimberState climberState;
-
-    double encoderZeroOffset = 0;
+    Angle encoderZeroOffset = Degrees.zero();
 
     private boolean isCalibrated;
 
@@ -121,10 +122,6 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         if (climberMotorRight != null) {
             climberMotorRight.periodic();
         }
-
-        if (!isCalibrated) {
-            forceCalibration();
-        }
     }
 
     @Override
@@ -152,7 +149,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     }
 
     private Angle getCalibratedPosition() {
-        return getAbsoluteAngle().minus(Rotations.of(encoderZeroOffset));
+        return getAbsoluteAngle().minus(encoderZeroOffset);
     }
 
     @Override
@@ -172,17 +169,16 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         return Degree.zero();
     }
 
-    public void setPositionalGoalIncludingOffset(Angle setpoint) {
-        climberMotorRight.setPositionTarget(
-                Rotations.of(setpoint.in(Degrees) / degreesPerRotation.get() + encoderZeroOffset),
-                XCANMotorController.MotorPidMode.Voltage);
-    }
-
-    private void forceCalibration() {
-        if (climberEncoder != null && climberEncoder.getAbsolutePosition() != null) {
-            encoderZeroOffset = climberEncoder.getAbsolutePosition().in(Rotations);
+    public void calibrateOffsetRetracted() {
+        if (climberMotorLeft != null) {
+            encoderZeroOffset = climberMotorLeft.getPosition();
             isCalibrated = true;
         }
     }
 
+    public void setPositionalGoalIncludingOffset(Angle setpoint) {
+        climberMotorRight.setPositionTarget(
+                Rotations.of(setpoint.in(Degrees) / degreesPerRotation.get()).plus(encoderZeroOffset),
+                XCANMotorController.MotorPidMode.Voltage);
+    }
 }
