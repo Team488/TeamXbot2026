@@ -3,6 +3,7 @@ package competition.operator_interface;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import competition.command_groups.FireWhenShooterReadyCommandGroup;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
 import competition.subsystems.climber.commands.ClimberRetractCommand;
@@ -65,6 +66,16 @@ public class OperatorCommandMap {
     ) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
+    }
+
+    @Inject
+    public void setupOperatorGamepad(OperatorInterface operatorInterface,
+                                     FireWhenShooterReadyCommandGroup shooterOutputCommand,
+                                     ShooterFeederFire shooterFeederFire,
+                                     HopperRollerSubsystem hopperRollerSubsystem) {
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(shooterOutputCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A)
+                .whileTrue(hopperRollerSubsystem.getIntakeCommand().alongWith(shooterFeederFire));
     }
 
     @Inject

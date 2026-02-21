@@ -26,6 +26,7 @@ import java.util.EnumSet;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Seconds;
 
 public class Contract2026 extends ElectricalContract {
 
@@ -51,7 +52,8 @@ public class Contract2026 extends ElectricalContract {
                 25,
                 PDHPort.PDH05,
                 new TalonFxMotorControllerOutputConfig()
-                        .withStatorCurrentLimit(Amps.of(10)));
+                        .withStatorCurrentLimit(Amps.of(80))
+                        .withSupplyCurrentLimit(Amps.of(40), Amps.of(60), Seconds.of(1)));
     }
 
     @Override
@@ -66,7 +68,8 @@ public class Contract2026 extends ElectricalContract {
                 PDHPort.PDH06,
                 new TalonFxMotorControllerOutputConfig()
                         .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                        .withStatorCurrentLimit(Amps.of(10)));
+                        .withStatorCurrentLimit(Amps.of(80))
+                        .withSupplyCurrentLimit(Amps.of(40), Amps.of(60), Seconds.of(1)));
     }
 
     @Override
@@ -107,7 +110,12 @@ public class Contract2026 extends ElectricalContract {
                 CANBusId.Canivore,
                 22,
                 PDHPort.PDH02,
-                new CANMotorControllerOutputConfig());
+                new TalonFxMotorControllerOutputConfig()
+                        .withStatorCurrentLimit(Amps.of(100))
+                        .withSupplyCurrentLimit(
+                                Amps.of(60),
+                                Amps.of(80),
+                                Seconds.of(1)));
     }
 
     @Override
@@ -117,8 +125,13 @@ public class Contract2026 extends ElectricalContract {
                 CANBusId.Canivore,
                 23,
                 PDHPort.PDH03,
-                new CANMotorControllerOutputConfig()
-                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
+                new TalonFxMotorControllerOutputConfig()
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                        .withStatorCurrentLimit(Amps.of(100))
+                        .withSupplyCurrentLimit(
+                                Amps.of(60),
+                                Amps.of(80),
+                                Seconds.of(1)));
     }
 
     @Override
@@ -128,12 +141,17 @@ public class Contract2026 extends ElectricalContract {
                 CANBusId.Canivore,
                 24,
                 PDHPort.PDH04,
-                new CANMotorControllerOutputConfig()
-                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
+                new TalonFxMotorControllerOutputConfig()
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                        .withStatorCurrentLimit(Amps.of(100))
+                        .withSupplyCurrentLimit(
+                                Amps.of(60),
+                                Amps.of(80),
+                                Seconds.of(1)));
     }
 
     @Override
-    public boolean isIntakeDeployReady() { return false; }
+    public boolean isIntakeDeployReady() { return true; }
 
     @Override
     public CANMotorControllerInfo getIntakeDeployMotor() {
@@ -142,7 +160,8 @@ public class Contract2026 extends ElectricalContract {
                 CANBusId.Canivore,
                 34,
                 PDHPort.PDH14,
-                new CANMotorControllerOutputConfig());
+                new TalonFxMotorControllerOutputConfig()
+                        .withStatorCurrentLimit(Amps.of(60)));
     }
 
     @Override
