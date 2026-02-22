@@ -1,6 +1,7 @@
 package competition.subsystems.climber.commands;
 
 import competition.subsystems.climber.ClimberSubsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
