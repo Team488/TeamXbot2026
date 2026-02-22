@@ -33,8 +33,6 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public DoubleProperty trimValue;
     public DoubleProperty trimStep;
 
-    public boolean isCalibrated = false;
-
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
                          ElectricalContract electricalContract, PropertyFactory propertyFactory) {
@@ -139,7 +137,9 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
     @Override
     public boolean isCalibrated() {
-        return isCalibrated;
+        // Since this subsystem uses servos with no feedback, we can
+        // consider it always calibrated.
+        return true;
     }
 
     @Override
