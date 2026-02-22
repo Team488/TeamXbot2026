@@ -16,8 +16,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 
-import static competition.subsystems.pose.Landmarks.blueClimbCenter;
-import static competition.subsystems.pose.Landmarks.blueMiddleClimbReadyPose;
+import static competition.subsystems.pose.Landmarks.blueClimbMiddleReadyPose;
 
 public class MiddleClimbCommandGroup extends BaseSequentialCommandGroup {
 
@@ -32,7 +31,7 @@ public class MiddleClimbCommandGroup extends BaseSequentialCommandGroup {
 
         ArrayList<XbotSwervePoint> readyMiddlePoint = new ArrayList<>();
 
-        Pose2d readyMiddleClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueMiddleClimbReadyPose);
+        Pose2d readyMiddleClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(blueClimbMiddleReadyPose);
 
         readyMiddlePoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(
                 readyMiddleClimbPose,4));

@@ -90,7 +90,7 @@ public class MapleSimulator implements BaseSimulator {
         });
 
         // starting middle ish of the field on blue
-        var startingPose = Landmarks.blueOutpost;
+        var startingPose = new Pose2d(7, 7 , new Rotation2d());
 
         // Creating the SelfControlledSwerveDriveSimulation instance
         this.swerveDriveSimulation = new SelfControlledSwerveDriveSimulation(

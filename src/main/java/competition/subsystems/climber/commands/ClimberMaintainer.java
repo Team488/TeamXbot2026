@@ -20,7 +20,7 @@ import static edu.wpi.first.units.Units.Rotations;
 
 public class ClimberMaintainer extends BaseMaintainerCommand <Angle, Double> {
 
-    private ClimberSubsystem climber;
+    private final ClimberSubsystem climber;
     private PIDManager pidManager;
     private XXboxController manualContrlGamepad;
     private double manualControlDeadband;

@@ -16,9 +16,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 
-import static competition.subsystems.pose.Landmarks.blueClimbMiddleOutpostSide;
-import static competition.subsystems.pose.Landmarks.blueOutpostSideClimbReadyPose;
-
 public class OutpostClimbCommandGroup extends BaseSequentialCommandGroup {
 
     @Inject
@@ -31,7 +28,7 @@ public class OutpostClimbCommandGroup extends BaseSequentialCommandGroup {
 
         ArrayList<XbotSwervePoint> readyOutpostPoint = new ArrayList<>();
 
-        Pose2d readyOutpostClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueOutpostSideClimbReadyPose);
+        Pose2d readyOutpostClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbMiddleOutpostSideReadyPose);
 
         readyOutpostPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(
                 readyOutpostClimbPose,4));

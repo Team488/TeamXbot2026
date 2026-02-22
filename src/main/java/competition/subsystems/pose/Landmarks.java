@@ -12,6 +12,11 @@ import javax.inject.Singleton;
 
 @Singleton
 public class Landmarks {
+    // Y coordinate constants
+    private static final double climbMiddleOutpostSideY = 3.3;
+    private static final double climbMiddleY = 3.730;
+    private static final double climbMiddleDepotSideY = 4.175;
+
     // General field
     public static Pose2d overallCenter = new Pose2d(8.270,4.040, Rotation2d.fromDegrees(180));
     public static Pose2d blueOutpostSideTrenchEntrance = new Pose2d(5.540,.650, Rotation2d.fromDegrees(180));
@@ -46,20 +51,20 @@ public class Landmarks {
     public static Pose2d blueOutpostPark = new Pose2d(0.350, 0.650, Rotation2d.fromDegrees(0));
 
     // Blue Tower
-    public static Pose2d blueClimbOutpostEdge = new Pose2d(1.510,2.780,Rotation2d.fromDegrees(180));
-    public static Pose2d blueClimbMiddleOutpostSide = new Pose2d(1.510,3.120,Rotation2d.fromDegrees(180));
-    public static Pose2d blueClimbCenter = new Pose2d(1.510,3.750,Rotation2d.fromDegrees(180));
-    public static Pose2d blueClimbMiddleDepotSide = new Pose2d(1.510,4.380,Rotation2d.fromDegrees(180));
-    public static Pose2d blueClimbDepotSideEdge = new Pose2d(1.510,4.650,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbOutpostEdge = new Pose2d(1.545,2.780,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbMiddleOutpostSide = new Pose2d(1.545,climbMiddleOutpostSideY ,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbCenter = new Pose2d(1.545,climbMiddleY,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbMiddleDepotSide = new Pose2d(1.545,climbMiddleDepotSideY,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbDepotSideEdge = new Pose2d(1.545,4.650,Rotation2d.fromDegrees(180));
 
-    public static Pose2d blueTowerCenter = new Pose2d(.48,3.810, Rotation2d.fromDegrees(0));
+    // Blue tower preclimb spot
+    public static Pose2d blueClimbMiddleOutpostSideReadyPose = new Pose2d(2.036,climbMiddleOutpostSideY, Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbMiddleReadyPose = new Pose2d(2.036,climbMiddleY, Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbDepotSideReadyPose = new Pose2d(2.321,climbMiddleDepotSideY,Rotation2d.fromDegrees(180));
 
     // Field of fuel (For auto)
     public static Pose2d blueOutpostSideFuelFieldCollectionStart = new Pose2d(7.790,1.640, Rotation2d.fromDegrees(90));
     public static Pose2d blueDepotSideFuelFieldCollectionStart = new Pose2d(7.790,6.800, Rotation2d.fromDegrees(270));
-
-
-
 
     public static int redCenterHubNeutralSideFiducialId = 4;
     public static int redCenterHubDriverSideFiducialId = 10;

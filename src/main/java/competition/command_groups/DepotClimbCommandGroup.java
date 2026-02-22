@@ -17,9 +17,6 @@
 
     import java.util.ArrayList;
 
-    import static competition.subsystems.pose.Landmarks.blueDepotSideClimbReadyPose;
-    import static competition.subsystems.pose.Landmarks.blueClimbMiddleDepotSide;
-
     public class DepotClimbCommandGroup extends BaseSequentialCommandGroup {
 
         @Inject
@@ -33,7 +30,7 @@
             ArrayList<XbotSwervePoint> readyDepotPoint = new ArrayList<>();
 
             Pose2d readyDepotSideClimbPose =
-                    PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueDepotSideClimbReadyPose);
+                    PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbDepotSideReadyPose);
 
             readyDepotPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
                     (readyDepotSideClimbPose,4));
