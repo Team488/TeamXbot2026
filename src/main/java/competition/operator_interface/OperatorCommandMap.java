@@ -3,7 +3,6 @@ package competition.operator_interface;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-
 import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.command_groups.FireWhenShooterReadyCommandGroup;
 import competition.subsystems.climber.ClimberSubsystem;
