@@ -39,7 +39,7 @@ public class Landmarks {
     public static Pose2d blueDepotTowerSide = new Pose2d(0.460, 4.950, Rotation2d.fromDegrees(90));
 
     // Blue Outpost
-    public static Pose2d blueOutpost = new Pose2d(.350, 0.650, Rotation2d.fromDegrees(0));
+    public static Pose2d blueOutpost = new Pose2d(.375, 0.650, Rotation2d.fromDegrees(0));
 
     // Blue Tower
     public static Pose2d blueClimbOutpostEdge = new Pose2d(1.545,2.780,Rotation2d.fromDegrees(180));
