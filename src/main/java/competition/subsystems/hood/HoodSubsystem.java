@@ -29,7 +29,6 @@ public class HoodSubsystem extends BaseSubsystem {
 
     public DoubleProperty servoTargetNormalized;
     public DoubleProperty targetValueChange;
-    public DoubleProperty servoTargetTrimDown;
     public DoubleProperty trimValue;
     public DoubleProperty trimStep;
 
