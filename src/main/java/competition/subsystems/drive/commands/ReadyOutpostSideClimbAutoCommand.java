@@ -28,7 +28,7 @@ public class ReadyOutpostSideClimbAutoCommand extends SwerveSimpleTrajectoryComm
 
     @Override
     public void initialize() {
-        Pose2d readyPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbMiddleOutpostSideReadyPose);
+        Pose2d readyPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueOutpostSideClimbReadyPose);
 
         ArrayList<XbotSwervePoint> swervePoints = new ArrayList<>();
 

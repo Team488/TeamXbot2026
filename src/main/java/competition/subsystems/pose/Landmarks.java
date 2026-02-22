@@ -39,7 +39,7 @@ public class Landmarks {
     public static Pose2d blueDepotTowerSide = new Pose2d(0.460, 4.950, Rotation2d.fromDegrees(90));
 
     // Blue Outpost
-    public static Pose2d blueOutpost = new Pose2d(0.540, 0.650, Rotation2d.fromDegrees(0));
+    public static Pose2d blueOutpost = new Pose2d(.375, 0.650, Rotation2d.fromDegrees(0));
 
     // Blue Tower
     public static Pose2d blueClimbOutpostEdge = new Pose2d(1.545,2.780,Rotation2d.fromDegrees(180));
@@ -49,9 +49,9 @@ public class Landmarks {
     public static Pose2d blueClimbDepotSideEdge = new Pose2d(1.545,4.650,Rotation2d.fromDegrees(180));
 
     // Blue tower preclimb spot
-    public static Pose2d blueClimbMiddleOutpostSideReadyPose = new Pose2d(2.036,climbMiddleOutpostSideY, Rotation2d.fromDegrees(180));
-    public static Pose2d blueMiddleReadyPose = new Pose2d(2.036,climbMiddleY, Rotation2d.fromDegrees(180));
-    public static Pose2d blueClimbDepotSideReadyPose = new Pose2d(2.321,climbMiddleDepotSideY,Rotation2d.fromDegrees(180));
+    public static Pose2d blueOutpostSideClimbReadyPose = new Pose2d(2.036,climbMiddleOutpostSideY, Rotation2d.fromDegrees(180));
+    public static Pose2d blueMiddleClimbReadyPose = new Pose2d(2.036,climbMiddleY, Rotation2d.fromDegrees(180));
+    public static Pose2d blueDepotSideClimbReadyPose = new Pose2d(2.321,climbMiddleDepotSideY,Rotation2d.fromDegrees(180));
 
     // Blue Hub
     // TODO: delete this and use getAllianceHubPose instead
