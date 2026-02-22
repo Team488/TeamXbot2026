@@ -146,8 +146,4 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     protected boolean areTwoTargetsEquivalent(Double target1, Double target2) {
         return Math.abs(target1 - target2) < 0.1;
     }
-
-    public Command setHoodTo(double normalizedPosition) {
-        return this.runOnce(() -> this.setTargetValue(normalizedPosition));
-    }
 }
