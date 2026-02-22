@@ -71,7 +71,10 @@ public class IntakeDeploySimulator {
     }
 
     public boolean isDeployed() {
-        return getAngularPosition().isNear(SimulatorConstants.intakeDeployedAngle, Degrees.of(5));
+        return getAngularPosition().isNear(
+                Degrees.of(intakeDeploy.extendedPositionInDegree.get()),
+                Degrees.of(5)
+        );
     }
 
     public void update() {
@@ -94,10 +97,9 @@ public class IntakeDeploySimulator {
 
         if (absoluteEncoder != null) {
             absoluteEncoder.setPosition(mechanismAngle);
-            aKitLog.record("IntakeDeployEncoderPos", this.absoluteEncoder.getPosition().in(Degrees));
         }
 
-        aKitLog.record("IntakeDeployMotorPos", this.motor.getPosition().in(Rotations));
+        aKitLog.record("IntakeDeployPosition", getAngularPosition().in(Degrees));
         aKitLog.record("IntakeDeployed", isDeployed());
     }
 }
