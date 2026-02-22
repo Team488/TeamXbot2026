@@ -3,6 +3,7 @@ package competition.subsystems.intake_deploy;
 import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.units.measure.Angle;
 import xbot.common.controls.actuators.XCANMotorController;
+import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.properties.AngleProperty;
 import xbot.common.command.BaseSetpointSubsystem;
 
@@ -24,12 +25,14 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public final XCANMotorController intakeDeployMotor;
     public final XAbsoluteEncoder intakeDeployAbsoluteEncoder;
     public final DoubleProperty manualControlPower;
-    public final AngleProperty limbRange;
+    public final AngleProperty limbRange; //limb range is the rotations between the deploy position and the stowed position, used for calibration
     public Angle offset;
     public boolean isCalibrated = false;
     public final DoubleProperty extendedPositionInDegree;
     public final DoubleProperty retractedPositionInDegree;
-    private Angle targetRotation;
+    private final AngleProperty targetRotation;
+
+
 
     public final DoubleProperty degreesPerRotation;
 
@@ -39,9 +42,17 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
                                  XAbsoluteEncoder.XAbsoluteEncoderFactory xAbsoluteEncoderFactory) {
         propertyFactory.setPrefix(this);
 
+        var defaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
+                .withP(0.0)
+                .withI(0.0)
+                .withD(0.0)
+                .withMinPowerOutput(-1.0)
+                .withMaxPowerOutput(1.0)
+                .build();
+
         if (electricalContract.isIntakeDeployReady()) {
             this.intakeDeployMotor = xcanMotorControllerFactory.create(electricalContract.getIntakeDeployMotor(),
-                    getPrefix(), "intakeDeploy");
+                    getPrefix(), "IntakeDeployPID", defaultPIDProperties);
             this.registerDataFrameRefreshable(this.intakeDeployMotor);
         } else {
             this.intakeDeployMotor = null;
@@ -59,15 +70,15 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         this.retractedPositionInDegree = propertyFactory.createPersistentProperty("RetractedPositionDegrees", 0);
         this.extendedPositionInDegree = propertyFactory.createPersistentProperty("ExtendedPositionDegrees", 90);
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
-        this.limbRange = propertyFactory.createPersistentProperty("limbRange", Degrees.of(85));
+        this.limbRange = propertyFactory.createPersistentProperty("limbRange", Rotations.of(9.5));
 
         this.degreesPerRotation = propertyFactory.createPersistentProperty("DegreesPerRotation", 360);
-        this.targetRotation = getCurrentValue();
+        this.targetRotation = propertyFactory.createPersistentProperty("TargetRotation", Degrees.of(0));
     }
 
     @Override
     public Angle getCurrentValue() {
-        if (intakeDeployAbsoluteEncoder != null) {
+        if (intakeDeployAbsoluteEncoder != null && intakeDeployAbsoluteEncoder.getAbsolutePosition() != null) {
             return intakeDeployAbsoluteEncoder.getAbsolutePosition();
         }
         return Degrees.zero();
@@ -75,12 +86,12 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     @Override
     public Angle getTargetValue() {
-        return targetRotation;
+        return targetRotation.get();
     }
 
     @Override
     public void setTargetValue(Angle value) {
-        this.targetRotation = value;
+        this.targetRotation.set(value);
     }
 
     @Override
@@ -98,7 +109,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             }
 
             intakeDeployMotor.setPositionTarget(
-                    Rotations.of(goal.in(Degrees) / degreesPerRotation.get())
+                    Rotations.of(goal.in(Degrees) / degreesPerRotation.get()).plus(offset)
             );
         }
     }
