@@ -19,5 +19,4 @@ public class ClimberRetractCommand extends BaseCommand {
         climber.retract();
         log.info("Initialized ClimberRetract");
     }
-
 }

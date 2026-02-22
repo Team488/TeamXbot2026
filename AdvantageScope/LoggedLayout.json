@@ -70,7 +70,7 @@
                 "sources": [
                   {
                     "type": "ghost",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/PoseSubsystem/RobotPose",
+                    "logKey": "/RealOutputs/PoseSubsystem/RobotPose",
                     "logType": "Pose2d",
                     "visible": true,
                     "options": {
@@ -79,7 +79,7 @@
                   },
                   {
                     "type": "robot",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/Simulator/FieldSimulation/Robot",
+                    "logKey": "/RealOutputs/Simulator/FieldSimulation/Robot",
                     "logType": "Pose2d",
                     "visible": true,
                     "options": {
@@ -102,7 +102,7 @@
                 "sources": [
                   {
                     "type": "ghost",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/PoseSubsystem/RobotPose",
+                    "logKey": "/RealOutputs/PoseSubsystem/RobotPose",
                     "logType": "Pose2d",
                     "visible": true,
                     "options": {
@@ -112,7 +112,7 @@
                   },
                   {
                     "type": "robot",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/Simulator/FieldSimulation/Robot",
+                    "logKey": "/RealOutputs/Simulator/FieldSimulation/Robot",
                     "logType": "Pose2d",
                     "visible": true,
                     "options": {
@@ -121,7 +121,7 @@
                   },
                   {
                     "type": "vision",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/TagPoses",
+                    "logKey": "/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/TagPoses",
                     "logType": "Pose3d[]",
                     "visible": true,
                     "options": {
@@ -131,7 +131,7 @@
                   },
                   {
                     "type": "gamePiece",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/Simulator/FieldSimulation/GamePieces",
+                    "logKey": "/RealOutputs/Simulator/FieldSimulation/GamePieces",
                     "logType": "Pose3d[]",
                     "visible": true,
                     "options": {
@@ -140,7 +140,7 @@
                   },
                   {
                     "type": "ghost",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/PoseSubsystem/VisionEnhancedPose",
+                    "logKey": "/RealOutputs/PoseSubsystem/VisionEnhancedPose",
                     "logType": "Pose2d",
                     "visible": true,
                     "options": {
@@ -175,7 +175,7 @@
                 "leftSources": [
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/ShooterLeftMotor/CANMotorController/AngularVelocity",
+                    "logKey": "/ShooterLeftMotor/CANMotorController/AngularVelocity",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -185,7 +185,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/ShooterRightMotor/CANMotorController/AngularVelocity",
+                    "logKey": "/ShooterRightMotor/CANMotorController/AngularVelocity",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -195,7 +195,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/ShooterMiddleMotor/CANMotorController/AngularVelocity",
+                    "logKey": "/ShooterMiddleMotor/CANMotorController/AngularVelocity",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -207,7 +207,7 @@
                 "rightSources": [
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/3",
+                    "logKey": "/PowerDistribution/ChannelCurrent/3",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -217,7 +217,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/2",
+                    "logKey": "/PowerDistribution/ChannelCurrent/2",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -227,7 +227,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/4",
+                    "logKey": "/PowerDistribution/ChannelCurrent/4",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -248,7 +248,7 @@
                   },
                   {
                     "type": "stripes",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/ShooterWheelMaintainerCommand/ErrorWithinTotalTolerance",
+                    "logKey": "/RealOutputs/ShooterWheelMaintainerCommand/ErrorWithinTotalTolerance",
                     "logType": "Boolean",
                     "visible": true,
                     "options": {
@@ -257,7 +257,7 @@
                   },
                   {
                     "type": "stripes",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/ShooterWheelMaintainerCommand/ErrorIsTimeStable",
+                    "logKey": "/RealOutputs/ShooterWheelMaintainerCommand/ErrorIsTimeStable",
                     "logType": "Boolean",
                     "visible": true,
                     "options": {
@@ -294,7 +294,7 @@
                 "leftSources": [
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/IntakeDeployMotor/CANMotorController/Voltage",
+                    "logKey": "/IntakeDeployMotor/CANMotorController/Voltage",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -304,7 +304,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/0",
+                    "logKey": "/PowerDistribution/ChannelCurrent/0",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -314,7 +314,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/1",
+                    "logKey": "/PowerDistribution/ChannelCurrent/1",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -324,7 +324,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/2",
+                    "logKey": "/PowerDistribution/ChannelCurrent/2",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -334,7 +334,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/3",
+                    "logKey": "/PowerDistribution/ChannelCurrent/3",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -344,7 +344,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/4",
+                    "logKey": "/PowerDistribution/ChannelCurrent/4",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -354,7 +354,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/5",
+                    "logKey": "/PowerDistribution/ChannelCurrent/5",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -364,7 +364,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/6",
+                    "logKey": "/PowerDistribution/ChannelCurrent/6",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -374,7 +374,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/7",
+                    "logKey": "/PowerDistribution/ChannelCurrent/7",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -384,7 +384,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/8",
+                    "logKey": "/PowerDistribution/ChannelCurrent/8",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -394,7 +394,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/9",
+                    "logKey": "/PowerDistribution/ChannelCurrent/9",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -404,7 +404,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/10",
+                    "logKey": "/PowerDistribution/ChannelCurrent/10",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -414,7 +414,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/11",
+                    "logKey": "/PowerDistribution/ChannelCurrent/11",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -424,7 +424,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/12",
+                    "logKey": "/PowerDistribution/ChannelCurrent/12",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -434,7 +434,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/13",
+                    "logKey": "/PowerDistribution/ChannelCurrent/13",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -444,7 +444,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/14",
+                    "logKey": "/PowerDistribution/ChannelCurrent/14",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -454,7 +454,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/15",
+                    "logKey": "/PowerDistribution/ChannelCurrent/15",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -464,7 +464,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/16",
+                    "logKey": "/PowerDistribution/ChannelCurrent/16",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -474,7 +474,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/17",
+                    "logKey": "/PowerDistribution/ChannelCurrent/17",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -484,7 +484,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/18",
+                    "logKey": "/PowerDistribution/ChannelCurrent/18",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -494,7 +494,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/19",
+                    "logKey": "/PowerDistribution/ChannelCurrent/19",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -504,7 +504,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/20",
+                    "logKey": "/PowerDistribution/ChannelCurrent/20",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -514,7 +514,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/21",
+                    "logKey": "/PowerDistribution/ChannelCurrent/21",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -524,7 +524,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/22",
+                    "logKey": "/PowerDistribution/ChannelCurrent/22",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -534,7 +534,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/23",
+                    "logKey": "/PowerDistribution/ChannelCurrent/23",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -546,7 +546,7 @@
                 "rightSources": [
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/IntakeDeployMaintainerCommand/ManualControlInput",
+                    "logKey": "/RealOutputs/IntakeDeployMaintainerCommand/ManualControlInput",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -556,7 +556,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/IntakeDeployMaintainerCommand/RawManualControlInput",
+                    "logKey": "/RealOutputs/IntakeDeployMaintainerCommand/RawManualControlInput",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -568,7 +568,7 @@
                 "discreteSources": [
                   {
                     "type": "stripes",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/IntakeDeployMaintainerCommand/CurrentMode",
+                    "logKey": "/RealOutputs/IntakeDeployMaintainerCommand/CurrentMode",
                     "logType": "String",
                     "visible": true,
                     "options": {
@@ -600,7 +600,7 @@
                 "sources": [
                   {
                     "type": "states",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState",
+                    "logKey": "/RealOutputs/DriveSubsystem/CurrentSwerveState",
                     "logType": "SwerveModuleState[]",
                     "visible": true,
                     "options": {
@@ -610,7 +610,7 @@
                   },
                   {
                     "type": "states",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState",
+                    "logKey": "/RealOutputs/DriveSubsystem/DesiredSwerveState",
                     "logType": "SwerveModuleState[]",
                     "visible": true,
                     "options": {
@@ -631,7 +631,7 @@
             {
               "type": 5,
               "title": "Console",
-              "controller": "NT:/AdvantageKit/RealOutputs/Console",
+              "controller": "/RealOutputs/Console",
               "controllerUUID": "9wre7127g0chqaslv4v6qj32e8axyuy4",
               "renderer": {
                 "highlight": false
@@ -646,3 +646,4 @@
   "satellites": [],
   "version": "26.0.0"
 }
+
