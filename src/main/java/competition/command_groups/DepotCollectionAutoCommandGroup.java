@@ -1,21 +1,71 @@
 package competition.command_groups;
 
+import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.DepotCollectionAutoCommand;
 import competition.subsystems.drive.commands.DriveToDepotAutoCommand;
+import competition.subsystems.hopper_roller.HopperRollerSubsystem;
+import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
+import competition.subsystems.intake_deploy.commands.IntakeDeployStopCommand;
 import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import xbot.common.command.BaseSequentialCommandGroup;
+import xbot.common.subsystems.drive.SwerveSimpleTrajectoryCommand;
+import xbot.common.trajectory.XbotSwervePoint;
 
-public class DepotCollectionAutoCommandGroup extends SequentialCommandGroup {
-    public DepotCollectionAutoCommandGroup(DriveToDepotAutoCommand driveToDepotAutoCommand,
+import javax.inject.Provider;
+import java.util.ArrayList;
+
+public class DepotCollectionAutoCommandGroup extends BaseSequentialCommandGroup {
+    public DepotCollectionAutoCommandGroup(
+            Provider<SwerveSimpleTrajectoryCommand> trajectoryProvider,
+                    DriveToDepotAutoCommand driveToDepotAutoCommand,
                                            DepotCollectionAutoCommand depotCollectionAutoCommand,
                                            HopperAndIntakeCommandGroup hopperAndIntakeCommandGroup,
+                                           IntakeDeployExtendCommand intakeDeployExtendCommand,
+                                           IntakeDeployStopCommand  intakeDeployStopCommand,
+                                           HopperRollerSubsystem hopper,
+                                           DriveSubsystem drive,
                                            PoseSubsystem pose) {
+
+        var readyDepotCollect = trajectoryProvider.get();
+
+        Pose2d depotWallSidePose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueDepotWallSide);
+
+        ArrayList<XbotSwervePoint> readyPoint = new ArrayList<>();
+
+        readyPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(
+                depotWallSidePose, 3));
+
+        readyDepotCollect.logic.setKeyPoints(readyPoint);
+        readyDepotCollect.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
+
+        var depotCollect = trajectoryProvider.get();
+
+        Pose2d depotTowerSidePose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueDepotTowerSide);
+
+        ArrayList<XbotSwervePoint> collectPoint = new ArrayList<>();
+
+        collectPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(
+                depotTowerSidePose, 3));
+
+        depotCollect.logic.setKeyPoints(collectPoint);
+        depotCollect.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
+
         addCommands(
                 pose.createSetPositionCommand(PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueStartTrenchToDepot)),
-                driveToDepotAutoCommand,
-                hopperAndIntakeCommandGroup,
-                depotCollectionAutoCommand
+                new ParallelCommandGroup(
+                        intakeDeployExtendCommand,
+                        hopperAndIntakeCommandGroup
+                ),
+                readyDepotCollect,
+                depotCollect,
+            new ParallelCommandGroup(
+                intakeDeployStopCommand,
+                hopper.getStopCommand()
+            )
         );
     }
 }
