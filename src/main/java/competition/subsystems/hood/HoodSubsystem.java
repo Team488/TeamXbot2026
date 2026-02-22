@@ -3,6 +3,7 @@ package competition.subsystems.hood;
 import competition.electrical_contract.ElectricalContract;
 
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.TimedAndBoundedServo;
