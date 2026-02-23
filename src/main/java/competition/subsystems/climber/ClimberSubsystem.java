@@ -126,7 +126,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     @Override
     public Angle getCurrentValue() {
         double currentAngle = 0;
-        if (climberEncoder != null) {
+        if (climberEncoder != null && climberEncoder.getAbsolutePosition() != null ) {
             currentAngle = getCalibratedPosition().in(Rotations) * degreesPerRotation.get();
         }
         return Degrees.of(currentAngle);
