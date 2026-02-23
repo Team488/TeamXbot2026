@@ -13,7 +13,7 @@ import javax.inject.Singleton;
 @Singleton
 public class Landmarks {
     // Y coordinate constants
-    private static final double climbMiddleOutpostSideY = 3.3;
+    private static final double climbMiddleOutpostSideY = 3.32;
     private static final double climbMiddleY = 3.730;
     private static final double climbMiddleDepotSideY = 4.175;
 
@@ -48,7 +48,7 @@ public class Landmarks {
 
     // Blue Outpost
     public static Pose2d blueOutpost = new Pose2d(0, 0.650, Rotation2d.fromDegrees(0));
-    public static Pose2d blueOutpostPark = new Pose2d(0.350, 0.650, Rotation2d.fromDegrees(0));
+    public static Pose2d blueOutpostPark = new Pose2d(0.46, 0.650, Rotation2d.fromDegrees(0));
 
     // Blue Tower
     public static Pose2d blueClimbOutpostEdge = new Pose2d(1.545,2.780,Rotation2d.fromDegrees(180));
@@ -60,7 +60,7 @@ public class Landmarks {
     // Blue tower preclimb spot
     public static Pose2d blueClimbMiddleOutpostSideReadyPose = new Pose2d(2.036,climbMiddleOutpostSideY, Rotation2d.fromDegrees(180));
     public static Pose2d blueClimbMiddleReadyPose = new Pose2d(2.036,climbMiddleY, Rotation2d.fromDegrees(180));
-    public static Pose2d blueClimbDepotSideReadyPose = new Pose2d(2.321,climbMiddleDepotSideY,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbMiddleDepotSideReadyPose = new Pose2d(2.321,climbMiddleDepotSideY,Rotation2d.fromDegrees(180));
 
     // Field of fuel (For auto)
     public static Pose2d blueOutpostSideFuelFieldCollectionStart = new Pose2d(7.790,1.640, Rotation2d.fromDegrees(90));
