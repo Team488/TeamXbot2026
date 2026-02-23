@@ -1,6 +1,7 @@
 package competition.command_groups;
 
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployStopCommand;
@@ -35,7 +36,7 @@ public class DepotCollectionAutoCommandGroup extends BaseSequentialCommandGroup 
         ArrayList<XbotSwervePoint> readyPoint = new ArrayList<>();
 
         readyPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(
-                depotWallSidePose, 3));
+                depotWallSidePose, 2.5));
 
         readyDepotCollect.logic.setKeyPoints(readyPoint);
         readyDepotCollect.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
