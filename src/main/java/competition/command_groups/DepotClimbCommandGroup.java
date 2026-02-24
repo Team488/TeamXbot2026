@@ -30,7 +30,7 @@
             ArrayList<XbotSwervePoint> readyDepotPoint = new ArrayList<>();
 
             Pose2d readyDepotSideClimbPose =
-                    PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbDepotSideReadyPose);
+                    PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbMiddleDepotSideReadyPose);
 
             readyDepotPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
                     (readyDepotSideClimbPose,4));
