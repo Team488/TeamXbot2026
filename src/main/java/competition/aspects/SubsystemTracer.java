@@ -18,10 +18,10 @@ import java.util.Set;
 @Aspect
 public class SubsystemTracer {
 
-    public Map<BaseSubsystem, Long> refreshDataFrameTimes = new HashMap<>();
-    public Map<BaseSubsystem, Long> periodicTimes = new HashMap<>();
-    public Set<BaseSubsystem> refreshDataFrameCalledMultipleTimes = new HashSet<>();
-    public Set<BaseSubsystem> periodicCalledMultipleTimes = new HashSet<>();
+    private final Map<BaseSubsystem, Long> refreshDataFrameTimes = new HashMap<>();
+    private final Map<BaseSubsystem, Long> periodicTimes = new HashMap<>();
+    private final Set<BaseSubsystem> refreshDataFrameCalledMultipleTimes = new HashSet<>();
+    private final Set<BaseSubsystem> periodicCalledMultipleTimes = new HashSet<>();
 
     @Before("execution(* edu.wpi.first.wpilibj.IterativeRobotBase.loopFunc(..))")
     public void clearMeasurements(JoinPoint joinPoint) {
