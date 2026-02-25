@@ -202,10 +202,10 @@ public class PoseSubsystem extends BasePoseSubsystem {
         };
     }
 
-    public boolean isFacingTarget(Pose2d target) {
+    public boolean isNotFacingTarget(Translation2d target) {
         Pose2d currentPose = this.getCurrentPose2d();
 
-        Translation2d vectorToTarget = target.getTranslation().minus(currentPose.getTranslation());
+        Translation2d vectorToTarget = target.minus(currentPose.getTranslation());
         if (vectorToTarget.getNorm() < 0.01) {
             return true;
         }
@@ -214,7 +214,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
         double rawError = desiredHeading.getRadians() - this.getCurrentHeading().getRadians();
         double angleError = Math.abs(MathUtil.angleModulus(rawError));
 
-        return Math.toDegrees(angleError) < isFacingTargetMarginOfError.get();
+        return !(Math.toDegrees(angleError) < isFacingTargetMarginOfError.get());
     }
 
     // Override methods remain unchanged
