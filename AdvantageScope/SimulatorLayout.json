@@ -13,7 +13,6 @@
             "/AdvantageKit/RealOutputs/Simulator/FieldSimulation",
             "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState",
             "/Preferences/SwerveSteeringSubsystem",
-            "/AdvantageKit/SwerveSteeringSubsystem",
             "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState",
             "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/0",
             "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/1",
@@ -36,20 +35,18 @@
             "/AdvantageKit/PowerDistribution/ChannelCurrent",
             "/Preferences/ShooterSubsystem",
             "/AdvantageKit/RealOutputs/ShooterWheelMaintainerCommand",
-            "/AdvantageKit/ShooterSubsystem",
             "/Preferences/ShooterFeederSubsystem",
             "/Preferences/IntakeDeploySubsystem",
-            "/AdvantageKit/IntakeDeployMotor",
             "/AdvantageKit/IntakeDeployMotor/CANMotorController",
-            "/AdvantageKit/IntakeDeployAbsoluteEncoderReady",
             "/AdvantageKit/IntakeDeployAbsoluteEncoderReady/AbsoluteEncoder",
             "/Preferences/IntakeDeployMaintainerCommand",
-            "/AdvantageKit/IntakeDeployMaintainerCommand",
-            "/AdvantageKit/IntakeDeploySubsystem",
             "/AdvantageKit/RealOutputs/IntakeDeployMaintainerCommand",
-            "/AdvantageKit/DriverStation",
             "/AdvantageKit/DriverStation/Joystick2",
-            "/AdvantageKit/DriverStation/Joystick2/AxisValues"
+            "/AdvantageKit/DriverStation/Joystick2/AxisValues",
+            "/AdvantageKit",
+            "/AdvantageKit/RealOutputs/Commands",
+            "/AdvantageKit/RealOutputs/Performance/Subsystems",
+            "/AdvantageKit/RealOutputs/RunningCommands"
           ]
         },
         "tabs": {
@@ -156,7 +153,7 @@
                 "cameraIndex": -1,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  -0.6547130166187134,
+                  -0.6547130166187103,
                   5.835649761227683,
                   -6.111545785305621
                 ],
@@ -166,6 +163,38 @@
                   0.8981926656629698
                 ]
               },
+              "controlsHeight": 200
+            },
+            {
+              "type": 1,
+              "title": "Command Timeline",
+              "controller": {
+                "leftSources": [],
+                "rightSources": [],
+                "discreteSources": [
+                  {
+                    "type": "alerts",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/RunningCommands",
+                    "logType": "Alerts",
+                    "visible": true,
+                    "options": {}
+                  }
+                ],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "rightUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "a1ta77mn94tzrbdfvawd7rup45s7t2h6",
+              "renderer": null,
               "controlsHeight": 200
             },
             {
