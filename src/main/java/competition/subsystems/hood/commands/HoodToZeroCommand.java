@@ -21,7 +21,7 @@ public class HoodToZeroCommand extends BaseCommand {
     @Override
     public void initialize() {
         hood.servoZero();
-        log.info("running servo to " + hood.servoMin.get());
+        log.info("running servo to " + HoodSubsystem.servoMinBound);
     }
 
     @Override

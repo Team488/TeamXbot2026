@@ -40,6 +40,61 @@ public class Contract2025 extends Contract2026 {
         return true;
     }
 
+    @Override
+    public boolean isLightsReady() {
+        return false;
+    }
+
+    @Override
+    public boolean isHopperRollerReady() {
+        return false;
+    }
+
+    @Override
+    public boolean isShooterFeederReady() {
+        return false;
+    }
+
+    @Override
+    public boolean isIntakeDeployReady() {
+        return false;
+    }
+
+    @Override
+    public boolean isLeftShooterReady() {
+        return false;
+    }
+
+    @Override
+    public boolean isMiddleShooterReady() {
+        return false;
+    }
+
+    @Override
+    public boolean isRightShooterReady() {
+        return false;
+    }
+
+    @Override
+    public boolean isHoodServoLeftReady() {
+        return false;
+    }
+
+    @Override
+    public boolean isHoodServoRightReady() {
+        return false;
+    }
+
+    @Override
+    public boolean isClimberLeftReady() {
+        return false;
+    }
+
+    @Override
+    public boolean isClimberRightReady() {
+        return false;
+    }
+
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/Drive";
     }

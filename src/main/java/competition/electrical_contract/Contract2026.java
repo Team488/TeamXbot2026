@@ -26,6 +26,7 @@ import java.util.EnumSet;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Seconds;
 
 public class Contract2026 extends ElectricalContract {
 
@@ -41,29 +42,34 @@ public class Contract2026 extends ElectricalContract {
     public boolean areCanCodersReady() { return true; }
 
     @Override
-    public boolean isClimberLeftReady() { return false; }
+    public boolean isClimberLeftReady() { return true; }
 
     @Override
     public CANMotorControllerInfo getClimberMotorLeft() {
         return new CANMotorControllerInfo("ClimberMotorLeft",
                 MotorControllerType.TalonFx,
-                CANBusId.RIO,
+                CANBusId.Canivore,
                 25,
                 PDHPort.PDH05,
-                new CANMotorControllerOutputConfig());
+                new TalonFxMotorControllerOutputConfig()
+                        .withStatorCurrentLimit(Amps.of(80))
+                        .withSupplyCurrentLimit(Amps.of(40), Amps.of(60), Seconds.of(1)));
     }
 
     @Override
-    public boolean isClimberRightReady() { return false; }
+    public boolean isClimberRightReady() { return true; }
 
     @Override
     public CANMotorControllerInfo getClimberMotorRight() {
         return new CANMotorControllerInfo("ClimberMotorRight",
                 MotorControllerType.TalonFx,
-                CANBusId.RIO,
+                CANBusId.Canivore,
                 26,
                 PDHPort.PDH06,
-                new CANMotorControllerOutputConfig());
+                new TalonFxMotorControllerOutputConfig()
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                        .withStatorCurrentLimit(Amps.of(80))
+                        .withSupplyCurrentLimit(Amps.of(40), Amps.of(60), Seconds.of(1)));
     }
 
     @Override
@@ -71,72 +77,91 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getClimberAbsoluteEncoder() {
-        return new DeviceInfo("ClimberAbsoluteEncoderReady",101);
+        return new DeviceInfo("ClimberAbsoluteEncoderReady",59);
 
     }
 
     @Override                                    
-    public boolean isShooterFeederReady() { return false; }
+    public boolean isShooterFeederReady() { return true; }
 
     public CANMotorControllerInfo getShooterFeederMotor() {
         return new CANMotorControllerInfo("ShooterFeederMotor",
                 MotorControllerType.TalonFx,
-                CANBusId.RIO,
+                CANBusId.Canivore,
                 37,
                 PDHPort.PDH17,
-                new CANMotorControllerOutputConfig());
+                new CANMotorControllerOutputConfig()
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
     }
 
     @Override
-    public boolean isLeftShooterReady() { return false; }
+    public boolean isLeftShooterReady() { return true; }
 
     @Override
-    public boolean isMiddleShooterReady() { return false; }
+    public boolean isMiddleShooterReady() { return true; }
 
     @Override
-    public boolean isRightShooterReady() { return false; }
+    public boolean isRightShooterReady() { return true; }
 
     @Override
     public CANMotorControllerInfo getLeftShooterMotor() {
         return new CANMotorControllerInfo("ShooterLeftMotor",
                 MotorControllerType.TalonFx,
-                CANBusId.RIO,
+                CANBusId.Canivore,
                 22,
                 PDHPort.PDH02,
-                new CANMotorControllerOutputConfig());
+                new TalonFxMotorControllerOutputConfig()
+                        .withStatorCurrentLimit(Amps.of(100))
+                        .withSupplyCurrentLimit(
+                                Amps.of(60),
+                                Amps.of(80),
+                                Seconds.of(1)));
     }
 
     @Override
     public CANMotorControllerInfo getMiddleShooterMotor() {
         return new CANMotorControllerInfo("ShooterMiddleMotor",
                 MotorControllerType.TalonFx,
-                CANBusId.RIO,
+                CANBusId.Canivore,
                 23,
                 PDHPort.PDH03,
-                new CANMotorControllerOutputConfig());
+                new TalonFxMotorControllerOutputConfig()
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                        .withStatorCurrentLimit(Amps.of(100))
+                        .withSupplyCurrentLimit(
+                                Amps.of(60),
+                                Amps.of(80),
+                                Seconds.of(1)));
     }
 
     @Override
     public CANMotorControllerInfo getRightShooterMotor() {
         return new CANMotorControllerInfo("ShooterRightMotor",
                 MotorControllerType.TalonFx,
-                CANBusId.RIO,
+                CANBusId.Canivore,
                 24,
                 PDHPort.PDH04,
-                new CANMotorControllerOutputConfig());
+                new TalonFxMotorControllerOutputConfig()
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                        .withStatorCurrentLimit(Amps.of(100))
+                        .withSupplyCurrentLimit(
+                                Amps.of(60),
+                                Amps.of(80),
+                                Seconds.of(1)));
     }
 
     @Override
-    public boolean isIntakeDeployReady() { return false; }
+    public boolean isIntakeDeployReady() { return true; }
 
     @Override
     public CANMotorControllerInfo getIntakeDeployMotor() {
         return new CANMotorControllerInfo("IntakeDeployMotor",
                 MotorControllerType.TalonFx,
-                CANBusId.RIO,
+                CANBusId.Canivore,
                 34,
                 PDHPort.PDH14,
-                new CANMotorControllerOutputConfig());
+                new TalonFxMotorControllerOutputConfig()
+                        .withStatorCurrentLimit(Amps.of(60)));
     }
 
     @Override
@@ -144,12 +169,11 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getIntakeDeployAbsoluteEncoderMotor() {
-        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady",100);
-
+        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady",58);
     }
 
     @Override
-    public boolean isHoodServoLeftReady() { return false; }
+    public boolean isHoodServoLeftReady() { return true; }
 
     @Override
     public DeviceInfo getHoodServoLeft() {
@@ -157,7 +181,7 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public boolean isHoodServoRightReady() {return false;}
+    public boolean isHoodServoRightReady() { return true;}
 
     @Override
     public DeviceInfo getHoodServoRight() {
@@ -265,20 +289,21 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public boolean isFuelIntakeMotorReady() { return false; }
+    public boolean isFuelIntakeMotorReady() { return true; }
 
     @Override
     public CANMotorControllerInfo getFuelIntakeMotor() {
         return new CANMotorControllerInfo("FuelIntakeMotor",
                 MotorControllerType.TalonFx,
-                CANBusId.RIO,
+                CANBusId.Canivore,
                 32,
                 PDHPort.PDH12,
-                new CANMotorControllerOutputConfig());
+                new CANMotorControllerOutputConfig()
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
     }
 
     @Override
-    public boolean isLightsReady() { return false; }
+    public boolean isLightsReady() { return true; }
 
     @Override
     public CANLightControllerInfo getLightControllerInfo() {
@@ -290,13 +315,13 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public boolean isHopperRollerReady() { return false; }
+    public boolean isHopperRollerReady() { return true; }
 
     @Override
     public CANMotorControllerInfo getHopperRollerMotor() {
         return new CANMotorControllerInfo("HopperRoller",
                 MotorControllerType.TalonFx,
-                CANBusId.RIO,
+                CANBusId.Canivore,
                 33,
                 PDHPort.PDH13,
                 new CANMotorControllerOutputConfig());
@@ -344,22 +369,44 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public CameraInfo[] getCameraInfo() {
-        // TODO: These camera positions are a placeholder for simulator-based testing.
-        double frontAprilCameraXDisplacement = 10.14 / PoseSubsystem.INCHES_IN_A_METER;
-        double frontAprilCameraYDisplacement = 0 / PoseSubsystem.INCHES_IN_A_METER;
-        double frontAprilCameraZDisplacement = 6.7 / PoseSubsystem.INCHES_IN_A_METER;
-        double frontAprilCameraPitch = Math.toRadians(-21);
-        double frontAprilCameraYaw = Math.toRadians(0);
+        double sideAprilCameraXDisplacement = 11.1004 / PoseSubsystem.INCHES_IN_A_METER;
+        double sideAprilCameraYDisplacement = -11.0 / PoseSubsystem.INCHES_IN_A_METER;
+        double sideAprilCameraZDisplacement = 6.96 / PoseSubsystem.INCHES_IN_A_METER;
+        double sideAprilCameraPitch = Math.toRadians(-25);
 
         return new CameraInfo[]{
-                new CameraInfo("Apriltag_Front",
+                new CameraInfo("Apriltag_Left_Camera",
+                        "AprilTagLeft",
+                        new Transform3d(new Translation3d(
+                                sideAprilCameraXDisplacement,
+                                sideAprilCameraYDisplacement,
+                                sideAprilCameraZDisplacement),
+                                new Rotation3d(0, sideAprilCameraPitch, Math.toRadians(90))),
+                        EnumSet.of(CameraCapabilities.APRIL_TAG)),
+                new CameraInfo("Apriltag_Right_Camera",
+                        "AprilTagRight",
+                        new Transform3d(new Translation3d(
+                                -sideAprilCameraXDisplacement,
+                                sideAprilCameraYDisplacement,
+                                sideAprilCameraZDisplacement),
+                                new Rotation3d(0, sideAprilCameraPitch, Math.toRadians(270))),
+                        EnumSet.of(CameraCapabilities.APRIL_TAG)),
+                new CameraInfo("Apriltag_Front_Camera",
                         "AprilTagFront",
                         new Transform3d(new Translation3d(
-                                frontAprilCameraXDisplacement,
-                                frontAprilCameraYDisplacement,
-                                frontAprilCameraZDisplacement),
-                                new Rotation3d(0, frontAprilCameraPitch, frontAprilCameraYaw)),
-                        EnumSet.of(CameraCapabilities.APRIL_TAG))
+                                0,
+                                1.432327 / PoseSubsystem.INCHES_IN_A_METER,
+                                20.075958 / PoseSubsystem.INCHES_IN_A_METER),
+                                new Rotation3d(0, Math.toRadians(-23), Math.toRadians(0))),
+                        EnumSet.of(CameraCapabilities.APRIL_TAG)),
+                new CameraInfo("Apriltag_Back_Camera",
+                        "AprilTagBack",
+                        new Transform3d(new Translation3d(
+                                0,
+                                -12.959212 / PoseSubsystem.INCHES_IN_A_METER,
+                                17.768664 / PoseSubsystem.INCHES_IN_A_METER),
+                                new Rotation3d(0, Math.toRadians(-15), Math.toRadians(180))),
+                        EnumSet.of(CameraCapabilities.APRIL_TAG)),
         };
     }
 }

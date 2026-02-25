@@ -19,5 +19,4 @@ public class ClimberExtendCommand extends BaseCommand {
         climber.extend();
         log.info("Initialized ClimberExtend");
     }
-
 }

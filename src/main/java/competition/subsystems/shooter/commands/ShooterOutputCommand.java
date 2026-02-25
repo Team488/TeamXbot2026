@@ -34,4 +34,9 @@ public class ShooterOutputCommand extends BaseSetpointCommand {
         log.info("Shooting at {} RPM", this.targetVelocity.in(RPM));
         this.shooter.setTargetValue(this.targetVelocity);
     }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }
