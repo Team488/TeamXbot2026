@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import xbot.common.controls.sensors.XAbsoluteEncoder;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANLightControllerOutputConfig;
@@ -76,9 +77,16 @@ public class Contract2026 extends ElectricalContract {
     public boolean isClimberAbsoluteEncoderReady() { return false; }
 
     @Override
+    public boolean isClimberCalibrationSensorPressed() { return false; }
+
+    @Override
+    public XAbsoluteEncoder getClimberCalibrationSensor() {
+        return null; //unsure what to put here for sensors
+    }
+
+    @Override
     public DeviceInfo getClimberAbsoluteEncoder() {
         return new DeviceInfo("ClimberAbsoluteEncoderReady",59);
-
     }
 
     @Override                                    

@@ -29,6 +29,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public final XAbsoluteEncoder climberEncoder;
     private final DoubleProperty degreesPerRotation;
     public final DoubleProperty manualControlPower;
+    public XAbsoluteEncoder climberSafetyLogic;
     public DoubleProperty extendPower;
     public DoubleProperty retractPower;
     public ClimberState climberState;
@@ -47,7 +48,8 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     @Inject
     public ClimberSubsystem(XCANMotorController.XCANMotorControllerFactory motorFactory,
                             ElectricalContract electricalContract, PropertyFactory propertyFactory,
-                            XAbsoluteEncoder.XAbsoluteEncoderFactory absoluteEncoder) {
+                            XAbsoluteEncoder.XAbsoluteEncoderFactory absoluteEncoder,
+                            XAbsoluteEncoder.XAbsoluteEncoderFactory safetyLogic) {
         propertyFactory.setPrefix(this);
         if (electricalContract.isClimberLeftReady() && electricalContract.isClimberRightReady()) {
             this.climberMotorLeft = motorFactory.create(
@@ -79,6 +81,15 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         } else {
             this.climberEncoder = null;
         }
+//
+//        if (electricalContract.isClimberCalibrationSensorPressed()) {
+//            this.climberSafetyLogic = safetyLogic.create(
+//                    electricalContract.getClimberCalibrationSensor(),
+//                    getPrefix());
+//            this.registerDataFrameRefreshable(climberSafetyLogic);
+//        } else {
+//            this.climberSafetyLogic = null;
+//        }
         degreesPerRotation = propertyFactory.createPersistentProperty("Degrees Per Rotation", 0);
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
         // TODO: find degrees per rotation
@@ -101,6 +112,9 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         if (climberMotorRight != null) {
             climberMotorRight.setPower(retractPower.get());
         }
+//        if (climberSafetyLogic == true) {
+//            climberSafetyLogic.stop;
+//        }
         climberState = ClimberState.RETRACTING;
     }
 
