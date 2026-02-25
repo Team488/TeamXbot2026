@@ -5,11 +5,11 @@ import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
-public class HoodExtractCommands extends BaseCommand {
+public class HoodExtendCommands extends BaseCommand {
     final HoodSubsystem hood;
 
     @Inject
-    public HoodExtractCommands(HoodSubsystem hoodSubsystem) {
+    public HoodExtendCommands(HoodSubsystem hoodSubsystem) {
         hood = hoodSubsystem;
         this.addRequirements(hood);
     }
@@ -17,7 +17,7 @@ public class HoodExtractCommands extends BaseCommand {
     @Override
     public void initialize() {
         hood.extend();
-        log.info("Initialized HoodExtract");
+        log.info("Initialized HoodExtend");
     }
 
     @Override

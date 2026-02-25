@@ -74,22 +74,10 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     }
 
     public void extend() {
-        if (hoodServoRight != null && hoodServoLeft != null) {
-            double newHoodGoal;
-            newHoodGoal = servoTargetNormalized.get() + trimStep.get();
-
-            if (newHoodGoal > 1.0) {
-                newHoodGoal = 1.0;
-            }
-            servoTargetNormalized.set(newHoodGoal);
-            hoodServoLeft.setNormalizedTargetPosition(newHoodGoal);
-            hoodServoRight.setNormalizedTargetPosition(newHoodGoal);
-        }
+        setTargetValue(getTargetValue() + trimStep.get());
     }
     public void retract() {
-        if (hoodServoRight != null && hoodServoLeft != null) {
-            setTargetValue(getTargetValue() - trimStep.get());
-        }
+        setTargetValue(getTargetValue() - trimStep.get());
     }
 
     public void runServo() {
