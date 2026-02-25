@@ -18,7 +18,7 @@ public class IntakeDeployExtendCommand extends BaseSetpointCommand {
 
     @Override
     public void initialize() {
-        intakeDeploy.setTargetValue(Degree.of(intakeDeploy.extendedPositionInDegree.get()));
+        intakeDeploy.setTargetValue(intakeDeploy.extendedPosition.get());
         log.info("Initialized IntakeDeployExtend");
     }
 
