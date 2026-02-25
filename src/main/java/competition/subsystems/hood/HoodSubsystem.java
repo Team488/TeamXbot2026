@@ -4,7 +4,6 @@ import competition.electrical_contract.ElectricalContract;
 
 import edu.wpi.first.units.measure.Time;
 import xbot.common.command.BaseSetpointSubsystem;
-import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.TimedAndBoundedServo;
 import xbot.common.controls.actuators.XServo;
 import xbot.common.properties.DoubleProperty;
@@ -89,15 +88,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     }
     public void retract() {
         if (hoodServoRight != null && hoodServoLeft != null) {
-            double newHoodGoal;
-            newHoodGoal = servoTargetNormalized.get() - trimStep.get();
-
-            if (newHoodGoal < 0.0) {
-                newHoodGoal = 0.0;
-            }
-            servoTargetNormalized.set(newHoodGoal);
-            hoodServoLeft.setNormalizedTargetPosition(newHoodGoal);
-            hoodServoRight.setNormalizedTargetPosition(newHoodGoal);
+            setTargetValue(getTargetValue() - trimStep.get());
         }
     }
 
