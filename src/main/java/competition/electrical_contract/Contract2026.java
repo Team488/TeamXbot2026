@@ -92,11 +92,11 @@ public class Contract2026 extends ElectricalContract {
     }
 
     public DeviceInfo getClimbHome() {
-        return new DeviceInfo("ClimbHomeDIO", 1, PowerSource.RIO);
+        return new DeviceInfo("ClimbHomeDIO", 0, PowerSource.RIO);
     }
 
     public DeviceInfo getIntakeHome() {
-        return new DeviceInfo("IntakeHomeDIO", 2, PowerSource.RIO);
+        return new DeviceInfo("IntakeHomeDIO", 1, PowerSource.RIO);
     }
 
     @Override                                    
