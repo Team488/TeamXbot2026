@@ -6,27 +6,23 @@ import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.properties.AngleProperty;
 import xbot.common.command.BaseSetpointSubsystem;
-
-import xbot.common.math.PIDManager;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
-import xbot.common.controls.sensors.XAbsoluteEncoder;
-import xbot.common.resiliency.DeviceHealth;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotation;
 import static edu.wpi.first.units.Units.Rotations;
 
 
 @Singleton
 public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  {
     public final XCANMotorController intakeDeployMotor;
-    public final XAbsoluteEncoder intakeDeployAbsoluteEncoder;
     public final DoubleProperty manualControlPower;
     public final AngleProperty limbRange; //limb range is the rotations between the deploy position and the stowed position, used for calibration
-    public Angle offset;
+    public Angle motorOffset;
     public boolean isCalibrated = false;
     public final DoubleProperty extendedPositionInDegree;
     public final DoubleProperty retractedPositionInDegree;
@@ -38,8 +34,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     @Inject
     public IntakeDeploySubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
-                                 ElectricalContract electricalContract, PropertyFactory propertyFactory, PIDManager.PIDManagerFactory pidManagerFactory,
-                                 XAbsoluteEncoder.XAbsoluteEncoderFactory xAbsoluteEncoderFactory) {
+                                 ElectricalContract electricalContract, PropertyFactory propertyFactory) {
         propertyFactory.setPrefix(this);
 
         var defaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
@@ -58,15 +53,6 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             this.intakeDeployMotor = null;
         }
 
-        if (electricalContract.isIntakeDeployAbsoluteEncoderReady()) {
-            this.intakeDeployAbsoluteEncoder = xAbsoluteEncoderFactory.create
-                    (electricalContract.getIntakeDeployAbsoluteEncoderMotor(),
-                            getPrefix());
-            registerDataFrameRefreshable(intakeDeployAbsoluteEncoder);
-        } else {
-            this.intakeDeployAbsoluteEncoder = null;
-        }
-
         this.retractedPositionInDegree = propertyFactory.createPersistentProperty("RetractedPositionDegrees", 0);
         this.extendedPositionInDegree = propertyFactory.createPersistentProperty("ExtendedPositionDegrees", 90);
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
@@ -78,10 +64,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     @Override
     public Angle getCurrentValue() {
-        if (intakeDeployAbsoluteEncoder != null && intakeDeployAbsoluteEncoder.getAbsolutePosition() != null) {
-            return intakeDeployAbsoluteEncoder.getAbsolutePosition();
-        }
-        return Degrees.zero();
+        return Degrees.of(intakeDeployMotor.getPosition().minus(motorOffset).in(Rotations) * degreesPerRotation.get());
     }
 
     @Override
@@ -109,16 +92,14 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             }
 
             intakeDeployMotor.setPositionTarget(
-                    Rotations.of(goal.in(Degrees) / degreesPerRotation.get()).plus(offset)
+                    Rotations.of(goal.in(Degrees) / degreesPerRotation.get()).plus(motorOffset)
             );
         }
     }
 
     @Override
     public boolean isCalibrated() {
-        boolean absoluteEncoderCalibrated = intakeDeployAbsoluteEncoder != null
-                && intakeDeployAbsoluteEncoder.getHealth() == DeviceHealth.Healthy;
-        return absoluteEncoderCalibrated || this.isCalibrated;
+        return this.isCalibrated;
     }
 
     @Override
@@ -139,14 +120,14 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     public void calibrateOffsetDown() {
         if (intakeDeployMotor != null) {
-            offset = intakeDeployMotor.getPosition().minus(limbRange.get());
+            motorOffset = intakeDeployMotor.getPosition().minus(limbRange.get());
             isCalibrated = true;
         }
     }
 
     public void calibrateOffsetUp() {
         if (intakeDeployMotor != null) {
-            offset = intakeDeployMotor.getPosition();
+            motorOffset = intakeDeployMotor.getPosition();
             isCalibrated = true;
         }
     }

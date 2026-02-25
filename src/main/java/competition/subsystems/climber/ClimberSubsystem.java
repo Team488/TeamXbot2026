@@ -8,31 +8,26 @@ import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.NamedRunCommand;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
-import xbot.common.controls.sensors.XAbsoluteEncoder;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 @Singleton
 public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     public final XCANMotorController climberMotorLeft;
     public final XCANMotorController climberMotorRight;
-    public final XAbsoluteEncoder climberEncoder;
     private final DoubleProperty degreesPerRotation;
     public final DoubleProperty manualControlPower;
     public DoubleProperty extendPower;
     public DoubleProperty retractPower;
     public ClimberState climberState;
-    Angle encoderZeroOffset = Degrees.zero();
+    Angle motorOffset = Degrees.zero();
 
     private boolean isCalibrated;
 
@@ -46,8 +41,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     @Inject
     public ClimberSubsystem(XCANMotorController.XCANMotorControllerFactory motorFactory,
-                            ElectricalContract electricalContract, PropertyFactory propertyFactory,
-                            XAbsoluteEncoder.XAbsoluteEncoderFactory absoluteEncoder) {
+                            ElectricalContract electricalContract, PropertyFactory propertyFactory) {
         propertyFactory.setPrefix(this);
         if (electricalContract.isClimberLeftReady() && electricalContract.isClimberRightReady()) {
             this.climberMotorLeft = motorFactory.create(
@@ -71,14 +65,6 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
             this.climberMotorRight = null;
         }
 
-        if (electricalContract.isClimberAbsoluteEncoderReady()) {
-            this.climberEncoder = absoluteEncoder.create(
-                    electricalContract.getClimberAbsoluteEncoder(),
-                    getPrefix());
-            this.registerDataFrameRefreshable(climberEncoder);
-        } else {
-            this.climberEncoder = null;
-        }
         degreesPerRotation = propertyFactory.createPersistentProperty("Degrees Per Rotation", 0);
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
         // TODO: find degrees per rotation
@@ -125,11 +111,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     @Override
     public Angle getCurrentValue() {
-        double currentAngle = 0;
-        if (climberEncoder != null) {
-            currentAngle = getCalibratedPosition().in(Rotations) * degreesPerRotation.get();
-        }
-        return Degrees.of(currentAngle);
+        return Degrees.of(climberMotorLeft.getPosition().minus(motorOffset).in(Rotations) * degreesPerRotation.get());
     }
 
     @Override
@@ -147,10 +129,6 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     }
 
-    private Angle getCalibratedPosition() {
-        return getAbsoluteAngle().minus(encoderZeroOffset);
-    }
-
     @Override
     public boolean isCalibrated() {
         return isCalibrated;
@@ -161,16 +139,9 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         return Math.abs(target1.in(Rotations)-target2.in(Rotations)) < .01;
     }
 
-    private Angle getAbsoluteAngle() {
-        if (climberMotorLeft != null) {
-            return climberEncoder.getPosition();
-        }
-        return Degree.zero();
-    }
-
     public void calibrateOffsetRetracted() {
         if (climberMotorLeft != null) {
-            encoderZeroOffset = climberMotorLeft.getPosition();
+            motorOffset = climberMotorLeft.getPosition();
             isCalibrated = true;
         }
     }
@@ -178,13 +149,13 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public void setPositionalGoalIncludingOffset(Angle setpoint) {
         if (climberMotorRight != null) {
             climberMotorRight.setPositionTarget(
-                    Rotations.of(setpoint.in(Degrees) / degreesPerRotation.get()).plus(encoderZeroOffset),
+                    Rotations.of(setpoint.in(Degrees) / degreesPerRotation.get()).plus(motorOffset),
                     XCANMotorController.MotorPidMode.Voltage);
         }
 
         if (climberMotorLeft != null) {
             climberMotorLeft.setPositionTarget(
-                    Rotations.of(setpoint.in(Degrees) / degreesPerRotation.get()).plus(encoderZeroOffset),
+                    Rotations.of(setpoint.in(Degrees) / degreesPerRotation.get()).plus(motorOffset),
                     XCANMotorController.MotorPidMode.Voltage);
         }
     }

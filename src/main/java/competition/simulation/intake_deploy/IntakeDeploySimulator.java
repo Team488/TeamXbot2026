@@ -36,7 +36,6 @@ public class IntakeDeploySimulator {
 
     final IntakeDeploySubsystem intakeDeploy;
     final MockCANMotorController motor;
-    final MockAbsoluteEncoder absoluteEncoder;
 
     @Inject
     public IntakeDeploySimulator(IntakeDeploySubsystem intakeDeploy, PIDManager.PIDManagerFactory pidManagerFactory,
@@ -45,7 +44,6 @@ public class IntakeDeploySimulator {
         aKitLog = new AKitLogger(pf.getPrefix());
         this.intakeDeploy = intakeDeploy;
         this.motor = (MockCANMotorController) intakeDeploy.intakeDeployMotor;
-        this.absoluteEncoder = (MockAbsoluteEncoder) intakeDeploy.intakeDeployAbsoluteEncoder;
         this.pidManager = pidManagerFactory.create(
                 pf.getPrefix() + "IntakeDeploySimulatorPID",
                 0.2,
@@ -91,11 +89,6 @@ public class IntakeDeploySimulator {
         double motorRotation = mechanismAngle.in(Degrees) / intakeDeploy.degreesPerRotation.get();
 
         this.motor.setPosition(Rotations.of(motorRotation));
-
-        if (absoluteEncoder != null) {
-            absoluteEncoder.setPosition(mechanismAngle);
-            aKitLog.record("IntakeDeployEncoderPos", this.absoluteEncoder.getPosition().in(Degrees));
-        }
 
         aKitLog.record("IntakeDeployMotorPos", this.motor.getPosition().in(Rotations));
         aKitLog.record("IntakeDeployed", isDeployed());
