@@ -25,6 +25,8 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
     public DoubleProperty targetVelocity;
     public DoubleProperty trimValue;
+    public DoubleProperty Point_1_RPM;
+    public DoubleProperty Point_2_RPM;
 
     @Inject
     public ShooterSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
@@ -69,6 +71,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         this.targetVelocity = propertyFactory.createPersistentProperty("Target Velocity", 3000);
         this.trimValue = propertyFactory.createPersistentProperty("Shooter Trim Value", 0);
+        this.Point_1_RPM = propertyFactory.createPersistentProperty("Point 1 RPM", 2000);
+        this.Point_2_RPM = propertyFactory.createPersistentProperty("Point 2 RPM", 2000);
+
     }
 
     public void stop() {
@@ -93,10 +98,6 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         for (var motor : getShooterMotors()) {
             motor.setVelocityTarget(RPM.of(targetVelocity.get()));
         }
-    }
-
-    public boolean isReadyToFire() {
-        return isMaintainerAtGoal() && hasNonIdleTarget();
     }
 
 
@@ -179,6 +180,29 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         this.setTargetValue(RPM.of(rpm));
 
         this.runAtTargetVelocity();
+        PropertyFactory propertyFactory;
+        this.Point_1_RPM = propertyFactory.createPersistentProperty("Point 1 RPM", 2000);
+        this.Point_2_RPM = propertyFactory.createPersistentProperty("Point 2 RPM", 2000);
+
     }
 
+    public enum FieldScoringLocation {
+
+        Point_1,
+        Point_2
+    }
+
+    public double getRPMForScoringLocation(FieldScoringLocation location) {
+        return switch (location) {
+            case Point_1 -> Point_1_RPM.get();
+            case Point_2 -> Point_2_RPM.get();
+
+            default -> targetVelocity.get();
+        };
+    }
+
+    public void setTargetFromLocation(FieldScoringLocation location) {
+        double rpm = getRPMForScoringLocation(location);
+        setTargetValue(rpm);
+    }
 }

@@ -16,9 +16,7 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
     public final XCANMotorController shooterFeederMotor;
 
     public final DoubleProperty shooterFeederMotorPower;
-    public final DoubleProperty firePower;
     public final DoubleProperty shooterFeederVelocity;
-    public final DoubleProperty pointHubPower;
 
     @Inject
     public ShooterFeederSubsystem(ElectricalContract electricalContract,
@@ -35,6 +33,9 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
                 .withMaxPowerOutput(1.0)
                 .build();
 
+        this.shooterFeederMotorPower = pf.createPersistentProperty("Feeder Power", 0.5);
+        this.shooterFeederVelocity = pf.createPersistentProperty("Feeder Velocity", 1000);
+
         if (electricalContract.isShooterFeederReady()) {
             this.shooterFeederMotor = motorFactory.create(electricalContract.getShooterFeederMotor(),
                     getPrefix(), "ShooterFeederMotorPID", defaultPIDProperties);
@@ -42,10 +43,6 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
         } else {
             this.shooterFeederMotor = null;
         }
-        this.shooterFeederMotorPower = pf.createPersistentProperty("ShooterFeederMotorPower", 1);
-        this.firePower = pf.createPersistentProperty("firePower", 1);
-        this.shooterFeederVelocity = pf.createPersistentProperty("RPMShooterFeederVelocity", 1);
-        this.pointHubPower = pf.createPersistentProperty("RPMHub", 1500); //todo to be changed
     }
 
     @Override
