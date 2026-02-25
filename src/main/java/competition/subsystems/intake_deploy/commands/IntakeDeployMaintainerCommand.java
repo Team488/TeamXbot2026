@@ -63,7 +63,7 @@ public class IntakeDeployMaintainerCommand extends BaseMaintainerCommand<Angle, 
 
     @Override
     public void initialize() {
-        this.subsystem.setPower(0.0);
+        super.initialize();
     }
 
     @Override
