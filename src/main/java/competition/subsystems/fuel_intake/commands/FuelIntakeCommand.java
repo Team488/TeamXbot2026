@@ -19,4 +19,10 @@ public class FuelIntakeCommand extends BaseCommand {
         intakeSubsystem.intake();
         log.info("Initialized FuelIntake");
     }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
+
 }

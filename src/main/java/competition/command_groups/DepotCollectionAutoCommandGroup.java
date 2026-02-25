@@ -9,6 +9,7 @@ import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import xbot.common.command.BaseSequentialCommandGroup;
 import xbot.common.subsystems.drive.SwerveSimpleTrajectoryCommand;
 import xbot.common.trajectory.XbotSwervePoint;
@@ -55,7 +56,7 @@ public class DepotCollectionAutoCommandGroup extends BaseSequentialCommandGroup 
 
         addCommands(
                 pose.createSetPositionCommand(PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueStartTrenchToDepot)),
-                new ParallelCommandGroup(
+                new ParallelDeadlineGroup(
                         intakeDeployExtendCommand,
                         hopperAndIntakeCommandGroup
                 ),

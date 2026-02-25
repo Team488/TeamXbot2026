@@ -24,7 +24,7 @@ public class IntakeDeployExtendCommand extends BaseSetpointCommand {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return true;
     }
 
 }
