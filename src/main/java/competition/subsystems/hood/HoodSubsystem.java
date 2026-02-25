@@ -103,15 +103,6 @@ public class HoodSubsystem extends BaseSubsystem {
         }
     }
 
-    public void stop() {
-        if (hoodServoRight != null && hoodServoLeft != null) {
-            double currentPosition = hoodServoLeft.getNormalizedCurrentPosition();
-            servoTargetNormalized.set(currentPosition);
-            hoodServoRight.setNormalizedTargetPosition(currentPosition);
-            hoodServoLeft.setNormalizedTargetPosition(currentPosition);
-        }
-    }
-
     public void runServo() {
         if (hoodServoLeft != null && hoodServoRight != null) {
             hoodServoLeft.setNormalizedTargetPosition(servoTargetNormalized.get());

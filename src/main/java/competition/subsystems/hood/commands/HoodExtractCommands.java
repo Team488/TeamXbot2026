@@ -16,7 +16,7 @@ public class HoodExtractCommands extends BaseCommand {
 
     @Override
     public void initialize() {
-        hood.retract();
+        hood.extend();
         log.info("Initialized HoodExtract");
     }
 
