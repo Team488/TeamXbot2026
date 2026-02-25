@@ -31,7 +31,6 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public DoubleProperty servoTargetNormalized;
     public DoubleProperty trimValue;
     public DoubleProperty trimStep;
-    public XboxController xboxController;
     public DoubleProperty extend;
     public DoubleProperty retract;
 
