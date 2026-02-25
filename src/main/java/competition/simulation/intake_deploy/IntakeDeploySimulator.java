@@ -65,7 +65,7 @@ public class IntakeDeploySimulator {
 
     public boolean isDeployed() {
         return getAngularPosition().isNear(
-                Degrees.of(intakeDeploy.extendedPositionInDegree.get()),
+                intakeDeploy.extendedPosition.get(),
                 Degrees.of(5)
         );
     }
