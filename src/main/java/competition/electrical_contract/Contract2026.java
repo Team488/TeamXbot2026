@@ -370,7 +370,7 @@ public class Contract2026 extends ElectricalContract {
     @Override
     public CameraInfo[] getCameraInfo() {
         double sideAprilCameraXDisplacement = 11.1004 / PoseSubsystem.INCHES_IN_A_METER;
-        double sideAprilCameraYDisplacement = 11.0 / PoseSubsystem.INCHES_IN_A_METER;
+        double sideAprilCameraYDisplacement = -11.0 / PoseSubsystem.INCHES_IN_A_METER;
         double sideAprilCameraZDisplacement = 6.96 / PoseSubsystem.INCHES_IN_A_METER;
         double sideAprilCameraPitch = Math.toRadians(-25);
 
@@ -381,7 +381,7 @@ public class Contract2026 extends ElectricalContract {
                                 sideAprilCameraXDisplacement,
                                 sideAprilCameraYDisplacement,
                                 sideAprilCameraZDisplacement),
-                                new Rotation3d(0, sideAprilCameraPitch, Math.toRadians(270))),
+                                new Rotation3d(0, sideAprilCameraPitch, Math.toRadians(90))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
                 new CameraInfo("Apriltag_Right_Camera",
                         "AprilTagRight",
@@ -389,23 +389,23 @@ public class Contract2026 extends ElectricalContract {
                                 -sideAprilCameraXDisplacement,
                                 sideAprilCameraYDisplacement,
                                 sideAprilCameraZDisplacement),
-                                new Rotation3d(0, sideAprilCameraPitch, Math.toRadians(90))),
+                                new Rotation3d(0, sideAprilCameraPitch, Math.toRadians(270))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
                 new CameraInfo("Apriltag_Front_Camera",
                         "AprilTagFront",
                         new Transform3d(new Translation3d(
                                 0,
-                                -1.432327 / PoseSubsystem.INCHES_IN_A_METER,
+                                1.432327 / PoseSubsystem.INCHES_IN_A_METER,
                                 20.075958 / PoseSubsystem.INCHES_IN_A_METER),
-                                new Rotation3d(0, Math.toRadians(-23), Math.toRadians(90))),
+                                new Rotation3d(0, Math.toRadians(-23), Math.toRadians(0))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
                 new CameraInfo("Apriltag_Back_Camera",
                         "AprilTagBack",
                         new Transform3d(new Translation3d(
                                 0,
-                                12.959212 / PoseSubsystem.INCHES_IN_A_METER,
+                                -12.959212 / PoseSubsystem.INCHES_IN_A_METER,
                                 17.768664 / PoseSubsystem.INCHES_IN_A_METER),
-                                new Rotation3d(0, Math.toRadians(-15), Math.toRadians(90))),
+                                new Rotation3d(0, Math.toRadians(-15), Math.toRadians(180))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
         };
     }
