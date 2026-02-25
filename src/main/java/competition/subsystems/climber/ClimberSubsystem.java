@@ -22,16 +22,15 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     public final XCANMotorController climberMotorLeft;
     public final XCANMotorController climberMotorRight;
-    private final DoubleProperty degreesPerRotation;
+    private final DoubleProperty mechanismDegreesPerMotorRotation;
     public final DoubleProperty manualControlPower;
     public DoubleProperty extendPower;
     public DoubleProperty retractPower;
     public ClimberState climberState;
-    Angle motorOffset = Degrees.zero();
-
+    public Angle motorOffset = Degrees.zero();
     private boolean isCalibrated;
 
-    private final MutAngle targetAngle = Degrees.mutable(0);
+    private final MutAngle mechanismTargetAngle = Degrees.mutable(0);
 
     public enum ClimberState {
         EXTENDING,
@@ -65,7 +64,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
             this.climberMotorRight = null;
         }
 
-        degreesPerRotation = propertyFactory.createPersistentProperty("Degrees Per Rotation", 0);
+        this.mechanismDegreesPerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreesPerMotorRotation", 0);
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
         // TODO: find degrees per rotation
     }
@@ -111,23 +110,23 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     @Override
     public Angle getCurrentValue() {
-        return Degrees.of(climberMotorLeft.getPosition().minus(motorOffset).in(Rotations) * degreesPerRotation.get());
+        return Degrees.of(
+                climberMotorLeft.getPosition().minus(motorOffset).in(Rotations) * mechanismDegreesPerMotorRotation.get()
+        );
     }
 
     @Override
     public Angle getTargetValue() {
-        return targetAngle.copy();
+        return mechanismTargetAngle.copy();
     }
 
     @Override
     public void setTargetValue(Angle angle) {
-       targetAngle.mut_replace(angle);
+       mechanismTargetAngle.mut_replace(angle);
     }
 
     @Override
-    public void setPower(Double power) {
-
-    }
+    public void setPower(Double power) {}
 
     @Override
     public boolean isCalibrated() {
@@ -149,13 +148,13 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public void setPositionalGoalIncludingOffset(Angle setpoint) {
         if (climberMotorRight != null) {
             climberMotorRight.setPositionTarget(
-                    Rotations.of(setpoint.in(Degrees) / degreesPerRotation.get()).plus(motorOffset),
+                    Rotations.of(setpoint.in(Degrees) / mechanismDegreesPerMotorRotation.get()).plus(motorOffset),
                     XCANMotorController.MotorPidMode.Voltage);
         }
 
         if (climberMotorLeft != null) {
             climberMotorLeft.setPositionTarget(
-                    Rotations.of(setpoint.in(Degrees) / degreesPerRotation.get()).plus(motorOffset),
+                    Rotations.of(setpoint.in(Degrees) / mechanismDegreesPerMotorRotation.get()).plus(motorOffset),
                     XCANMotorController.MotorPidMode.Voltage);
         }
     }

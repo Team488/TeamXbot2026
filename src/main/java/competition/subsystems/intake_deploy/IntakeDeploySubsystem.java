@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Rotation;
 import static edu.wpi.first.units.Units.Rotations;
 
 
@@ -21,16 +20,15 @@ import static edu.wpi.first.units.Units.Rotations;
 public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  {
     public final XCANMotorController intakeDeployMotor;
     public final DoubleProperty manualControlPower;
-    public final AngleProperty limbRange; //limb range is the rotations between the deploy position and the stowed position, used for calibration
     public Angle motorOffset = Degrees.zero();
     public boolean isCalibrated = false;
-    public final DoubleProperty extendedPositionInDegree;
-    public final DoubleProperty retractedPositionInDegree;
-    private final AngleProperty targetRotation;
+    public final AngleProperty extendedPosition;
+    public final AngleProperty retractedPosition;
+    private final AngleProperty mechanismTargetRotation;
+    public final DoubleProperty mechanismDegreePerMotorRotation;
 
-
-
-    public final DoubleProperty degreesPerRotation;
+    // Limb range is the rotations between the Deploy's position and the stowed position, used for calibration.
+    public final AngleProperty limbRange;
 
     @Inject
     public IntakeDeploySubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
@@ -53,28 +51,30 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             this.intakeDeployMotor = null;
         }
 
-        this.retractedPositionInDegree = propertyFactory.createPersistentProperty("RetractedPositionDegrees", 0);
-        this.extendedPositionInDegree = propertyFactory.createPersistentProperty("ExtendedPositionDegrees", 90);
+        this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", Degrees.zero());
+        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", Degrees.of(90));
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
         this.limbRange = propertyFactory.createPersistentProperty("limbRange", Rotations.of(9.5));
 
-        this.degreesPerRotation = propertyFactory.createPersistentProperty("DegreesPerRotation", 360);
-        this.targetRotation = propertyFactory.createPersistentProperty("TargetRotation", Degrees.of(0));
+        this.mechanismDegreePerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreePerMotorRotation", 360);
+        this.mechanismTargetRotation = propertyFactory.createPersistentProperty("MechanismTargetRotation", Degrees.of(0));
     }
 
     @Override
     public Angle getCurrentValue() {
-        return Degrees.of(intakeDeployMotor.getPosition().minus(motorOffset).in(Rotations) * degreesPerRotation.get());
+        return Degrees.of(
+                intakeDeployMotor.getPosition().minus(motorOffset).in(Rotations) * mechanismDegreePerMotorRotation.get()
+        );
     }
 
     @Override
     public Angle getTargetValue() {
-        return targetRotation.get();
+        return mechanismTargetRotation.get();
     }
 
     @Override
     public void setTargetValue(Angle value) {
-        this.targetRotation.set(value);
+        this.mechanismTargetRotation.set(value);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             }
 
             intakeDeployMotor.setPositionTarget(
-                    Rotations.of(goal.in(Degrees) / degreesPerRotation.get()).plus(motorOffset)
+                    Rotations.of(goal.in(Degrees) / mechanismDegreePerMotorRotation.get()).plus(motorOffset)
             );
         }
     }
@@ -113,9 +113,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         }
     }
     public void periodic() {
-        if (isCalibrated) {
-            aKitLog.record("IsCalibrated", isCalibrated);
-        }
+        aKitLog.record("IsCalibrated", isCalibrated);
         if (intakeDeployMotor != null) {
             intakeDeployMotor.periodic();
         }

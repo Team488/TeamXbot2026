@@ -11,9 +11,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import xbot.common.advantage.AKitLogger;
 import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
-import xbot.common.controls.sensors.mock_adapters.MockAbsoluteEncoder;
 import xbot.common.math.PIDManager;
-import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.simulation.MotorInternalPIDHelper;
 
@@ -21,10 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.Second;
 
 @Singleton
 public class IntakeDeploySimulator {
@@ -86,7 +81,7 @@ public class IntakeDeploySimulator {
 
         // Update motor position and velocity with the motorSim
         var mechanismAngle = getAngularPosition();
-        double motorRotation = mechanismAngle.in(Degrees) / intakeDeploy.degreesPerRotation.get();
+        double motorRotation = mechanismAngle.in(Degrees) / intakeDeploy.mechanismDegreePerMotorRotation.get();
 
         this.motor.setPosition(Rotations.of(motorRotation));
 
