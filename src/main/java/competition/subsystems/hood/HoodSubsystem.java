@@ -4,7 +4,6 @@ import competition.electrical_contract.ElectricalContract;
 
 import edu.wpi.first.units.measure.Time;
 import xbot.common.command.BaseSetpointSubsystem;
-import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.TimedAndBoundedServo;
 import xbot.common.controls.actuators.XServo;
 import xbot.common.properties.DoubleProperty;
@@ -31,6 +30,8 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public DoubleProperty servoTargetNormalized;
     public DoubleProperty trimValue;
     public DoubleProperty trimStep;
+    public DoubleProperty extend;
+    public DoubleProperty retract;
 
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
@@ -68,6 +69,15 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
                 "ServoTargetPositionNormalized", 0);
         this.trimValue = propertyFactory.createPersistentProperty("HoodTrimValue", 0);
         this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.1);
+        this.extend = propertyFactory.createPersistentProperty("MinExtendGoal", 0);
+        this.retract = propertyFactory.createPersistentProperty("MaxRetractGoal", 0.1);
+    }
+
+    public void extend() {
+        setTargetValue(getTargetValue() + trimStep.get());
+    }
+    public void retract() {
+        setTargetValue(getTargetValue() - trimStep.get());
     }
 
     public void runServo() {

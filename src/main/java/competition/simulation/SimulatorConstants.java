@@ -25,7 +25,7 @@ public class SimulatorConstants {
     public static final Distance intakeLengthExtended = Inches.of(12);
 
     /** Intake Deploy **/
-    public static final Angle intakeDeployedAngle = Degrees.of(80);
+    public static final Angle intakeDeployedAngle = Degrees.of(90);
     public static final double intakeDeployJKgMetersSquared = 0.005;
     public static final double intakeDeployGearing = 60;
 }
