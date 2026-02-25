@@ -16,8 +16,8 @@ public class PrepareToShootCommandGroup extends BaseParallelCommandGroup {
         this.outputCommand.setTargetVelocity(targetVelocity);
     }
 
-    public void setHoodGoal() {
-        this.hoodMaintainer.
+    public void setHoodGoal(double ratio) {
+        this.hoodMaintainer.setTargetRatio(ratio);
     }
 
     @Inject
