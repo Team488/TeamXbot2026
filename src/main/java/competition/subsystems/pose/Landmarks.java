@@ -39,7 +39,7 @@ public class Landmarks {
     public static Pose2d blueDepotWallSide = new Pose2d(0.460, 6.980, Rotation2d.fromDegrees(270));
     public static Pose2d blueDepotTowerSide = new Pose2d(0.460, 4.950, Rotation2d.fromDegrees(90));
 
-        public static Pose2d blueDepotCenter = new Pose2d(0.270,5.940, Rotation2d.fromDegrees(0));
+    public static Pose2d blueDepotCenter = new Pose2d(0.270,5.940, Rotation2d.fromDegrees(0));
 
     // Blue Outpost
     public static Pose2d blueOutpost = new Pose2d(0, 0.650, Rotation2d.fromDegrees(0));
@@ -67,11 +67,18 @@ public class Landmarks {
     public static int blueCenterHubNeutralSideFiducialId = 20;
     public static int blueCenterHubDriverSideFiducialId = 26;
 
-    public static int blueTrenchDriverDepotSideFiducialId = 23;
-    public static int redTrenchDriverDepotSideFiducialId = 7;
+    public static int blueTrenchDriverDepotSideId = 23;
+    public static int redTrenchDriverDepotSideId = 7;
+
+    public static int blueTrenchNeutralDepotSideId = 22;
+    public static int redTrenchNeutralDepotSideId = 6;
+
+    public static int blueTrenchNeutralOutpostSideId = 17;
+    public static int redTrenchNeutralOutpostSideId = 1;
 
     public static int blueOutpostFiducialId = 29;
     public static int redOutpostFiducialId = 13;
+
 
     public static List<Integer> getAllianceHubCenterFiducialIds(Alliance alliance) {
         return switch (alliance) {
@@ -79,16 +86,52 @@ public class Landmarks {
             case Blue -> List.of(blueCenterHubNeutralSideFiducialId, blueCenterHubDriverSideFiducialId);
         };
     }
-    public static int getTrenchDriverDepotSideId(Alliance alliance) {
+
+    public static int getAllianceHubNeutralSideFiducialId(Alliance alliance) {
         return alliance == Alliance.Blue
-                ? blueTrenchDriverDepotSideFiducialId
-                : redTrenchDriverDepotSideFiducialId;
+                ? blueCenterHubNeutralSideFiducialId
+                : redCenterHubNeutralSideFiducialId;
     }
 
-    public static int getOutpostId(Alliance alliance) {
+
+    public static int getTrenchNeutralDepotSideId(Alliance alliance) {
+        return alliance == Alliance.Blue
+                ? blueTrenchNeutralDepotSideId
+                : redTrenchNeutralDepotSideId;
+    }
+
+    public static int getTrenchNeutralOutpostSideId(Alliance alliance) {
+        return alliance == Alliance.Blue
+                ? blueTrenchNeutralOutpostSideId
+                : redTrenchNeutralOutpostSideId;
+    }
+
+    public static int getTrenchDriverDepotSideId(Alliance alliance) {
+        return alliance == Alliance.Blue
+                ? blueTrenchDriverDepotSideId
+                : redTrenchDriverDepotSideId;
+    }
+
+    public static int getOutpostFiducialId(Alliance alliance) {
         return alliance == Alliance.Blue
                 ? blueOutpostFiducialId
                 : redOutpostFiducialId;
+    }
+
+    public static Pose2d getClosestTrenchNeutralSideIdPose(AprilTagFieldLayout aprilTagFieldLayout, Alliance alliance, Pose2d currentPose) {
+        Pose2d trenchNeutralDepotSideIdPose = getAprilTagPose(
+                aprilTagFieldLayout,
+                getTrenchNeutralDepotSideId(alliance)
+        );
+        Pose2d trenchNeutralOutpostSideIdPose = getAprilTagPose(
+                aprilTagFieldLayout,
+                getTrenchNeutralOutpostSideId(alliance)
+        );
+
+        double distToDepot = currentPose.getTranslation().getDistance(trenchNeutralDepotSideIdPose.getTranslation());
+        double distToOutpost = currentPose.getTranslation().getDistance(trenchNeutralOutpostSideIdPose.getTranslation());
+
+        return distToDepot <= distToOutpost ? trenchNeutralDepotSideIdPose : trenchNeutralOutpostSideIdPose;
     }
 
     // Get the average pose of the alliance hub using april tags
@@ -120,7 +163,7 @@ public class Landmarks {
         return currentPose.getX() >= minX && currentPose.getX() <= maxX;
     }
 
-    private static Pose2d getAprilTagPose(AprilTagFieldLayout aprilTagFieldLayout, int aprilTag) {
+    public static Pose2d getAprilTagPose(AprilTagFieldLayout aprilTagFieldLayout, int aprilTag) {
         return aprilTagFieldLayout
                 .getTagPose(aprilTag)
                 .orElseThrow(() -> new RuntimeException("AprilTag " + aprilTag + " not found in field layout"))
