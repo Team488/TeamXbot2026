@@ -1,0 +1,12 @@
+package competition.command_groups;
+
+import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
+import competition.subsystems.hopper_roller.HopperRollerSubsystem;
+import xbot.common.command.BaseParallelCommandGroup;
+
+public class HopperIntakeAndIntakeCommandGroup extends BaseParallelCommandGroup {
+
+    public HopperIntakeAndIntakeCommandGroup(FuelIntakeCommand intake, HopperRollerSubsystem hopper) {
+        addCommands(intake, hopper.getIntakeCommand());
+    }
+}
