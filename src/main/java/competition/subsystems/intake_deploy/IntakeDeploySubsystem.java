@@ -26,7 +26,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public final XAbsoluteEncoder intakeDeployAbsoluteEncoder;
     public final DoubleProperty manualControlPower;
     public final AngleProperty limbRange; //limb range is the rotations between the deploy position and the stowed position, used for calibration
-    public Angle offset;
+    public Angle offset = Degrees.zero();
     public boolean isCalibrated = false;
     public final DoubleProperty extendedPositionInDegree;
     public final DoubleProperty retractedPositionInDegree;
@@ -132,6 +132,9 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         }
     }
     public void periodic() {
+        if (isCalibrated) {
+            aKitLog.record("IsCalibrated", isCalibrated);
+        }
         if (intakeDeployMotor != null) {
             intakeDeployMotor.periodic();
         }
