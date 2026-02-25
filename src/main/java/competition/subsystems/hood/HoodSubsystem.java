@@ -2,9 +2,7 @@ package competition.subsystems.hood;
 
 import competition.electrical_contract.ElectricalContract;
 
-import competition.subsystems.hood.commands.HoodToGoalCommand;
 import edu.wpi.first.units.measure.Time;
-import edu.wpi.first.wpilibj.XboxController;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.TimedAndBoundedServo;
 import xbot.common.controls.actuators.XServo;
@@ -32,7 +30,6 @@ public class HoodSubsystem extends BaseSubsystem {
     public DoubleProperty servoTargetNormalized;
     public DoubleProperty trimValue;
     public DoubleProperty trimStep;
-    public XboxController xboxController;
     public DoubleProperty extend;
     public DoubleProperty retract;
 
