@@ -263,8 +263,9 @@ public class Main {
             all.addAll(additionals);
 
             boolean isConflict = motors.size() > 1 || (!motors.isEmpty() && !additionals.isEmpty());
+            boolean isNoConnect = !all.isEmpty() && all.stream().allMatch(s -> s.equals("No_Connect"));
 
-            if (all.isEmpty()) {
+            if (all.isEmpty() || isNoConnect) {
                 System.out.printf("  %s: (No Connect)\n", port);
             } else if (isConflict) {
                 System.out.printf("  %s: *** CONFLICT *** %s\n", port, String.join(", ", all));

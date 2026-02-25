@@ -80,8 +80,15 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getClimberAbsoluteEncoder() {
-        return new DeviceInfo("ClimberAbsoluteEncoderReady",59);
+        return new DeviceInfo("ClimberAbsoluteEncoderReady",CANBusId.Canivore, 59);
+    }
 
+    public DeviceInfo Pigeon2() {
+        return new DeviceInfo("Pigeon2.0",CANBusId.Canivore, 56);
+    }
+
+    public DeviceInfo CANdle() {
+        return new DeviceInfo("CANdle",CANBusId.Canivore, 57);
     }
 
     public DeviceInfo getClimbHome() {
@@ -180,7 +187,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getIntakeDeployAbsoluteEncoderMotor() {
-        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady",58);
+        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady", CANBusId.Canivore, 58);
     }
 
     @Override
@@ -440,27 +447,31 @@ public class Contract2026 extends ElectricalContract {
 
     public List<CanBusOrderEntry> getCanBusConnectionOrder() {
         return List.of(
-            new CanBusOrderEntry(CANBusId.Canivore, 22, "ShooterLeftMotor",                  1),
-            new CanBusOrderEntry(CANBusId.Canivore, 23, "ShooterMiddleMotor",                2),
-            new CanBusOrderEntry(CANBusId.Canivore, 24, "ShooterRightMotor",                 3),
-            new CanBusOrderEntry(CANBusId.Canivore, 25, "ClimberMotorLeft",                  4),
-            new CanBusOrderEntry(CANBusId.Canivore, 26, "ClimberMotorRight",                 5),
-            new CanBusOrderEntry(CANBusId.Canivore, 32, "FuelIntakeMotor",                   6),
-            new CanBusOrderEntry(CANBusId.Canivore, 33, "HopperRoller",                      7),
-            new CanBusOrderEntry(CANBusId.Canivore, 34, "IntakeDeployMotor",                 8),
-            new CanBusOrderEntry(CANBusId.Canivore, 37, "ShooterFeederMotor",                9),
-            new CanBusOrderEntry(CANBusId.Canivore, 30, "FrontLeftDrive/Drive",             10),
-            new CanBusOrderEntry(CANBusId.Canivore, 31, "FrontLeftDrive/Steering",          11),
-            new CanBusOrderEntry(CANBusId.Canivore, 53, "FrontLeftDrive/SteeringEncoder",   12),
-            new CanBusOrderEntry(CANBusId.Canivore, 38, "FrontRightDrive/Drive",            13),
-            new CanBusOrderEntry(CANBusId.Canivore, 39, "FrontRightDrive/Steering",         14),
-            new CanBusOrderEntry(CANBusId.Canivore, 54, "FrontRightDrive/SteeringEncoder",  15),
-            new CanBusOrderEntry(CANBusId.Canivore, 28, "RearLeftDrive/Drive",              16),
-            new CanBusOrderEntry(CANBusId.Canivore, 29, "RearLeftDrive/Steering",           17),
-            new CanBusOrderEntry(CANBusId.Canivore, 52, "RearLeftDrive/SteeringEncoder",    18),
-            new CanBusOrderEntry(CANBusId.Canivore, 20, "RearRightDrive/Drive",             19),
-            new CanBusOrderEntry(CANBusId.Canivore, 21, "RearRightDrive/Steering",          20),
-            new CanBusOrderEntry(CANBusId.Canivore, 51, "RearRightDrive/SteeringEncoder",   21)
+            new CanBusOrderEntry(CANBusId.Canivore, 30, "FrontLeftDrive/Drive",              1),
+            new CanBusOrderEntry(CANBusId.Canivore, 53, "FrontLeftDrive/SteeringEncoder",    2),
+            new CanBusOrderEntry(CANBusId.Canivore, 31, "FrontLeftDrive/Steering",           3),
+            new CanBusOrderEntry(CANBusId.Canivore, 29, "RearLeftDrive/Steering",            4),
+            new CanBusOrderEntry(CANBusId.Canivore, 52, "RearLeftDrive/SteeringEncoder",     5),
+            new CanBusOrderEntry(CANBusId.Canivore, 28, "RearLeftDrive/Drive",               6),
+            new CanBusOrderEntry(CANBusId.Canivore, 20, "RearRightDrive/Drive",              7),
+            new CanBusOrderEntry(CANBusId.Canivore, 51, "RearRightDrive/SteeringEncoder",    8),
+            new CanBusOrderEntry(CANBusId.Canivore, 21, "RearRightDrive/Steering",           9),
+            new CanBusOrderEntry(CANBusId.Canivore, 39, "FrontRightDrive/Steering",         10),
+            new CanBusOrderEntry(CANBusId.Canivore, 54, "FrontRightDrive/SteeringEncoder",  11),
+            new CanBusOrderEntry(CANBusId.Canivore, 38, "FrontRightDrive/Drive",            12),
+            new CanBusOrderEntry(CANBusId.Canivore, 56, "Pigeon",                           13),
+            new CanBusOrderEntry(CANBusId.Canivore, 57, "CANdle",                           14),
+            new CanBusOrderEntry(CANBusId.Canivore, 58, "IntakeDeployAbsoluteEncoderReady", 15),
+            new CanBusOrderEntry(CANBusId.Canivore, 34, "IntakeDeployMotor",                16),
+            new CanBusOrderEntry(CANBusId.Canivore, 32, "FuelIntakeMotor",                  17),
+            new CanBusOrderEntry(CANBusId.Canivore, 33, "HopperRoller",                     18),
+            new CanBusOrderEntry(CANBusId.Canivore, 37, "ShooterFeederMotor",               19),
+            new CanBusOrderEntry(CANBusId.Canivore, 25, "ClimberMotorLeft",                 20),
+            new CanBusOrderEntry(CANBusId.Canivore, 22, "ShooterLeftMotor",                 21),
+            new CanBusOrderEntry(CANBusId.Canivore, 23, "ShooterMiddleMotor",               22),
+            new CanBusOrderEntry(CANBusId.Canivore, 59, "ClimberAbsoluteEncoderReady",      23),
+            new CanBusOrderEntry(CANBusId.Canivore, 24, "ShooterRightMotor",                24),
+            new CanBusOrderEntry(CANBusId.Canivore, 26, "ClimberMotorRight",                25)
         );
     }
 
