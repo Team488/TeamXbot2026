@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import competition.subsystems.hood.HoodSubsystem;
 import edu.wpi.first.wpilibj.Filesystem;
+import xbot.common.advantage.AKitLogger;
 import xbot.common.command.BaseCommand;
 
 public class CorrectHoodAngleCommand extends BaseCommand {
@@ -33,7 +34,7 @@ public class CorrectHoodAngleCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        log.info("Initializing Hood Alignment");
+        aKitLog.record("Initializing Hood Alignment");
 
         if (trajectoryMap == null) {
             loadTrajectories();
@@ -42,9 +43,9 @@ public class CorrectHoodAngleCommand extends BaseCommand {
 
     @Override
     public void execute() {
-
+        System.out.println("this is running");
         double currentDistance = 0; // placeholder value
-        log.info("Current distance: " + currentDistance);
+        aKitLog.record("Current distance: " + currentDistance);
 
         HoodTrajectory bestShot = null;
         // variable to keep track of the smallest difference found so far
@@ -62,17 +63,17 @@ public class CorrectHoodAngleCommand extends BaseCommand {
                 }
             }
         } else {
-            log.warn("Trajectory map is null!");
+            aKitLog.record("Trajectory map is null!");
         }
 
         if (bestShot != null) {
-            log.info("Best shot - Distance: " + bestShot.distance + 
+            aKitLog.record("Best shot - Distance: " + bestShot.distance +
                      ", Theta: " + bestShot.theta + 
                      ", Velocity: " + bestShot.velocity +
                      " (diff: " + minDiff + ")");
             hood.runServo();
         } else {
-            log.warn("No matching trajectory found!");
+            aKitLog.record("No matching trajectory found!");
         }
     }
 
@@ -90,17 +91,17 @@ public class CorrectHoodAngleCommand extends BaseCommand {
                 for (HoodTrajectory point : rawArray) {
                     trajectoryMap.put(point.distance, point);
                 }
-                
-                log.info("Loaded " + trajectoryMap.size() + " trajectories into HashMap.");
+
+                aKitLog.record("Loaded " + trajectoryMap.size() + " trajectories into HashMap.");
             } else {
-                log.warn("Trajectories.json not found in the deploy directory!");
+                aKitLog.record("Trajectories.json not found in the deploy directory!");
             }
         } catch (Exception e) {
-            log.error("Failed to load JSON: " + e.getMessage());
+            aKitLog.record("Failed to load JSON: " + e.getMessage());
         }
     }
     @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
 }

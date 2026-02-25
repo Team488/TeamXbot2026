@@ -162,7 +162,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     private void forceCalibration() {
         if (climberEncoder != null) {
-            encoderZeroOffset = climberEncoder.getAbsolutePosition().in(Rotations);
+            // encoderZeroOffset = climberEncoder.getAbsolutePosition().in(Rotations);
             isCalibrated = true;
         }
     }
