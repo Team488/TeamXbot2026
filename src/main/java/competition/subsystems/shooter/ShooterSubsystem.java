@@ -43,7 +43,27 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         propertyFactory.setPrefix(this);
         this.electricalContract = electricalContract;
 
-        var defaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
+        var leftShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
+                .withP(0.05)
+                .withI(0.0)
+                .withD(0.0)
+                .withStaticFeedForward(0.02)
+                .withVelocityFeedForward(0.0095)
+                .withMinPowerOutput(-1.0)
+                .withMaxPowerOutput(1.0)
+                .build();
+
+        var middleShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
+                .withP(0.05)
+                .withI(0.0)
+                .withD(0.0)
+                .withStaticFeedForward(0.02)
+                .withVelocityFeedForward(0.0095)
+                .withMinPowerOutput(-1.0)
+                .withMaxPowerOutput(1.0)
+                .build();
+
+        var rightShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
                 .withP(0.05)
                 .withI(0.0)
                 .withD(0.0)
@@ -55,7 +75,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         if (electricalContract.isLeftShooterReady()) {
             this.leftShooterMotor = xcanMotorControllerFactory.create(electricalContract.getLeftShooterMotor(),
-                    getPrefix(), "ShooterMotor", defaultPIDProperties);
+                    getPrefix(), "leftShooterMotor", leftShooterMotorDefaultPIDProperties);
             this.registerDataFrameRefreshable(leftShooterMotor);
         } else {
             this.leftShooterMotor = null;
@@ -63,7 +83,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         if (electricalContract.isMiddleShooterReady()) {
             this.middleShooterMotor = xcanMotorControllerFactory.create(electricalContract.getMiddleShooterMotor(),
-                    getPrefix(), "ShooterMotor", defaultPIDProperties);
+                    getPrefix(), "middleShooterMotor", middleShooterMotorDefaultPIDProperties);
             this.registerDataFrameRefreshable(middleShooterMotor);
         } else {
             this.middleShooterMotor = null;
@@ -71,7 +91,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         if (electricalContract.isRightShooterReady()) {
             this.rightShooterMotor = xcanMotorControllerFactory.create(electricalContract.getRightShooterMotor(),
-                    getPrefix(), "ShooterMotor", defaultPIDProperties);
+                    getPrefix(), "rightShooterMotor", rightShooterMotorDefaultPIDProperties);
             this.registerDataFrameRefreshable(rightShooterMotor);
         } else {
             this.rightShooterMotor = null;
