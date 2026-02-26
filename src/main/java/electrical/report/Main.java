@@ -194,7 +194,7 @@ public class Main {
         generatePDHReport(contract, dioDevices, devicesByPowerSource);
         
         // Generate VRM Port Usage Report
-        generateVRMReport(devicesByPowerSource);
+        generateVRMReport(contract, devicesByPowerSource);
 
         // Generate Power Branch Report (buck converters and other intermediate converters)
         generatePowerBranchReport(contract, devicesByPowerSource);
@@ -533,7 +533,15 @@ public class Main {
     /**
      * Generates VRM port usage report.
      */
-    private static void generateVRMReport(Map<PowerSource, List<String>> devicesByPowerSource) {
+    private static void generateVRMReport(Contract2026 contract, Map<PowerSource, List<String>> devicesByPowerSource) {
+        // Build reverse map: device name -> PDH port(s) that supply it
+        Map<String, List<String>> vrmToPDH = new HashMap<>();
+        for (Map.Entry<PDHPort, List<String>> entry : contract.getAdditionalPDHConnections().entrySet()) {
+            for (String device : entry.getValue()) {
+                vrmToPDH.computeIfAbsent(device, k -> new ArrayList<>()).add(entry.getKey().name());
+            }
+        }
+
         // Define all VRM ports in order
         PowerSource[] vrm1Ports = {
             PowerSource.VRM1_12V_2A, PowerSource.VRM1_12V_2B,
@@ -561,7 +569,9 @@ public class Main {
         if (vrm1Count > 0) {
             List<String> vrm1Conflicts = new ArrayList<>();
             System.out.println("-".repeat(80));
-            System.out.println("VRM1 Port Assignments");
+            List<String> vrm1PdhSources = vrmToPDH.getOrDefault("VRM1", Collections.emptyList());
+            String vrm1PdhLabel = vrm1PdhSources.isEmpty() ? "unknown" : String.join(", ", vrm1PdhSources);
+            System.out.println("VRM1 Port Assignments (power source = " + vrm1PdhLabel + ")");
             System.out.println("-".repeat(80));
 
             for (PowerSource port : vrm1Ports) {
@@ -608,7 +618,9 @@ public class Main {
         if (vrm2Count > 0) {
             List<String> vrm2Conflicts = new ArrayList<>();
             System.out.println("-".repeat(80));
-            System.out.println("VRM2 Port Assignments");
+            List<String> vrm2PdhSources = vrmToPDH.getOrDefault("VRM2", Collections.emptyList());
+            String vrm2PdhLabel = vrm2PdhSources.isEmpty() ? "unknown" : String.join(", ", vrm2PdhSources);
+            System.out.println("VRM2 Port Assignments (power source = " + vrm2PdhLabel + ")");
             System.out.println("-".repeat(80));
 
             for (PowerSource port : vrm2Ports) {
