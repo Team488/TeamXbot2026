@@ -96,8 +96,10 @@ public class Contract2026 extends ElectricalContract {
         return new DeviceInfo("ClimbHomeDIO", 0, PowerSource.RIO);
     }
 
-    public DeviceInfo getIntakeHome() {
-        return new DeviceInfo("IntakeHomeDIO", 1, PowerSource.RIO);
+    public boolean intakeDeploySensorReady() { return true; }
+
+    public DeviceInfo getIntakeDeploySensor() {
+        return new DeviceInfo("IntakeDeploySensor", 1, PowerSource.RIO);
     }
 
     @Override                                    
@@ -206,13 +208,6 @@ public class Contract2026 extends ElectricalContract {
     public DeviceInfo getHoodServoRight() {
         return new DeviceInfo("HoodServoRight", 1);
     }
-
-
-    public boolean intakeDeploySensorReady() { return false; }
-
-     public DeviceInfo getIntakeDeploySensor() {
-         return new DeviceInfo("IntakeDeploySensor", 1);
-     }
 
     // OrangePis - powered via buck converters (see getAdditionalPowerBranches)
     public DeviceInfo getFrontOrangePi() {
