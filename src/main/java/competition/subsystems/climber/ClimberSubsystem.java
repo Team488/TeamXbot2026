@@ -6,6 +6,7 @@ import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.NamedRunCommand;
+import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.controls.sensors.XAbsoluteEncoder;
@@ -31,6 +32,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public final DoubleProperty manualControlPower;
     public DoubleProperty extendPower;
     public DoubleProperty retractPower;
+    public DoubleProperty readinessTimeoutSeconds;
     public ClimberState climberState;
     Angle encoderZeroOffset = Degrees.zero();
 
@@ -81,6 +83,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         }
         degreesPerRotation = propertyFactory.createPersistentProperty("Degrees Per Rotation", 0);
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
+        this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("Readiness Timeout Seconds", 2.0);
         // TODO: find degrees per rotation
     }
         //set target position for rotation
@@ -191,5 +194,9 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     public final Command getCalibrateOffsetRetractCommand() {
         return new NamedRunCommand( getName() + "-calibrate", this::calibrateOffsetRetracted);
+    }
+
+    public Command getWaitForAtGoalCommand() {
+        return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
     }
 }
