@@ -23,7 +23,6 @@ import xbot.common.injection.electrical_contract.TalonFxMotorControllerOutputCon
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.subsystems.vision.CameraCapabilities;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -85,11 +84,11 @@ public class Contract2026 extends ElectricalContract {
         return new DeviceInfo("ClimberAbsoluteEncoderReady",CANBusId.Canivore, 59);
     }
 
-    public DeviceInfo Pigeon2() {
+    public DeviceInfo pigeon2() {
         return new DeviceInfo("Pigeon2.0",CANBusId.Canivore, 56);
     }
 
-    public DeviceInfo CANdle() {
+    public DeviceInfo candle() {
         return new DeviceInfo("CANdle",CANBusId.Canivore, 57);
     }
 
