@@ -120,6 +120,10 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         return false;
     }
 
+    public Angle getCalibratedAngle() {
+        return climberMotorLeft.getPosition().minus(motorOffset);
+    }
+
     public void periodic() {
 
         if (isTouchingSensor() && !isCalibrated) {
@@ -138,7 +142,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     @Override
     public Angle getCurrentValue() {
         return Degrees.of(
-                climberMotorLeft.getPosition().minus(motorOffset).in(Rotations) * mechanismDegreesPerMotorRotation.get()
+                getCalibratedAngle().in(Rotations) * mechanismDegreesPerMotorRotation.get()
         );
     }
 
