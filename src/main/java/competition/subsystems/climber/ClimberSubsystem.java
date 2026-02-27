@@ -120,13 +120,6 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         return false;
     }
 
-    private Angle getRawMotorAngle() {
-        if (climberMotorLeft != null) {
-            return climberMotorLeft.getPosition();
-        }
-        return Rotations.zero();
-    }
-
     public void periodic() {
 
         if (isTouchingSensor() && !isCalibrated) {
@@ -163,7 +156,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public void setPower(Double power) {}
 
     private Angle getCalibratedPosition() {
-        return getRawMotorAngle().minus(motorOffset);
+        return getCurrentValue().minus(motorOffset);
     }
 
     @Override
