@@ -42,7 +42,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         propertyFactory.setPrefix(this);
 
         var defaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
-                .withP(0.0)
+                .withP(0.1)
                 .withI(0.0)
                 .withD(0.0)
                 .withMinPowerOutput(-1.0)

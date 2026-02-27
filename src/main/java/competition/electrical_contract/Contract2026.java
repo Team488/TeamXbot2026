@@ -208,7 +208,7 @@ public class Contract2026 extends ElectricalContract {
     public DeviceInfo getHoodServoRight() {
         return new DeviceInfo("HoodServoRight", 1);
     }
-
+    
     // OrangePis - powered via buck converters (see getAdditionalPowerBranches)
     public DeviceInfo getFrontOrangePi() {
         return new DeviceInfo("FrontOrangePi", -1, PowerSource.NONE);
