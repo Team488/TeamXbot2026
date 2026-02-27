@@ -191,7 +191,7 @@ public class Contract2026 extends ElectricalContract {
     public boolean intakeDeploySensorReady() { return false; }
 
      public DeviceInfo getIntakeDeploySensor() {
-        return new DeviceInfo("IntakeDeploySensor", 0);
+        return new DeviceInfo("IntakeDeploySensor", 1);
     }
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
