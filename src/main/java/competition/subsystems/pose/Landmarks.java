@@ -12,6 +12,8 @@ import javax.inject.Singleton;
 
 @Singleton
 public class Landmarks {
+
+
     // Y coordinate constants
     private static final double climbMiddleOutpostSideY = 3.32;
     private static final double climbMiddleY = 3.730;
@@ -52,7 +54,7 @@ public class Landmarks {
 
     // Blue Tower
     public static Pose2d blueClimbOutpostEdge = new Pose2d(1.545,2.780,Rotation2d.fromDegrees(180));
-    public static Pose2d blueClimbMiddleOutpostSide = new Pose2d(1.545,climbMiddleOutpostSideY ,Rotation2d.fromDegrees(180));
+    public static Pose2d blueClimbMiddleOutpostSide = new Pose2d(1.75,climbMiddleOutpostSideY ,Rotation2d.fromDegrees(180));
     public static Pose2d blueClimbCenter = new Pose2d(1.545,climbMiddleY,Rotation2d.fromDegrees(180));
     public static Pose2d blueClimbMiddleDepotSide = new Pose2d(1.545,climbMiddleDepotSideY,Rotation2d.fromDegrees(180));
     public static Pose2d blueClimbDepotSideEdge = new Pose2d(1.545,4.650,Rotation2d.fromDegrees(180));
@@ -61,6 +63,12 @@ public class Landmarks {
     public static Pose2d blueClimbMiddleOutpostSideReadyPose = new Pose2d(2.036,climbMiddleOutpostSideY, Rotation2d.fromDegrees(180));
     public static Pose2d blueClimbMiddleReadyPose = new Pose2d(2.036,climbMiddleY, Rotation2d.fromDegrees(180));
     public static Pose2d blueClimbMiddleDepotSideReadyPose = new Pose2d(2.321,climbMiddleDepotSideY,Rotation2d.fromDegrees(180));
+
+    public static Pose2d blueVisionClimbReadyPose = new Pose2d(2.089,4.280, Rotation2d.fromDegrees(-180));
+
+    // Shooting location
+    public static Pose2d blueDepotSideShootPose = new Pose2d(2.645, 5.737, Rotation2d.fromDegrees(0));
+//    public static Pose2d blueOutpostSideShootPose = new Pose2d(2.645,)
 
     // Field of fuel (For auto)
     public static Pose2d blueOutpostSideFuelFieldCollectionStart = new Pose2d(7.790,1.640, Rotation2d.fromDegrees(90));

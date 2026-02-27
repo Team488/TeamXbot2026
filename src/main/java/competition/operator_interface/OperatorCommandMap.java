@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 import competition.command_groups.DepotClimbCommandGroup;
 import competition.command_groups.MiddleClimbCommandGroup;
 import competition.command_groups.OutpostClimbCommandGroup;
+import competition.command_groups.VisionOutpostClimbCommandGroup;
 import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.command_groups.FireWhenShooterReadyCommandGroup;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
@@ -118,13 +119,15 @@ public class OperatorCommandMap {
             ResetSimulatedPoseCommand resetSimulatorPositionCommand,
             OutpostClimbCommandGroup outpostClimbCommandGroup,
             MiddleClimbCommandGroup middleClimbCommandGroup,
-            DepotClimbCommandGroup depotClimbCommandGroup
+            DepotClimbCommandGroup depotClimbCommandGroup,
+            VisionOutpostClimbCommandGroup visionOutpostClimbCommandGroup
 
     ) {
         resetSimulatorPositionCommand.includeOnSmartDashboard("Reset Simulator Position");
         outpostClimbCommandGroup.includeOnSmartDashboard("Outpost Climb Command");
         middleClimbCommandGroup.includeOnSmartDashboard("Middle Climb Command");
         depotClimbCommandGroup.includeOnSmartDashboard("Depot Climb Command");
+        visionOutpostClimbCommandGroup.includeOnSmartDashboard("Vision Outpost Climb Command");
 
     }
 
