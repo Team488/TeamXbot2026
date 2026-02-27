@@ -1,6 +1,6 @@
 package competition.command_groups;
 
-import competition.subsystems.hood.commands.HoodMaintainerCommand;
+import competition.subsystems.hood.commands.HoodSetCommand;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import edu.wpi.first.units.measure.AngularVelocity;
 import xbot.common.command.BaseParallelCommandGroup;
@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 public class PrepareToShootCommandGroup extends BaseParallelCommandGroup {
 
-    HoodMaintainerCommand hoodMaintainer;
+    HoodSetCommand hoodSetCommand;
     ShooterOutputCommand outputCommand;
 
     public void setShooterGoal(AngularVelocity targetVelocity) {
@@ -17,15 +17,15 @@ public class PrepareToShootCommandGroup extends BaseParallelCommandGroup {
     }
 
     public void setHoodGoal(double ratio) {
-        this.hoodMaintainer.setTargetRatio(ratio);
+        this.hoodSetCommand.setTargetRatio(ratio);
     }
 
     @Inject
-    public PrepareToShootCommandGroup(HoodMaintainerCommand hood, ShooterOutputCommand shooterOutput) {
+    public PrepareToShootCommandGroup(HoodSetCommand hoodSet, ShooterOutputCommand shooterOutput) {
 
         this.outputCommand = shooterOutput;
-        this.hoodMaintainer = hood;
+        this.hoodSetCommand = hoodSet;
 
-        this.addCommands(shooterOutput, hood);
+        this.addCommands(shooterOutput, hoodSet);
     }
 }
