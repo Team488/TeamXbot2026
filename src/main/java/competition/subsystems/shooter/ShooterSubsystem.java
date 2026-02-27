@@ -10,6 +10,7 @@ import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
+import xbot.common.resiliency.DeviceHealth;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,7 +43,27 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         propertyFactory.setPrefix(this);
         this.electricalContract = electricalContract;
 
-        var defaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
+        var leftShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
+                .withP(0.05)
+                .withI(0.0)
+                .withD(0.0)
+                .withStaticFeedForward(0.02)
+                .withVelocityFeedForward(0.0095)
+                .withMinPowerOutput(-1.0)
+                .withMaxPowerOutput(1.0)
+                .build();
+
+        var middleShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
+                .withP(0.05)
+                .withI(0.0)
+                .withD(0.0)
+                .withStaticFeedForward(0.02)
+                .withVelocityFeedForward(0.0095)
+                .withMinPowerOutput(-1.0)
+                .withMaxPowerOutput(1.0)
+                .build();
+
+        var rightShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
                 .withP(0.05)
                 .withI(0.0)
                 .withD(0.0)
@@ -54,7 +75,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         if (electricalContract.isLeftShooterReady()) {
             this.leftShooterMotor = xcanMotorControllerFactory.create(electricalContract.getLeftShooterMotor(),
-                    getPrefix(), "ShooterMotor", defaultPIDProperties);
+                    getPrefix(), "leftShooterMotor", leftShooterMotorDefaultPIDProperties);
             this.registerDataFrameRefreshable(leftShooterMotor);
         } else {
             this.leftShooterMotor = null;
@@ -62,7 +83,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         if (electricalContract.isMiddleShooterReady()) {
             this.middleShooterMotor = xcanMotorControllerFactory.create(electricalContract.getMiddleShooterMotor(),
-                    getPrefix(), "ShooterMotor", defaultPIDProperties);
+                    getPrefix(), "middleShooterMotor", middleShooterMotorDefaultPIDProperties);
             this.registerDataFrameRefreshable(middleShooterMotor);
         } else {
             this.middleShooterMotor = null;
@@ -70,7 +91,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         if (electricalContract.isRightShooterReady()) {
             this.rightShooterMotor = xcanMotorControllerFactory.create(electricalContract.getRightShooterMotor(),
-                    getPrefix(), "ShooterMotor", defaultPIDProperties);
+                    getPrefix(), "rightShooterMotor", rightShooterMotorDefaultPIDProperties);
             this.registerDataFrameRefreshable(rightShooterMotor);
         } else {
             this.rightShooterMotor = null;
@@ -129,6 +150,12 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         return motors;
     }
 
+    public List<XCANMotorController> getHealthyShooterMotors() {
+        return getShooterMotors().stream()
+                .filter(motor -> motor.getHealth() == DeviceHealth.Healthy)
+                .toList();
+    }
+
     public void periodic() {
         for (var motor : getShooterMotors()) {
             motor.periodic();
@@ -137,15 +164,16 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
     @Override
     public AngularVelocity getCurrentValue() {
-        if (getShooterMotors().isEmpty()) {
+        var shooterMotors = getHealthyShooterMotors();
+        if (shooterMotors.isEmpty()) {
             return RPM.zero();
         }
 
         double total = 0;
-        for (var motor : getShooterMotors()) {
+        for (var motor : shooterMotors) {
             total += motor.getVelocity().in(RPM);
         }
-        double averageSpeed = total / getShooterMotors().size();
+        double averageSpeed = total / shooterMotors.size();
         return RPM.of(averageSpeed);
     }
 

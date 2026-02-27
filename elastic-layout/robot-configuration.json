@@ -295,6 +295,7 @@
             "properties": {
               "topic": "/Preferences/ContractToUse",
               "period": 0.06,
+              "data_type": "string",
               "show_submit_button": true
             }
           }
@@ -310,7 +311,7 @@
             "x": 128.0,
             "y": 128.0,
             "width": 256.0,
-            "height": 256.0,
+            "height": 384.0,
             "type": "List Layout",
             "properties": {
               "label_position": "TOP"
@@ -343,6 +344,34 @@
                   "data_type": "double",
                   "show_submit_button": true
                 }
+              },
+              {
+                "title": "Error Tolerance",
+                "x": 128.0,
+                "y": 384.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/ShooterWheelMaintainerCommand/Error Tolerance",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Error Time Stable Window",
+                "x": 256.0,
+                "y": 384.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/ShooterWheelMaintainerCommand/Error Time Stable Window",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
               }
             ]
           },
@@ -351,7 +380,7 @@
             "x": 384.0,
             "y": 128.0,
             "width": 256.0,
-            "height": 256.0,
+            "height": 384.0,
             "type": "List Layout",
             "properties": {
               "label_position": "TOP"
@@ -372,14 +401,42 @@
                 }
               },
               {
-                "title": "HoodTrimValue",
+                "title": "HoodTrimStep",
                 "x": 384.0,
                 "y": 256.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/Preferences/HoodSubsystem/HoodTrimValue",
+                  "topic": "/Preferences/HoodSubsystem/HoodTrimStep",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "MinExtensionGoal",
+                "x": 512.0,
+                "y": 256.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/HoodSubsystem/MinExtensionGoal",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "MaxExtensionGoal",
+                "x": 512.0,
+                "y": 256.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/HoodSubsystem/MaxExtensionGoal",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
@@ -390,17 +447,277 @@
         ],
         "containers": [
           {
-            "title": "kGravityFeedForward",
+            "title": "kP",
+            "x": 768.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/leftShooterMotor/0/kP",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kI",
+            "x": 768.0,
+            "y": 256.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/leftShooterMotor/0/kI",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kD",
+            "x": 768.0,
+            "y": 384.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/leftShooterMotor/0/kD",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kStaticFeedForward",
+            "x": 768.0,
+            "y": 512.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/leftShooterMotor/0/kStaticFeedForward",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kVelocityFeedForward",
+            "x": 768.0,
+            "y": 640.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/leftShooterMotor/0/kVelocityFeedForward",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kP",
+            "x": 896.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/middleShooterMotor/0/kP",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kI",
             "x": 896.0,
             "y": 256.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kGravityFeedForward",
+              "topic": "/Preferences/ShooterSubsystem/middleShooterMotor/0/kI",
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": true
+            }
+          },
+          {
+            "title": "kD",
+            "x": 896.0,
+            "y": 384.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/middleShooterMotor/0/kD",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kStaticFeedForward",
+            "x": 896.0,
+            "y": 512.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/middleShooterMotor/0/kStaticFeedForward",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kVelocityFeedForward",
+            "x": 896.0,
+            "y": 640.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/middleShooterMotor/0/kVelocityFeedForward",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kP",
+            "x": 1024.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/rightShooterMotor/0/kP",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kI",
+            "x": 1024.0,
+            "y": 256.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/rightShooterMotor/0/kI",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kD",
+            "x": 1024.0,
+            "y": 384.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/rightShooterMotor/0/kD",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kStaticFeedForward",
+            "x": 1024.0,
+            "y": 512.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/rightShooterMotor/0/kStaticFeedForward",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "kVelocityFeedForward",
+            "x": 1024.0,
+            "y": 640.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/rightShooterMotor/0/kVelocityFeedForward",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Shooting Target Velocity",
+            "x": 512.0,
+            "y": 512.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ShooterSubsystem/Shooting Target Velocity",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Intake Deploy Tuning",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "kD",
+            "x": 512.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/IntakeDeploySubsystem/IntakeDeployPID/0/kD",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "kI",
+            "x": 640.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/IntakeDeploySubsystem/IntakeDeployPID/0/kI",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "kP",
+            "x": 768.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/IntakeDeploySubsystem/IntakeDeployPID/0/kP",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
             }
           },
           {
@@ -411,10 +728,10 @@
             "height": 128.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/kMaxOutput",
+              "topic": "/Preferences/IntakeDeploySubsystem/IntakeDeployPID/kMaxOutput",
               "period": 0.06,
               "data_type": "double",
-              "show_submit_button": true
+              "show_submit_button": false
             }
           },
           {
@@ -425,91 +742,21 @@
             "height": 128.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/kMinOutput",
+              "topic": "/Preferences/IntakeDeploySubsystem/IntakeDeployPID/kMinOutput",
               "period": 0.06,
               "data_type": "double",
-              "show_submit_button": true
+              "show_submit_button": false
             }
           },
           {
-            "title": "kP",
-            "x": 640.0,
-            "y": 128.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kP",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "kD",
-            "x": 896.0,
-            "y": 128.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kD",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "kVelocityFeedForward",
-            "x": 640.0,
+            "title": "MechanismTargetRotation-in-Degrees",
+            "x": 512.0,
             "y": 256.0,
-            "width": 128.0,
-            "height": 128.0,
+            "width": 256.0,
+            "height": 256.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kVelocityFeedForward",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "Target Velocity",
-            "x": 640.0,
-            "y": 384.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/Preferences/ShooterSubsystem/Target Velocity",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "kI",
-            "x": 768.0,
-            "y": 128.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kI",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "kStaticFeedForward",
-            "x": 896.0,
-            "y": 384.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/Preferences/ShooterSubsystem/ShooterMotor/0/kStaticFeedForward",
+              "topic": "/Preferences/IntakeDeploySubsystem/MechanismTargetRotation-in-Degrees",
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": true
