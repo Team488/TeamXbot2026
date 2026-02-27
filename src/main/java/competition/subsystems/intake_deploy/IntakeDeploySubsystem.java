@@ -27,8 +27,8 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public final XDigitalInput intakeDeploySensor;
 
     public boolean isCalibrated = false;
-    public final AngleProperty extendedPosition;
-    public final AngleProperty retractedPosition;
+    public final DoubleProperty extendedPosition;
+    public final DoubleProperty retractedPosition;
     private final AngleProperty mechanismTargetRotation;
     public final DoubleProperty mechanismDegreePerMotorRotation;
 
@@ -67,8 +67,8 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             this.intakeDeploySensor = null;
         }
 
-        this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", Degrees.zero());
-        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", Degrees.of(90));
+        this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", 0.0);
+        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -90.0);
 
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
         this.limbRange = propertyFactory.createPersistentProperty("limbRange", Rotations.of(9.5));
@@ -138,10 +138,11 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     }
     public void periodic() {
         aKitLog.record("IsCalibrated", isCalibrated);
+        aKitLog.record("CurrentPosition", getCurrentValue().in(Degrees));
         if (intakeDeployMotor != null) {
             intakeDeployMotor.periodic();
         }
-        if (isTouchingIntakeDeploy()){
+        if (isTouchingIntakeDeploy() && !isCalibrated) {
             calibrateOffsetUp();
         }
     }
