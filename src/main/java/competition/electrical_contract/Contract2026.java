@@ -73,11 +73,11 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public boolean isClimberAbsoluteEncoderReady() { return false; }
+    public boolean isClimberSensorReady() { return false; }
 
     @Override
-    public DeviceInfo getClimberAbsoluteEncoder() {
-        return new DeviceInfo("ClimberAbsoluteEncoderReady",59);
+    public DeviceInfo getClimberSensor() {
+        return new DeviceInfo("ClimberSensor",59);
 
     }
 
