@@ -25,4 +25,9 @@ public class ShooterStopCommand extends BaseSetpointCommand {
     public boolean runsWhenDisabled() {
         return true;
     }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }
