@@ -188,6 +188,12 @@ public class Contract2026 extends ElectricalContract {
         return new DeviceInfo("HoodServoRight", 1);
     }
 
+    public boolean intakeDeploySensorReady() { return false; }
+
+     public DeviceInfo getIntakeDeploySensor() {
+        return new DeviceInfo("IntakeDeploySensor", 0);
+    }
+
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/Drive";
     }

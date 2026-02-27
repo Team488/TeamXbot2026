@@ -9,6 +9,8 @@ import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
+import xbot.common.controls.sensors.XDigitalInput;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -18,9 +20,12 @@ import static edu.wpi.first.units.Units.Rotations;
 
 @Singleton
 public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  {
+   ElectricalContract electricalContract;
     public final XCANMotorController intakeDeployMotor;
     public final DoubleProperty manualControlPower;
-    public Angle motorOffset = Degrees.zero();
+    public Angle motorOffset = Rotations.zero();
+    public final XDigitalInput intakeDeploySensor;
+
     public boolean isCalibrated = false;
     public final AngleProperty extendedPosition;
     public final AngleProperty retractedPosition;
@@ -32,7 +37,8 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     @Inject
     public IntakeDeploySubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
-                                 ElectricalContract electricalContract, PropertyFactory propertyFactory) {
+                                 ElectricalContract electricalContract, PropertyFactory propertyFactory,
+                                 XDigitalInput.XDigitalInputFactory xDigitalInputFactory, XDigitalInput intakeDeploySensor) {
         propertyFactory.setPrefix(this);
 
         var defaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
@@ -53,6 +59,16 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
         this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", Degrees.zero());
         this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", Degrees.of(90));
+
+        if (electricalContract.intakeDeploySensorReady()){
+            this.intakeDeploySensor = xDigitalInputFactory.create
+                    (electricalContract.getIntakeDeploySensor(),
+                            getPrefix());
+            registerDataFrameRefreshable(intakeDeploySensor);
+        } else {
+            this.intakeDeploySensor = null;
+        }
+
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
         this.limbRange = propertyFactory.createPersistentProperty("limbRange", Rotations.of(9.5));
 
@@ -107,6 +123,13 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         return Math.abs(target1.in(Degrees) - target2.in(Degrees)) < 0.001;
     }
 
+    public boolean isTouchingIntakeDeploy() {
+        if (electricalContract.intakeDeploySensorReady()) {
+            return this.intakeDeploySensor.get();
+        }
+        return false;
+    }
+
     public void stop() {
         if (intakeDeployMotor != null) {
             intakeDeployMotor.setPower(0);
@@ -116,6 +139,9 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         aKitLog.record("IsCalibrated", isCalibrated);
         if (intakeDeployMotor != null) {
             intakeDeployMotor.periodic();
+        }
+        if (isTouchingIntakeDeploy()){
+            calibrateOffsetUp();
         }
     }
 
