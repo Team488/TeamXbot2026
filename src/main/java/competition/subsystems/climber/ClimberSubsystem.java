@@ -155,10 +155,6 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     @Override
     public void setPower(Double power) {}
 
-    private Angle getCalibratedPosition() {
-        return getCurrentValue().minus(motorOffset);
-    }
-
     @Override
     public boolean isCalibrated() {
         return isCalibrated;
