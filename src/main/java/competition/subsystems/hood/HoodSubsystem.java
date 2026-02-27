@@ -68,9 +68,9 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         this.servoTargetNormalized = propertyFactory.createPersistentProperty(
                 "ServoTargetPositionNormalized", 0);
         this.trimValue = propertyFactory.createPersistentProperty("HoodTrimValue", 0);
-        this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.1);
-        this.extend = propertyFactory.createPersistentProperty("MinExtendGoal", 0);
-        this.retract = propertyFactory.createPersistentProperty("MaxRetractGoal", 0.1);
+        this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.05);
+        this.extend = propertyFactory.createPersistentProperty("MaxExtensionGoal", 1.0);
+        this.retract = propertyFactory.createPersistentProperty("MinExtensionGoal", 0.0);
     }
 
     public void extend() {
@@ -136,6 +136,15 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
     @Override
     public void setTargetValue(Double targetRatio) {
+        // Check bounds
+        var minPosition = retract.get();
+        var maxPosition = extend.get();
+        if (targetRatio < minPosition) {
+            targetRatio = minPosition;
+        } else if (targetRatio > maxPosition) {
+            targetRatio = maxPosition;
+        }
+
         servoTargetNormalized.set(targetRatio);
     }
 
