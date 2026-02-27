@@ -38,7 +38,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     @Inject
     public IntakeDeploySubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
                                  ElectricalContract electricalContract, PropertyFactory propertyFactory,
-                                 XDigitalInput.XDigitalInputFactory xDigitalInputFactory, XDigitalInput intakeDeploySensor) {
+                                 XDigitalInput.XDigitalInputFactory xDigitalInputFactory) {
         propertyFactory.setPrefix(this);
 
         var defaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
@@ -57,17 +57,18 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             this.intakeDeployMotor = null;
         }
 
-        this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", Degrees.zero());
-        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", Degrees.of(90));
-
         if (electricalContract.intakeDeploySensorReady()){
-            this.intakeDeploySensor = xDigitalInputFactory.create
-                    (electricalContract.getIntakeDeploySensor(),
-                            getPrefix());
-            registerDataFrameRefreshable(intakeDeploySensor);
+            this.intakeDeploySensor = xDigitalInputFactory.create(
+                    electricalContract.getIntakeDeploySensor(),
+                    getPrefix()
+            );
+            this.registerDataFrameRefreshable(this.intakeDeploySensor);
         } else {
             this.intakeDeploySensor = null;
         }
+
+        this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", Degrees.zero());
+        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", Degrees.of(90));
 
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
         this.limbRange = propertyFactory.createPersistentProperty("limbRange", Rotations.of(9.5));
@@ -124,7 +125,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     }
 
     public boolean isTouchingIntakeDeploy() {
-        if (electricalContract.intakeDeploySensorReady()) {
+        if (intakeDeploySensor != null) {
             return this.intakeDeploySensor.get();
         }
         return false;
