@@ -41,8 +41,7 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
         this.gamefield = gamefield;
     }
 
-    @Override
-    public void initialize() {
+    private List<XbotSwervePoint> calcOldSwervePoints() {
         Pose2d closestTrench = this.pose.closestAllianceTrench();
         var fieldCenter = this.gamefield.getFieldCenter();
         var changeInX = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? -1 : 1;
@@ -62,21 +61,35 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
 
         if (closestPoint == finalPoint) {
             List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, finalPoint, false);
-            super.logic.setKeyPoints(swervePoints);
+            return this.pathPlanning.generateSwervePoints(currentPose, finalPoint, false);
         } else if (closestPoint == neutralPoint) {
             List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, neutralPoint,
                     false);
             swervePoints.addAll(this.pathPlanning.generateSwervePoints(neutralPoint, finalPoint, false));
 
-            super.logic.setKeyPoints(swervePoints);
-        } else {
-            List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, driverPoint,
-                    false);
-            swervePoints.addAll(this.pathPlanning.generateSwervePoints(driverPoint, neutralPoint, false));
-            swervePoints.addAll(this.pathPlanning.generateSwervePoints(neutralPoint, finalPoint, false));
-
-            super.logic.setKeyPoints(swervePoints);
+            return swervePoints;
         }
+
+        List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, driverPoint,
+                false);
+        swervePoints.addAll(this.pathPlanning.generateSwervePoints(driverPoint, neutralPoint, false));
+        swervePoints.addAll(this.pathPlanning.generateSwervePoints(neutralPoint, finalPoint, false));
+
+        return swervePoints;
+    }
+
+    private List<XbotSwervePoint> calcSwervePoints() {
+        var currentPose = pose.getCurrentPose2d();
+        var ballPitEdge = Landmarks.getClosestAutoBallPitEdge(this.gamefield, currentPose,
+                DriverStation.getAlliance().orElse(Alliance.Blue));
+
+        return this.pathPlanning.generateSwervePoints(currentPose, ballPitEdge,
+                false);
+    }
+
+    @Override
+    public void initialize() {
+        super.logic.setKeyPoints(this.calcSwervePoints());
 
         this.logic.setPrioritizeRotationIfCloseToGoal(true);
         this.logic.setVelocityMode(SwerveSimpleTrajectoryMode.GlobalKinematicsValue);

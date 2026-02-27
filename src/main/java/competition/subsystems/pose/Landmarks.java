@@ -4,8 +4,13 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import xbot.common.subsystems.pose.GameField;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Singleton;
@@ -58,9 +63,17 @@ public class Landmarks {
     public static Pose2d blueOutpostSideFuelFieldCollectionStart = new Pose2d(7.790,1.640, Rotation2d.fromDegrees(90));
     public static Pose2d blueDepotSideFuelFieldCollectionStart = new Pose2d(7.790,6.800, Rotation2d.fromDegrees(270));
 
+    private static Distance halfWidthBallPit = Units.Inches.of(35.95);
+    private static Distance halfHeightBallPit = Units.Inches.of(90.95);
 
+    private static Transform2d[] ballPitTransforms = new Transform2d[] {
+        new Transform2d(halfWidthBallPit, halfHeightBallPit, Rotation2d.kZero),
+        new Transform2d(halfWidthBallPit.times(-1), halfHeightBallPit, Rotation2d.kZero),
+        new Transform2d(halfWidthBallPit, halfHeightBallPit.times(-1), Rotation2d.kZero),        
+        new Transform2d(halfWidthBallPit.times(-1), halfHeightBallPit.times(-1), Rotation2d.kZero),
+    };
 
-
+    // AprilTag Ids for known points
     public static int redCenterHubNeutralSideFiducialId = 4;
     public static int redCenterHubDriverSideFiducialId = 10;
 
@@ -81,6 +94,9 @@ public class Landmarks {
 
     public static int blueOutpostFiducialId = 29;
     public static int redOutpostFiducialId = 13;
+
+    // Offsets/Transforms
+    public static Transform2d edgeOfNeutralZoneInitialBallPit = new Transform2d(Units.Inches.of(35.95), Units.Inches.of(90.95), Rotation2d.kZero);
 
 
     public static List<Integer> getAllianceHubCenterFiducialIds(Alliance alliance) {
@@ -159,6 +175,28 @@ public class Landmarks {
         double maxX = Math.max(id1Pose.getX(), id2Pose.getX());
 
         return currentPose.getX() >= minX && currentPose.getX() <= maxX;
+    }
+
+    public static Pose2d getClosestAutoBallPitEdge(GameField field, Pose2d currentPose, Alliance alliance) {
+        var center = field.getFieldCenter();
+        var centerPose = new Pose2d(center, Rotation2d.kZero);
+        var ballPitEdges = Arrays.stream(ballPitTransforms)
+            .map(transform -> centerPose.transformBy(transform))
+            .filter(edgePose -> isInAllianceSide(field, edgePose, alliance))
+            .toList();
+
+        return currentPose.nearest(ballPitEdges);
+    }
+
+    public static boolean isInAllianceSide(GameField field, Pose2d pose, Alliance alliance) {
+        var center = field.getFieldCenter();
+        if (alliance == Alliance.Blue) {
+            return pose.getX() < center.getX();
+        } else if (alliance == Alliance.Red) {
+            return pose.getX() > center.getX();
+        }
+
+        return false;
     }
 
     public static List<Pose2d> getAllianceTrenchPoses(AprilTagFieldLayout aprilTagFieldLayout, Alliance alliance) {
