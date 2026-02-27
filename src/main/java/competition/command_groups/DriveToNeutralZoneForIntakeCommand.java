@@ -21,6 +21,7 @@ import xbot.common.subsystems.drive.SwerveSimpleTrajectoryCommand;
 import xbot.common.subsystems.drive.SwerveSimpleTrajectoryMode;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
 import xbot.common.subsystems.oracle.SwervePointPathPlanning;
+import xbot.common.subsystems.pose.GameField;
 import xbot.common.trajectory.XbotSwervePoint;
 
 import javax.inject.Inject;
@@ -28,43 +29,49 @@ import javax.inject.Inject;
 public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierCommand {
     private final PoseSubsystem pose;
     private final SwervePointPathPlanning pathPlanning;
+    private final GameField gamefield;
 
     @Inject
     public DriveToNeutralZoneForIntakeCommand(DriveSubsystem drive, PoseSubsystem pose,
-                                              PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
-                                              RobotAssertionManager robotAssertionManager, SwervePointPathPlanning pathPlanning) {
+            PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
+            RobotAssertionManager robotAssertionManager, SwervePointPathPlanning pathPlanning, GameField gamefield) {
         super(drive, pose, pf, headingModuleFactory, robotAssertionManager);
         this.pose = pose;
         this.pathPlanning = pathPlanning;
+        this.gamefield = gamefield;
     }
 
     @Override
     public void initialize() {
         Pose2d closestTrench = this.pose.closestAllianceTrench();
-        var changeInY = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? -1 : 1;
-        var driverSideTransform = new Transform2d(Units.Meters.of(0), Units.Meters.of(1.5 * changeInY), Rotation2d.kZero);
-        var neutralSideTransform = new Transform2d(Units.Meters.of(0), Units.Meters.of(1.5 * -1 * changeInY), Rotation2d.kZero);
-        var finalTransform = new Transform2d(Units.Meters.of(1), Units.Meters.of(2 * -1 * changeInY), Rotation2d.kZero);
+        var fieldCenter = this.gamefield.getFieldCenter();
+        var changeInX = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? -1 : 1;
+        var changeInY = closestTrench.getY() > fieldCenter.getY() ? -1 : 1;
+        var driverSideTransform = new Transform2d(Units.Meters.of(2 * changeInX), Units.Meters.of(0), Rotation2d.kZero);
+        var neutralSideTransform = new Transform2d(Units.Meters.of(2 * -1 * changeInX), Units.Meters.of(0),
+                Rotation2d.kZero);
+        var finalTransform = new Transform2d(Units.Meters.of(3 * -1 * changeInX), Units.Meters.of(1 * changeInY),
+                changeInX * changeInY == 1 ? Rotation2d.kCCW_Pi_2 : Rotation2d.kCW_Pi_2);
 
         var driverPoint = closestTrench.plus(driverSideTransform);
         var neutralPoint = closestTrench.plus(neutralSideTransform);
         var finalPoint = closestTrench.plus(finalTransform);
 
         var currentPose = pose.getCurrentPose2d();
-        var closestPoint = currentPose.nearest(Arrays.asList(new Pose2d[] {driverPoint, neutralPoint, finalPoint}));
+        var closestPoint = currentPose.nearest(Arrays.asList(new Pose2d[] { driverPoint, neutralPoint, finalPoint }));
 
         if (closestPoint == finalPoint) {
             List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, finalPoint, false);
             super.logic.setKeyPoints(swervePoints);
         } else if (closestPoint == neutralPoint) {
-            List<XbotSwervePoint> swervePoints =
-            this.pathPlanning.generateSwervePoints(currentPose, neutralPoint, false);
+            List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, neutralPoint,
+                    false);
             swervePoints.addAll(this.pathPlanning.generateSwervePoints(neutralPoint, finalPoint, false));
 
             super.logic.setKeyPoints(swervePoints);
         } else {
-            List<XbotSwervePoint> swervePoints =
-            this.pathPlanning.generateSwervePoints(currentPose, driverPoint, false);
+            List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, driverPoint,
+                    false);
             swervePoints.addAll(this.pathPlanning.generateSwervePoints(driverPoint, neutralPoint, false));
             swervePoints.addAll(this.pathPlanning.generateSwervePoints(neutralPoint, finalPoint, false));
 
