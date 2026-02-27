@@ -11,6 +11,7 @@ import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -186,4 +187,17 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public Command getWaitForAtGoalCommand() {
         return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
     }
+
+    public enum FieldScoringLocation {
+        Point_1,
+        Point_2
+    }
+
+    public double getRPMForScoringLocation(FieldScoringLocation location) {
+        return switch (location) {
+            case Point_1 -> 2000;
+            case Point_2 -> 2000;
+        };
+    }
+
 }

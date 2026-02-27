@@ -1,13 +1,12 @@
 package competition.subsystems.shooter_feeder.commands;
 
 import competition.subsystems.shooter.ShooterSubsystem;
+import competition.subsystems.shooter.ShooterSubsystem.FieldScoringLocation;
 import xbot.common.command.BaseSetpointCommand;
 
 import javax.inject.Inject;
 
 import static edu.wpi.first.units.Units.RPM;
-
-import competition.subsystems.shooter.ShooterSubsystem.FieldScoringLocation;
 
 public class SetShooterSpeedFromLocationCommand extends BaseSetpointCommand {
     private final ShooterSubsystem shooter;
@@ -25,15 +24,16 @@ public class SetShooterSpeedFromLocationCommand extends BaseSetpointCommand {
 
     @Override
     public void initialize() {
-        log.info("Initializing SetShooterSpeedFromLocationCommand at location: " + currentLocation);
+        log.info("Initializing at location: " + currentLocation);
         double speed = shooter.getRPMForScoringLocation(currentLocation);
-        shooter.setTargetValue(speed);
+        shooter.setTargetValue(RPM.of(speed));
     }
 
     @Override
     public void execute() {
         double speed = shooter.getRPMForScoringLocation(currentLocation);
-        shooter.setTargetValue(speed);
+        shooter.setTargetValue(RPM.of(speed));
+        shooter.runMotorsAtVelocity(shooter.getTrimmedTargetValue());
     }
 
     @Override
