@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
 import competition.command_groups.FireWhenShooterReadyCommandGroup;
 import competition.command_groups.HopperAndIntakeCommandGroup;
+import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
@@ -61,7 +62,7 @@ public class OperatorCommandMap {
                                    ChangeActiveSwerveModuleCommand changeActiveModule,
                                    SwerveDriveWithJoysticksCommand typicalSwerveDrive) {
         resetHeading.setHeadingToApply(0);
-        operatorInterface.driverGamepad.getifAvailable(1).onTrue(resetHeading);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
 
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
         operatorInterface.driverGamepad.getPovIfAvailable(90).onTrue(changeActiveModule);
@@ -144,6 +145,10 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getPovIfAvailable(270).whileTrue(shooterFeederFire);
     }
 
-
-
+    @Inject
+    public void setupSimulatorCommands(
+            ResetSimulatedPoseCommand resetPose
+    ) {
+        resetPose.includeOnSmartDashboard();
+    }
 }
