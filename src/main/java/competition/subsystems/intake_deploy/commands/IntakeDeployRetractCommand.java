@@ -6,6 +6,7 @@ import xbot.common.command.BaseSetpointCommand;
 import javax.inject.Inject;
 
 import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Degrees;
 
 public class IntakeDeployRetractCommand extends BaseSetpointCommand {
     final IntakeDeploySubsystem intakeDeploy;
@@ -18,13 +19,7 @@ public class IntakeDeployRetractCommand extends BaseSetpointCommand {
 
     @Override
     public void initialize() {
-        intakeDeploy.setTargetValue(Degree.of(intakeDeploy.retractedPositionInDegree.get()));
+        intakeDeploy.setTargetValue(Degrees.of(intakeDeploy.retractedPosition.get()));
         log.info("Initialized IntakeDeployRetract");
     }
-
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
-
 }
