@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 
 @Singleton
 public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFrameRefreshable {
-    public static Logger log = LogManager.getLogger(DriveSubsystem.class);
+    private static Logger log = LogManager.getLogger(DriveSubsystem.class);
 
     private Translation2d lookAtPointTarget = new Translation2d(); // The target point to look at
     private Rotation2d staticHeadingTarget = new Rotation2d(); // The heading you want to constantly be at
