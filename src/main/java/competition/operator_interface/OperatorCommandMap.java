@@ -88,14 +88,14 @@ public class OperatorCommandMap {
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(intakeCommand);
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(hopperRollerSubsystem.getIntakeCommand());
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B).onTrue(calibrateOffsetUp);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateOffsetUp);
 
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(hoodExtend);
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(hoodRetract);
 
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start).whileTrue(intakeDeployExtendCommand);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Back).whileTrue(intakeDeployRetractCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(intakeDeployExtendCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(intakeDeployRetractCommand);
     }
 
     @Inject
