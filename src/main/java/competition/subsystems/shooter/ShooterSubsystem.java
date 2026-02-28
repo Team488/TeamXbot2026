@@ -35,7 +35,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public DoubleProperty trimValue;
     public DoubleProperty readinessTimeoutSeconds;
 
-    public AngularVelocity currentTargetVelocity = RPM.of(0);
+    public AngularVelocityProperty currentTargetVelocity = RPM.of(0);
 
     private final Subsystem trimSetpointLock = new Subsystem() {
     };

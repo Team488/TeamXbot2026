@@ -17,7 +17,7 @@ public class ShooterOutputCommand extends BaseSetpointCommand {
     public ShooterOutputCommand(ShooterSubsystem shooterSubsystem) {
         super(shooterSubsystem);
         this.shooter = shooterSubsystem;
-        this.targetVelocity = RPM.of(shooterSubsystem.shootingTargetVelocity.get());
+        this.targetVelocity = RPM.of(shooterSubsystem.shootingTargetVelocity);
     }
 
     public void setTargetVelocity(AngularVelocity targetVelocity) {
@@ -28,7 +28,7 @@ public class ShooterOutputCommand extends BaseSetpointCommand {
     @Override
     public void initialize() {
         if (!this.usingCustomGoal) {
-            this.targetVelocity = RPM.of(this.shooter.shootingTargetVelocity.get());
+            this.targetVelocity = RPM.of(this.shooter.shootingTargetVelocity);
         }
 
         log.info("Shooting at {} RPM", this.targetVelocity.in(RPM));
