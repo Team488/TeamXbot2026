@@ -24,6 +24,11 @@ public class CalibrateOffsetDown extends BaseCommand {
     }
 
     @Override
+    public boolean runsWhenDisabled() {
+        return true;
+    }
+
+    @Override
     public boolean isFinished() {
         return true;
     }
