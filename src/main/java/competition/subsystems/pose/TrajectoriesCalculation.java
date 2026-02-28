@@ -32,15 +32,17 @@ public class TrajectoriesCalculation {
     private final Logger log;
     private final AprilTagFieldLayout aprilTagFieldLayout;
     private final DoubleProperty trajectoriesShooterRPMFixed;
+    private final DoubleProperty interpolationFactor;
 
     public TrajectoriesCalculation(AprilTagFieldLayout aprilTagFieldLayout, PropertyFactory propManager) {
         this.aprilTagFieldLayout = aprilTagFieldLayout;
         this.log = LogManager.getLogger(getClass().getName());
 
         this.trajectoriesShooterRPMFixed = propManager.createPersistentProperty("trajectoriesShooterRPMFixed", 4800);
+        this.interpolationFactor = propManager.createPersistentProperty("AllianceZoneAimMidpointInterpolationFactor", 0.5);
     }
 
-    // fieldOrientatedRotation Should tell us where the drivesystem should head.
+    // fieldOrientatedRotation Should tell us where the drive system should head.
     // shooterRPM Tell us what the shooting wheel should spin at.
     // ballAngle The angle of the hood based on the ball exit angle.
     public record ShootingData(Rotation2d fieldOrientatedRotation, AngularVelocity shooterRPM, double ballAngle) {
@@ -52,7 +54,7 @@ public class TrajectoriesCalculation {
     // hashmap holding all the values
     private static HashMap<TrajectoryKey, HoodTrajectory> trajectoryMap = null;
 
-    // essentially holds all the values for the json to fill hashmap
+    // essentially holds all the values for the JSON to fill hashmap
     public static class HoodTrajectory {
         public double distance;
         public double theta;
@@ -65,17 +67,33 @@ public class TrajectoriesCalculation {
         return calculateTrajectory(robotPose, hubPose);
     }
 
+    public ShootingData calculateAllianceZoneShootingData(Pose2d robotPose) {
+        Pose2d closestTrenchNeutralSideIdPose = Landmarks.getClosestTrenchNeutralSideIdPose(
+                aprilTagFieldLayout,
+                DriverStation.getAlliance().orElse(Alliance.Blue),
+                robotPose
+        );
+
+        Translation2d target = Landmarks.getAllianceHubPose(aprilTagFieldLayout, DriverStation.getAlliance().orElse(Alliance.Blue))
+                .getTranslation()
+                .interpolate(closestTrenchNeutralSideIdPose.getTranslation(), interpolationFactor.get());
+
+        Pose2d targetPose = new Pose2d(target, Rotation2d.kZero);
+
+        return calculateTrajectory(robotPose, targetPose);
+    }
+
     private ShootingData calculateTrajectory(Pose2d robotPose, Pose2d targetPose) {
         if (trajectoryMap == null) {
             loadTrajectories();
         }
         Translation2d vectorToTarget = targetPose.minus(robotPose).getTranslation();
-        var finalRotation = vectorToTarget.getNorm() < 0.01 ? robotPose.getRotation() : vectorToTarget.getAngle();
-        var finalPose = new Pose2d(robotPose.getX(), robotPose.getY(), finalRotation);
+        Rotation2d finalRotation = vectorToTarget.getNorm() < 0.01 ? robotPose.getRotation() : vectorToTarget.getAngle();
+        Pose2d finalPose = new Pose2d(robotPose.getX(), robotPose.getY(), finalRotation);
 
-        var shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
+        Pose2d shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
         double distance = shooterPose.getTranslation().getDistance(targetPose.getTranslation());
-        var hoodTrajectory = trajectoryMap.get(new TrajectoryKey(distance, 10.5));
+        HoodTrajectory hoodTrajectory = trajectoryMap.get(new TrajectoryKey(distance, 10.5));
 
         return new ShootingData(finalRotation, Units.RPM.of(trajectoriesShooterRPMFixed.get()), hoodTrajectory.theta);
     }
@@ -96,12 +114,12 @@ public class TrajectoriesCalculation {
                     trajectoryMap.put(new TrajectoryKey(point.distance, point.velocity), point);
                 }
 
-                log.info("Loaded " + trajectoryMap.size() + " trajectories into HashMap.");
+                log.info("Loaded {} trajectories into HashMap.", trajectoryMap.size());
             } else {
                 log.warn("Trajectories.json not found in the deploy directory!");
             }
         } catch (Exception e) {
-            log.error("Failed to load JSON: " + e.getMessage());
+            log.error("Failed to load JSON: {}", e.getMessage());
         }
     }
 }
