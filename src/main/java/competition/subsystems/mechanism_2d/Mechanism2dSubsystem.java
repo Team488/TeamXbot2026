@@ -24,6 +24,7 @@ public class Mechanism2dSubsystem extends BaseSubsystem {
     final LoggedMechanismLigament2d intakeDeployLigament;
     final double intakeDeployLigamentBaseLengthMeters = 165;
 
+    Angle hoodAngle = Degrees.zero();
     Angle intakeDeployAngle  = Degrees.zero();
     Distance intakeDeployLength = Meters.zero();
 

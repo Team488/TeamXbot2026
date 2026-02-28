@@ -5,7 +5,6 @@ import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import xbot.common.logging.RobotAssertionManager;
-import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
 import xbot.common.subsystems.drive.SwerveSimpleTrajectoryCommand;
@@ -33,7 +32,7 @@ public class DriveToOutpostCommand extends SwerveSimpleTrajectoryCommand {
 
     @Override
     public void initialize() {
-        outpostPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueOutpost);
+        outpostPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueOutpostPark);
 
         ArrayList<XbotSwervePoint> swervePoints = new ArrayList<>();
         swervePoints.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(

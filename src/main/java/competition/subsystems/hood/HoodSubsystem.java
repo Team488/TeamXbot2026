@@ -4,9 +4,9 @@ import competition.electrical_contract.ElectricalContract;
 
 import edu.wpi.first.units.measure.Time;
 import xbot.common.command.BaseSetpointSubsystem;
-import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.TimedAndBoundedServo;
 import xbot.common.controls.actuators.XServo;
+import xbot.common.properties.AngleProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -15,10 +15,17 @@ import javax.inject.Singleton;
 
 import java.util.Optional;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
 public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
+
+    public static final double a = 18.550274;
+    public static final double b = 9.733663;
+    public static final double cMin = 8.53898;
+    public static final double cMax = 14.787199;
+
     // Constants
     public static final double servoMinBound = 0.2;
     public static final double servoMaxBound = 0.8;
@@ -27,8 +34,8 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public final TimedAndBoundedServo hoodServoLeft;
     public final TimedAndBoundedServo hoodServoRight;
     public ElectricalContract electricalContract;
-
     public DoubleProperty servoTargetNormalized;
+    public AngleProperty targetMechanismAngle;
     public DoubleProperty trimValue;
     public DoubleProperty trimStep;
 
@@ -66,6 +73,8 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
         this.servoTargetNormalized = propertyFactory.createPersistentProperty(
                 "ServoTargetPositionNormalized", 0);
+        this.targetMechanismAngle = propertyFactory.createPersistentProperty(
+                "TargetMechanismAngle",Degrees.zero());
         this.trimValue = propertyFactory.createPersistentProperty("HoodTrimValue", 0);
         this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.1);
     }
@@ -88,6 +97,13 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public void trimHoodGoalDown() {
         trimValue.set(trimValue.get() - trimStep.get());
     }
+    public double getMechanismAngle() {
+        double c = hoodServoLeft.getNormalizedCurrentPosition() * (cMax - cMin);
+        double top = Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2);
+        double bottom = 2 * a * b;
+        return Math.acos(top / bottom);
+    }
+
 
     @Override
     public void periodic() {
@@ -133,6 +149,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public void setPower(Double power) {
 
     }
+
 
     @Override
     public boolean isCalibrated() {
