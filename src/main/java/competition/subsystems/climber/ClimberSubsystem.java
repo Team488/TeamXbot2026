@@ -1,6 +1,10 @@
 package competition.subsystems.climber;
 
 import competition.electrical_contract.ElectricalContract;
+import competition.operator_interface.OperatorCommandMap;
+import competition.operator_interface.OperatorInterface;
+import competition.subsystems.climber.commands.ClimberExtendCommand;
+import competition.subsystems.climber.commands.ClimberRetractCommand;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -8,6 +12,7 @@ import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.NamedRunCommand;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
+import xbot.common.controls.sensors.XXboxController;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -158,6 +163,14 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
             climberMotorLeft.setPositionTarget(
                     Rotations.of(setpoint.in(Degrees) / mechanismDegreesPerMotorRotation.get()).plus(motorOffset),
                     XCANMotorController.MotorPidMode.Voltage);
+        }
+
+        if(ClimberExtendCommand != XXboxController.XboxButton.LeftBumper(climberState) == isPressed) {
+            climberMotorLeft && climberMotorRight = retract();
+        }
+
+        if(ClimberRetractCommand != XXboxController.XboxButton.LeftBumper(ClimberRetractCommand) == isPressed) {
+            climberMotorLeft && climberMotorRight = retract();
         }
     }
 
