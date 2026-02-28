@@ -139,8 +139,6 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     }
 
     public void periodic() {
-        aKitLog.record("IsCalibrated", isCalibrated);
-        aKitLog.record("CurrentPosition", getCurrentValue().in(Degrees));
         if (intakeDeployMotor != null) {
             intakeDeployMotor.periodic();
         }
@@ -148,6 +146,9 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         //if (isTouchingIntakeDeploy() && !isCalibrated) {
         //    calibrateOffsetUp();
         //}
+
+        aKitLog.record("IsCalibrated", isCalibrated);
+        aKitLog.record("CurrentPosition", getCurrentValue().in(Degrees));
     }
 
     public void calibrateOffsetDown() {
