@@ -1,31 +1,39 @@
 package competition.subsystems.hood.commands;
 
+import competition.operator_interface.OperatorInterface;
 import competition.subsystems.hood.HoodSubsystem;
 
-import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
-public class HoodToZeroCommand extends BaseCommand {
+public class DropHoodForTrenchCommand extends BaseCommand {
     final HoodSubsystem hood;
+    final OperatorInterface oi;
 
     @Inject
-    public HoodToZeroCommand(HoodSubsystem hoodSubsystem) {
+    public DropHoodForTrenchCommand(HoodSubsystem hoodSubsystem, OperatorInterface oi) {
         this.hood = hoodSubsystem;
+        this.oi = oi;
         addRequirements(hoodSubsystem);
     }
 
     @Override
     public void initialize() {
         hood.servoZero();
+        hood.runServo();
         log.info("running servo to " + HoodSubsystem.servoMinBound);
     }
 
     @Override
+    public void execute() {
+        if (hood.getCurrentValue() == 0) {
+            oi.driverGamepad.getRumbleManager().rumbleGamepad(100,100);
+        }
+    }
+
+    @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
 }
