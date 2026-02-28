@@ -9,6 +9,7 @@ import xbot.common.command.NamedRunCommand;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.controls.sensors.XAbsoluteEncoder;
+import xbot.common.controls.sensors.XDigitalInput;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -29,7 +30,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public final XAbsoluteEncoder climberEncoder;
     private final DoubleProperty degreesPerRotation;
     public final DoubleProperty manualControlPower;
-    public XAbsoluteEncoder climberSafetyLogic;
+    public XDigitalInput climberSafetyLogic;
     public DoubleProperty extendPower;
     public DoubleProperty retractPower;
     public ClimberState climberState;
@@ -49,7 +50,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public ClimberSubsystem(XCANMotorController.XCANMotorControllerFactory motorFactory,
                             ElectricalContract electricalContract, PropertyFactory propertyFactory,
                             XAbsoluteEncoder.XAbsoluteEncoderFactory absoluteEncoder,
-                            XAbsoluteEncoder.XAbsoluteEncoderFactory safetyLogic) {
+                            XDigitalInput.XDigitalInputFactory safetyLogic) {
         propertyFactory.setPrefix(this);
         if (electricalContract.isClimberLeftReady() && electricalContract.isClimberRightReady()) {
             this.climberMotorLeft = motorFactory.create(
@@ -81,17 +82,19 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         } else {
             this.climberEncoder = null;
         }
-//
-//        if (electricalContract.isClimberCalibrationSensorPressed()) {
-//            this.climberSafetyLogic = safetyLogic.create(
-//                    electricalContract.getClimberCalibrationSensor(),
-//                    getPrefix());
-//            this.registerDataFrameRefreshable(climberSafetyLogic);
-//        } else {
-//            this.climberSafetyLogic = null;
-//        }
+
+        if (electricalContract.isClimberCalibrationSensorPressed()) {
+            this.climberSafetyLogic = safetyLogic.create(
+                    electricalContract.getClimberCalibrationSensor(),
+                    getPrefix());
+            this.registerDataFrameRefreshable(climberSafetyLogic);
+        } else {
+            this.climberSafetyLogic = null;
+        }
+
         degreesPerRotation = propertyFactory.createPersistentProperty("Degrees Per Rotation", 0);
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
+
         // TODO: find degrees per rotation
     }
         //set target position for rotation
@@ -173,6 +176,13 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     @Override
     protected boolean areTwoTargetsEquivalent(Angle target1, Angle target2) {
         return Math.abs(target1.in(Rotations)-target2.in(Rotations)) < .01;
+    }
+
+    public boolean climberIsSafe () {
+        if (climberSafetyLogic == true) {
+        //if calibration sensor pressed, don't allow climber to retract any farther
+            climberState = stop(retractPower);
+        }
     }
 
     private Angle getAbsoluteAngle() {

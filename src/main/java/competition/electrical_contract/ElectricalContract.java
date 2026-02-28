@@ -1,7 +1,6 @@
 package competition.electrical_contract;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import xbot.common.controls.sensors.XAbsoluteEncoder;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
@@ -60,7 +59,7 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract boolean isClimberCalibrationSensorPressed();
 
-    public abstract XAbsoluteEncoder getClimberCalibrationSensor();
+    public abstract DeviceInfo getClimberCalibrationSensor();
 
     public abstract boolean isClimberAbsoluteEncoderReady();
 
