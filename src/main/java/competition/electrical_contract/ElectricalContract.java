@@ -87,6 +87,10 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract CANMotorControllerInfo getHopperRollerMotor();
 
+    public abstract boolean intakeDeploySensorReady();
+
+    public abstract DeviceInfo getIntakeDeploySensor();
+
     /**
      * Returns additional PDH connections for non-motor devices (e.g., VRMs, PCMs, buck converters, etc.)
      * Override this method in specific contract implementations to specify these connections.

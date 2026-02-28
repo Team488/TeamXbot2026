@@ -61,10 +61,8 @@ public class SubsystemDefaultCommandMap {
 
     @Inject
     public void setupIntakeDeploySubsystem(IntakeDeploySubsystem intakeDeploy,
-                                           IntakeDeployMaintainerCommand command,
-                                           IntakeDeployRetractCommand retractCommand) {
+                                           IntakeDeployMaintainerCommand command) {
         intakeDeploy.setDefaultCommand(command);
-        intakeDeploy.getSetpointLock().setDefaultCommand(retractCommand);
     }
 
     @Inject
