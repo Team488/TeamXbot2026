@@ -77,6 +77,14 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
+    public boolean isClimberAbsoluteEncoderReady() { return false; }
+
+    @Override
+    public DeviceInfo getClimberAbsoluteEncoder() {
+        return new DeviceInfo("ClimberAbsoluteEncoderReady", CANBusId.Canivore, 59);
+    }
+
+    @Override
     public boolean isClimberSensorReady() { return false; }
 
     @Override
