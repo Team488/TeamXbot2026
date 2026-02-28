@@ -111,6 +111,10 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         if (intakeDeployMotor != null) {
             intakeDeployMotor.setPower(0);
         }
+
+        if (!isCalibrated) {
+            intakeDeployMotor.setPower(0);
+        }
     }
     public void periodic() {
         aKitLog.record("IsCalibrated", isCalibrated);
