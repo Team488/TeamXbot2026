@@ -137,6 +137,8 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         if (climberMotorRight != null) {
             climberMotorRight.periodic();
         }
+
+        aKitLog.record("CurrentPosition", getCurrentValue());
     }
 
     @Override
