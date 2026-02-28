@@ -18,11 +18,15 @@ import xbot.common.injection.electrical_contract.LEDStripType;
 import xbot.common.injection.electrical_contract.LightControllerType;
 import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.electrical_contract.PDHPort;
+import xbot.common.injection.electrical_contract.PowerSource;
 import xbot.common.injection.electrical_contract.TalonFxMotorControllerOutputConfig;
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.subsystems.vision.CameraCapabilities;
 
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
@@ -77,8 +81,25 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getClimberAbsoluteEncoder() {
-        return new DeviceInfo("ClimberAbsoluteEncoderReady",59);
+        return new DeviceInfo("ClimberAbsoluteEncoderReady",CANBusId.Canivore, 59);
+    }
 
+    public DeviceInfo pigeon2() {
+        return new DeviceInfo("Pigeon2.0",CANBusId.Canivore, 56);
+    }
+
+    public DeviceInfo candle() {
+        return new DeviceInfo("CANdle",CANBusId.Canivore, 57);
+    }
+
+    public DeviceInfo getClimbHome() {
+        return new DeviceInfo("ClimbHomeDIO", 0, PowerSource.RIO);
+    }
+
+    public boolean intakeDeploySensorReady() { return true; }
+
+    public DeviceInfo getIntakeDeploySensor() {
+        return new DeviceInfo("IntakeDeploySensor", 1, PowerSource.RIO);
     }
 
     @Override                                    
@@ -161,7 +182,8 @@ public class Contract2026 extends ElectricalContract {
                 34,
                 PDHPort.PDH14,
                 new TalonFxMotorControllerOutputConfig()
-                        .withStatorCurrentLimit(Amps.of(60)));
+                        .withSupplyCurrentLimit(Amps.of(15), Amps.of(30), Seconds.of(1))
+                        .withStatorCurrentLimit(Amps.of(50)));
     }
 
     @Override
@@ -169,7 +191,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getIntakeDeployAbsoluteEncoderMotor() {
-        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady",58);
+        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady", CANBusId.Canivore, 58);
     }
 
     @Override
@@ -186,6 +208,61 @@ public class Contract2026 extends ElectricalContract {
     @Override
     public DeviceInfo getHoodServoRight() {
         return new DeviceInfo("HoodServoRight", 1);
+    }
+    
+    // OrangePis - powered via buck converters (see getAdditionalPowerBranches)
+    public DeviceInfo getFrontOrangePi() {
+        return new DeviceInfo("FrontOrangePi", -1, PowerSource.NONE);
+    }
+
+    public DeviceInfo getBackOrangePi() {
+        return new DeviceInfo("BackOrangePi", -1, PowerSource.NONE);
+    }
+
+    // Orin Nano - powered via FrontBuckBoost_Pwr (see getAdditionalPowerBranches)
+    public DeviceInfo getOrinNano() {
+        return new DeviceInfo("Orin_Nano", -1, PowerSource.NONE);
+    }
+
+    // Ethernet switch - powered via BackBuckBoost_Pwr (see getAdditionalPowerBranches)
+    public DeviceInfo getEthernetSwitch() {
+        return new DeviceInfo("EthernetSwitch", -1, PowerSource.NONE);
+    }
+
+    // VRM1 12V/2A outputs
+    public DeviceInfo getVrm1_12v_2a() {
+        return new DeviceInfo("FrontBuckBoost_Pwr", -1, PowerSource.VRM1_12V_2A);
+    }
+
+    public DeviceInfo getVrm1_12v_2b() {
+        return new DeviceInfo("BackBuckBoost_Pwr", -1, PowerSource.VRM1_12V_2B);
+    }
+
+    // VRM1 12V/500mA outputs
+    public DeviceInfo getVrm1_12v_500ma() {
+        return new DeviceInfo("FrontBuckBoost_Fan", -1, PowerSource.VRM1_12V_500MA);
+    }
+
+    public DeviceInfo getVrm1_12v_500mb() {
+        return new DeviceInfo("BackBuckBoost_Fan", -1, PowerSource.VRM1_12V_500MB);
+    }
+
+    // VRM1 5V/2A outputs - unused
+    public DeviceInfo getVrm1_5v_2a() {
+        return new DeviceInfo("No_Connect", -1, PowerSource.VRM1_5V_2A);
+    }
+
+    public DeviceInfo getVrm1_5v_2b() {
+        return new DeviceInfo("No_Connect", -1, PowerSource.VRM1_5V_2B);
+    }
+
+    // VRM1 5V/500mA outputs
+    public DeviceInfo getVrm1_5v_500ma() {
+        return new DeviceInfo("CANdle", -1, PowerSource.VRM1_5V_500MA);
+    }
+
+    public DeviceInfo getVrm1_5v_500mb() {
+        return new DeviceInfo("No_Connect", -1, PowerSource.VRM1_5V_500MB);
     }
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
@@ -365,6 +442,64 @@ public class Contract2026 extends ElectricalContract {
     @Override
     public double getDriveGearRatio() {
         return 6.48; // Documented value for WCP x2i with X3 10t gears.
+    }
+
+    // --- CAN Bus Connection Order (used only by the electrical report tool) ---
+    // Lists every CAN device with its physical daisy-chain position.
+    // busId + canId must uniquely identify the device returned by the corresponding getter.
+    public static record CanBusOrderEntry(CANBusId busId, int canId, String deviceName, int busPosition) {}
+
+    public List<CanBusOrderEntry> getCanBusConnectionOrder() {
+        return List.of(
+            new CanBusOrderEntry(CANBusId.Canivore, 30, "FrontLeftDrive/Drive",              1),
+            new CanBusOrderEntry(CANBusId.Canivore, 53, "FrontLeftDrive/SteeringEncoder",    2),
+            new CanBusOrderEntry(CANBusId.Canivore, 31, "FrontLeftDrive/Steering",           3),
+            new CanBusOrderEntry(CANBusId.Canivore, 29, "RearLeftDrive/Steering",            4),
+            new CanBusOrderEntry(CANBusId.Canivore, 52, "RearLeftDrive/SteeringEncoder",     5),
+            new CanBusOrderEntry(CANBusId.Canivore, 28, "RearLeftDrive/Drive",               6),
+            new CanBusOrderEntry(CANBusId.Canivore, 20, "RearRightDrive/Drive",              7),
+            new CanBusOrderEntry(CANBusId.Canivore, 51, "RearRightDrive/SteeringEncoder",    8),
+            new CanBusOrderEntry(CANBusId.Canivore, 21, "RearRightDrive/Steering",           9),
+            new CanBusOrderEntry(CANBusId.Canivore, 39, "FrontRightDrive/Steering",         10),
+            new CanBusOrderEntry(CANBusId.Canivore, 54, "FrontRightDrive/SteeringEncoder",  11),
+            new CanBusOrderEntry(CANBusId.Canivore, 38, "FrontRightDrive/Drive",            12),
+            new CanBusOrderEntry(CANBusId.Canivore, 56, "Pigeon",                           13),
+            new CanBusOrderEntry(CANBusId.Canivore, 57, "CANdle",                           14),
+            new CanBusOrderEntry(CANBusId.Canivore, 58, "IntakeDeployAbsoluteEncoderReady", 15),
+            new CanBusOrderEntry(CANBusId.Canivore, 34, "IntakeDeployMotor",                16),
+            new CanBusOrderEntry(CANBusId.Canivore, 32, "FuelIntakeMotor",                  17),
+            new CanBusOrderEntry(CANBusId.Canivore, 33, "HopperRoller",                     18),
+            new CanBusOrderEntry(CANBusId.Canivore, 37, "ShooterFeederMotor",               19),
+            new CanBusOrderEntry(CANBusId.Canivore, 25, "ClimberMotorLeft",                 20),
+            new CanBusOrderEntry(CANBusId.Canivore, 22, "ShooterLeftMotor",                 21),
+            new CanBusOrderEntry(CANBusId.Canivore, 23, "ShooterMiddleMotor",               22),
+            new CanBusOrderEntry(CANBusId.Canivore, 59, "ClimberAbsoluteEncoderReady",      23),
+            new CanBusOrderEntry(CANBusId.Canivore, 24, "ShooterRightMotor",                24),
+            new CanBusOrderEntry(CANBusId.Canivore, 26, "ClimberMotorRight",                25)
+        );
+    }
+
+    @Override
+    public Map<PDHPort, List<String>> getAdditionalPDHConnections() {
+        Map<PDHPort, List<String>> connections = new HashMap<>();
+        connections.put(PDHPort.PDH07, List.of("No_Connect"));
+        connections.put(PDHPort.PDH15, List.of("FrontBuck_Pwr"));
+        connections.put(PDHPort.PDH16, List.of("BackBuck_Pwr"));
+        connections.put(PDHPort.PDH20, List.of("RoboRio"));
+        connections.put(PDHPort.PDH21, List.of("VRM1"));
+        connections.put(PDHPort.PDH22, List.of("Radio_Power_Module"));
+        connections.put(PDHPort.PDH23, List.of("Pigeon"));
+        return connections;
+    }
+
+    @Override
+    public Map<String, List<String>> getAdditionalPowerBranches() {
+        Map<String, List<String>> branches = new HashMap<>();
+        branches.put("FrontBuck_Pwr", List.of("FrontOrangePi"));
+        branches.put("BackBuck_Pwr", List.of("BackOrangePi"));
+        branches.put("FrontBuckBoost_Pwr", List.of("Orin_Nano"));
+        branches.put("BackBuckBoost_Pwr", List.of("EthernetSwitch"));
+        return branches;
     }
 
     @Override
