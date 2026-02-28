@@ -1,13 +1,22 @@
 package competition.subsystems.climber;
 
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkLowLevel;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import competition.electrical_contract.ElectricalContract;
 import competition.operator_interface.OperatorCommandMap;
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
 import competition.subsystems.climber.commands.ClimberRetractCommand;
+import edu.wpi.first.units.AngularAccelerationUnit;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.MutAngle;
+import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.NamedRunCommand;
 import xbot.common.controls.actuators.XCANMotorController;
@@ -20,6 +29,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Rotations;
 
 @Singleton
@@ -28,12 +38,14 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public final XCANMotorController climberMotorLeft;
     public final XCANMotorController climberMotorRight;
     private final DoubleProperty mechanismDegreesPerMotorRotation;
+    private SparkMax climberSparkBase;
     public final DoubleProperty manualControlPower;
     public DoubleProperty extendPower;
     public DoubleProperty retractPower;
     public ClimberState climberState;
     public Angle motorOffset = Degrees.zero();
     private boolean isCalibrated;
+
 
     private final MutAngle mechanismTargetAngle = Degrees.mutable(0);
 
@@ -72,8 +84,11 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         this.mechanismDegreesPerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreesPerMotorRotation", 0);
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
         // TODO: find degrees per rotation
+        this.climberSparkBase = new SparkMax(climberSparkBase.getDeviceId(), SparkLowLevel.MotorType.kBrushless);
+
     }
-        //set target position for rotation
+
+    //set target position for rotation
     public void extend() {
         if (climberMotorLeft != null) {
             climberMotorLeft.setPower(extendPower.get());
@@ -129,11 +144,12 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     @Override
     public void setTargetValue(Angle angle) {
-       mechanismTargetAngle.mut_replace(angle);
+        mechanismTargetAngle.mut_replace(angle);
     }
 
     @Override
-    public void setPower(Double power) {}
+    public void setPower(Double power) {
+    }
 
     @Override
     public boolean isCalibrated() {
@@ -142,7 +158,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     @Override
     protected boolean areTwoTargetsEquivalent(Angle target1, Angle target2) {
-        return Math.abs(target1.in(Rotations)-target2.in(Rotations)) < .01;
+        return Math.abs(target1.in(Rotations) - target2.in(Rotations)) < .01;
     }
 
     public void calibrateOffsetRetracted() {
@@ -164,14 +180,20 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
                     Rotations.of(setpoint.in(Degrees) / mechanismDegreesPerMotorRotation.get()).plus(motorOffset),
                     XCANMotorController.MotorPidMode.Voltage);
         }
+    }
 
-        if(ClimberExtendCommand != XXboxController.XboxButton.LeftBumper(climberState) == isPressed) {
-            climberMotorLeft && climberMotorRight = retract();
+    public void setTrapezoidalProfileAcceleration(Velocity<AngularAccelerationUnit> jerk) {
+        if (jerk.magnitude() > 0) {
+//            log.warn("setTrapezoidalProfileJerk: Jerk configuration is not supported by SparkMax");
         }
+    }
 
-        if(ClimberRetractCommand != XXboxController.XboxButton.LeftBumper(ClimberRetractCommand) == isPressed) {
-            climberMotorLeft && climberMotorRight = retract();
-        }
+    public void setTrapezoidalProfileMaxVelocity(Angle maxVelocity) {
+        var config = new SparkMaxConfig();
+        config.closedLoop.maxMotion.cruiseVelocity(maxVelocity.in(Degrees));
+        this.climberSparkBase.ControlType(config,
+                ResetMode.kNoResetSafeParameters,
+                PersistMode.kNoPersistParameters);
     }
 
     public final Command getCalibrateOffsetRetractCommand() {
