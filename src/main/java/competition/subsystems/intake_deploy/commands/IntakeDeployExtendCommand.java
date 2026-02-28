@@ -22,10 +22,4 @@ public class IntakeDeployExtendCommand extends BaseSetpointCommand {
         intakeDeploy.setTargetValue(Degrees.of(intakeDeploy.extendedPosition.get()));
         log.info("Initialized IntakeDeployExtend");
     }
-
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
-
 }

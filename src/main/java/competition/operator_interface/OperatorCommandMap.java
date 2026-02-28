@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import competition.command_groups.FireWhenShooterReadyCommandGroup;
+import competition.command_groups.HopperAndIntakeCommandGroup;
 import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
@@ -77,19 +78,29 @@ public class OperatorCommandMap {
                                      ShooterFeederFire shooterFeederFire,
                                      HopperRollerSubsystem hopperRollerSubsystem,
                                      HoodExtendCommands hoodExtend,
-                                     HoodRetractCommands hoodRetract) {
+                                     HoodRetractCommands hoodRetract,
+                                     IntakeDeployExtendCommand intakeDeployExtendCommand,
+                                     IntakeDeployRetractCommand intakeDeployRetractCommand,
+                                     CalibrateOffsetUp calibrateOffsetUp,
+                                     HopperAndIntakeCommandGroup intakeCommand) {
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(shooterOutputCommand);
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A)
                 .whileTrue(hopperRollerSubsystem.getIntakeCommand().alongWith(shooterFeederFire));
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(intakeCommand);
 
         operatorInterface.operatorGamepad.getPovIfAvailable(0).onTrue(hoodExtend);
         operatorInterface.operatorGamepad.getPovIfAvailable(180).onTrue(hoodRetract);
+
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).onTrue(intakeDeployRetractCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).onTrue(intakeDeployExtendCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateOffsetUp);
     }
 
     @Inject
     public void setupDebugGamepad(OperatorInterface operatorInterface,
                                   ClimberExtendCommand climberExtendCommand,
                                   ClimberRetractCommand climberRetractCommand,
+
                                   ShooterOutputCommand shooterOutputCommand,
                                   TrimShooterVelocityUp trimShooterVelocityUp,
                                   TrimShooterVelocityDown trimShooterVelocityDown,
@@ -112,10 +123,10 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger).onTrue(trimShooterVelocityUp);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(shooterOutputCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(fuelIntakeCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(intakeDeployExtendCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(intakeDeployRetractCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Back).whileTrue(calibrateOffsetDown);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Start).whileTrue(calibrateOffsetUp);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.A).onTrue(intakeDeployExtendCommand);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.B).onTrue(intakeDeployRetractCommand);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Back).onTrue(calibrateOffsetDown);
+        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateOffsetUp);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftStick).whileTrue(hopperRollerSubsystem.getEjectCommand());
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightStick).whileTrue(hopperRollerSubsystem.getIntakeCommand());
 

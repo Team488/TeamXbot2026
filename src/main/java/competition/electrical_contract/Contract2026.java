@@ -182,7 +182,8 @@ public class Contract2026 extends ElectricalContract {
                 34,
                 PDHPort.PDH14,
                 new TalonFxMotorControllerOutputConfig()
-                        .withStatorCurrentLimit(Amps.of(60)));
+                        .withSupplyCurrentLimit(Amps.of(15), Amps.of(30), Seconds.of(1))
+                        .withStatorCurrentLimit(Amps.of(50)));
     }
 
     @Override
