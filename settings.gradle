@@ -29,8 +29,8 @@ pluginManagement {
 // Composite build support for local SeriouslyCommonLib development
 // Only activates when explicitly requested via -DuseLocalCommonLib=true or USE_LOCAL_COMMON_LIB=true
 def localCommonLibPath = file('../SeriouslyCommonLib')
-def useLocalCommonLib = System.getProperty('useLocalCommonLib', 'false').toBoolean() ||
-                        System.getenv('USE_LOCAL_COMMON_LIB') == 'true'
+def useLocalCommonLib = true
+
 
 if (useLocalCommonLib) {
     if (localCommonLibPath.exists()) {

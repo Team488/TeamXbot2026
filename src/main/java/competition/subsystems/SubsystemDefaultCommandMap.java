@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.climber.commands.ClimberStopCommand;
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.drive.commands.RotateToFuelCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.fuel_intake.IntakeSubsystem;
 import competition.subsystems.fuel_intake.commands.FuelStopCommand;

@@ -10,6 +10,7 @@ import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
 import competition.subsystems.climber.commands.ClimberRetractCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
+import competition.subsystems.drive.commands.RotateToFuelCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.fuel_intake.commands.FuelEjectCommand;
 import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
@@ -45,9 +46,11 @@ public class OperatorCommandMap {
             OperatorInterface operatorInterface,
             ShooterOutputCommand shooterOutputCommand,
             TrimShooterVelocityUp trimShooterVelocityUp,
-            TrimShooterVelocityDown trimShooterVelocityDown
+            TrimShooterVelocityDown trimShooterVelocityDown,
+            RotateToFuelCommand rotateToFuelCommand
     ) {
 
+        rotateToFuelCommand.includeOnSmartDashboard("1 Rotate to fuel");
     }
 
     @Inject
@@ -135,7 +138,4 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getPovIfAvailable(180).onTrue(trimHoodUpCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(270).whileTrue(shooterFeederFire);
     }
-
-
-
 }

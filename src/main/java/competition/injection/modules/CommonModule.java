@@ -15,7 +15,7 @@ import xbot.common.injection.swerve.RearRightDrive;
 import xbot.common.injection.swerve.SwerveComponent;
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.subsystems.pose.GameField;
-import xbot.common.subsystems.vision.AprilTagVisionSubsystem;
+import xbot.common.subsystems.vision.april_tag.AprilTagVisionSubsystem;
 
 import javax.inject.Singleton;
 
