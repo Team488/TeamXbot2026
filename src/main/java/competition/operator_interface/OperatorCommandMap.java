@@ -55,7 +55,8 @@ public class OperatorCommandMap {
                                    SetRobotHeadingCommand resetHeading,
                                    DebugSwerveModuleCommand debugModule,
                                    ChangeActiveSwerveModuleCommand changeActiveModule,
-                                   SwerveDriveWithJoysticksCommand typicalSwerveDrive) {
+                                   SwerveDriveWithJoysticksCommand typicalSwerveDrive
+    ) {
         resetHeading.setHeadingToApply(0);
         operatorInterface.driverGamepad.getifAvailable(1).onTrue(resetHeading);
 
@@ -74,7 +75,6 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupOperatorGamepad(OperatorInterface operatorInterface,
-                                     FireWhenShooterReadyCommandGroup shooterOutputCommand,
                                      ShooterFeederFire shooterFeederFire,
                                      HopperRollerSubsystem hopperRollerSubsystem,
                                      HoodExtendCommands hoodExtend,
@@ -83,17 +83,19 @@ public class OperatorCommandMap {
                                      IntakeDeployRetractCommand intakeDeployRetractCommand,
                                      CalibrateOffsetUp calibrateOffsetUp,
                                      HopperAndIntakeCommandGroup intakeCommand) {
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(shooterOutputCommand);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A)
-                .whileTrue(hopperRollerSubsystem.getIntakeCommand().alongWith(shooterFeederFire));
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(intakeCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger)
+                    .whileTrue(hopperRollerSubsystem.getIntakeCommand().alongWith(shooterFeederFire));
 
-        operatorInterface.operatorGamepad.getPovIfAvailable(0).onTrue(hoodExtend);
-        operatorInterface.operatorGamepad.getPovIfAvailable(180).onTrue(hoodRetract);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(intakeCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(hopperRollerSubsystem.getIntakeCommand());
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B).onTrue(calibrateOffsetUp);
 
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).onTrue(intakeDeployRetractCommand);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).onTrue(intakeDeployExtendCommand);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateOffsetUp);
+
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(hoodExtend);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(hoodRetract);
+
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start).whileTrue(intakeDeployExtendCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Back).whileTrue(intakeDeployRetractCommand);
     }
 
     @Inject
