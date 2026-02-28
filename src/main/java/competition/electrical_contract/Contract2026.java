@@ -96,8 +96,10 @@ public class Contract2026 extends ElectricalContract {
         return new DeviceInfo("ClimbHomeDIO", 0, PowerSource.RIO);
     }
 
-    public DeviceInfo getIntakeHome() {
-        return new DeviceInfo("IntakeHomeDIO", 1, PowerSource.RIO);
+    public boolean intakeDeploySensorReady() { return true; }
+
+    public DeviceInfo getIntakeDeploySensor() {
+        return new DeviceInfo("IntakeDeploySensor", 1, PowerSource.RIO);
     }
 
     @Override                                    
@@ -180,7 +182,8 @@ public class Contract2026 extends ElectricalContract {
                 34,
                 PDHPort.PDH14,
                 new TalonFxMotorControllerOutputConfig()
-                        .withStatorCurrentLimit(Amps.of(60)));
+                        .withSupplyCurrentLimit(Amps.of(15), Amps.of(30), Seconds.of(1))
+                        .withStatorCurrentLimit(Amps.of(50)));
     }
 
     @Override
@@ -206,7 +209,7 @@ public class Contract2026 extends ElectricalContract {
     public DeviceInfo getHoodServoRight() {
         return new DeviceInfo("HoodServoRight", 1);
     }
-
+    
     // OrangePis - powered via buck converters (see getAdditionalPowerBranches)
     public DeviceInfo getFrontOrangePi() {
         return new DeviceInfo("FrontOrangePi", -1, PowerSource.NONE);
