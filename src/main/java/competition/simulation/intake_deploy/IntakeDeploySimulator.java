@@ -7,6 +7,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.MockDigitalInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import xbot.common.advantage.AKitLogger;
@@ -31,6 +32,7 @@ public class IntakeDeploySimulator {
 
     final IntakeDeploySubsystem intakeDeploy;
     final MockCANMotorController motor;
+    final MockDigitalInput homedSensor;
 
     @Inject
     public IntakeDeploySimulator(IntakeDeploySubsystem intakeDeploy, PIDManager.PIDManagerFactory pidManagerFactory,
@@ -39,6 +41,7 @@ public class IntakeDeploySimulator {
         aKitLog = new AKitLogger(pf.getPrefix());
         this.intakeDeploy = intakeDeploy;
         this.motor = (MockCANMotorController) intakeDeploy.intakeDeployMotor;
+        this.homedSensor = (MockDigitalInput) intakeDeploy.intakeDeploySensor;
         this.pidManager = pidManagerFactory.create(
                 pf.getPrefix() + "IntakeDeploySimulatorPID",
                 0.2,
@@ -64,7 +67,13 @@ public class IntakeDeploySimulator {
     }
 
     public boolean isDeployed() {
-        return getAngularPosition().isNear(SimulatorConstants.intakeDeployedAngle, Degrees.of(5));
+        return getAngularPosition()
+                .isNear(Degrees.of(intakeDeploy.extendedPosition.get()), Degrees.of(5));
+    }
+
+    public boolean isHomed() {
+        return getAngularPosition()
+                .isNear(Degrees.of(intakeDeploy.retractedPosition.get()), Degrees.of(5));
     }
 
     public void update() {
@@ -84,6 +93,9 @@ public class IntakeDeploySimulator {
         double motorRotation = mechanismAngle.in(Degrees) / intakeDeploy.mechanismDegreePerMotorRotation.get();
 
         this.motor.setPosition(Rotations.of(motorRotation));
+        if (homedSensor != null) {
+            homedSensor.setValue(isHomed());
+        }
         aKitLog.record("IntakeDeployed", isDeployed());
     }
 }
