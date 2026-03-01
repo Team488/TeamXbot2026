@@ -50,7 +50,7 @@ public class RotateToHubCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        if (pose.isNotFacingTarget(target)) {
+        if (!pose.isFacingTarget(target)) {
             drive.setLookAtPointTarget(target);
             boolean areWeInAllianceZone = Landmarks.isBetweenIdX(
                     this.aprilTagFieldLayout,
