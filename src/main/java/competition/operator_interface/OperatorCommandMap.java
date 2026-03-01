@@ -107,8 +107,8 @@ public class OperatorCommandMap {
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(hoodRetract);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateOffsetUp);
-        
-        operatorInterface.driverGamepad.getPovIfAvailable(0).whileTrue(shooterOutputCommand);
+
+        operatorInterface.operatorGamepad.getPovIfAvailable(0).whileTrue(shooterOutputCommand);
     }
 
     @Inject
