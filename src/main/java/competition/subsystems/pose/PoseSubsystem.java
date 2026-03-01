@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 import competition.electrical_contract.ElectricalContract;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.vision.AprilTagVisionSubsystemExtended;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -19,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.DriverStation;
 
 import static edu.wpi.first.units.Units.Meters;
 
@@ -44,6 +46,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
     private final BooleanProperty useVisionAssistedPose;
     private final BooleanProperty reportCameraPoses;
     private final DoubleProperty isFacingTargetMarginOfError;
+    private AprilTagFieldLayout aprilTagFieldLayout;
 
     private boolean preferOdometryToVision = false;
 
@@ -56,10 +59,12 @@ public class PoseSubsystem extends BasePoseSubsystem {
     public PoseSubsystem(XGyroFactory gyroFactory,
             ElectricalContract electricalContract,
             PropertyFactory propManager, DriveSubsystem drive,
-            AprilTagVisionSubsystemExtended aprilTagVisionSubsystem) {
+                         AprilTagVisionSubsystemExtended aprilTagVisionSubsystem,
+                         AprilTagFieldLayout aprilTagFieldLayout) {
         super(gyroFactory, propManager);
         this.drive = drive;
         this.aprilTagVisionSubsystem = aprilTagVisionSubsystem;
+        this.aprilTagFieldLayout = aprilTagFieldLayout;
 
         this.onlyWheelsGyroSwerveOdometry = initializeSwerveOdometry();
         this.fullSwerveOdometry = initializeSwerveOdometry();
@@ -202,19 +207,23 @@ public class PoseSubsystem extends BasePoseSubsystem {
         };
     }
 
-    public boolean isNotFacingTarget(Translation2d target) {
-        Pose2d currentPose = this.getCurrentPose2d();
-
-        Translation2d vectorToTarget = target.minus(currentPose.getTranslation());
-        if (vectorToTarget.getNorm() < 0.01) {
-            return true;
-        }
-
-        Rotation2d desiredHeading = vectorToTarget.getAngle();
+    public boolean isFacingTarget(Translation2d target) {
+        Rotation2d desiredHeading = desiredHeadingToTarget(target);
         double rawError = desiredHeading.getRadians() - this.getCurrentHeading().getRadians();
         double angleError = Math.abs(MathUtil.angleModulus(rawError));
 
         return !(Math.toDegrees(angleError) < isFacingTargetMarginOfError.get());
+    }
+
+    public Rotation2d desiredHeadingToTarget(Translation2d target) {
+        Pose2d currentPose = this.getCurrentPose2d();
+
+        Translation2d vectorToTarget = target.minus(currentPose.getTranslation());
+        if (vectorToTarget.getNorm() < 0.01) {
+            return currentPose.getRotation();
+        }
+
+        return vectorToTarget.getAngle();
     }
 
     // Override methods remain unchanged
@@ -311,4 +320,16 @@ public class PoseSubsystem extends BasePoseSubsystem {
             resetPoseEstimator(getPrimaryPoseEstimator().getEstimatedPosition());
         }
     }
+
+    // Start of Closest Landmark Calcs
+
+    public Pose2d closestAllianceTrench() {
+        var alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
+
+        var poses = Landmarks.getAllianceTrenchPoses(this.aprilTagFieldLayout, alliance);
+        Pose2d currentPose = getCurrentPose2d();
+        return currentPose.nearest(poses);
+    }
+
+    // End of Closest Landmark Calcs
 }
