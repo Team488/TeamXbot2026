@@ -16,6 +16,8 @@ import javax.inject.Singleton;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Second;
 
 @Singleton
 public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
@@ -32,6 +34,9 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
     public final AngleProperty retractedAngle;
     public final AngleProperty extendedAngle;
     public final AngleProperty engagedAngle;
+
+    public final DoubleProperty maxPidVelocity;
+    public final DoubleProperty maxPidAcceleration;
 
     private final AngleProperty mechanismTargetAngle;
 
@@ -81,8 +86,19 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
         this.extendedAngle = propertyFactory.createPersistentProperty("ExtendedAngle", Degrees.of(180));
         this.engagedAngle = propertyFactory.createPersistentProperty("ClimbEngagedAngle", Degrees.of(85));
 
+        this.maxPidVelocity = propertyFactory.createPersistentProperty("PidMaxMotorVelocity-RotationsPerSecond", 100);
+        this.maxPidAcceleration = propertyFactory.createPersistentProperty("PidMaxMotorAcceleration-RotationsPerSecondPerSecond", 300);
+
         this.mechanismTargetAngle = propertyFactory.createPersistentProperty("MechanismTargetAngle", Degrees.zero());
 
+        if (this.climberMotorLeft != null) {
+            this.climberMotorLeft.setTrapezoidalProfileMaxVelocity(RotationsPerSecond.of(maxPidVelocity.get()));
+            this.climberMotorLeft.setTrapezoidalProfileAcceleration(RotationsPerSecond.per(Second).of(maxPidAcceleration.get()));
+        }
+        if (this.climberMotorRight != null) {
+            this.climberMotorRight.setTrapezoidalProfileMaxVelocity(RotationsPerSecond.of(maxPidVelocity.get()));
+            this.climberMotorRight.setTrapezoidalProfileAcceleration(RotationsPerSecond.per(Second).of(maxPidAcceleration.get()));
+        }
     }
         //set target position for rotation
     public void extend() {
@@ -127,6 +143,24 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
         }
         if (climberMotorRight != null) {
             climberMotorRight.periodic();
+        }
+
+        if (this.maxPidVelocity.hasChangedSinceLastCheck()) {
+            if (climberMotorLeft != null) {
+                this.climberMotorLeft.setTrapezoidalProfileMaxVelocity(RotationsPerSecond.of(maxPidVelocity.get()));
+            }
+            if (climberMotorRight != null) {
+                this.climberMotorRight.setTrapezoidalProfileMaxVelocity(RotationsPerSecond.of(maxPidVelocity.get()));
+            }
+        }
+
+        if (this.maxPidAcceleration.hasChangedSinceLastCheck()) {
+            if (climberMotorLeft != null) {
+                this.climberMotorLeft.setTrapezoidalProfileAcceleration(RotationsPerSecond.per(Second).of(maxPidAcceleration.get()));
+            }
+            if (climberMotorRight != null) {
+                this.climberMotorRight.setTrapezoidalProfileAcceleration(RotationsPerSecond.per(Second).of(maxPidAcceleration.get()));
+            }
         }
 
         aKitLog.record("IsCalibrated", isCalibrated);
@@ -175,13 +209,13 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
         if (climberMotorRight != null) {
             climberMotorRight.setPositionTarget(
                     Rotations.of(setpoint.in(Degrees) / mechanismDegreesPerMotorRotation.get()).plus(motorOffset),
-                    XCANMotorController.MotorPidMode.Voltage);
+                    XCANMotorController.MotorPidMode.TrapezoidalVoltage);
         }
 
         if (climberMotorLeft != null) {
             climberMotorLeft.setPositionTarget(
                     Rotations.of(setpoint.in(Degrees) / mechanismDegreesPerMotorRotation.get()).plus(motorOffset),
-                    XCANMotorController.MotorPidMode.Voltage);
+                    XCANMotorController.MotorPidMode.TrapezoidalVoltage);
         }
     }
 

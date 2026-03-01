@@ -979,6 +979,34 @@
               "data_type": "double",
               "show_submit_button": true
             }
+          },
+          {
+            "title": "PidMaxMotorAcceleration-RotationsPerSecondPerSecond",
+            "x": 896.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ClimberSubsystem/PidMaxMotorAcceleration-RotationsPerSecondPerSecond",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "PidMaxMotorVelocity-RotationsPerSecond",
+            "x": 896.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/ClimberSubsystem/PidMaxMotorVelocity-RotationsPerSecond",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
           }
         ]
       }
