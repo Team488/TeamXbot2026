@@ -27,7 +27,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public final XCANMotorController climberMotorLeft;
     public final XCANMotorController climberMotorRight;
     public final XDigitalInput climberSensor;
-    private final DoubleProperty mechanismDegreesPerMotorRotation;
+    public final DoubleProperty mechanismDegreesPerMotorRotation;
     public final DoubleProperty manualControlPower;
     public DoubleProperty extendPower;
     public DoubleProperty retractPower;
@@ -52,7 +52,9 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     @Inject
     public ClimberSubsystem(XCANMotorController.XCANMotorControllerFactory motorFactory,
-                            ElectricalContract electricalContract, PropertyFactory propertyFactory) {
+                            ElectricalContract electricalContract, PropertyFactory propertyFactory,
+                            XDigitalInput.XDigitalInputFactory xDigitalInputFactory) {
+
         propertyFactory.setPrefix(this);
 
         var defaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()

@@ -66,7 +66,7 @@ public class OperatorCommandMap {
                                    DropHoodForTrenchCommand dropHoodForTrenchCommand) {
         resetHeading.setHeadingToApply(0);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(dropHoodForTrenchCommand);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(dropHoodForTrenchCommand);
 
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
         operatorInterface.driverGamepad.getPovIfAvailable(90).onTrue(changeActiveModule);
@@ -74,13 +74,15 @@ public class OperatorCommandMap {
     }
   
     @Inject
-    public void setupAutoCommands(Provider<SetAutonomousCommand> setAutonomousCommandProvider,
+    public void setupAutoCommands(OperatorInterface operatorInterface,
+                                  SetRobotHeadingCommand resetHeading,
+                                  Provider<SetAutonomousCommand> setAutonomousCommandProvider,
                                   DriveToOutpostCommand driveToOutpostCommand,
                                   MoveAcrossFieldCommandGroup moveAcrossFieldCommand,
                                   Provider<ClimberSetPointCommand> climberSetPoint,
                                   ClimberSubsystem climber
     ) {
-        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
+//        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
 
         // Map climber related commands
         var climberRetract = climberSetPoint.get().setGoalAngle(climber.retractedAngle.get());
@@ -90,6 +92,12 @@ public class OperatorCommandMap {
         operatorInterface.driverGamepad.getPovIfAvailable(90).onTrue(climberExtend);
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(climberEngage);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Back).onTrue(climber.getCalibrateOffsetRetractCommand());
+
+        driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
+
+        var moveAcrossField = setAutonomousCommandProvider.get();
+        moveAcrossField.setAutoCommand(moveAcrossFieldCommand, Landmarks.blueStartTrenchToOutpost);
+        moveAcrossField.includeOnSmartDashboard("Move across field.");
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
@@ -138,7 +146,7 @@ public class OperatorCommandMap {
                                   HopperRollerSubsystem hopperRollerSubsystem,
                                   CalibrateOffsetDown calibrateOffsetDown,
                                   CalibrateOffsetUp calibrateOffsetUp,
-                                  ClimberSubsystem climberSubsystem,
+                                  ClimberSubsystem climberSubsystem
     ) {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(climberRetractCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(climberExtendCommand);
@@ -159,18 +167,6 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getPovIfAvailable(90).whileTrue(fuelEjectCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(180).onTrue(trimHoodUpCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(270).whileTrue(shooterFeederFire);
-    }
-
-    @Inject
-    public void setupAutoCommands(Provider<SetAutonomousCommand> setAutonomousCommandProvider,
-                                  DriveToOutpostCommand driveToOutpostCommand,
-                                  MoveAcrossFieldCommandGroup moveAcrossFieldCommand
-    ) {
-        driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
-
-        var moveAcrossField = setAutonomousCommandProvider.get();
-        moveAcrossField.setAutoCommand(moveAcrossFieldCommand, Landmarks.blueStartTrenchToOutpost);
-        moveAcrossField.includeOnSmartDashboard("Move across field.");
     }
 
     @Inject

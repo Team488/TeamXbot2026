@@ -27,7 +27,7 @@ public class DropHoodForTrenchCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        if (hood.getCurrentValue() == 0) {
+        if (Math.abs(HoodSubsystem.servoMinBound - hood.getCurrentValue()) <= .1) {
             oi.driverGamepad.getRumbleManager().rumbleGamepad(100,100);
         }
     }
