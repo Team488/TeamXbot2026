@@ -25,7 +25,6 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public final XCANMotorController climberMotorRight;
     private final DoubleProperty mechanismDegreesPerMotorRotation;
     public final DoubleProperty manualControlPower;
-    public final AngleProperty limbRange ;
     public DoubleProperty extendPower;
     public DoubleProperty retractPower;
     public ClimberState climberState;
@@ -44,31 +43,45 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public ClimberSubsystem(XCANMotorController.XCANMotorControllerFactory motorFactory,
                             ElectricalContract electricalContract, PropertyFactory propertyFactory) {
         propertyFactory.setPrefix(this);
+
+        var defaultPIDProperties1 = new XCANMotorControllerPIDProperties.Builder()
+                .withP(5.0)
+                .withI(0.0)
+                .withD(0.0)
+                .withMinPowerOutput(-0.2)
+                .withMaxPowerOutput(0.2)
+                .build();
+
+        var defaultPIDProperties2 = new XCANMotorControllerPIDProperties.Builder()
+                .withP(5.0)
+                .withI(0.0)
+                .withD(0.0)
+                .withMinPowerOutput(-0.2)
+                .withMaxPowerOutput(0.2)
+                .build();
+
+
         if (electricalContract.isClimberLeftReady() && electricalContract.isClimberRightReady()) {
-            this.climberMotorLeft = motorFactory.create(
-                    electricalContract.getClimberMotorLeft(),
-                    getPrefix(), "ClimberMotorPID", new XCANMotorControllerPIDProperties(
-                            0,
-                            0,
-                            0
-                    ));
+            this.climberMotorLeft = motorFactory.create(electricalContract.getClimberMotorLeft(),
+                    getPrefix(), "ClimberMotorPID", defaultPIDProperties1);
+
+            this.registerDataFrameRefreshable(climberMotorLeft);
+
             this.climberMotorRight = motorFactory.create(
                     electricalContract.getClimberMotorRight(),
-                    getPrefix(), "ClimberMotorPID", new XCANMotorControllerPIDProperties(
-                            0,
-                            0,
-                            0
-                    ));
-            this.registerDataFrameRefreshable(climberMotorLeft);
+                    getPrefix(), "ClimberMotorPID", defaultPIDProperties2);
+
             this.registerDataFrameRefreshable(climberMotorRight);
         } else {
             this.climberMotorLeft = null;
             this.climberMotorRight = null;
         }
 
-        this.mechanismDegreesPerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreesPerMotorRotation", 0);
+        this.mechanismDegreesPerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreesPerMotorRotation", 3.0);
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
-        this.limbRange = propertyFactory.createPersistentProperty("LimbRange", Degrees.of(3));
+
+        this.extendPower = propertyFactory.createPersistentProperty("ExtendPower", 0.2);
+        this.retractPower = propertyFactory.createPersistentProperty("RetractPower", -0.2);
     }
         //set target position for rotation
     public void extend() {
@@ -102,14 +115,14 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     }
 
     public void periodic() {
+        aKitLog.record("TargetPosition", getTargetValue());
+        aKitLog.record("CurrentPosition", getCurrentValue());
         if (climberMotorLeft != null) {
             climberMotorLeft.periodic();
         }
         if (climberMotorRight != null) {
             climberMotorRight.periodic();
         }
-
-        aKitLog.record("CurrentPosition", getCurrentValue());
     }
 
     @Override
