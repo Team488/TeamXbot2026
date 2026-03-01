@@ -8,6 +8,7 @@ import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.NamedRunCommand;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
+import xbot.common.properties.AngleProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -24,6 +25,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public final XCANMotorController climberMotorRight;
     private final DoubleProperty mechanismDegreesPerMotorRotation;
     public final DoubleProperty manualControlPower;
+    public final AngleProperty limbRange ;
     public DoubleProperty extendPower;
     public DoubleProperty retractPower;
     public ClimberState climberState;
@@ -66,7 +68,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
         this.mechanismDegreesPerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreesPerMotorRotation", 0);
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
-        // TODO: find degrees per rotation
+        this.limbRange = propertyFactory.createPersistentProperty("LimbRange", Degrees.of(3));
     }
         //set target position for rotation
     public void extend() {
