@@ -3,8 +3,13 @@ package competition.operator_interface;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import competition.command_groups.DepotClimbCommandGroup;
 import competition.command_groups.FireWhenShooterReadyCommandGroup;
 import competition.command_groups.HopperAndIntakeCommandGroup;
+import competition.command_groups.MiddleClimbCommandGroup;
+import competition.command_groups.OutpostClimbCommandGroup;
+import competition.command_groups.VisionOutpostClimbCommandGroup;
+import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
@@ -134,6 +139,23 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getPovIfAvailable(90).whileTrue(fuelEjectCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(180).onTrue(trimHoodUpCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(270).whileTrue(shooterFeederFire);
+    }
+
+    @Inject
+    public void setupSimulatorCommands(
+            ResetSimulatedPoseCommand resetSimulatorPositionCommand,
+            OutpostClimbCommandGroup outpostClimbCommandGroup,
+            MiddleClimbCommandGroup middleClimbCommandGroup,
+            DepotClimbCommandGroup depotClimbCommandGroup,
+            VisionOutpostClimbCommandGroup visionOutpostClimbCommandGroup
+
+    ) {
+        resetSimulatorPositionCommand.includeOnSmartDashboard("Reset Simulator Position");
+        outpostClimbCommandGroup.includeOnSmartDashboard("Outpost Climb Command");
+        middleClimbCommandGroup.includeOnSmartDashboard("Middle Climb Command");
+        depotClimbCommandGroup.includeOnSmartDashboard("Depot Climb Command");
+        visionOutpostClimbCommandGroup.includeOnSmartDashboard("Vision Outpost Climb Command");
+
     }
 
 
