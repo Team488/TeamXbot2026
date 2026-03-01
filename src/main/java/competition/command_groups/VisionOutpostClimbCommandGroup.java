@@ -8,7 +8,9 @@ import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import xbot.common.command.BaseSequentialCommandGroup;
 import xbot.common.subsystems.drive.SwerveSimpleTrajectoryCommand;
 import xbot.common.trajectory.XbotSwervePoint;
@@ -26,23 +28,16 @@ public class VisionOutpostClimbCommandGroup extends BaseSequentialCommandGroup {
                                           ClimberExtendCommand climberExtendCommand,
                                           ClimberRetractCommand climberRetractCommand,
                                           IntakeDeployRetractCommand intakeDeployRetractCommand
-//                                          Landmarks landmarks, AprilTagFieldLayout aprilTagFieldLayout1
     )
     {
-//        this.aprilTagFieldLayout = aprilTagFieldLayout;
-
-
         var readyOutpostClimb =  trajectoryProvider.get();
 
         ArrayList<XbotSwervePoint> readyOutpostPoint = new ArrayList<>();
 
-       var hub = Landmarks.getAllianceHubPose(
-                aprilTagFieldLayout, DriverStation.Alliance.Blue);
-
         Pose2d readyOutpostClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueVisionOutpostSideClimbSupportReadyPose);
 
         readyOutpostPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(
-                readyOutpostClimbPose,2));
+                readyOutpostClimbPose,1));
 
         readyOutpostClimb.logic.setKeyPoints(readyOutpostPoint);
         readyOutpostClimb.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
@@ -54,7 +49,7 @@ public class VisionOutpostClimbCommandGroup extends BaseSequentialCommandGroup {
         Pose2d readyClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueVisionOutpostSideReadyClimbPose);
 
         readyClimbPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
-                (readyClimbPose,2));
+                (readyClimbPose,1));
 
         readyClimb.logic.setKeyPoints(readyClimbPoint);
         readyClimb.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
@@ -73,10 +68,10 @@ public class VisionOutpostClimbCommandGroup extends BaseSequentialCommandGroup {
 
         addCommands(
                 readyOutpostClimb,
-//                new ParallelCommandGroup(
-//                        intakeDeployRetractCommand,
-//                        climberExtendCommand
-//                ),
+                new ParallelCommandGroup(
+                        intakeDeployRetractCommand,
+                        climberExtendCommand
+                ),
                 readyClimb,
                 outpostClimb,
                 climberRetractCommand
