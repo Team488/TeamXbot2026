@@ -48,4 +48,6 @@ public abstract class BaseRobotComponent extends BaseComponent {
     public abstract HopperRollerSubsystem hopperRollerSubsystem();
 
     public abstract VoltageMonitorSubsystem voltageMonitorSubsystem();
-    }
+
+    public abstract ClimberSubsystem climberSubsystem();
+}

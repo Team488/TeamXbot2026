@@ -1,8 +1,8 @@
-package competition.simulation.intake_deploy;
+package competition.simulation.climber;
 
 import competition.Robot;
 import competition.simulation.SimulatorConstants;
-import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
+import competition.subsystems.climber.ClimberSubsystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.Angle;
@@ -22,25 +22,25 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
 
 @Singleton
-public class IntakeDeploySimulator {
+public class ClimberSimulator {
     final AKitLogger aKitLog;
-
     final DCMotorSim motorSim;
-    final DCMotor intakeDeployGearBox = DCMotor.getKrakenX60(1);
-    final PIDManager pidManager;
 
-    final IntakeDeploySubsystem intakeDeploy;
+    // We have 2 motors for climber but don't think it really matters for this case
+    final DCMotor climberGearBox = DCMotor.getKrakenX60(1);
+    final PIDManager pidManager;
+    final ClimberSubsystem climber;
     final MockCANMotorController motor;
 
     @Inject
-    public IntakeDeploySimulator(IntakeDeploySubsystem intakeDeploy, PIDManager.PIDManagerFactory pidManagerFactory,
-                                 PropertyFactory pf) {
+    public ClimberSimulator(ClimberSubsystem climber, PIDManager.PIDManagerFactory pidManagerFactory,
+                            PropertyFactory pf) {
         pf.setPrefix("Simulator/");
         aKitLog = new AKitLogger(pf.getPrefix());
-        this.intakeDeploy = intakeDeploy;
-        this.motor = (MockCANMotorController) intakeDeploy.intakeDeployMotor;
+        this.climber = climber;
+        this.motor = (MockCANMotorController) climber.climberMotorLeft;
         this.pidManager = pidManagerFactory.create(
-                pf.getPrefix() + "IntakeDeploySimulatorPID",
+                pf.getPrefix() + "ClimberSimulatorPID",
                 0.2,
                 0.001,
                 0.0,
@@ -51,20 +51,16 @@ public class IntakeDeploySimulator {
 
         this.motorSim = new DCMotorSim(
                 LinearSystemId.createDCMotorSystem(
-                        intakeDeployGearBox,
+                        climberGearBox,
                         SimulatorConstants.intakeDeployJKgMetersSquared,
                         SimulatorConstants.intakeDeployGearing
                 ),
-                intakeDeployGearBox
+                climberGearBox
         );
     }
 
     public Angle getAngularPosition() {
         return this.motorSim.getAngularPosition();
-    }
-
-    public boolean isDeployed() {
-        return getAngularPosition().isNear(SimulatorConstants.intakeDeployedAngle, Degrees.of(5));
     }
 
     public void update() {
@@ -81,9 +77,7 @@ public class IntakeDeploySimulator {
 
         // Update motor position and velocity with the motorSim
         var mechanismAngle = getAngularPosition();
-        double motorRotation = mechanismAngle.in(Degrees) / intakeDeploy.mechanismDegreePerMotorRotation.get();
-
+        double motorRotation = mechanismAngle.in(Degrees) / climber.mechanismDegreesPerMotorRotation.get();
         this.motor.setPosition(Rotations.of(motorRotation));
-        aKitLog.record("IntakeDeployed", isDeployed());
     }
 }
