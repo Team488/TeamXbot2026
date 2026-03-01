@@ -12,6 +12,7 @@ import competition.operator_interface.OperatorInterface;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
 import competition.subsystems.climber.commands.ClimberRetractCommand;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
 import edu.wpi.first.units.AngularAccelerationUnit;
 import edu.wpi.first.units.measure.Acceleration;
 import edu.wpi.first.units.measure.Angle;
@@ -24,6 +25,7 @@ import xbot.common.command.NamedRunCommand;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.controls.sensors.XXboxController;
+import xbot.common.math.PID;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -40,7 +42,6 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public final XCANMotorController climberMotorLeft;
     public final XCANMotorController climberMotorRight;
     private final DoubleProperty mechanismDegreesPerMotorRotation;
-    private SparkMax climberSparkBase;
     public final DoubleProperty manualControlPower;
     public DoubleProperty extendPower;
     public DoubleProperty retractPower;
@@ -50,10 +51,6 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
 
     private final MutAngle mechanismTargetAngle = Degrees.mutable(0);
-
-    public SparkMax getClimberSparkBase() {
-        return climberSparkBase;
-    }
 
     public enum ClimberState {
         EXTENDING,
@@ -90,8 +87,6 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         this.mechanismDegreesPerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreesPerMotorRotation", 0);
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
         // TODO: find degrees per rotation
-        this.climberSparkBase = new SparkMax(climberSparkBase.getDeviceId(), SparkLowLevel.MotorType.kBrushless);
-
     }
 
     //set target position for rotation
@@ -186,9 +181,27 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
                     Rotations.of(setpoint.in(Degrees) / mechanismDegreesPerMotorRotation.get()).plus(motorOffset),
                     XCANMotorController.MotorPidMode.Voltage);
         }
+
+//        if (ClimberRetractCommand == XXboxController.XboxButton.LeftBumper(climberState) == ) {
+//
+//        }
     }
 
-    TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(10,2);
+    TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1.0,0.2);
+
+    public void climberSmoothAcceleration () {
+        if (XXboxController.XboxButton.LeftBumper.equals(true)) {
+            double maxVelocityConstraint = 1.0;
+            double maxAccelerationConstraint = 0.2;
+        }
+    }
+
+    public void unhookFromTower () {
+        //set a height of where you want to unhook
+        //use trapezoidProfile to slowly rotate the degrees to a safe angle
+
+        //safe landing on (0.0)
+    }
 
     public final Command getCalibrateOffsetRetractCommand() {
         return new NamedRunCommand( getName() + "-calibrate", this::calibrateOffsetRetracted);
