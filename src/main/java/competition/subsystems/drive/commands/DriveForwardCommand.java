@@ -5,6 +5,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import xbot.common.command.BaseCommand;
 import xbot.common.math.XYPair;
 import xbot.common.properties.DoubleProperty;
+import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 
@@ -12,35 +13,18 @@ import static edu.wpi.first.units.Units.RPM;
 
 public class DriveForwardCommand extends BaseCommand {
 
-    private final DriveSubsystem drive;
-    //private AngularVelocity targetVelocity;
-    //private boolean usingCustomGoal = false;
-    public DoubleProperty power;
+    public final DriveSubsystem drive;
+    public final DoubleProperty power;
 
     @Inject
-    public DriveForwardCommand(DriveSubsystem driveSubsystem) {
+    public DriveForwardCommand(DriveSubsystem driveSubsystem, PropertyFactory propertyFactory) {
         this.drive = driveSubsystem;
+        this.power = propertyFactory.createPersistentProperty("PowerForward", 1);
         addRequirements(driveSubsystem);
     }
 
-
-    //public void setTargetVelocity(AngularVelocity targetVelocity) {
-    //    this.targetVelocity = targetVelocity;
-    //    this.usingCustomGoal = true;
-    //}
-
     @Override
     public void initialize() {
-        drive.move(new XYPair(power.get(),0),0);
-        //if (!this.usingCustomGoal) {
-    //        this.targetVelocity = RPM.of(this.drive.);
-    //    }
-
-    //    log.info("Drive Meter: ", this.targetVelocity.in(RPM));
-    }
-
-    @Override
-    public boolean isFinished () {
-        return false;
+        drive.move(new XYPair(power.get(), 0), 0);
     }
 }
