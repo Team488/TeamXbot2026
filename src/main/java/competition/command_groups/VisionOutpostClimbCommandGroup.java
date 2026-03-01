@@ -8,9 +8,7 @@ import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import xbot.common.command.BaseSequentialCommandGroup;
 import xbot.common.subsystems.drive.SwerveSimpleTrajectoryCommand;
 import xbot.common.trajectory.XbotSwervePoint;
@@ -33,14 +31,15 @@ public class VisionOutpostClimbCommandGroup extends BaseSequentialCommandGroup {
     {
 //        this.aprilTagFieldLayout = aprilTagFieldLayout;
 
+
         var readyOutpostClimb =  trajectoryProvider.get();
 
         ArrayList<XbotSwervePoint> readyOutpostPoint = new ArrayList<>();
 
-        Pose2d readyOutpostClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueVisionClimbReadyPose);
+       var hub = Landmarks.getAllianceHubPose(
+                aprilTagFieldLayout, DriverStation.Alliance.Blue);
 
-//        Pose2d readyOutpostClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.getAllianceHubPose(
-//                aprilTagFieldLayout, DriverStation.Alliance.Blue).minus(new Pose2d(1.8,1.8, Rotation2d.fromRotations(0)));
+        Pose2d readyOutpostClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueVisionOutpostSideClimbSupportReadyPose);
 
         readyOutpostPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(
                 readyOutpostClimbPose,2));
@@ -48,6 +47,17 @@ public class VisionOutpostClimbCommandGroup extends BaseSequentialCommandGroup {
         readyOutpostClimb.logic.setKeyPoints(readyOutpostPoint);
         readyOutpostClimb.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
 
+        var readyClimb = trajectoryProvider.get();
+
+        ArrayList<XbotSwervePoint> readyClimbPoint = new ArrayList<>();
+
+        Pose2d outpostClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueVisionOutpostSideReadyClimbPose);
+
+        readyClimbPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
+                (outpostClimbPose,2));
+
+        readyClimb.logic.setKeyPoints(readyClimbPoint);
+        readyClimb.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
 
         var outpostClimb = trajectoryProvider.get();
 
