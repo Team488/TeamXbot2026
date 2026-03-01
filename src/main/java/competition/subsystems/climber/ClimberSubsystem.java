@@ -23,7 +23,6 @@ import static edu.wpi.first.units.Units.Second;
 @Singleton
 public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
-    ElectricalContract electricalContract;
     public final XCANMotorController climberMotorLeft;
     public final XCANMotorController climberMotorRight;
     public final XDigitalInput climberSensor;
