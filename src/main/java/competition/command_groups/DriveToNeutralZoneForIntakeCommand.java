@@ -9,10 +9,12 @@ import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.drive.SwervePointKinematics;
@@ -30,17 +32,21 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
     private final PoseSubsystem pose;
     private final SwervePointPathPlanning pathPlanning;
     private final GameField gamefield;
+    private final Distance robotRadius;
 
     @Inject
     public DriveToNeutralZoneForIntakeCommand(DriveSubsystem drive, PoseSubsystem pose,
             PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
+            XSwerveDriveElectricalContract electrical_contract,
             RobotAssertionManager robotAssertionManager, SwervePointPathPlanning pathPlanning, GameField gamefield) {
         super(drive, pose, pf, headingModuleFactory, robotAssertionManager);
         this.pose = pose;
         this.pathPlanning = pathPlanning;
         this.gamefield = gamefield;
+        this.robotRadius = electrical_contract.getRadiusOfRobot();
     }
 
+    // After some testing, we'll delete this.
     private List<XbotSwervePoint> calcOldSwervePoints() {
         Pose2d closestTrench = this.pose.closestAllianceTrench();
         var fieldCenter = this.gamefield.getFieldCenter();
@@ -83,7 +89,14 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
         var ballPitEdge = Landmarks.getClosestAutoBallPitEdge(this.gamefield, currentPose,
                 DriverStation.getAlliance().orElse(Alliance.Blue));
 
-        return this.pathPlanning.generateSwervePoints(currentPose, ballPitEdge,
+        // If the edge is above the center then we move along 180 deg otherwise move
+        // along 0 deg.
+        var multiplier = ballPitEdge.getY() > this.gamefield.getFieldCenter().getY() ? 1 : -1;
+        var adjustedForRobot = new Translation2d(Units.Meters.of(0),
+                this.robotRadius.plus(this.pathPlanning.getAdditionalClearance()).times(multiplier));
+        var fieldPose = new Pose2d(ballPitEdge.getTranslation().plus(adjustedForRobot), ballPitEdge.getRotation());
+
+        return this.pathPlanning.generateSwervePoints(currentPose, fieldPose,
                 false);
     }
 

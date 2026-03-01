@@ -185,7 +185,13 @@ public class Landmarks {
             .filter(edgePose -> isInAllianceSide(field, edgePose, alliance))
             .toList();
 
-        return currentPose.nearest(ballPitEdges);
+        var nearestEdge = currentPose.nearest(ballPitEdges);
+
+        if (nearestEdge.getY() > center.getY()) {
+            return new Pose2d(nearestEdge.getTranslation(), Rotation2d.kCW_Pi_2);
+        } else {
+            return new Pose2d(nearestEdge.getTranslation(), Rotation2d.kCCW_Pi_2);
+        }
     }
 
     public static boolean isInAllianceSide(GameField field, Pose2d pose, Alliance alliance) {
