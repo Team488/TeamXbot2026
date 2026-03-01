@@ -2,7 +2,6 @@ package competition.subsystems.climber;
 
 import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.NamedRunCommand;
@@ -62,14 +61,12 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
         if (electricalContract.isClimberLeftReady() && electricalContract.isClimberRightReady()) {
             this.climberMotorLeft = motorFactory.create(electricalContract.getClimberMotorLeft(),
                     getPrefix(), "ClimberMotorPID", defaultPIDProperties1);
-
-            this.registerDataFrameRefreshable(climberMotorLeft);
+            this.registerDataFrameRefreshable(this.climberMotorLeft);
 
             this.climberMotorRight = motorFactory.create(
                     electricalContract.getClimberMotorRight(),
                     getPrefix(), "ClimberMotorPID", defaultPIDProperties2);
-
-            this.registerDataFrameRefreshable(climberMotorRight);
+            this.registerDataFrameRefreshable(this.climberMotorRight);
         } else {
             this.climberMotorLeft = null;
             this.climberMotorRight = null;
@@ -82,7 +79,6 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
         this.extendPower = propertyFactory.createPersistentProperty("ExtendPower", 0.2);
         this.retractPower = propertyFactory.createPersistentProperty("RetractPower", -0.2);
 
-        // TODO: Figure out mech deg per motor rot
         this.mechanismTargetAngle = propertyFactory.createPersistentProperty("MechanismTargetAngle", Degrees.zero());
 
     }
@@ -118,10 +114,6 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
     }
 
     public void periodic() {
-
-        aKitLog.record("TargetPosition", getTargetValue());
-        aKitLog.record("CurrentPosition", getCurrentValue());
-
         this.isCalibrated = true;
 
         if (climberMotorLeft != null) {
@@ -131,8 +123,9 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
             climberMotorRight.periodic();
         }
 
-        aKitLog.record("IsCalibrated", isCalibrated);
+        aKitLog.record("TargetPosition", getTargetValue());
         aKitLog.record("CurrentPosition", getCurrentValue());
+        aKitLog.record("IsCalibrated", isCalibrated());
     }
 
     @Override

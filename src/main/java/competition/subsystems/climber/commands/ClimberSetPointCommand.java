@@ -27,5 +27,6 @@ public class ClimberSetPointCommand extends BaseSetpointCommand {
         } else {
             climber.setTargetValue(climber.getCurrentValue());
         }
+            log.info("Initialized ClimberSetPointCommand with goal angle: " + goalAngle);
     }
 }
