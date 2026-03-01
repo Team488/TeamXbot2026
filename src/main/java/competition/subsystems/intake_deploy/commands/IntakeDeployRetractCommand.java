@@ -1,17 +1,15 @@
 package competition.subsystems.intake_deploy.commands;
 
-import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import xbot.common.command.BaseSetpointCommand;
 
 import javax.inject.Inject;
 
 import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Degrees;
 
 public class IntakeDeployRetractCommand extends BaseSetpointCommand {
     final IntakeDeploySubsystem intakeDeploy;
-
-
 
     @Inject
     public IntakeDeployRetractCommand(IntakeDeploySubsystem intakeDeploy) {
@@ -21,13 +19,7 @@ public class IntakeDeployRetractCommand extends BaseSetpointCommand {
 
     @Override
     public void initialize() {
-        intakeDeploy.setTargetValue(Degree.of(intakeDeploy.retractedPositionInDegree.get()));
+        intakeDeploy.setTargetValue(Degrees.of(intakeDeploy.retractedPosition.get()));
         log.info("Initialized IntakeDeployRetract");
     }
-
-    @Override
-    public boolean isFinished() {
-        return true;
-    }
-
 }
