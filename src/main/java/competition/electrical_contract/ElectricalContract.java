@@ -1,6 +1,7 @@
 package competition.electrical_contract;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Distance;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
@@ -83,6 +84,10 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract CANMotorControllerInfo getHopperRollerMotor();
 
+    public abstract boolean intakeDeploySensorReady();
+
+    public abstract DeviceInfo getIntakeDeploySensor();
+
     /**
      * Returns additional PDH connections for non-motor devices (e.g., VRMs, PCMs, buck converters, etc.)
      * Override this method in specific contract implementations to specify these connections.
@@ -100,4 +105,6 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public Map<String, List<String>> getAdditionalPowerBranches() {
         return new HashMap<>();
     }
+
+    public abstract Distance getRadiusOfRobot();
 }
