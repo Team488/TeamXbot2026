@@ -11,7 +11,6 @@ import xbot.common.command.NamedInstantCommand;
 
 import javax.inject.Inject;
 
-
 public class FireWhenShooterReadyCommandGroup extends BaseParallelCommandGroup {
 
     @Inject
@@ -24,9 +23,9 @@ public class FireWhenShooterReadyCommandGroup extends BaseParallelCommandGroup {
         var waitForHoodCommand =  hoodSubsystem.getWaitForAtGoalCommand();
         var hopperIntakeCommand = hopper.getIntakeCommand();
         this.addCommands(
+
                 new NamedInstantCommand("Set Hood Min", () -> hoodSubsystem.setTargetValue(0.0))
-                        .andThen(shooterOutputCommand)
-                        .andThen(waitForShooterCommand).alongWith(waitForHoodCommand)
+                        .andThen(shooterOutputCommand).alongWith(waitForShooterCommand).alongWith(waitForHoodCommand)
                         .andThen(hopperIntakeCommand.alongWith(shooterFeederFireCommand, fuelIntakeCommand))
         );
     }

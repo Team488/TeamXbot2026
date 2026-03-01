@@ -15,6 +15,7 @@ import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
 import competition.subsystems.climber.commands.ClimberRetractCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
+import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.fuel_intake.commands.FuelEjectCommand;
 import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
@@ -65,7 +66,8 @@ public class OperatorCommandMap {
                                    ChangeActiveSwerveModuleCommand changeActiveModule,
                                    SwerveDriveWithJoysticksCommand typicalSwerveDrive,
                                    Provider<ClimberSetPointCommand> climberSetPoint,
-                                   ClimberSubsystem climber
+                                   ClimberSubsystem climber,
+                                   RotateToHubCommand rotateToHubCommand
     ) {
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
 
@@ -77,6 +79,7 @@ public class OperatorCommandMap {
         operatorInterface.driverGamepad.getPovIfAvailable(90).onTrue(climberExtend);
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(climberEngage);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Back).onTrue(climber.getCalibrateOffsetRetractCommand());
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).onTrue(rotateToHubCommand);
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
