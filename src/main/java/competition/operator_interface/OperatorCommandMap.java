@@ -9,6 +9,7 @@ import competition.command_groups.FireWhenShooterReadyCommandGroup;
 import competition.command_groups.HopperAndIntakeCommandGroup;
 import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.climber.ClimberSubsystem;
+import competition.subsystems.climber.commands.ClimberSetPointCommand;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
 import competition.subsystems.climber.commands.ClimberRetractCommand;
@@ -60,9 +61,20 @@ public class OperatorCommandMap {
                                    SetRobotHeadingCommand resetHeading,
                                    DebugSwerveModuleCommand debugModule,
                                    ChangeActiveSwerveModuleCommand changeActiveModule,
-                                   SwerveDriveWithJoysticksCommand typicalSwerveDrive
+                                   SwerveDriveWithJoysticksCommand typicalSwerveDrive,
+                                   Provider<ClimberSetPointCommand> climberSetPoint,
+                                   ClimberSubsystem climber
     ) {
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
+
+        // Map climber related commands
+        var climberRetract = climberSetPoint.get().setGoalAngle(climber.retractedAngle.get());
+        var climberExtend = climberSetPoint.get().setGoalAngle(climber.extendedAngle.get());
+        var climberEngage = climberSetPoint.get().setGoalAngle(climber.engagedAngle.get());
+        operatorInterface.driverGamepad.getPovIfAvailable(270).onTrue(climberRetract);
+        operatorInterface.driverGamepad.getPovIfAvailable(90).onTrue(climberExtend);
+        operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(climberEngage);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Back).onTrue(climber.getCalibrateOffsetRetractCommand());
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
