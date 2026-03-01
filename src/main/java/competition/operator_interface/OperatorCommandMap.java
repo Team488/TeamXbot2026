@@ -97,8 +97,6 @@ public class OperatorCommandMap {
                 .whileTrue(fireWhenShooterReadyCommandGroup);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(intakeCommand);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateIntakeOffsetUp);
-
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(hoodExtend);
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(hoodRetract);
