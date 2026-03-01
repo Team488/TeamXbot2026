@@ -8,6 +8,7 @@ import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.NamedRunCommand;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
+import xbot.common.properties.AngleProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -18,11 +19,10 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
 
 @Singleton
-public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
-
+public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
     public final XCANMotorController climberMotorLeft;
     public final XCANMotorController climberMotorRight;
-    private final DoubleProperty mechanismDegreesPerMotorRotation;
+    public final DoubleProperty mechanismDegreesPerMotorRotation;
     public final DoubleProperty manualControlPower;
     public DoubleProperty extendPower;
     public DoubleProperty retractPower;
@@ -30,7 +30,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public Angle motorOffset = Degrees.zero();
     private boolean isCalibrated;
 
-    private final MutAngle mechanismTargetAngle = Degrees.mutable(0);
+    private final AngleProperty mechanismTargetAngle;
 
     public enum ClimberState {
         EXTENDING,
@@ -40,8 +40,8 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     @Inject
     public ClimberSubsystem(XCANMotorController.XCANMotorControllerFactory motorFactory,
-                            ElectricalContract electricalContract, PropertyFactory propertyFactory) {
-        propertyFactory.setPrefix(this);
+                            ElectricalContract electricalContract, PropertyFactory pf) {
+        pf.setPrefix(this);
         if (electricalContract.isClimberLeftReady() && electricalContract.isClimberRightReady()) {
             this.climberMotorLeft = motorFactory.create(
                     electricalContract.getClimberMotorLeft(),
@@ -64,9 +64,10 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
             this.climberMotorRight = null;
         }
 
-        this.mechanismDegreesPerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreesPerMotorRotation", 0);
-        this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
-        // TODO: find degrees per rotation
+        // TODO: Figure out mech deg per motor rot
+        this.mechanismDegreesPerMotorRotation = pf.createPersistentProperty("MechanismDegreesPerMotorRotation", 0);
+        this.manualControlPower = pf.createPersistentProperty("ManualControlPower", 0.1);
+        this.mechanismTargetAngle = pf.createPersistentProperty("MechanismTargetAngle", Degrees.zero());
     }
         //set target position for rotation
     public void extend() {
@@ -100,6 +101,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     }
 
     public void periodic() {
+        this.isCalibrated = true;
         if (climberMotorLeft != null) {
             climberMotorLeft.periodic();
         }
@@ -107,6 +109,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
             climberMotorRight.periodic();
         }
 
+        aKitLog.record("IsCalibrated", isCalibrated);
         aKitLog.record("CurrentPosition", getCurrentValue());
     }
 
@@ -119,12 +122,12 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     @Override
     public Angle getTargetValue() {
-        return mechanismTargetAngle.copy();
+        return mechanismTargetAngle.get();
     }
 
     @Override
     public void setTargetValue(Angle angle) {
-       mechanismTargetAngle.mut_replace(angle);
+       mechanismTargetAngle.set(angle);
     }
 
     @Override
