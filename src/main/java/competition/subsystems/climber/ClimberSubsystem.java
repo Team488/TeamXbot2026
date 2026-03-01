@@ -11,7 +11,9 @@ import competition.operator_interface.OperatorCommandMap;
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
 import competition.subsystems.climber.commands.ClimberRetractCommand;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.AngularAccelerationUnit;
+import edu.wpi.first.units.measure.Acceleration;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.units.measure.Velocity;
@@ -48,6 +50,10 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
 
     private final MutAngle mechanismTargetAngle = Degrees.mutable(0);
+
+    public SparkMax getClimberSparkBase() {
+        return climberSparkBase;
+    }
 
     public enum ClimberState {
         EXTENDING,
@@ -182,19 +188,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         }
     }
 
-    public void setTrapezoidalProfileAcceleration(Velocity<AngularAccelerationUnit> jerk) {
-        if (jerk.magnitude() > 0) {
-//            log.warn("setTrapezoidalProfileJerk: Jerk configuration is not supported by SparkMax");
-        }
-    }
-
-    public void setTrapezoidalProfileMaxVelocity(Angle maxVelocity) {
-        var config = new SparkMaxConfig();
-        config.closedLoop.maxMotion.cruiseVelocity(maxVelocity.in(Degrees));
-        this.climberSparkBase.ControlType(config,
-                ResetMode.kNoResetSafeParameters,
-                PersistMode.kNoPersistParameters);
-    }
+    TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(10,2);
 
     public final Command getCalibrateOffsetRetractCommand() {
         return new NamedRunCommand( getName() + "-calibrate", this::calibrateOffsetRetracted);
