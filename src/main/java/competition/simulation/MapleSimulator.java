@@ -1,6 +1,7 @@
 package competition.simulation;
 
 import competition.Robot;
+import competition.simulation.climber.ClimberSimulator;
 import competition.simulation.intake.IntakeSimulator;
 import competition.simulation.intake_deploy.IntakeDeploySimulator;
 import competition.simulation.shooter.ShooterSimulator;
@@ -47,10 +48,12 @@ public class MapleSimulator implements BaseSimulator {
     final ShooterSimulator shooterSimulator;
     final IntakeSimulator intakeSimulator;
     final IntakeDeploySimulator intakeDeploySimulator;
+    final ClimberSimulator climberSimulator;
 
     @Inject
     public MapleSimulator(PoseSubsystem pose, DriveSubsystem drive, ShooterSimulator shooterSimulator,
-                          IntakeSimulator intakeSimulator, IntakeDeploySimulator intakeDeploySimulator) {
+                          IntakeSimulator intakeSimulator, IntakeDeploySimulator intakeDeploySimulator,
+                          ClimberSimulator climberSimulator) {
         this.pose = pose;
         this.drive = drive;
 
@@ -105,6 +108,7 @@ public class MapleSimulator implements BaseSimulator {
         this.intakeSimulator = intakeSimulator;
         this.intakeSimulator.initialize(this.swerveDriveSimulation.getDriveTrainSimulation());
         this.intakeDeploySimulator = intakeDeploySimulator;
+        this.climberSimulator = climberSimulator;
 
         SimulatedArena.overrideSimulationTimings(Seconds.of(Robot.LOOP_INTERVAL), 5);
     }
@@ -114,6 +118,7 @@ public class MapleSimulator implements BaseSimulator {
         intakeSimulator.update();
         shooterSimulator.update(this.arena);
         intakeDeploySimulator.update();
+        climberSimulator.update();
     }
 
     protected void updateDriveSimulation() {

@@ -42,6 +42,7 @@ public class Robot extends BaseRobot {
         getInjectorComponent().hopperRollerSubsystem();
         getInjectorComponent().intakeDeploySubsystem();
         getInjectorComponent().voltageMonitorSubsystem();
+        getInjectorComponent().climberSubsystem();
 
         if (BaseRobot.isSimulation()) {
             simulator = getInjectorComponent().simulator();
@@ -58,6 +59,7 @@ public class Robot extends BaseRobot {
         dataFrameRefreshables.add(getInjectorComponent().lightsSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().hopperRollerSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().voltageMonitorSubsystem());
+        dataFrameRefreshables.add(getInjectorComponent().climberSubsystem());
     }
 
     protected BaseRobotComponent createDaggerComponent() {
