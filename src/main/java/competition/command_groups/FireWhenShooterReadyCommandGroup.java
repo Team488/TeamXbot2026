@@ -7,6 +7,7 @@ import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import xbot.common.command.BaseParallelCommandGroup;
+import xbot.common.command.NamedInstantCommand;
 
 import javax.inject.Inject;
 
@@ -23,10 +24,10 @@ public class FireWhenShooterReadyCommandGroup extends BaseParallelCommandGroup {
         var waitForHoodCommand =  hoodSubsystem.getWaitForAtGoalCommand();
         var hopperIntakeCommand = hopper.getIntakeCommand();
         this.addCommands(
-                shooterOutputCommand,
-                waitForShooterCommand.alongWith(waitForHoodCommand)
+                new NamedInstantCommand("Set Hood Min", () -> hoodSubsystem.setTargetValue(0.0))
+                        .andThen(shooterOutputCommand)
+                        .andThen(waitForShooterCommand).alongWith(waitForHoodCommand)
                         .andThen(hopperIntakeCommand.alongWith(shooterFeederFireCommand, fuelIntakeCommand))
         );
     }
 }
-
