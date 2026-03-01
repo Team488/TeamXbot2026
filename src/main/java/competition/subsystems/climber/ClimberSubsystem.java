@@ -2,10 +2,9 @@ package competition.subsystems.climber;
 
 import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSetpointSubsystem;
-import xbot.common.command.NamedRunCommand;
+import xbot.common.command.NamedInstantCommand;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.properties.AngleProperty;
@@ -30,6 +29,10 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
     public Angle motorOffset = Degrees.zero();
     private boolean isCalibrated;
 
+    public final AngleProperty retractedAngle;
+    public final AngleProperty extendedAngle;
+    public final AngleProperty engagedAngle;
+
     private final AngleProperty mechanismTargetAngle;
 
     public enum ClimberState {
@@ -43,31 +46,23 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
                             ElectricalContract electricalContract, PropertyFactory propertyFactory) {
         propertyFactory.setPrefix(this);
 
-        var defaultPIDProperties1 = new XCANMotorControllerPIDProperties.Builder()
-                .withP(5.0)
+        var defaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
+                .withP(0.6)
                 .withI(0.0)
                 .withD(0.0)
-                .withMinPowerOutput(-0.2)
-                .withMaxPowerOutput(0.2)
-                .build();
-
-        var defaultPIDProperties2 = new XCANMotorControllerPIDProperties.Builder()
-                .withP(5.0)
-                .withI(0.0)
-                .withD(0.0)
-                .withMinPowerOutput(-0.2)
-                .withMaxPowerOutput(0.2)
+                .withMinPowerOutput(-1.0)
+                .withMaxPowerOutput(1.0)
                 .build();
 
         if (electricalContract.isClimberLeftReady() && electricalContract.isClimberRightReady()) {
             this.climberMotorLeft = motorFactory.create(electricalContract.getClimberMotorLeft(),
-                    getPrefix(), "ClimberMotorPID", defaultPIDProperties1);
+                    getPrefix(), "ClimberMotorPID", defaultPIDProperties);
 
             this.registerDataFrameRefreshable(climberMotorLeft);
 
             this.climberMotorRight = motorFactory.create(
                     electricalContract.getClimberMotorRight(),
-                    getPrefix(), "ClimberMotorPID", defaultPIDProperties2);
+                    getPrefix(), "ClimberMotorPID", defaultPIDProperties);
 
             this.registerDataFrameRefreshable(climberMotorRight);
         } else {
@@ -82,7 +77,10 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
         this.extendPower = propertyFactory.createPersistentProperty("ExtendPower", 0.2);
         this.retractPower = propertyFactory.createPersistentProperty("RetractPower", -0.2);
 
-        // TODO: Figure out mech deg per motor rot
+        this.retractedAngle = propertyFactory.createPersistentProperty("RetractedAngle", Degrees.of(0));
+        this.extendedAngle = propertyFactory.createPersistentProperty("ExtendedAngle", Degrees.of(180));
+        this.engagedAngle = propertyFactory.createPersistentProperty("ClimbEngagedAngle", Degrees.of(85));
+
         this.mechanismTargetAngle = propertyFactory.createPersistentProperty("MechanismTargetAngle", Degrees.zero());
 
     }
@@ -168,6 +166,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
     public void calibrateOffsetRetracted() {
         if (climberMotorLeft != null) {
             motorOffset = climberMotorLeft.getPosition();
+            setTargetValue(getCurrentValue());
             isCalibrated = true;
         }
     }
@@ -187,6 +186,11 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
     }
 
     public final Command getCalibrateOffsetRetractCommand() {
-        return new NamedRunCommand( getName() + "-calibrate", this::calibrateOffsetRetracted);
+        return new NamedInstantCommand( getName() + "-calibrate", this::calibrateOffsetRetracted) {
+            @Override
+            public boolean runsWhenDisabled() {
+                return true;
+            }
+        };
     }
 }
