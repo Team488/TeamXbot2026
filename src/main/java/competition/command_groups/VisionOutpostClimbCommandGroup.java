@@ -51,10 +51,10 @@ public class VisionOutpostClimbCommandGroup extends BaseSequentialCommandGroup {
 
         ArrayList<XbotSwervePoint> readyClimbPoint = new ArrayList<>();
 
-        Pose2d outpostClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueVisionOutpostSideReadyClimbPose);
+        Pose2d readyClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueVisionOutpostSideReadyClimbPose);
 
         readyClimbPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
-                (outpostClimbPose,2));
+                (readyClimbPose,2));
 
         readyClimb.logic.setKeyPoints(readyClimbPoint);
         readyClimb.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
@@ -77,6 +77,7 @@ public class VisionOutpostClimbCommandGroup extends BaseSequentialCommandGroup {
 //                        intakeDeployRetractCommand,
 //                        climberExtendCommand
 //                ),
+                readyClimb,
                 outpostClimb,
                 climberRetractCommand
         );
