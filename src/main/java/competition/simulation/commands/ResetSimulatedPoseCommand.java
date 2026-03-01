@@ -17,7 +17,7 @@ public class ResetSimulatedPoseCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        this.simulator.resetPosition(new Pose2d(6, 4, new Rotation2d()));
+        this.simulator.resetPosition(new Pose2d(12.5, 3, Rotation2d.kPi));
     }
 
     @Override
