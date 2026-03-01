@@ -65,7 +65,7 @@ public class RotateToAllianceZoneCommand extends BaseCommand {
                 .getTranslation()
                 .interpolate(closestTrenchNeutralSideIdPose.getTranslation(), interpolationFactor.get());
 
-        if (pose.isNotFacingTarget(target)) {
+        if (!pose.isFacingTarget(target)) {
             drive.setLookAtPointTarget(target);
             boolean areWeInNeutralZone = Landmarks.isBetweenIdX(
                     this.aprilTagFieldLayout,
