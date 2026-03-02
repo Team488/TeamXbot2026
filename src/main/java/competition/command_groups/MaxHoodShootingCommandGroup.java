@@ -25,7 +25,7 @@ public class MaxHoodShootingCommandGroup extends BaseParallelCommandGroup {
         var waitForShooterCommand = shooterSubsystem.getWaitForAtGoalCommand();
         var hopperIntakeCommand = hopperRollerSubsystem.getIntakeCommand();
 
-        var setHoodCommand = new NamedInstantCommand("Set Hood Min", () -> hoodSubsystem.setTargetValue(1.0));
+        var setHoodCommand = new NamedInstantCommand("Set Hood Max", () -> hoodSubsystem.setTargetValue(1.0));
         var waitForShooterAndHood = waitForShooterCommand.alongWith(waitForHoodCommand);
         var startFeedingSequence = shooterFeederFire
                 .alongWith(new WaitCommand(0.5)
