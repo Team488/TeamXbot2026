@@ -66,6 +66,6 @@ public class RotateToHubCommand extends BaseCommand {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        drive.setLookAtPointTargetActive(false);
+        drive.setStaticHeadingTargetActive(false);
     }
 }
