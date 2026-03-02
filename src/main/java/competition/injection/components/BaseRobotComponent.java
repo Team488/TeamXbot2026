@@ -11,6 +11,7 @@ import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.lights.LightsSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
+import competition.electrical_contract.ElectricalContract;
 import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
 import xbot.common.injection.components.BaseComponent;
 import xbot.common.injection.swerve.SwerveComponentHolder;
@@ -19,6 +20,8 @@ import competition.subsystems.vision.AprilTagVisionSubsystemExtended;
 import xbot.common.subsystems.pose.GameField;
 
 public abstract class BaseRobotComponent extends BaseComponent {
+    public abstract ElectricalContract electricalContract();
+
     public abstract SubsystemDefaultCommandMap subsystemDefaultCommandMap();
 
     public abstract OperatorCommandMap operatorCommandMap();

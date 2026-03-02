@@ -1,88 +1,97 @@
 package competition.command_groups;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
 import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import xbot.common.logging.RobotAssertionManager;
-import xbot.common.properties.PropertyFactory;
-import xbot.common.subsystems.drive.SwervePointKinematics;
-import xbot.common.subsystems.drive.SwerveSimpleBezierCommand;
-import xbot.common.subsystems.drive.SwerveSimpleTrajectoryCommand;
-import xbot.common.subsystems.drive.SwerveSimpleTrajectoryMode;
-import xbot.common.subsystems.drive.control_logic.HeadingModule;
-import xbot.common.subsystems.oracle.SwervePointPathPlanning;
+import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.subsystems.pose.GameField;
-import xbot.common.trajectory.XbotSwervePoint;
 
 import javax.inject.Inject;
 
-public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierCommand {
+public class DriveToNeutralZoneForIntakeCommand extends Command {
     private final PoseSubsystem pose;
-    private final SwervePointPathPlanning pathPlanning;
-    private final GameField gamefield;
+    private final GameField gameField;
+
+    private Command pathfindingCommand;
 
     @Inject
-    public DriveToNeutralZoneForIntakeCommand(DriveSubsystem drive, PoseSubsystem pose,
-            PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
-            RobotAssertionManager robotAssertionManager, SwervePointPathPlanning pathPlanning, GameField gamefield) {
-        super(drive, pose, pf, headingModuleFactory, robotAssertionManager);
+    public DriveToNeutralZoneForIntakeCommand(DriveSubsystem drive, PoseSubsystem pose, GameField gameField) {
         this.pose = pose;
-        this.pathPlanning = pathPlanning;
-        this.gamefield = gamefield;
+        this.gameField = gameField;
+        addRequirements(drive);
     }
 
     @Override
     public void initialize() {
+        // Compute the finalPoint — same transform logic as the original code.
+        // This is the point across the neutral zone into the fuel field.
         Pose2d closestTrench = this.pose.closestAllianceTrench();
-        var fieldCenter = this.gamefield.getFieldCenter();
+        var fieldCenter = this.gameField.getFieldCenter();
         var changeInX = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? -1 : 1;
         var changeInY = closestTrench.getY() > fieldCenter.getY() ? -1 : 1;
-        var driverSideTransform = new Transform2d(Units.Meters.of(2 * changeInX), Units.Meters.of(0), Rotation2d.kZero);
-        var neutralSideTransform = new Transform2d(Units.Meters.of(2 * -1 * changeInX), Units.Meters.of(0),
-                Rotation2d.kZero);
         var finalTransform = new Transform2d(Units.Meters.of(3 * -1 * changeInX), Units.Meters.of(1 * changeInY),
                 changeInX * changeInY == 1 ? Rotation2d.kCCW_Pi_2 : Rotation2d.kCW_Pi_2);
-
-        var driverPoint = closestTrench.plus(driverSideTransform);
-        var neutralPoint = closestTrench.plus(neutralSideTransform);
         var finalPoint = closestTrench.plus(finalTransform);
 
-        var currentPose = pose.getCurrentPose2d();
-        var closestPoint = currentPose.nearest(Arrays.asList(new Pose2d[] { driverPoint, neutralPoint, finalPoint }));
+        // PathPlanner's AD* algorithm with the navgrid handles obstacle avoidance.
+        PathConstraints constraints = new PathConstraints(
+                3.0,   // max velocity m/s
+                3.0,   // max acceleration m/s^2
+                Math.toRadians(540),  // max angular velocity rad/s
+                Math.toRadians(720)   // max angular acceleration rad/s^2
+        );
 
-        if (closestPoint == finalPoint) {
-            List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, finalPoint, false);
-            super.logic.setKeyPoints(swervePoints);
-        } else if (closestPoint == neutralPoint) {
-            List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, neutralPoint,
-                    false);
-            swervePoints.addAll(this.pathPlanning.generateSwervePoints(neutralPoint, finalPoint, false));
+        pathfindingCommand = AutoBuilder.pathfindToPose(finalPoint, constraints);
+        pathfindingCommand.initialize();
 
-            super.logic.setKeyPoints(swervePoints);
-        } else {
-            List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, driverPoint,
-                    false);
-            swervePoints.addAll(this.pathPlanning.generateSwervePoints(driverPoint, neutralPoint, false));
-            swervePoints.addAll(this.pathPlanning.generateSwervePoints(neutralPoint, finalPoint, false));
+//
+//        Pose2d closestTrench = this.pose.closestAllianceTrench();
+//        var changeInX = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? -1 : 1;
+//        var neutralSideTransform = new Transform2d(Units.Meters.of(2 * -1 * changeInX), Units.Meters.of(0),
+//                Rotation2d.kZero);
+//
+//        var neutralPoint = closestTrench.plus(neutralSideTransform);
+//
+//        // PathPlanner's AD* algorithm with the navgrid handles obstacle avoidance.
+//        // Pathfind to the neutral-side point of the trench (the entry into the neutral zone).
+//        // The second command (DriveAcrossNeutralZoneCommand) will continue to finalPoint.
+//        PathConstraints constraints = new PathConstraints(
+//                3.0,   // max velocity m/s
+//                3.0,   // max acceleration m/s^2
+//                Math.toRadians(540),  // max angular velocity rad/s
+//                Math.toRadians(720)   // max angular acceleration rad/s^2
+//        );
+//
+//        pathfindingCommand = AutoBuilder.pathfindToPose(neutralPoint, constraints);
+//        pathfindingCommand.initialize();
+    }
 
-            super.logic.setKeyPoints(swervePoints);
+    @Override
+    public void execute() {
+        if (pathfindingCommand != null) {
+            pathfindingCommand.execute();
         }
+    }
 
-        this.logic.setPrioritizeRotationIfCloseToGoal(true);
-        this.logic.setVelocityMode(SwerveSimpleTrajectoryMode.GlobalKinematicsValue);
-        super.logic.setGlobalKinematicValues(
-                new SwervePointKinematics(2, 1, 0, 4.5));
+    @Override
+    public boolean isFinished() {
+        if (pathfindingCommand != null) {
+            return pathfindingCommand.isFinished();
+        }
+        return true;
+    }
 
-        super.initialize();
+    @Override
+    public void end(boolean interrupted) {
+        if (pathfindingCommand != null) {
+            pathfindingCommand.end(interrupted);
+        }
     }
 }

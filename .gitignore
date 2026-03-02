@@ -174,5 +174,8 @@ ctre_sim
 #Claude
 .claude
 
+#Zed
+.zed
+
 # Prevent accidentally committing the entire repo back in
 SeriouslyCommonLib/
