@@ -53,8 +53,11 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
         var finalTransform = new Transform2d(Units.Meters.of(3 * -1 * changeInX), Units.Meters.of(1 * changeInY),
                 changeInX * changeInY == 1 ? Rotation2d.kCCW_Pi_2 : Rotation2d.kCW_Pi_2);
 
+        var rotationThroughTrench = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? Rotation2d.kZero : Rotation2d.kPi;
         var driverPoint = closestTrench.plus(driverSideTransform);
+        var driverPointPose = new Pose2d(driverPoint.getX(), driverPoint.getY(), rotationThroughTrench);
         var neutralPoint = closestTrench.plus(neutralSideTransform);
+        var neutralPointPose = new Pose2d(neutralPoint.getX(), neutralPoint.getY(), rotationThroughTrench);
         var finalPoint = closestTrench.plus(finalTransform);
 
         var currentPose = pose.getCurrentPose2d();
@@ -64,16 +67,16 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
             List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, finalPoint, false);
             super.logic.setKeyPoints(swervePoints);
         } else if (closestPoint == neutralPoint) {
-            List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, neutralPoint,
+            List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, neutralPointPose,
                     false);
             swervePoints.addAll(this.pathPlanning.generateSwervePoints(neutralPoint, finalPoint, false));
 
             super.logic.setKeyPoints(swervePoints);
         } else {
-            List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, driverPoint,
+            List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, driverPointPose,
                     false);
-            swervePoints.addAll(this.pathPlanning.generateSwervePoints(driverPoint, neutralPoint, false));
-            swervePoints.addAll(this.pathPlanning.generateSwervePoints(neutralPoint, finalPoint, false));
+            swervePoints.addAll(this.pathPlanning.generateSwervePoints(driverPointPose, neutralPointPose, false));
+            swervePoints.addAll(this.pathPlanning.generateSwervePoints(neutralPointPose, finalPoint, false));
 
             super.logic.setKeyPoints(swervePoints);
         }
