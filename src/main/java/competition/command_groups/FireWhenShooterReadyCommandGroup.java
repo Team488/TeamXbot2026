@@ -6,6 +6,7 @@ import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import xbot.common.command.BaseParallelCommandGroup;
 import xbot.common.command.NamedInstantCommand;
 
@@ -23,11 +24,17 @@ public class FireWhenShooterReadyCommandGroup extends BaseParallelCommandGroup {
         var waitForShooterCommand = shooterSubsystem.getWaitForAtGoalCommand();
         var waitForHoodCommand =  hoodSubsystem.getWaitForAtGoalCommand();
         var hopperIntakeCommand = hopper.getIntakeCommand();
-        this.addCommands(
 
-                new NamedInstantCommand("Set Hood Min", () -> hoodSubsystem.setTargetValue(0.0))
-                        .andThen(shooterOutputCommand).alongWith(waitForShooterCommand, waitForHoodCommand)
-                        .andThen(shooterFeederFireCommand).alongWith(fuelIntakeCommand)
-                        .andThen(hopperIntakeCommand));
+        var setHoodCommand = new NamedInstantCommand("Set Hood Min", () -> hoodSubsystem.setTargetValue(0.0));
+        var waitForShooterAndHood = waitForShooterCommand.alongWith(waitForHoodCommand);
+        var startFeedingSequence = shooterFeederFireCommand
+                .alongWith(new WaitCommand(0.5)
+                        .andThen(fuelIntakeCommand.alongWith(hopperIntakeCommand)));
+
+        this.addCommands(
+                setHoodCommand,
+                shooterOutputCommand,
+                waitForShooterAndHood.andThen(startFeedingSequence)
+        );
     }
 }
