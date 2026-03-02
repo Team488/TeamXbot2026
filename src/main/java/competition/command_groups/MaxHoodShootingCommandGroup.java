@@ -25,8 +25,8 @@ public class MaxHoodShootingCommandGroup extends BaseParallelCommandGroup {
         var hopperIntakeCommand = hopperRollerSubsystem.getIntakeCommand();
         this.addCommands(
                 new NamedInstantCommand("Set Hood Max", () -> hoodSubsystem.setTargetValue(1.0))
-                        .andThen(shooterOutputCommand).alongWith(waitForHoodCommand).alongWith(waitForShooterCommand)
-                        .andThen(hopperIntakeCommand.alongWith(shooterFeederFire, fuelIntakeCommand))
-        );
+                        .andThen(shooterOutputCommand).alongWith(waitForHoodCommand, waitForShooterCommand)
+                        .andThen(shooterFeederFire).alongWith(fuelIntakeCommand)
+                        .andThen(hopperIntakeCommand));
     }
 }

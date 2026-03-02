@@ -18,15 +18,16 @@ public class FireWhenShooterReadyCommandGroup extends BaseParallelCommandGroup {
                                             HoodSubsystem hoodSubsystem,
                                             ShooterOutputCommand shooterOutputCommand,
                                             ShooterFeederFire shooterFeederFireCommand,
-                                            FuelIntakeCommand fuelIntakeCommand) {
+                                            FuelIntakeCommand fuelIntakeCommand
+    ) {
         var waitForShooterCommand = shooterSubsystem.getWaitForAtGoalCommand();
         var waitForHoodCommand =  hoodSubsystem.getWaitForAtGoalCommand();
         var hopperIntakeCommand = hopper.getIntakeCommand();
         this.addCommands(
 
                 new NamedInstantCommand("Set Hood Min", () -> hoodSubsystem.setTargetValue(0.0))
-                        .andThen(shooterOutputCommand).alongWith(waitForShooterCommand).alongWith(waitForHoodCommand)
-                        .andThen(hopperIntakeCommand.alongWith(shooterFeederFireCommand, fuelIntakeCommand))
-        );
+                        .andThen(shooterOutputCommand).alongWith(waitForShooterCommand, waitForHoodCommand)
+                        .andThen(shooterFeederFireCommand).alongWith(fuelIntakeCommand)
+                        .andThen(hopperIntakeCommand));
     }
 }
