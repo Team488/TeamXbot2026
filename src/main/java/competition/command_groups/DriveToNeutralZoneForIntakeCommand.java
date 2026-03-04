@@ -27,6 +27,7 @@ import xbot.common.trajectory.XbotSwervePoint;
 import javax.inject.Inject;
 
 public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierCommand {
+    private final DriveSubsystem drive;
     private final PoseSubsystem pose;
     private final SwervePointPathPlanning pathPlanning;
     private final GameField gamefield;
@@ -36,6 +37,7 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
             PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
             RobotAssertionManager robotAssertionManager, SwervePointPathPlanning pathPlanning, GameField gamefield) {
         super(drive, pose, pf, headingModuleFactory, robotAssertionManager);
+        this.drive = drive;
         this.pose = pose;
         this.pathPlanning = pathPlanning;
         this.gamefield = gamefield;
@@ -53,7 +55,9 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
         var finalTransform = new Transform2d(Units.Meters.of(3 * -1 * changeInX), Units.Meters.of(1 * changeInY),
                 changeInX * changeInY == 1 ? Rotation2d.kCCW_Pi_2 : Rotation2d.kCW_Pi_2);
 
-        var rotationThroughTrench = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? Rotation2d.kZero : Rotation2d.kPi;
+        var rotationThroughTrench = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue
+                ? Rotation2d.kZero
+                : Rotation2d.kPi;
         var driverPoint = closestTrench.plus(driverSideTransform);
         var driverPointPose = new Pose2d(driverPoint.getX(), driverPoint.getY(), rotationThroughTrench);
         var neutralPoint = closestTrench.plus(neutralSideTransform);
@@ -84,7 +88,8 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
         this.logic.setPrioritizeRotationIfCloseToGoal(true);
         this.logic.setVelocityMode(SwerveSimpleTrajectoryMode.GlobalKinematicsValue);
         super.logic.setGlobalKinematicValues(
-                new SwervePointKinematics(2, 1, 0, 4.5));
+                new SwervePointKinematics(this.drive.getMaxAccelerationMetersPerSecondSquared(), 0, 0,
+                        this.drive.getMaxAutoTargetSpeedMetersPerSecond()));
 
         super.initialize();
     }
