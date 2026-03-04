@@ -50,8 +50,8 @@ public class RotateToHubCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        if (pose.isNotFacingTarget(target)) {
-            drive.setLookAtPointTarget(target);
+        if (!pose.isFacingTarget(target)) {
+            drive.setStaticHeadingTarget(pose.desiredHeadingToTarget(target));
             boolean areWeInAllianceZone = Landmarks.isBetweenIdX(
                     this.aprilTagFieldLayout,
                     Landmarks.getTrenchDriverDepotSideId(alliance),
@@ -59,13 +59,13 @@ public class RotateToHubCommand extends BaseCommand {
                     pose.getCurrentPose2d()
             );
 
-            drive.setLookAtPointTargetActive(areWeInAllianceZone || autoAimWhenNotInZone.get());
+            drive.setStaticHeadingTargetActive(areWeInAllianceZone || autoAimWhenNotInZone.get());
         }
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        drive.setLookAtPointTargetActive(false);
+        drive.setStaticHeadingTargetActive(false);
     }
 }

@@ -7,6 +7,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.Units;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANLightControllerOutputConfig;
@@ -81,7 +83,15 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getClimberAbsoluteEncoder() {
-        return new DeviceInfo("ClimberAbsoluteEncoderReady",CANBusId.Canivore, 59);
+        return new DeviceInfo("ClimberAbsoluteEncoderReady", CANBusId.Canivore, 59);
+    }
+
+    @Override
+    public boolean isClimberSensorReady() { return false; }
+
+    @Override
+    public DeviceInfo getClimberSensor() {
+        return new DeviceInfo("ClimberSensor", 0, PowerSource.RIO);
     }
 
     public DeviceInfo pigeon2() {
@@ -90,10 +100,6 @@ public class Contract2026 extends ElectricalContract {
 
     public DeviceInfo candle() {
         return new DeviceInfo("CANdle",CANBusId.Canivore, 57);
-    }
-
-    public DeviceInfo getClimbHome() {
-        return new DeviceInfo("ClimbHomeDIO", 0, PowerSource.RIO);
     }
 
     public boolean intakeDeploySensorReady() { return true; }
@@ -191,7 +197,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getIntakeDeployAbsoluteEncoderMotor() {
-        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady", CANBusId.Canivore, 58);
+        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady",58);
     }
 
     @Override
@@ -500,6 +506,11 @@ public class Contract2026 extends ElectricalContract {
         branches.put("FrontBuckBoost_Pwr", List.of("Orin_Nano"));
         branches.put("BackBuckBoost_Pwr", List.of("EthernetSwitch"));
         return branches;
+    }
+
+    @Override
+    public Distance getRadiusOfRobot() {
+        return Units.Inches.of(18);
     }
 
     @Override
