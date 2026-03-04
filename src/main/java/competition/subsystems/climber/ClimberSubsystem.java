@@ -279,6 +279,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
                 return true;
             }
         };
+    }
     public Command getWaitForAtGoalCommand() {
         return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
     }
