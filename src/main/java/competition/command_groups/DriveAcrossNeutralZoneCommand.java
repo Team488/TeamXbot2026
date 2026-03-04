@@ -42,8 +42,9 @@ public class DriveAcrossNeutralZoneCommand extends SwerveSimpleBezierCommand {
         Pose2d furthestTrench = this.pose.furthestAllianceTrench();
         var fieldCenter = this.gamefield.getFieldCenter();
         var changeInX = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? -1 : 1;
+        var moreCenter = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? 0.45 : -0.45;
         var changeInY = furthestTrench.getY() > fieldCenter.getY() ? -1 : 1;
-        var finalTransform = new Transform2d(Units.Meters.of(3 * -1 * changeInX), Units.Meters.of(1 * changeInY),
+        var finalTransform = new Transform2d(Units.Meters.of((3 * -1 * changeInX) + moreCenter), Units.Meters.of(changeInY) ,
                 Rotation2d.kZero);
 
         Pose2d currentPose = pose.getCurrentPose2d();
