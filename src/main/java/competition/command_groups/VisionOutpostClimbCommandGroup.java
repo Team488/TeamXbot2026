@@ -12,68 +12,72 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import xbot.common.command.BaseSequentialCommandGroup;
+import xbot.common.logging.RobotAssertionManager;
+import xbot.common.properties.PropertyFactory;
+import xbot.common.subsystems.drive.SwervePointKinematics;
 import xbot.common.subsystems.drive.SwerveSimpleTrajectoryCommand;
+import xbot.common.subsystems.drive.SwerveSimpleTrajectoryMode;
+import xbot.common.subsystems.drive.control_logic.HeadingModule;
+import xbot.common.subsystems.oracle.SwervePointPathPlanning;
+import xbot.common.subsystems.pose.BasePoseSubsystem;
+import xbot.common.subsystems.pose.GameField;
 import xbot.common.trajectory.XbotSwervePoint;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class VisionOutpostClimbCommandGroup extends BaseSequentialCommandGroup {
-//    private final AprilTagFieldLayout aprilTagFieldLayout;
+    private final DriveSubsystem drive;
+    private final PoseSubsystem pose;
+    private final SwervePointPathPlanning pathPlanning;
+    private final GameField gamefield;
+
+
     @Inject
     public VisionOutpostClimbCommandGroup(Provider<SwerveSimpleTrajectoryCommand> trajectoryProvider,
-                                          DriveSubsystem drive,
+                                          DriveSubsystem drive, PoseSubsystem pose,
                                           AprilTagFieldLayout aprilTagFieldLayout,
                                           ClimberExtendCommand climberExtendCommand,
                                           ClimberRetractCommand climberRetractCommand,
-                                          IntakeDeployRetractCommand intakeDeployRetractCommand
+                                          IntakeDeployRetractCommand intakeDeployRetractCommand,
+                                          SwervePointPathPlanning pathPlanning,
+                                          PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
+                                          RobotAssertionManager robotAssertionManager, GameField gamefield
     )
     {
-        var readyOutpostClimb =  trajectoryProvider.get();
+        this.drive = drive;
+        this.pose = pose;
+        this.pathPlanning = pathPlanning;
+        this.gamefield = gamefield;
 
-        ArrayList<XbotSwervePoint> readyOutpostPoint = new ArrayList<>();
+        var drivePath = trajectoryProvider.get();
 
-        Pose2d readyOutpostClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueVisionOutpostSideClimbSupportReadyPose);
 
-        readyOutpostPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(
-                readyOutpostClimbPose,1));
 
-        readyOutpostClimb.logic.setKeyPoints(readyOutpostPoint);
-        readyOutpostClimb.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
+        var currentPose = pose.getCurrentPose2d();
+        var finalPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbMiddleOutpostSide);
 
-        var readyClimb = trajectoryProvider.get();
+        List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose,finalPose,false);
 
-        ArrayList<XbotSwervePoint> readyClimbPoint = new ArrayList<>();
 
-        Pose2d readyClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueVisionOutpostSideReadyClimbPose);
+        drivePath.logic.setPrioritizeRotationIfCloseToGoal(true);
+        drivePath.logic.setVelocityMode(SwerveSimpleTrajectoryMode.GlobalKinematicsValue);
+        drivePath.logic.setGlobalKinematicValues(
+                new SwervePointKinematics(this.drive.getMaxAccelerationMetersPerSecondSquared(), 0, 0,
+                        this.drive.getMaxAutoTargetSpeedMetersPerSecond()));
 
-        readyClimbPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
-                (readyClimbPose,1));
+        drivePath.logic.setKeyPoints(swervePoints);
 
-        readyClimb.logic.setKeyPoints(readyClimbPoint);
-        readyClimb.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
 
-        var outpostClimb = trajectoryProvider.get();
-
-        ArrayList<XbotSwervePoint> outpostPoint = new ArrayList<>();
-
-        Pose2d outpostClimbPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueClimbMiddleOutpostSide);
-
-        outpostPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint
-                (outpostClimbPose,2));
-
-        outpostClimb.logic.setKeyPoints(outpostPoint);
-        outpostClimb.logic.setConstantVelocity(drive.getMaxTargetSpeedMetersPerSecond());
 
         addCommands(
-                readyOutpostClimb,
                 new ParallelCommandGroup(
                         intakeDeployRetractCommand,
                         climberExtendCommand
                 ),
-                readyClimb,
-                outpostClimb,
                 climberRetractCommand
         );
     }
