@@ -50,7 +50,9 @@ public class Landmarks {
 
     // Blue Outpost
     public static Pose2d blueOutpost = new Pose2d(0, 0.650, Rotation2d.fromDegrees(0));
+
     public static Pose2d blueOutpostPark = new Pose2d(0.46, 0.650, Rotation2d.fromDegrees(0));
+
 
     // Blue Tower
     public static Pose2d blueClimbOutpostEdge = new Pose2d(1.545,2.780,Rotation2d.fromDegrees(180));
@@ -75,6 +77,7 @@ public class Landmarks {
     public static Pose2d blueOutpostSideFuelFieldCollectionStart = new Pose2d(7.790,1.640, Rotation2d.fromDegrees(90));
     public static Pose2d blueDepotSideFuelFieldCollectionStart = new Pose2d(7.790,6.800, Rotation2d.fromDegrees(270));
 
+
     public static int redCenterHubNeutralSideFiducialId = 4;
     public static int redCenterHubDriverSideFiducialId = 10;
 
@@ -89,6 +92,9 @@ public class Landmarks {
 
     public static int blueTrenchNeutralOutpostSideId = 17;
     public static int redTrenchNeutralOutpostSideId = 1;
+
+    public static int blueTrenchDriverOutpostSideFiducialId = 28;
+    public static int redTrenchDriverOutpostSideFiducialId = 12;
 
     public static int blueOutpostFiducialId = 29;
     public static int redOutpostFiducialId = 13;
@@ -153,12 +159,7 @@ public class Landmarks {
         var allianceHubCenterTags = Landmarks.getAllianceHubCenterFiducialIds(alliance);
 
         // Tags to tag poses, to 2d poses
-        List<Pose2d> hubCenterTags = allianceHubCenterTags.stream()
-                .map(aprilTagFieldLayout::getTagPose)
-                .filter(Optional::isPresent)
-                .flatMap(Optional::stream)
-                .map(Pose3d::toPose2d)
-                .toList();
+        List<Pose2d> hubCenterTags = getAprilTagPoses(aprilTagFieldLayout, allianceHubCenterTags);
 
         // Sum across poses to a total X value, same y
         double xTotal = hubCenterTags.stream().map(Pose2d::getX).reduce(0.0, Double::sum);
@@ -175,6 +176,27 @@ public class Landmarks {
         double maxX = Math.max(id1Pose.getX(), id2Pose.getX());
 
         return currentPose.getX() >= minX && currentPose.getX() <= maxX;
+    }
+
+    public static List<Pose2d> getAllianceTrenchPoses(AprilTagFieldLayout aprilTagFieldLayout, Alliance alliance) {
+        return getAprilTagPoses(aprilTagFieldLayout, getAllianceTrenchFiducialIds(alliance));
+    }
+
+    private static List<Integer> getAllianceTrenchFiducialIds(Alliance alliance) {
+        return switch (alliance) {
+            case Red -> List.of(redTrenchDriverDepotSideId, redTrenchDriverOutpostSideFiducialId);
+            case Blue -> List.of(blueTrenchDriverDepotSideId, blueTrenchDriverOutpostSideFiducialId);
+        };
+    }
+
+    private static List<Pose2d> getAprilTagPoses(AprilTagFieldLayout aprilTagFieldLayout,
+            List<Integer> aprilTagFiducialIds) {
+        return aprilTagFiducialIds.stream()
+            .map(aprilTagFieldLayout::getTagPose)
+            .filter(Optional::isPresent)
+            .flatMap(Optional::stream)
+            .map(Pose3d::toPose2d)
+            .toList();
     }
 
     public static Pose2d getAprilTagPose(AprilTagFieldLayout aprilTagFieldLayout, int aprilTag) {

@@ -1,37 +1,42 @@
 package competition.operator_interface;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import competition.command_groups.DepotClimbCommandGroup;
+import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
 import competition.command_groups.FireWhenShooterReadyCommandGroup;
 import competition.command_groups.HopperAndIntakeCommandGroup;
-import competition.command_groups.MiddleClimbCommandGroup;
-import competition.command_groups.OutpostClimbCommandGroup;
-import competition.command_groups.VisionOutpostClimbCommandGroup;
+import competition.command_groups.MaxHoodShootingCommandGroup;
 import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.climber.ClimberSubsystem;
+import competition.subsystems.climber.commands.ClimberSetPointCommand;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.climber.commands.ClimberExtendCommand;
 import competition.subsystems.climber.commands.ClimberRetractCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
+import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.fuel_intake.commands.FuelEjectCommand;
 import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
+import competition.subsystems.hood.commands.DropHoodForTrenchCommand;
 import competition.subsystems.hood.commands.HoodExtendCommands;
 import competition.subsystems.hood.commands.HoodRetractCommands;
 import competition.subsystems.hood.commands.TrimHoodDownCommand;
 import competition.subsystems.hood.commands.TrimHoodUpCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
+import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.intake_deploy.commands.CalibrateOffsetDown;
 import competition.subsystems.intake_deploy.commands.CalibrateOffsetUp;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
+import competition.subsystems.pose.Landmarks;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
 import xbot.common.controls.sensors.XXboxController;
+import xbot.common.subsystems.autonomous.SetAutonomousCommand;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
@@ -60,45 +65,55 @@ public class OperatorCommandMap {
                                    SetRobotHeadingCommand resetHeading,
                                    DebugSwerveModuleCommand debugModule,
                                    ChangeActiveSwerveModuleCommand changeActiveModule,
-                                   SwerveDriveWithJoysticksCommand typicalSwerveDrive) {
-        resetHeading.setHeadingToApply(0);
-        operatorInterface.driverGamepad.getifAvailable(1).onTrue(resetHeading);
-
-        operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
-        operatorInterface.driverGamepad.getPovIfAvailable(90).onTrue(changeActiveModule);
-        operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(typicalSwerveDrive);
-    }
-  
-    @Inject
-    public void setupAutoCommands(
-            DriveToOutpostCommand driveToOutpostCommand
+                                   SwerveDriveWithJoysticksCommand typicalSwerveDrive,
+                                   Provider<ClimberSetPointCommand> climberSetPoint,
+                                   ClimberSubsystem climber,
+                                   DropHoodForTrenchCommand dropHoodForTrenchCommand,
+                                   RotateToHubCommand rotateToHubCommand
     ) {
-        driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
 
+        // Map climber related commands
+        var climberRetract = climberSetPoint.get().setGoalAngle(climber.retractedAngle.get());
+        var climberExtend = climberSetPoint.get().setGoalAngle(climber.extendedAngle.get());
+        var climberEngage = climberSetPoint.get().setGoalAngle(climber.engagedAngle.get());
+        operatorInterface.driverGamepad.getPovIfAvailable(270).onTrue(climberRetract);
+        operatorInterface.driverGamepad.getPovIfAvailable(90).onTrue(climberExtend);
+        operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(climberEngage);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Back).onTrue(climber.getCalibrateOffsetRetractCommand());
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(dropHoodForTrenchCommand);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
+
+        // Commenting out so it's not accidentally pressed during a match
+        // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
+        // operatorInterface.driverGamepad.getPovIfAvailable(90).onTrue(changeActiveModule);
+        // operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(typicalSwerveDrive);
     }
 
     @Inject
     public void setupOperatorGamepad(OperatorInterface operatorInterface,
-                                     FireWhenShooterReadyCommandGroup shooterOutputCommand,
-                                     ShooterFeederFire shooterFeederFire,
-                                     HopperRollerSubsystem hopperRollerSubsystem,
+                                     FireWhenShooterReadyCommandGroup fireWhenShooterReadyCommandGroup,
                                      HoodExtendCommands hoodExtend,
                                      HoodRetractCommands hoodRetract,
                                      IntakeDeployExtendCommand intakeDeployExtendCommand,
                                      IntakeDeployRetractCommand intakeDeployRetractCommand,
-                                     CalibrateOffsetUp calibrateOffsetUp,
-                                     HopperAndIntakeCommandGroup intakeCommand) {
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(shooterOutputCommand);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A)
-                .whileTrue(hopperRollerSubsystem.getIntakeCommand().alongWith(shooterFeederFire));
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(intakeCommand);
+                                     CalibrateOffsetUp calibrateIntakeOffsetUp,
+                                     HopperAndIntakeCommandGroup intakeCommand,
+                                     MaxHoodShootingCommandGroup maxHoodShootingCommandGroup
+    ) {
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger)
+                .whileTrue(fireWhenShooterReadyCommandGroup);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger)
+                .whileTrue(maxHoodShootingCommandGroup);
 
-        operatorInterface.operatorGamepad.getPovIfAvailable(0).onTrue(hoodExtend);
-        operatorInterface.operatorGamepad.getPovIfAvailable(180).onTrue(hoodRetract);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(hoodExtend);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(hoodRetract);
 
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).onTrue(intakeDeployRetractCommand);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).onTrue(intakeDeployExtendCommand);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateOffsetUp);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(intakeDeployExtendCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(intakeCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(intakeDeployRetractCommand);
+
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateIntakeOffsetUp);
     }
 
     @Inject
@@ -142,22 +157,21 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupSimulatorCommands(
-            ResetSimulatedPoseCommand resetSimulatorPositionCommand,
-            OutpostClimbCommandGroup outpostClimbCommandGroup,
-            MiddleClimbCommandGroup middleClimbCommandGroup,
-            DepotClimbCommandGroup depotClimbCommandGroup,
-            VisionOutpostClimbCommandGroup visionOutpostClimbCommandGroup
-
+    public void setupAutoCommands(Provider<SetAutonomousCommand> setAutonomousCommandProvider,
+                                  DriveToOutpostCommand driveToOutpostCommand,
+                                  MoveAcrossFieldCommandGroup moveAcrossFieldCommand
     ) {
-        resetSimulatorPositionCommand.includeOnSmartDashboard("Reset Simulator Position");
-        outpostClimbCommandGroup.includeOnSmartDashboard("Outpost Climb Command");
-        middleClimbCommandGroup.includeOnSmartDashboard("Middle Climb Command");
-        depotClimbCommandGroup.includeOnSmartDashboard("Depot Climb Command");
-        visionOutpostClimbCommandGroup.includeOnSmartDashboard("Vision Outpost Climb Command");
+        driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
+        var moveAcrossField = setAutonomousCommandProvider.get();
+        moveAcrossField.setAutoCommand(moveAcrossFieldCommand, Landmarks.blueStartTrenchToOutpost);
+        moveAcrossField.includeOnSmartDashboard("Move across field.");
     }
 
-
-
+    @Inject
+    public void setupSimulatorCommands(
+            ResetSimulatedPoseCommand resetPose
+    ) {
+        resetPose.includeOnSmartDashboard();
+    }
 }
