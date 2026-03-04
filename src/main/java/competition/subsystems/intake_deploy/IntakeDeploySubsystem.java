@@ -27,6 +27,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public final XCANMotorController intakeDeployMotor;
     public final DoubleProperty manualControlPower;
     public Angle motorOffset = Rotations.zero();
+    public Angle motorPosition;
     public final XDigitalInput intakeDeploySensor;
 
     public boolean isCalibrated = false;
@@ -186,6 +187,18 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             motorOffset = intakeDeployMotor.getPosition();
             setTargetValue(getCurrentValue());
             isCalibrated = true;
+        }
+    }
+
+    public void intakeDeployGoDown() {
+        if (intakeDeployMotor != null) {
+            motorPosition = getTargetValue().minus(Degrees.of(3.0));
+        }
+    }
+
+    public void intakeDeployGoUp() {
+        if (intakeDeployMotor != null) {
+            motorPosition = getTargetValue().plus(Degrees.of(3.0));
         }
     }
 }
