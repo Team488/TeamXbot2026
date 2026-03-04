@@ -19,4 +19,10 @@ public class ClimberRetractCommand extends BaseCommand {
         climber.retract();
         log.info("Initialized ClimberRetract");
     }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
+
 }

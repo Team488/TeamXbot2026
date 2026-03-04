@@ -19,4 +19,9 @@ public class ClimberExtendCommand extends BaseCommand {
         climber.extend();
         log.info("Initialized ClimberExtend");
     }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 }

@@ -6,6 +6,7 @@ import competition.simulation.intake.IntakeSimulator;
 import competition.simulation.intake_deploy.IntakeDeploySimulator;
 import competition.simulation.shooter.ShooterSimulator;
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
