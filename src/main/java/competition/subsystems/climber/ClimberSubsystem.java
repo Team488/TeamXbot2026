@@ -5,6 +5,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.NamedInstantCommand;
+import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.controls.sensors.XDigitalInput;
@@ -30,6 +31,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public final DoubleProperty manualControlPower;
     public DoubleProperty extendPower;
     public DoubleProperty retractPower;
+    public DoubleProperty readinessTimeoutSeconds;
     public ClimberState climberState;
     public Angle motorOffset = Degrees.zero();
     private boolean isCalibrated;
@@ -260,5 +262,9 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
                 return true;
             }
         };
+    }
+
+    public Command getWaitForAtGoalCommand() {
+        return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
     }
 }
