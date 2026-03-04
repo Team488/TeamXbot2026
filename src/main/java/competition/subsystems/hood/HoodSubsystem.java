@@ -22,12 +22,17 @@ import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
 public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
+    
+    public static double getMechanismAngle(double servoPosition) {
+        return mechanismAngleMax - servoPosition * (mechanismAngleMax - mechanismAngleMin);
+    }
 
-    public static final double a = 18.550274;
-    public static final double b = 9.733663;
-    public static final double cMin = 8.53898;
-    public static final double cMax = 14.787199;
+    public static double getServoPosition(double mechanismAngle) {
+        return mechanismAngleMax - mechanismAngle / (mechanismAngleMax - mechanismAngleMin);
+    }
 
+    public static final double mechanismAngleMax = 73;
+    public static final double mechanismAngleMin = 39.6;
     // Constants
     public static final double servoMinBound = 0.2;
     public static final double servoMaxBound = 0.8;
@@ -112,13 +117,6 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public void trimHoodGoalDown() {
         trimValue.set(trimValue.get() - trimStep.get());
     }
-    public double getMechanismAngle() {
-        double c = hoodServoLeft.getNormalizedCurrentPosition() * (cMax - cMin);
-        double top = Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2);
-        double bottom = 2 * a * b;
-        return Math.acos(top / bottom);
-    }
-
 
     @Override
     public void periodic() {

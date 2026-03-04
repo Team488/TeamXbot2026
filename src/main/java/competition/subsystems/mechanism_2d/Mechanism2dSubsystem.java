@@ -22,30 +22,45 @@ public class Mechanism2dSubsystem extends BaseSubsystem {
     final IntakeDeploySubsystem intakeDeploySubsystem;
     final HoodSubsystem hoodSubsystem;
     final LoggedMechanismLigament2d intakeDeployLigament;
+    final LoggedMechanismLigament2d hoodLiagment;
     final double intakeDeployLigamentBaseLengthMeters = 165;
+    final double hoodBaseLiagamentLengthMeters = 14;
+
 
     Angle hoodAngle = Degrees.zero();
+    Distance hoodLength = Meters.zero();
     Angle intakeDeployAngle  = Degrees.zero();
     Distance intakeDeployLength = Meters.zero();
 
     // FakeNumber
     final double intakeDeployAngleDegrees = 0.7;
+    final double hoodAngleDegrees = 0.7;
 
-    final Translation2d intakeDeployBasePositionMeter = new Translation2d();
-
+    final Translation2d intakeDeployBasePositionMeters = new Translation2d();
+    final Translation2d hoodBasePositionLengthMeters = new Translation2d();
 
 
     @Inject
-    public Mechanism2dSubsystem(IntakeDeploySubsystem intakeDeploySubsystem, HoodSubsystem hoodSubsystem, LoggedMechanismLigament2d intakeDeployLigament) {
+    public Mechanism2dSubsystem(IntakeDeploySubsystem intakeDeploySubsystem, HoodSubsystem hoodSubsystem,
+                                LoggedMechanismLigament2d intakeDeployLigament, LoggedMechanismLigament2d hoodLiagment) {
         this.mech2d = new LoggedMechanism2d(1, 3);
 
         this.intakeDeploySubsystem = intakeDeploySubsystem;
         this.hoodSubsystem = hoodSubsystem;
 
-        this.intakeDeployLigament = new LoggedMechanismLigament2d("intakeDeploy",intakeDeployLigamentBaseLengthMeters,
+        this.intakeDeployLigament = new LoggedMechanismLigament2d("intakeDeployMechanism",intakeDeployLigamentBaseLengthMeters,
                 intakeDeployAngleDegrees,10,new Color8Bit(Color.kBlue));
-        var intakeDeployRoot = mech2d.getRoot("intakeDeployRoot",intakeDeployBasePositionMeter.getX(),intakeDeployBasePositionMeter.getY());
+
+        var intakeDeployRoot = mech2d.getRoot("intakeDeployRoot",intakeDeployBasePositionMeters.getX(),intakeDeployBasePositionMeters.getY());
         intakeDeployRoot.append(intakeDeployLigament);
+
+        this.hoodLiagment = new LoggedMechanismLigament2d("hoodMechanism",hoodBaseLiagamentLengthMeters,hoodAngleDegrees, 10,new Color8Bit(Color.kRed));
+
+        var hoodRoot = mech2d.getRoot("hoodRoot", hoodBasePositionLengthMeters.getX(),hoodBasePositionLengthMeters.getY());
+        hoodRoot.append(hoodLiagment);
+    }
+    public void setHoodAngleDegrees(Angle angle){
+        hoodAngle = angle;
     }
     public void setIntakeDeployAngleDegrees(Angle angle) {
         intakeDeployAngle = angle;
@@ -55,10 +70,17 @@ public class Mechanism2dSubsystem extends BaseSubsystem {
 
         intakeDeployLength = length;
     }
+    public void setHoodLength(Distance length) {
+        hoodLength = length;
+    }
     public LoggedMechanism2d getMech2d() {
         intakeDeployLigament.setAngle(intakeDeployAngleDegrees - intakeDeployAngle.in(Degrees));
 
         intakeDeployLigament.setLength(intakeDeployLigamentBaseLengthMeters + intakeDeployLength.in(Meters));
+
+        hoodLiagment.setAngle(hoodAngleDegrees - hoodAngle.in(Degrees));
+
+        hoodLiagment.setLength(hoodBaseLiagamentLengthMeters - hoodLength.in(Meters));
 
         return mech2d;
     }
