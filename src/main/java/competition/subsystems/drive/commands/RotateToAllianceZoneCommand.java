@@ -66,7 +66,7 @@ public class RotateToAllianceZoneCommand extends BaseCommand {
                 .interpolate(closestTrenchNeutralSideIdPose.getTranslation(), interpolationFactor.get());
 
         if (!pose.isFacingTarget(target)) {
-            drive.setLookAtPointTarget(target);
+            drive.setStaticHeadingTarget(pose.desiredHeadingToTarget(target));
             boolean areWeInNeutralZone = Landmarks.isBetweenIdX(
                     this.aprilTagFieldLayout,
                     Landmarks.getAllianceHubNeutralSideFiducialId(Alliance.Blue),
@@ -74,13 +74,13 @@ public class RotateToAllianceZoneCommand extends BaseCommand {
                     robotPose
             );
 
-            drive.setLookAtPointTargetActive(areWeInNeutralZone || autoAimWhenNotInNeutralZone.get());
+            drive.setStaticHeadingTargetActive(areWeInNeutralZone || autoAimWhenNotInNeutralZone.get());
         }
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        drive.setLookAtPointTargetActive(false);
+        drive.setStaticHeadingTargetActive(false);
     }
 }
