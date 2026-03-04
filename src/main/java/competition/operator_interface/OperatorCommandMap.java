@@ -79,7 +79,7 @@ public class OperatorCommandMap {
         operatorInterface.driverGamepad.getPovIfAvailable(90).onTrue(climberExtend);
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(climberEngage);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Back).onTrue(climber.getCalibrateOffsetRetractCommand());
-        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).onTrue(rotateToHubCommand);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
