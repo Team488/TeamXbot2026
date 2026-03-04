@@ -1,6 +1,7 @@
 package competition.electrical_contract;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Distance;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
@@ -63,9 +64,13 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract CANMotorControllerInfo getClimberMotorRight();
 
-    public abstract boolean isClimberAbsoluteEncoderReady();
+    public abstract  boolean isClimberAbsoluteEncoderReady();
 
     public abstract DeviceInfo getClimberAbsoluteEncoder();
+
+    public abstract boolean isClimberSensorReady();
+
+    public abstract DeviceInfo getClimberSensor();
 
     public abstract boolean isShooterFeederReady();
 
@@ -104,4 +109,6 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public Map<String, List<String>> getAdditionalPowerBranches() {
         return new HashMap<>();
     }
+
+    public abstract Distance getRadiusOfRobot();
 }

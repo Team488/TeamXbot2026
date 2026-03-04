@@ -1,6 +1,7 @@
 package competition.injection.modules;
 
 import competition.electrical_contract.ElectricalContract;
+import competition.subsystems.pose.RebuiltObstacleMap;
 import competition.subsystems.vision.AprilTagVisionSubsystemExtended;
 import dagger.Binds;
 import dagger.Module;
@@ -14,6 +15,7 @@ import xbot.common.injection.swerve.RearLeftDrive;
 import xbot.common.injection.swerve.RearRightDrive;
 import xbot.common.injection.swerve.SwerveComponent;
 import xbot.common.injection.swerve.SwerveInstance;
+import xbot.common.subsystems.pose.ObstacleMap;
 import xbot.common.subsystems.pose.GameField;
 import xbot.common.subsystems.vision.AprilTagVisionSubsystem;
 
@@ -63,6 +65,12 @@ public abstract class CommonModule {
     @Singleton
     public static GameField.Symmetry fieldSymmetry() {
         return GameField.Symmetry.Rotational;
+    }
+
+    @Provides
+    @Singleton
+    public static ObstacleMap obstacleMap(ElectricalContract impl) {
+        return new RebuiltObstacleMap(impl);
     }
 
     @Binds

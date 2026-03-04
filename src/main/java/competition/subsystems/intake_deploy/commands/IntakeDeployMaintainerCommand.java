@@ -23,8 +23,7 @@ public class IntakeDeployMaintainerCommand extends BaseMaintainerCommand<Angle, 
     @Inject
     public IntakeDeployMaintainerCommand(IntakeDeploySubsystem subsystemToMaintain, PropertyFactory pf,
                                          OperatorInterface oi,
-                                         HumanVsMachineDecider.HumanVsMachineDeciderFactory hvmFactory,
-                                         PIDManager.PIDManagerFactory pidManagerFactory) {
+                                         HumanVsMachineDecider.HumanVsMachineDeciderFactory hvmFactory) {
         super(subsystemToMaintain, pf, hvmFactory,0.01,0.01);
         pf.setPrefix(this);
         this.subsystem = subsystemToMaintain;
