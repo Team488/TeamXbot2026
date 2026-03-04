@@ -1,5 +1,6 @@
 package competition.subsystems.intake_deploy;
 
+import com.revrobotics.AbsoluteEncoder;
 import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.units.measure.Angle;
 import xbot.common.controls.actuators.XCANMotorController;
@@ -132,18 +133,30 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         }
     }
 
-    public void setPositionGoal(Angle goal) {
+    public void setPositionGoal(Angle absoluteEncoder, double rotationTarget, double rotationError) {
         if (intakeDeployMotor != null) {
             if (!isCalibrated()) {
                 log.warn("Attempted to set position goal while not calibrated!");
                 return;
             }
+            //absEncoder can get goal updated constantly
+            // absEncoder 0-90 (0-900 in motor Rotations) if the absEncoder move up, ex: 5
+            // absEncoder 5 -> motor rotation 50, 900-50 = 850, 1100(getCurrentPosition + 850 = 1950(setTargetPosition)
+            // 1000 motor(ask for current pos motor.getCurrentPosition), .plus(900) to get 1900(setTargetPosition)
+            rotationTarget = mechanismTargetRotation.get();
 
-            intakeDeployMotor.setPositionTarget(
-                    Rotations.of(goal.in(Degrees) / mechanismDegreePerMotorRotation.get()).plus(motorOffset),
-                    XCANMotorController.MotorPidMode.TrapezoidalVoltage
+            rotationError = mechanismTargetRotation.get().minus(mechanismDegreePerMotorRotation.get());
+
+            Angle error = Rotations.of(absoluteEncoder.in(Degrees)).minus(getTargetValue());
+            Angle target = Rotations.of(absoluteEncoder.in(Degrees));
+
+                        //previous code
+//                      intakeDeployMotor.setPositionTarget(
+//                      Rotations.of(absoluteEncoder.in(Degrees) / mechanismDegreePerMotorRotation.get()).plus(motorOffset),
+//                      XCANMotorController.MotorPidMode.TrapezoidalVoltage
             );
         }
+
     }
 
     @Override
