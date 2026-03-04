@@ -5,6 +5,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.NamedInstantCommand;
+import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.controls.sensors.XDigitalInput;
@@ -30,6 +31,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public final DoubleProperty manualControlPower;
     public DoubleProperty extendPower;
     public DoubleProperty retractPower;
+    public DoubleProperty readinessTimeoutSeconds;
     public ClimberState climberState;
     public Angle motorOffset = Degrees.zero();
     private boolean isCalibrated;
@@ -91,7 +93,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     
 
         this.mechanismDegreesPerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreesPerMotorRotation", 3.0);
-        this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
+        this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.5);
 
         this.extendPower = propertyFactory.createPersistentProperty("ExtendPower", 0.2);
         this.retractPower = propertyFactory.createPersistentProperty("RetractPower", -0.2);
@@ -212,7 +214,14 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     }
 
     @Override
-    public void setPower(Double power) {}
+    public void setPower(Double power) {
+        if (climberMotorLeft != null) {
+            climberMotorLeft.setPower(power * manualControlPower.get());
+        }
+        if (climberMotorRight != null) {
+            climberMotorRight.setPower(power * manualControlPower.get());
+        }
+    }
 
     @Override
     public boolean isCalibrated() {
@@ -253,5 +262,9 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
                 return true;
             }
         };
+    }
+
+    public Command getWaitForAtGoalCommand() {
+        return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
     }
 }

@@ -30,10 +30,13 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public DoubleProperty shootingTargetVelocity;
     public DoubleProperty trimValue;
     public DoubleProperty readinessTimeoutSeconds;
+    public DoubleProperty point1RPM;
+    public DoubleProperty point2RPM;
 
     public AngularVelocity currentTargetVelocity = RPM.of(0);
 
     private final Subsystem trimSetpointLock = new Subsystem() {
+
     };
 
     @Inject
@@ -100,6 +103,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         this.shootingTargetVelocity = propertyFactory.createPersistentProperty("Shooting Target Velocity", 3000);
         this.trimValue = propertyFactory.createPersistentProperty("Shooter Trim Value", 0);
         this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("Readiness Timeout Seconds", 2.0);
+
+        this.point1RPM = propertyFactory.createPersistentProperty("Point 1 RPM", 2000);//to change
+        this.point2RPM = propertyFactory.createPersistentProperty("Point 2 RPM", 2500); //to change
     }
 
     public void stop() {
@@ -213,5 +219,16 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
     public Command getWaitForAtGoalCommand() {
         return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
+    }
+    public enum FieldScoringLocation {
+        Point_1,
+        Point_2
+    }
+
+    public double getRPMForScoringLocation(FieldScoringLocation location) {
+        return switch (location) {
+            case Point_1 -> point1RPM.get();
+            case Point_2 -> point2RPM.get();
+        };
     }
 }
