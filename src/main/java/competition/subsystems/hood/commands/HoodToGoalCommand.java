@@ -24,6 +24,7 @@ public class HoodToGoalCommand extends BaseCommand {
 
     @Override
     public boolean isFinished() {
+
         return true;
     }
 }

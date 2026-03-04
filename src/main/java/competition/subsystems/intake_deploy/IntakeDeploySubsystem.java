@@ -15,7 +15,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Second;
 
 
 @Singleton
@@ -31,6 +34,8 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public final DoubleProperty retractedPosition;
     private final AngleProperty mechanismTargetRotation;
     public final DoubleProperty mechanismDegreePerMotorRotation;
+    public final DoubleProperty maxPidVelocity;
+    public final DoubleProperty maxPidAcceleration;
 
     // Limb range is the rotations between the Deploy's position and the stowed position, used for calibration.
     public final AngleProperty limbRange;
@@ -52,6 +57,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         if (electricalContract.isIntakeDeployReady()) {
             this.intakeDeployMotor = xcanMotorControllerFactory.create(electricalContract.getIntakeDeployMotor(),
                     getPrefix(), "IntakeDeployPID", defaultPIDProperties);
+
             this.registerDataFrameRefreshable(this.intakeDeployMotor);
         } else {
             this.intakeDeployMotor = null;
@@ -68,13 +74,21 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         }
 
         this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", 0.0);
-        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -115.0);
+        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -145.0);
 
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.2);
         this.limbRange = propertyFactory.createPersistentProperty("limbRange", Rotations.of(9.5));
 
         this.mechanismDegreePerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreePerMotorRotation", 15);
         this.mechanismTargetRotation = propertyFactory.createPersistentProperty("MechanismTargetRotation", Degrees.of(0));
+
+        this.maxPidVelocity = propertyFactory.createPersistentProperty("PidMaxMotorVelocity-RotationsPerSecond", 100);
+        this.maxPidAcceleration = propertyFactory.createPersistentProperty("PidMaxMotorAcceleration-RotationsPerSecondPerSecond", 300);
+
+        if (this.intakeDeployMotor != null) {
+            this.intakeDeployMotor.setTrapezoidalProfileMaxVelocity(RotationsPerSecond.of(maxPidVelocity.get()));
+            this.intakeDeployMotor.setTrapezoidalProfileAcceleration(RotationsPerSecond.per(Second).of(maxPidAcceleration.get()));
+        }
     }
 
     @Override
@@ -110,7 +124,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
             intakeDeployMotor.setPositionTarget(
                     Rotations.of(goal.in(Degrees) / mechanismDegreePerMotorRotation.get()).plus(motorOffset),
-                    XCANMotorController.MotorPidMode.Voltage
+                    XCANMotorController.MotorPidMode.TrapezoidalVoltage
             );
         }
     }
@@ -139,15 +153,24 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     }
 
     public void periodic() {
-        aKitLog.record("IsCalibrated", isCalibrated);
-        aKitLog.record("CurrentPosition", getCurrentValue().in(Degrees));
         if (intakeDeployMotor != null) {
             intakeDeployMotor.periodic();
+
+            if (this.maxPidVelocity.hasChangedSinceLastCheck()) {
+                this.intakeDeployMotor.setTrapezoidalProfileMaxVelocity(RotationsPerSecond.of(maxPidVelocity.get()));
+            }
+
+            if (this.maxPidAcceleration.hasChangedSinceLastCheck()) {
+                this.intakeDeployMotor.setTrapezoidalProfileAcceleration(RotationsPerSecond.per(Second).of(maxPidAcceleration.get()));
+            }
         }
         // Sensor reading seems bad - don't trust it for now
         //if (isTouchingIntakeDeploy() && !isCalibrated) {
         //    calibrateOffsetUp();
         //}
+
+        aKitLog.record("IsCalibrated", isCalibrated);
+        aKitLog.record("CurrentPosition", getCurrentValue().in(Degrees));
     }
 
     public void calibrateOffsetDown() {
