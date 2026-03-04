@@ -332,5 +332,22 @@ public class PoseSubsystem extends BasePoseSubsystem {
         return currentPose.nearest(poses);
     }
 
-    // End of Closest Landmark Calcs
+    public Pose2d furthestAllianceTrench() {
+        var alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
+
+        var poses = Landmarks.getAllianceTrenchPoses(this.aprilTagFieldLayout, alliance);
+        Pose2d currentPose = getCurrentPose2d();
+        Pose2d furthest = poses.get(0);
+        double maxDist = 0;
+        for (Pose2d pose : poses) {
+            double dist = currentPose.getTranslation().getDistance(pose.getTranslation());
+            if (dist > maxDist) {
+                maxDist = dist;
+                furthest = pose;
+            }
+        }
+        return furthest;
+    }
+
+    // End of Landmark Calcs
 }
