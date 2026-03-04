@@ -93,9 +93,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     
 
         this.mechanismDegreesPerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreesPerMotorRotation", 3.0);
-        this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
-        this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("Readiness Timeout Seconds", 2.0);
-        // TODO: find degrees per rotation
+        this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.5);
 
         this.extendPower = propertyFactory.createPersistentProperty("ExtendPower", 0.2);
         this.retractPower = propertyFactory.createPersistentProperty("RetractPower", -0.2);
@@ -216,7 +214,14 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     }
 
     @Override
-    public void setPower(Double power) {}
+    public void setPower(Double power) {
+        if (climberMotorLeft != null) {
+            climberMotorLeft.setPower(power * manualControlPower.get());
+        }
+        if (climberMotorRight != null) {
+            climberMotorRight.setPower(power * manualControlPower.get());
+        }
+    }
 
     @Override
     public boolean isCalibrated() {
