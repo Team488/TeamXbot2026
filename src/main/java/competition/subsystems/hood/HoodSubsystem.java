@@ -5,6 +5,7 @@ import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSetpointSubsystem;
+import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.controls.actuators.TimedAndBoundedServo;
 import xbot.common.controls.actuators.XServo;
 import xbot.common.properties.DoubleProperty;
@@ -33,6 +34,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public DoubleProperty trimStep;
     public DoubleProperty extend;
     public DoubleProperty retract;
+    public DoubleProperty readinessTimeoutSeconds;
 
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
@@ -72,6 +74,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.05);
         this.extend = propertyFactory.createPersistentProperty("MaxExtensionGoal", 1.0);
         this.retract = propertyFactory.createPersistentProperty("MinExtensionGoal", 0.0);
+        this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("ReadinessTimeoutSeconds", 2.0);
     }
 
     public void extend() {
@@ -164,5 +167,9 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     @Override
     protected boolean areTwoTargetsEquivalent(Double target1, Double target2) {
         return Math.abs(target1 - target2) < 0.1;
+    }
+
+    public Command getWaitForAtGoalCommand() {
+        return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
     }
 }
