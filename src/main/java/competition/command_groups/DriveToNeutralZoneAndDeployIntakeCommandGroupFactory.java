@@ -14,7 +14,9 @@ public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
     private final DriveSubsystem drive;
 
     @Inject
-    public DriveToNeutralZoneAndDeployIntakeCommandGroupFactory(Provider<DriveToNeutralZoneForIntakeCommand> driveToNeutralZoneForIntakeCommandProvider,
+    public DriveToNeutralZoneAndDeployIntakeCommandGroupFactory(
+            Provider<DriveToNeutralZoneForIntakeCommand> driveToNeutralZoneForIntakeCommandProvider,
+            Provider<DriveAcrossNeutralZoneCommand> driveAcrossNeutralZoneCommandProvider,
             DriveSubsystem drive) {
         this.driveToNeutralZoneForIntakeCommandProvider = driveToNeutralZoneForIntakeCommandProvider;
         this.drive = drive;
