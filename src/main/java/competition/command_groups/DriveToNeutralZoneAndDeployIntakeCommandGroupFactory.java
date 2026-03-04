@@ -11,6 +11,7 @@ import java.util.Set;
 
 public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
     private final Provider<DriveToNeutralZoneForIntakeCommand> driveToNeutralZoneForIntakeCommandProvider;
+    private final Provider<DriveAcrossNeutralZoneCommand> driveAcrossNeutralZoneCommandProvider;
     private final DriveSubsystem drive;
 
     @Inject
@@ -19,6 +20,7 @@ public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
             Provider<DriveAcrossNeutralZoneCommand> driveAcrossNeutralZoneCommandProvider,
             DriveSubsystem drive) {
         this.driveToNeutralZoneForIntakeCommandProvider = driveToNeutralZoneForIntakeCommandProvider;
+        this.driveAcrossNeutralZoneCommandProvider = driveAcrossNeutralZoneCommandProvider;
         this.drive = drive;
     }
 
@@ -27,12 +29,16 @@ public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
         group.setName("DriveToNeutralZoneAndDeployIntakeCommandGroup");
 
         var driveToNeutral = new DeferredCommand(
-                () -> {
-                    var driveToNeutralZoneForIntakeCommand = this.driveToNeutralZoneForIntakeCommandProvider.get();
-                    return driveToNeutralZoneForIntakeCommand;
-                }, Set.of(drive)
+                this.driveToNeutralZoneForIntakeCommandProvider::get, Set.of(drive)
         );
+
         group.addCommands(driveToNeutral);
+
+        var driveAcross = new DeferredCommand(
+                this.driveAcrossNeutralZoneCommandProvider::get, Set.of(drive)
+        );
+
+        group.addCommands(driveAcross);
 
         return group;
     }
