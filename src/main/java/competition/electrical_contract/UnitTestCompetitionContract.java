@@ -53,7 +53,7 @@ public class UnitTestCompetitionContract extends Contract2026 {
     }
 
     @Override
-    public boolean isClimberAbsoluteEncoderReady() {return true;}
+    public boolean isClimberSensorReady() {return true;}
 
     @Override
     public boolean isHopperRollerReady() {

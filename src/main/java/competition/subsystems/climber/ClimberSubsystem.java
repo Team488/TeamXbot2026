@@ -7,6 +7,7 @@ import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.NamedInstantCommand;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
+import xbot.common.controls.sensors.XDigitalInput;
 import xbot.common.properties.AngleProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
@@ -20,9 +21,11 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Second;
 
 @Singleton
-public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
+public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
+
     public final XCANMotorController climberMotorLeft;
     public final XCANMotorController climberMotorRight;
+    public final XDigitalInput climberSensor;
     public final DoubleProperty mechanismDegreesPerMotorRotation;
     public final DoubleProperty manualControlPower;
     public DoubleProperty extendPower;
@@ -48,7 +51,9 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
 
     @Inject
     public ClimberSubsystem(XCANMotorController.XCANMotorControllerFactory motorFactory,
-                            ElectricalContract electricalContract, PropertyFactory propertyFactory) {
+                            ElectricalContract electricalContract, PropertyFactory propertyFactory,
+                            XDigitalInput.XDigitalInputFactory xDigitalInputFactory) {
+
         propertyFactory.setPrefix(this);
 
         var defaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
@@ -75,6 +80,15 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
             this.climberMotorRight = null;
         }
 
+        if (electricalContract.isClimberSensorReady()) {
+            this.climberSensor = xDigitalInputFactory.create(
+                    electricalContract.getClimberSensor(),
+                    this.getPrefix());
+            this.registerDataFrameRefreshable(climberSensor);
+        } else {
+            this.climberSensor = null;
+        }
+    
 
         this.mechanismDegreesPerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreesPerMotorRotation", 3.0);
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.1);
@@ -131,16 +145,29 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
         climberState = ClimberState.STOPPED;
     }
 
+    public boolean isTouchingSensor() {
+        if (climberSensor != null) {
+            return this.climberSensor.get();
+        }
+        return false;
+    }
+
+    public Angle getCalibratedAngle() {
+        return climberMotorLeft.getPosition().minus(motorOffset);
+    }
+
     public void periodic() {
 
+        if (isTouchingSensor() && !isCalibrated) {
+            calibrateOffsetRetracted();
+        }
         aKitLog.record("TargetPosition", getTargetValue());
         aKitLog.record("CurrentPosition", getCurrentValue());
-
-        this.isCalibrated = true;
 
         if (climberMotorLeft != null) {
             climberMotorLeft.periodic();
         }
+
         if (climberMotorRight != null) {
             climberMotorRight.periodic();
         }
@@ -170,7 +197,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem<Angle, Double> {
     @Override
     public Angle getCurrentValue() {
         return Degrees.of(
-                climberMotorLeft.getPosition().minus(motorOffset).in(Rotations) * mechanismDegreesPerMotorRotation.get()
+                getCalibratedAngle().in(Rotations) * mechanismDegreesPerMotorRotation.get()
         );
     }
 
