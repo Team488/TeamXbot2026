@@ -8,6 +8,6 @@ public class AutoShootFuelAtStartCommandGroup extends BaseSequentialCommandGroup
 
     @Inject
     public AutoShootFuelAtStartCommandGroup(PrepareToShootCommandGroup prepare, FireWhenShooterReadyCommandGroup fire) {
-        addCommands(prepare, fire);
+        addCommands(prepare, fire.withTimeout(5.0));
     }
 }
