@@ -4,10 +4,12 @@ import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.units.measure.Angle;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
+import xbot.common.controls.sensors.XAbsoluteEncoder;
 import xbot.common.properties.AngleProperty;
 import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
+import xbot.common.resiliency.DeviceHealth;
 
 import xbot.common.controls.sensors.XDigitalInput;
 
@@ -28,6 +30,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public final DoubleProperty manualControlPower;
     public Angle motorOffset = Rotations.zero();
     public final XDigitalInput intakeDeploySensor;
+    public XAbsoluteEncoder intakeDeployAbsoluteEncoder;
 
     public boolean isCalibrated = false;
     public final DoubleProperty extendedPosition;
@@ -43,7 +46,8 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     @Inject
     public IntakeDeploySubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
                                  ElectricalContract electricalContract, PropertyFactory propertyFactory,
-                                 XDigitalInput.XDigitalInputFactory xDigitalInputFactory) {
+                                 XDigitalInput.XDigitalInputFactory xDigitalInputFactory,
+                                 XAbsoluteEncoder.XAbsoluteEncoderFactory xAbsoluteEncoderFactory) {
         propertyFactory.setPrefix(this);
 
         var defaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
@@ -61,6 +65,15 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             this.registerDataFrameRefreshable(this.intakeDeployMotor);
         } else {
             this.intakeDeployMotor = null;
+        }
+
+        if (electricalContract.isClimberAbsoluteEncoderReady()) {
+            this.intakeDeployAbsoluteEncoder = xAbsoluteEncoderFactory.create(electricalContract.getIntakeDeployAbsoluteEncoderMotor(),
+                    getPrefix());
+                    registerDataFrameRefreshable(intakeDeployAbsoluteEncoder);
+        }
+        else {
+            this.intakeDeployAbsoluteEncoder = null;
         }
 
         if (electricalContract.intakeDeploySensorReady()){
@@ -93,6 +106,10 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     @Override
     public Angle getCurrentValue() {
+        if (intakeDeployAbsoluteEncoder != null && intakeDeployAbsoluteEncoder.getAbsolutePosition() != null) {
+            return intakeDeployAbsoluteEncoder.getAbsolutePosition();
+        }
+
         return Degrees.of(
                 intakeDeployMotor.getPosition().minus(motorOffset).in(Rotations) * mechanismDegreePerMotorRotation.get()
         );
@@ -131,7 +148,9 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     @Override
     public boolean isCalibrated() {
-        return this.isCalibrated;
+        boolean absoluteEncoderCalibrated = intakeDeployAbsoluteEncoder != null
+                && intakeDeployAbsoluteEncoder.getHealth() == DeviceHealth.Healthy;
+        return absoluteEncoderCalibrated || this.isCalibrated;
     }
 
     @Override
