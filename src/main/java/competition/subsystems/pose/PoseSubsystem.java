@@ -212,7 +212,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
         double rawError = desiredHeading.getRadians() - this.getCurrentHeading().getRadians();
         double angleError = Math.abs(MathUtil.angleModulus(rawError));
 
-        return !(Math.toDegrees(angleError) < isFacingTargetMarginOfError.get());
+        return (Math.toDegrees(angleError) < isFacingTargetMarginOfError.get());
     }
 
     public Rotation2d desiredHeadingToTarget(Translation2d target) {

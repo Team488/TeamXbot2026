@@ -44,7 +44,6 @@ public class Landmarks {
     // Blue Outpost
     public static Pose2d blueOutpost = new Pose2d(0, 0.650, Rotation2d.fromDegrees(0));
     public static Pose2d blueOutpostPark = new Pose2d(0.350, 0.650, Rotation2d.fromDegrees(0));
-
     // Blue Tower
     public static Pose2d blueClimbOutpostEdge = new Pose2d(1.510,2.780,Rotation2d.fromDegrees(180));
     public static Pose2d blueClimbMiddleOutpostSide = new Pose2d(1.510,3.120,Rotation2d.fromDegrees(180));
@@ -58,9 +57,7 @@ public class Landmarks {
     public static Pose2d blueOutpostSideFuelFieldCollectionStart = new Pose2d(7.790,1.640, Rotation2d.fromDegrees(90));
     public static Pose2d blueDepotSideFuelFieldCollectionStart = new Pose2d(7.790,6.800, Rotation2d.fromDegrees(270));
 
-
-
-
+    // AprilTag IDs
     public static int redCenterHubNeutralSideFiducialId = 4;
     public static int redCenterHubDriverSideFiducialId = 10;
 
@@ -76,7 +73,7 @@ public class Landmarks {
     public static int blueTrenchNeutralOutpostSideId = 17;
     public static int redTrenchNeutralOutpostSideId = 1;
 
-    public static int blueTrenchDriverOutposeSideFiducialId = 28;
+    public static int blueTrenchDriverOutpostSideFiducialId = 28;
     public static int redTrenchDriverOutpostSideFiducialId = 12;
 
     public static int blueOutpostFiducialId = 29;
@@ -168,7 +165,7 @@ public class Landmarks {
     private static List<Integer> getAllianceTrenchFiducialIds(Alliance alliance) {
         return switch (alliance) {
             case Red -> List.of(redTrenchDriverDepotSideId, redTrenchDriverOutpostSideFiducialId);
-            case Blue -> List.of(blueTrenchDriverDepotSideId, blueTrenchDriverOutposeSideFiducialId);
+            case Blue -> List.of(blueTrenchDriverDepotSideId, blueTrenchDriverOutpostSideFiducialId);
         };
     }
 
