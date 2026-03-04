@@ -100,7 +100,7 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
         // along 0 deg.
         var multiplier = ballPitEdge.getY() > this.gamefield.getFieldCenter().getY() ? 1 : -1;
         var adjustedForRobot = new Translation2d(Units.Meters.of(0),
-                this.robotRadius.plus(this.pathPlanning.getAdditionalClearance()).times(multiplier));
+                this.robotRadius.times(multiplier));
         var fieldPose = new Pose2d(ballPitEdge.getTranslation().plus(adjustedForRobot), ballPitEdge.getRotation());
 
         return this.pathPlanning.generateSwervePoints(currentPose, fieldPose,
