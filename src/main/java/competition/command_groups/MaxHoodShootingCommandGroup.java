@@ -12,29 +12,32 @@ import xbot.common.command.NamedInstantCommand;
 
 import javax.inject.Inject;
 
+import static edu.wpi.first.units.Units.RPM;
+
 public class MaxHoodShootingCommandGroup extends BaseParallelCommandGroup {
 
     @Inject
     public MaxHoodShootingCommandGroup(HopperRollerSubsystem hopperRollerSubsystem,
                                        HoodSubsystem hoodSubsystem,
-                                       ShooterFeederFire shooterFeederFire,
+                                       ShooterFeederFire shooterFeederFireCommand,
                                        FuelIntakeCommand fuelIntakeCommand,
                                        ShooterSubsystem shooterSubsystem,
-                                       ShooterOutputCommand shooterOutputCommand) {
+                                       PrepareToShootCommandGroup prepareToShootCommandGroup
+    ) {
         var waitForHoodCommand =  hoodSubsystem.getWaitForAtGoalCommand();
         var waitForShooterCommand = shooterSubsystem.getWaitForAtGoalCommand();
         var hopperIntakeCommand = hopperRollerSubsystem.getIntakeCommand();
 
-        var setHoodCommand = new NamedInstantCommand("Set Hood Max", () -> hoodSubsystem.setTargetValue(1.0));
-        var waitForShooterAndHood = waitForShooterCommand.alongWith(waitForHoodCommand);
-        var startFeedingSequence = shooterFeederFire
+        var startFeedingSequence = waitForShooterCommand.alongWith(waitForHoodCommand).andThen(shooterFeederFireCommand)
                 .alongWith(new WaitCommand(0.5)
                         .andThen(fuelIntakeCommand.alongWith(hopperIntakeCommand)));
 
+        prepareToShootCommandGroup.setShooterGoal(RPM.of(4800));
+        prepareToShootCommandGroup.setHoodGoal(1.0);
+
         this.addCommands(
-                setHoodCommand,
-                shooterOutputCommand,
-                waitForShooterAndHood.andThen(startFeedingSequence)
+                prepareToShootCommandGroup
+                .andThen(startFeedingSequence)
         );
     }
 }
