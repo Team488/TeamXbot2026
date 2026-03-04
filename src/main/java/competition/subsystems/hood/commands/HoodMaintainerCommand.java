@@ -43,6 +43,10 @@ public class HoodMaintainerCommand extends BaseMaintainerCommand<Double, Double>
         return Math.abs(target - current);
     }
 
+    public void setTargetRatio(double ratio) {
+        hood.setTargetValue(ratio);
+    }
+
     @Override
     protected Double getHumanInput() {
         return 0.0;

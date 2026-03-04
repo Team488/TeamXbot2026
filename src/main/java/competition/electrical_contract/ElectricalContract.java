@@ -1,12 +1,19 @@
 package competition.electrical_contract;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Distance;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
+import xbot.common.injection.electrical_contract.PDHPort;
 import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.injection.swerve.SwerveInstance;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class ElectricalContract implements XSwerveDriveElectricalContract, XCameraElectricalContract {
     public abstract boolean isDriveReady();
@@ -57,9 +64,13 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract CANMotorControllerInfo getClimberMotorRight();
 
-    public abstract boolean isClimberAbsoluteEncoderReady();
+    public abstract  boolean isClimberAbsoluteEncoderReady();
 
     public abstract DeviceInfo getClimberAbsoluteEncoder();
+
+    public abstract boolean isClimberSensorReady();
+
+    public abstract DeviceInfo getClimberSensor();
 
     public abstract boolean isShooterFeederReady();
 
@@ -76,4 +87,28 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public abstract boolean isHopperRollerReady();
 
     public abstract CANMotorControllerInfo getHopperRollerMotor();
+
+    public abstract boolean intakeDeploySensorReady();
+
+    public abstract DeviceInfo getIntakeDeploySensor();
+
+    /**
+     * Returns additional PDH connections for non-motor devices (e.g., VRMs, PCMs, buck converters, etc.)
+     * Override this method in specific contract implementations to specify these connections.
+     * Multiple non-motor devices may share a PDH port (e.g., two buck converters on one port).
+     */
+    public Map<PDHPort, List<String>> getAdditionalPDHConnections() {
+        return new HashMap<>();
+    }
+
+    /**
+     * Returns power branch connections for intermediate converters (e.g., buck converters, VRMs).
+     * Maps converter name to the list of devices it powers.
+     * Override this method in specific contract implementations to document the power chain.
+     */
+    public Map<String, List<String>> getAdditionalPowerBranches() {
+        return new HashMap<>();
+    }
+
+    public abstract Distance getRadiusOfRobot();
 }
