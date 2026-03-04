@@ -232,6 +232,14 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         }
     }
 
+    public void calibrateOffsetExtended() {
+        if (climberMotorLeft != null) {
+            motorOffset = climberMotorLeft.getPosition();
+            setTargetValue(getCurrentValue());
+            isCalibrated = true;
+        }
+    }
+
     public void setPositionalGoalIncludingOffset(Angle setpoint) {
         if (climberMotorRight != null) {
             climberMotorRight.setPositionTarget(
@@ -248,6 +256,15 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     public final Command getCalibrateOffsetRetractCommand() {
         return new NamedInstantCommand( getName() + "-calibrate", this::calibrateOffsetRetracted) {
+            @Override
+            public boolean runsWhenDisabled() {
+                return true;
+            }
+        };
+    }
+
+    public final Command getCalibrateOffsetExtendCommand() {
+        return new  NamedInstantCommand(getName() + "-calibrate", this::getCalibrateOffsetExtendCommand) {
             @Override
             public boolean runsWhenDisabled() {
                 return true;
