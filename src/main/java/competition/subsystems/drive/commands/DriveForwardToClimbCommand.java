@@ -11,24 +11,25 @@ public class DriveForwardToClimbCommand extends BaseCommand {
     private final DriveSubsystem drive;
     private final Timer timer = new Timer();
 
-    private final double durationSeconds;
-    private final double forwardPower;
+    private double durationSeconds;
+    private double forwardPower;
 
     @Inject
     public DriveForwardToClimbCommand(DriveSubsystem drive) {
-        this(drive, 2.0, 0.3);
+        this.drive = drive;
+        this.addRequirements(drive);
     }
 
-    public DriveForwardToClimbCommand(DriveSubsystem drive, double durationSeconds, double forwardPower) {
-        this.drive = drive;
-        this.durationSeconds = durationSeconds;
-        this.forwardPower = forwardPower;
-        this.addRequirements(drive);
+    public void setDuration(double seconds) {
+        this.durationSeconds = seconds;
+    }
+
+    public void setPower(double power) {
+        this.forwardPower = power;
     }
 
     @Override
     public void initialize() {
-        timer.reset();
         timer.start();
     }
 
