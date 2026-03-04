@@ -4,7 +4,7 @@ import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSetpointSubsystem;
-import xbot.common.command.NamedRunCommand;
+import xbot.common.command.NamedInstantCommand;
 import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
