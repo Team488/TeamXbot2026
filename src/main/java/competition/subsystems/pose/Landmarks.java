@@ -181,7 +181,7 @@ public class Landmarks {
         var center = field.getFieldCenter();
         var centerPose = new Pose2d(center, Rotation2d.kZero);
         var ballPitEdges = Arrays.stream(ballPitTransforms)
-            .map(transform -> centerPose.transformBy(transform))
+            .map(centerPose::transformBy)
             .filter(edgePose -> isInAllianceSide(field, edgePose, alliance))
             .toList();
 
@@ -191,6 +191,31 @@ public class Landmarks {
             return new Pose2d(nearestEdge.getTranslation(), Rotation2d.kCW_Pi_2);
         } else {
             return new Pose2d(nearestEdge.getTranslation(), Rotation2d.kCCW_Pi_2);
+        }
+    }
+
+    public static Pose2d getFurthestAutoBallPitEdge(GameField field, Pose2d currentPose, Alliance alliance) {
+        var center = field.getFieldCenter();
+        var centerPose = new Pose2d(center, Rotation2d.kZero);
+        var ballPitEdges = Arrays.stream(ballPitTransforms)
+            .map(centerPose::transformBy)
+            .filter(edgePose -> isInAllianceSide(field, edgePose, alliance))
+            .toList();
+
+        Pose2d furthestEdge = ballPitEdges.get(0);
+        double maxDist = 0;
+        for (Pose2d edge : ballPitEdges) {
+            double dist = currentPose.getTranslation().getDistance(edge.getTranslation());
+            if (dist > maxDist) {
+                maxDist = dist;
+                furthestEdge = edge;
+            }
+        }
+
+        if (furthestEdge.getY() > center.getY()) {
+            return new Pose2d(furthestEdge.getTranslation(), Rotation2d.kCW_Pi_2);
+        } else {
+            return new Pose2d(furthestEdge.getTranslation(), Rotation2d.kCCW_Pi_2);
         }
     }
 
