@@ -163,8 +163,6 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         if (isTouchingSensor() && !isCalibrated) {
             calibrateOffsetRetracted();
         }
-        aKitLog.record("TargetPosition", getTargetValue());
-        aKitLog.record("CurrentPosition", getCurrentValue());
 
         if (climberMotorLeft != null) {
             climberMotorLeft.periodic();
@@ -191,9 +189,11 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
                 this.climberMotorRight.setTrapezoidalProfileAcceleration(RotationsPerSecond.per(Second).of(maxPidAcceleration.get()));
             }
         }
-
-        aKitLog.record("IsCalibrated", isCalibrated);
-        aKitLog.record("CurrentPosition", getCurrentValue());
+        if (climberMotorLeft != null) {
+            aKitLog.record("IsCalibrated", isCalibrated);
+            aKitLog.record("TargetPosition", getTargetValue());
+            aKitLog.record("CurrentPosition", getCurrentValue());
+        }
     }
 
     @Override
