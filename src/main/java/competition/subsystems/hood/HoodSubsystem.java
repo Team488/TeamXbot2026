@@ -22,17 +22,17 @@ import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
 public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
-    
+
     public static double getMechanismAngle(double servoPosition) {
-        return mechanismAngleMax - servoPosition * (mechanismAngleMax - mechanismAngleMin);
+        return Math.acos(mechanismAngleMax - servoPosition * (mechanismAngleMax - mechanismAngleMin));
     }
 
-    public static double getServoPosition(double mechanismAngle) {
-        return mechanismAngleMax - mechanismAngle / (mechanismAngleMax - mechanismAngleMin);
+    public static double getServoPosition(double ballReleaseAngle) {
+        return Math.acos(mechanismAngleMax - ballReleaseAngle / (mechanismAngleMax - mechanismAngleMin));
     }
 
-    public static final double mechanismAngleMax = 73;
-    public static final double mechanismAngleMin = 39.6;
+    public static final double mechanismAngleMax = 75.6;
+    public static final double mechanismAngleMin = 41.6;
     // Constants
     public static final double servoMinBound = 0.2;
     public static final double servoMaxBound = 0.8;
@@ -42,7 +42,6 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public final TimedAndBoundedServo hoodServoRight;
     public ElectricalContract electricalContract;
     public DoubleProperty servoTargetNormalized;
-    public AngleProperty targetMechanismAngle;
     public DoubleProperty trimValue;
     public DoubleProperty trimStep;
     public DoubleProperty extend;
@@ -83,8 +82,6 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
         this.servoTargetNormalized = propertyFactory.createPersistentProperty(
                 "ServoTargetPositionNormalized", 0);
-        this.targetMechanismAngle = propertyFactory.createPersistentProperty(
-                "TargetMechanismAngle",Degrees.zero());
         this.trimValue = propertyFactory.createPersistentProperty("HoodTrimValue", 0);
         this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.05);
         this.extend = propertyFactory.createPersistentProperty("MaxExtensionGoal", 1.0);
