@@ -47,13 +47,15 @@ public class DriveBackToAllianceZoneCommand extends SwerveSimpleBezierCommand {
         var adjustedForRobot = new Translation2d(Units.Meters.of(0),
                 this.robotRadius.times(multiplier));
 
-        var across = new Pose2d(ballPitEdge.getTranslation().plus(adjustedForRobot), ballPitEdge.getRotation().minus(Rotation2d.fromDegrees(90)));
+        // this is actually closest because by the time it reaches other side it calculates the opposite's opposite side
+        var closestTrench = pose.furthestAllianceTrench();
+
+        var translation = ballPitEdge.getTranslation().plus(adjustedForRobot);
+        var across = new Pose2d(translation.getX(), closestTrench.getY(), ballPitEdge.getRotation().minus(Rotation2d.fromDegrees(90)));
 
         points.add(new XbotSwervePoint(across, 3));
 
-        var closest = pose.furthestAllianceTrench();
-
-        points.add(new XbotSwervePoint(closest, 0.5));
+        points.add(new XbotSwervePoint(closestTrench, 0.5));
 
         super.logic.setKeyPoints(points);
 
