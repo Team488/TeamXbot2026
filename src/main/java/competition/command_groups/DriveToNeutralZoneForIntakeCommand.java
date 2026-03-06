@@ -19,7 +19,6 @@ import xbot.common.logging.RobotAssertionManager;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.drive.SwervePointKinematics;
 import xbot.common.subsystems.drive.SwerveSimpleBezierCommand;
-import xbot.common.subsystems.drive.SwerveSimpleTrajectoryCommand;
 import xbot.common.subsystems.drive.SwerveSimpleTrajectoryMode;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
 import xbot.common.subsystems.oracle.SwervePointPathPlanning;
@@ -38,10 +37,11 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
     @Inject
     public DriveToNeutralZoneForIntakeCommand(DriveSubsystem drive, PoseSubsystem pose,
             PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
-            XSwerveDriveElectricalContract electrical_contract,
             XSwerveDriveElectricalContract electricalContract,
             RobotAssertionManager robotAssertionManager, SwervePointPathPlanning pathPlanning, GameField gamefield) {
         super(drive, pose, pf, headingModuleFactory, robotAssertionManager);
+
+        this.drive = drive;
         this.pose = pose;
         this.pathPlanning = pathPlanning;
         this.gamefield = gamefield;
