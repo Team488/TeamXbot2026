@@ -9,7 +9,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import xbot.common.advantage.AKitLogger;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
@@ -23,18 +22,18 @@ import java.util.List;
 import org.littletonrobotics.junction.Logger;
 
 public class RebuiltObstacleMap extends ObstacleMap {
-    private static void logObstacle(String label, RectangleFieldObstacle obstacle, Distance halfWidth, Distance halfHeight) {
+    private static RectangleFieldObstacle logObstacle(RectangleFieldObstacle obstacle) {
         var center = obstacle.center();
-        var prefix = String.format("RebuiltObstacleMap/%s(%.2f,%.2f)", label, center.getX(), center.getY());
+        var prefix = String.format("RebuiltObstacleMap/Obstacle(%.2f,%.2f)", center.getX(), center.getY());
 
-        Logger.recordOutput(prefix + "/halfHeight", halfHeight);
-        Logger.recordOutput(prefix + "/halfWidth", halfWidth);
+        Logger.recordOutput(prefix + "/halfHeight", obstacle.getHalfHeight());
+        Logger.recordOutput(prefix + "/halfWidth", obstacle.getHalfWidth());
 
         var translations = new Translation2d[] {
-            new Translation2d(halfWidth, halfHeight),
-            new Translation2d(halfWidth.times(-1), halfHeight),
-            new Translation2d(halfWidth, halfHeight.times(-1)),
-            new Translation2d(halfWidth.times(-1), halfHeight.times(-1)),
+            new Translation2d(obstacle.getHalfWidth(), obstacle.getHalfHeight()),
+            new Translation2d(obstacle.getHalfWidth().times(-1), obstacle.getHalfHeight()),
+            new Translation2d(obstacle.getHalfWidth(), obstacle.getHalfHeight().times(-1)),
+            new Translation2d(obstacle.getHalfWidth().times(-1), obstacle.getHalfHeight().times(-1)),
         };
 
         var positions = new Translation2d[translations.length];
@@ -43,68 +42,46 @@ public class RebuiltObstacleMap extends ObstacleMap {
             positions[i] = center.plus(translation);
         }
         Logger.recordOutput(prefix + "/positions", positions);
+
+        return obstacle;
     }
 
     private static List<IFieldObstacle> buildObstacleMap(AprilTagFieldLayout aprilTagFieldLayout) {
         AKitLogger aKitLog = new AKitLogger("RebuiltObstacleMap");
 
         List<IFieldObstacle> obstacles = new ArrayList<IFieldObstacle>();
+        var stapleBump = new BumpObstacle(new Translation2d());
+        var stapleBumpGuard = new BumpGuardObstacle(new Translation2d());
 
         var blueAllianceHubPose = Landmarks.getAllianceHubPose(aprilTagFieldLayout, Alliance.Blue);
         var redAllianceHubPose = Landmarks.getAllianceHubPose(aprilTagFieldLayout, Alliance.Red);
 
         // Add both red and blue hubs, and use blue as a variable for offsets.
-        var blueHub = new HubObstacle(blueAllianceHubPose.getTranslation());
-        logObstacle("Hub", blueHub, HubObstacle.HALF_SIZE, HubObstacle.HALF_SIZE);
-        obstacles.add(blueHub);
+        var hubObstacle = logObstacle(new HubObstacle(blueAllianceHubPose.getTranslation()));
+        obstacles.add(hubObstacle);
+        obstacles.add(logObstacle(new HubObstacle(redAllianceHubPose.getTranslation())));
 
-        var redHub = new HubObstacle(redAllianceHubPose.getTranslation());
-        logObstacle("Hub", redHub, HubObstacle.HALF_SIZE, HubObstacle.HALF_SIZE);
-        obstacles.add(redHub);
-
-        var hubOffset = HubObstacle.HALF_SIZE;
+        var hubOffset = hubObstacle.getHalfHeight();
 
         // Make a transform to find how to go from the center of the hub to the center
         // of the bump.
-        var bumpTransform = new Transform2d(Units.Meters.of(0), hubOffset.plus(BumpObstacle.HALF_HEIGHT),
+        var bumpTranform = new Transform2d(Units.Meters.of(0), hubOffset.plus(stapleBump.getHalfHeight()),
                 Rotation2d.kZero);
 
         // Add all 4 bumps by using red vs blue, and taking the transform and using it along with the inverse.
-        var blueBump1 = new BumpObstacle(blueAllianceHubPose.plus(bumpTransform).getTranslation());
-        logObstacle("Bump", blueBump1, BumpObstacle.HALF_WIDTH, BumpObstacle.HALF_HEIGHT);
-        obstacles.add(blueBump1);
+        obstacles.add(logObstacle(new BumpObstacle(blueAllianceHubPose.plus(bumpTranform).getTranslation())));
+        obstacles.add(logObstacle(new BumpObstacle(redAllianceHubPose.plus(bumpTranform).getTranslation())));
+        obstacles.add(logObstacle((new BumpObstacle(blueAllianceHubPose.plus(bumpTranform.inverse()).getTranslation()))));
+        obstacles.add(logObstacle((new BumpObstacle(redAllianceHubPose.plus(bumpTranform.inverse()).getTranslation()))));
 
-        var redBump1 = new BumpObstacle(redAllianceHubPose.plus(bumpTransform).getTranslation());
-        logObstacle("Bump", redBump1, BumpObstacle.HALF_WIDTH, BumpObstacle.HALF_HEIGHT);
-        obstacles.add(redBump1);
-
-        var blueBump2 = new BumpObstacle(blueAllianceHubPose.plus(bumpTransform.inverse()).getTranslation());
-        logObstacle("Bump", blueBump2, BumpObstacle.HALF_WIDTH, BumpObstacle.HALF_HEIGHT);
-        obstacles.add(blueBump2);
-
-        var redBump2 = new BumpObstacle(redAllianceHubPose.plus(bumpTransform.inverse()).getTranslation());
-        logObstacle("Bump", redBump2, BumpObstacle.HALF_WIDTH, BumpObstacle.HALF_HEIGHT);
-        obstacles.add(redBump2);
-
-        var hubAndBumpOffset = hubOffset.plus(BumpObstacle.HALF_HEIGHT.times(2));
-        var bumpGuardTransform = new Transform2d(Units.Meters.of(0), hubAndBumpOffset.plus(BumpGuardObstacle.HALF_HEIGHT),
+        var hubAndBumpOffset = hubOffset.plus(stapleBump.getHalfHeight().times(2));
+        var bumpGuardTransform = new Transform2d(Units.Meters.of(0), hubAndBumpOffset.plus(stapleBumpGuard.getHalfHeight()),
                 Rotation2d.kZero);
 
-        var blueGuard1 = new BumpGuardObstacle(blueAllianceHubPose.plus(bumpGuardTransform).getTranslation());
-        logObstacle("BumpGuard", blueGuard1, BumpGuardObstacle.HALF_WIDTH, BumpGuardObstacle.HALF_HEIGHT);
-        obstacles.add(blueGuard1);
-
-        var redGuard1 = new BumpGuardObstacle(redAllianceHubPose.plus(bumpGuardTransform).getTranslation());
-        logObstacle("BumpGuard", redGuard1, BumpGuardObstacle.HALF_WIDTH, BumpGuardObstacle.HALF_HEIGHT);
-        obstacles.add(redGuard1);
-
-        var blueGuard2 = new BumpGuardObstacle(blueAllianceHubPose.plus(bumpGuardTransform.inverse()).getTranslation());
-        logObstacle("BumpGuard", blueGuard2, BumpGuardObstacle.HALF_WIDTH, BumpGuardObstacle.HALF_HEIGHT);
-        obstacles.add(blueGuard2);
-
-        var redGuard2 = new BumpGuardObstacle(redAllianceHubPose.plus(bumpGuardTransform.inverse()).getTranslation());
-        logObstacle("BumpGuard", redGuard2, BumpGuardObstacle.HALF_WIDTH, BumpGuardObstacle.HALF_HEIGHT);
-        obstacles.add(redGuard2);
+        obstacles.add(logObstacle(new BumpGuardObstacle(blueAllianceHubPose.plus(bumpGuardTransform).getTranslation())));
+        obstacles.add(logObstacle(new BumpGuardObstacle(redAllianceHubPose.plus(bumpGuardTransform).getTranslation())));
+        obstacles.add(logObstacle(new BumpGuardObstacle(blueAllianceHubPose.plus(bumpGuardTransform.inverse()).getTranslation())));
+        obstacles.add(logObstacle(new BumpGuardObstacle(redAllianceHubPose.plus(bumpGuardTransform.inverse()).getTranslation())));
 
         return obstacles;
     }

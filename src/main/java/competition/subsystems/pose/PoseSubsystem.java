@@ -9,7 +9,6 @@ import javax.inject.Singleton;
 import competition.electrical_contract.ElectricalContract;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.vision.AprilTagVisionSubsystemExtended;
-import xbot.common.subsystems.pose.GameField;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.estimator.PoseEstimator;
@@ -48,7 +47,6 @@ public class PoseSubsystem extends BasePoseSubsystem {
     private final BooleanProperty reportCameraPoses;
     private final DoubleProperty isFacingTargetMarginOfError;
     private AprilTagFieldLayout aprilTagFieldLayout;
-    private final GameField gamefield;
 
     private boolean preferOdometryToVision = false;
 
@@ -62,13 +60,11 @@ public class PoseSubsystem extends BasePoseSubsystem {
             ElectricalContract electricalContract,
             PropertyFactory propManager, DriveSubsystem drive,
                          AprilTagVisionSubsystemExtended aprilTagVisionSubsystem,
-                         AprilTagFieldLayout aprilTagFieldLayout,
-                         GameField gamefield) {
+                         AprilTagFieldLayout aprilTagFieldLayout) {
         super(gyroFactory, propManager);
         this.drive = drive;
         this.aprilTagVisionSubsystem = aprilTagVisionSubsystem;
         this.aprilTagFieldLayout = aprilTagFieldLayout;
-        this.gamefield = gamefield;
 
         this.onlyWheelsGyroSwerveOdometry = initializeSwerveOdometry();
         this.fullSwerveOdometry = initializeSwerveOdometry();
