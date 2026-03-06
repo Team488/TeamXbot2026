@@ -155,7 +155,10 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     }
 
     public Angle getCalibratedAngle() {
-        return climberMotorLeft.getPosition().minus(motorOffset);
+        if (climberMotorLeft != null) {
+            return climberMotorLeft.getPosition().minus(motorOffset);
+        }
+        return Degrees.zero();
     }
 
     public void periodic() {
