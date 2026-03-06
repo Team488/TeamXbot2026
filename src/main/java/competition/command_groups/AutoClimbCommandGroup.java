@@ -14,12 +14,12 @@ public class AutoClimbCommandGroup extends BaseSequentialCommandGroup {
     public AutoClimbCommandGroup(ClimberSubsystem climb, ClimberExtendCommand extendCommand,
                                  ClimberRetractCommand retractCommand, DriveForwardToClimbCommand driveForward) {
 
-        var waitForExtendCommand = climb.getWaitForAtGoalCommand();
-        var waitForRetractCommand = climb.getWaitForAtGoalCommand();
+        var ExtendwaitCommand = climb.getWaitForAtGoalCommand();
+        var RetractwaitCommand = climb.getWaitForAtGoalCommand();
         addCommands(
-                extendCommand.alongWith(waitForExtendCommand),
+                extendCommand.alongWith(ExtendwaitCommand),
                 driveForward.setDuration(2.0).setPower(100),
-                retractCommand.alongWith(waitForRetractCommand)
+                retractCommand.alongWith(RetractwaitCommand)
         );
     }
 }
