@@ -33,6 +33,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
     private Translation2d lookAtPointTarget = new Translation2d(); // The target point to look at
     private Rotation2d staticHeadingTarget = new Rotation2d(); // The heading you want to constantly be at
     private boolean lookAtPointActive = false;
+    private boolean lookAtPointInverted = false;
     private boolean staticHeadingActive = false;
     private final DoubleProperty maxAutoTargetSpeedMps;
     private final DoubleProperty maxAutoFuelIntakeTargetSpeedMps;
@@ -81,6 +82,14 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
     public void setLookAtPointTargetActive(boolean lookAtPointActive) {
         this.lookAtPointActive = lookAtPointActive;
+    }
+
+    public void setLookAtPointInverted(boolean lookAtPointInverted) {
+        this.lookAtPointInverted = lookAtPointInverted;
+    }
+
+    public boolean getLookAtPointInverted() {
+        return lookAtPointInverted;
     }
 
     public double getMaxAutoTargetSpeedMetersPerSecond() {
