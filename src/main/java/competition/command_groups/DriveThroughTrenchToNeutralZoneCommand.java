@@ -1,6 +1,5 @@
 package competition.command_groups;
 
-import java.util.Arrays;
 import java.util.List;
 
 import competition.subsystems.drive.DriveSubsystem;
@@ -9,10 +8,8 @@ import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
@@ -20,7 +17,6 @@ import xbot.common.logging.RobotAssertionManager;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.drive.SwervePointKinematics;
 import xbot.common.subsystems.drive.SwerveSimpleBezierCommand;
-import xbot.common.subsystems.drive.SwerveSimpleTrajectoryCommand;
 import xbot.common.subsystems.drive.SwerveSimpleTrajectoryMode;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
 import xbot.common.subsystems.oracle.SwervePointPathPlanning;
