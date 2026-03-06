@@ -96,7 +96,6 @@ public class Landmarks {
     public static int redOutpostFiducialId = 13;
 
     // Offsets/Transforms
-    public static Transform2d edgeOfNeutralZoneInitialBallPit = new Transform2d(Units.Inches.of(35.95), Units.Inches.of(90.95), Rotation2d.kZero);
 
 
     public static List<Integer> getAllianceHubCenterFiducialIds(Alliance alliance) {
