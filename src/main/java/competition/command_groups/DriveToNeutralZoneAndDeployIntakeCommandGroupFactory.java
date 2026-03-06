@@ -28,7 +28,7 @@ public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
             Provider<DriveAcrossNeutralZoneCommand> driveAcrossNeutralZoneCommandProvider,
             Provider<IntakeDeployExtendCommand> intakeDeployExtendCommandProvider,
             Provider<FuelIntakeCommand> fuelIntakeCommandProvider,
-            Provider<DriveBackToAllianceZoneCommand>  driveBackToAllianceZoneCommandProvider,
+            Provider<DriveBackToAllianceZoneCommand> driveBackToAllianceZoneCommandProvider,
             DriveSubsystem drive) {
         this.driveToNeutralZoneForIntakeCommandProvider = driveToNeutralZoneForIntakeCommandProvider;
         this.driveAcrossNeutralZoneCommandProvider = driveAcrossNeutralZoneCommandProvider;
@@ -44,23 +44,23 @@ public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
         group.setName("DriveToNeutralZoneAndDeployIntakeCommandGroup");
 
         var driveToNeutral = new DeferredCommand(
-                this.driveToNeutralZoneForIntakeCommandProvider::get, Set.of(drive)
-        );
+                this.driveToNeutralZoneForIntakeCommandProvider::get, Set.of(drive));
 
         group.addCommands(driveToNeutral);
 
-        var driveAcrossNeutralZoneAndIntakeDeployCommandGroup = new ParallelCommandGroup(this.driveAcrossNeutralZoneCommandProvider.get(), intakeDeployExtendCommandProvider.get());
+        var driveAcrossNeutralZoneAndIntakeDeployCommandGroup = new ParallelCommandGroup(
+                this.driveAcrossNeutralZoneCommandProvider.get(), intakeDeployExtendCommandProvider.get());
 
-        var driveAcrossIntakeDeployWithFuelIntakeCommand = new ParallelDeadlineGroup(driveAcrossNeutralZoneAndIntakeDeployCommandGroup, fuelIntakeCommandProvider.get());
+        var driveAcrossIntakeDeployWithFuelIntakeCommand = new ParallelDeadlineGroup(
+                driveAcrossNeutralZoneAndIntakeDeployCommandGroup, fuelIntakeCommandProvider.get());
 
         group.addCommands(driveAcrossIntakeDeployWithFuelIntakeCommand);
 
-//        group.addCommands(driveAcrossNeutralZoneCommandProvider.get());
+        // group.addCommands(driveAcrossNeutralZoneCommandProvider.get());
 
         group.addCommands(driveBackToAllianceZoneCommandProvider.get());
 
         return group;
     }
-
 
 }
