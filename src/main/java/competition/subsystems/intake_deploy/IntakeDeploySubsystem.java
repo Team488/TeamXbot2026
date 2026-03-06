@@ -75,7 +75,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         }
         if (electricalContract.isIntakeDeployExtendedSensorReady()) {
             this.intakeDeployExtendedSensor = xDigitalInputFactory.create(
-                    electricalContract.getIntakeDeploySensor(),
+                    electricalContract.getIntakeDeployExtendedSensor(),
                     getPrefix()
             );
             this.registerDataFrameRefreshable(this.intakeDeployExtendedSensor);
