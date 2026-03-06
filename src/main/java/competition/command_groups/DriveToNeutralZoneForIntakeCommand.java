@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.pose.AutoLandmarks;
 import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -33,12 +34,14 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
     private final SwervePointPathPlanning pathPlanning;
     private final GameField gamefield;
     private final Distance robotRadius;
+    private final AutoLandmarks autoLandmarks;
 
     @Inject
     public DriveToNeutralZoneForIntakeCommand(DriveSubsystem drive, PoseSubsystem pose,
             PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
             XSwerveDriveElectricalContract electricalContract,
-            RobotAssertionManager robotAssertionManager, SwervePointPathPlanning pathPlanning, GameField gamefield) {
+            RobotAssertionManager robotAssertionManager, SwervePointPathPlanning pathPlanning, GameField gamefield,
+            AutoLandmarks autoLandmarks) {
         super(drive, pose, pf, headingModuleFactory, robotAssertionManager);
 
         this.drive = drive;
@@ -46,6 +49,7 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
         this.pathPlanning = pathPlanning;
         this.gamefield = gamefield;
         this.robotRadius = electricalContract.getRadiusOfRobot();
+        this.autoLandmarks = autoLandmarks;
     }
 
     // After some testing, we'll delete this.
@@ -92,24 +96,18 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
     }
 
     private List<XbotSwervePoint> calcSwervePoints() {
-        var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
         var currentPose = pose.getCurrentPose2d();
-        var ballPitEdge = Landmarks.getClosestAutoBallPitEdge(this.gamefield, currentPose,
-                alliance);
+        var endPose = this.autoLandmarks.getStartCollectionPose(currentPose);
 
-        // If the edge is above the center then we move along 180 deg otherwise move
-        // along 0 deg.
-        var multiplier = alliance == Alliance.Blue ? -1 : 1;
-        var adjustedForRobot = new Translation2d(Units.Meters.of(0),
-                this.robotRadius.times(multiplier));
-        var fieldPose = new Pose2d(ballPitEdge.getTranslation().plus(adjustedForRobot), ballPitEdge.getRotation());
-
-        return this.pathPlanning.generateSwervePoints(currentPose, fieldPose,
+        return this.pathPlanning.generateSwervePoints(currentPose, endPose,
                 false);
     }
 
     @Override
     public void initialize() {
+        var headingPID = this.drive.getRotateToHeadingPid();
+        headingPID.setErrorThreshold(2);
+
         super.logic.setKeyPoints(this.calcSwervePoints());
 
         this.logic.setPrioritizeRotationIfCloseToGoal(true);
