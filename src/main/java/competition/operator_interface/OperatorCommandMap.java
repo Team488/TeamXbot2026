@@ -16,7 +16,7 @@ import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
-import competition.subsystems.fuel_intake.commands.FuelEjectCommand;
+import competition.subsystems.fuel_intake.commands.CollectorEjectCommand;
 import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
 import competition.subsystems.hood.commands.DropHoodForTrenchCommand;
 import competition.subsystems.hood.commands.HoodExtendCommands;
@@ -24,7 +24,6 @@ import competition.subsystems.hood.commands.HoodRetractCommands;
 import competition.subsystems.hood.commands.TrimHoodDownCommand;
 import competition.subsystems.hood.commands.TrimHoodUpCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
-import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.intake_deploy.commands.CalibrateOffsetDown;
 import competition.subsystems.intake_deploy.commands.CalibrateOffsetUp;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
@@ -116,7 +115,7 @@ public class OperatorCommandMap {
                                   TrimHoodDownCommand trimHoodDownCommand,
                                   IntakeDeployExtendCommand intakeDeployExtendCommand,
                                   IntakeDeployRetractCommand intakeDeployRetractCommand,
-                                  FuelEjectCommand fuelEjectCommand,
+                                  CollectorEjectCommand fuelEjectCommand,
                                   ShooterFeederFire shooterFeederFire,
                                   HopperRollerSubsystem hopperRollerSubsystem,
                                   CalibrateOffsetDown calibrateOffsetDown,
