@@ -55,7 +55,9 @@ public class DriveAcrossNeutralZoneCommand extends SwerveSimpleBezierCommand {
                 this.robotRadius.times(multiplier));
 
         List<XbotSwervePoint> points = new ArrayList<>();
-        var across = new Pose2d(ballPitEdge.getTranslation().plus(adjustedForRobot), ballPitEdge.getRotation().minus(Rotation2d.fromDegrees(180)));
+        var x = ballPitEdge.getTranslation().plus(adjustedForRobot).getX();
+
+        var across = new Pose2d(x, gamefield.getFieldCenter().plus(adjustedForRobot).getY(), ballPitEdge.getRotation().minus(Rotation2d.fromDegrees(180)));
 
         points.add(new XbotSwervePoint(across, 3));
 
