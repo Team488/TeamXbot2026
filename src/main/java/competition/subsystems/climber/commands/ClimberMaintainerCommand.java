@@ -1,7 +1,10 @@
 package competition.subsystems.climber.commands;
 
+import competition.operator_interface.OperatorInterface;
 import competition.subsystems.climber.ClimberSubsystem;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.measure.Angle;
+import xbot.common.advantage.AKitLogger;
 import xbot.common.command.BaseMaintainerCommand;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.logic.HumanVsMachineDecider;
@@ -16,15 +19,19 @@ public class ClimberMaintainerCommand extends BaseMaintainerCommand<Angle, Doubl
 
     private final ClimberSubsystem climber;
     private PIDManager pidManager;
-    private XXboxController manualControlGamepad;
-    private double manualControlDeadband;
+    private final XXboxController manualControlGamepad;
+    private final double manualControlDeadband;
 
     @Inject
     public ClimberMaintainerCommand(ClimberSubsystem climber, PropertyFactory pf,
-                                    HumanVsMachineDecider.HumanVsMachineDeciderFactory hvmFactory) {
+                                    HumanVsMachineDecider.HumanVsMachineDeciderFactory hvmFactory,
+                                    OperatorInterface oi) {
         super(climber, pf, hvmFactory, 0.03, 0.1);
         this.climber = climber;
         addRequirements(climber);
+
+        this.manualControlGamepad = oi.operatorGamepad;
+        this.manualControlDeadband = oi.getOperatorGamepadTypicalDeadband();
     }
 
     @Override
@@ -46,16 +53,15 @@ public class ClimberMaintainerCommand extends BaseMaintainerCommand<Angle, Doubl
         return error.in(Degrees);
     }
 
-    @Override
-    protected Double getHumanInput() {
+      @Override
+      protected Double getHumanInput() {
 //        var humanInput = MathUtil.applyDeadband(manualControlGamepad.getRightStickY(), manualControlDeadband);
 //        aKitLog.setLogLevel(AKitLogger.LogLevel.DEBUG);
 //        aKitLog.record("ManualControlInput", humanInput);
 //        aKitLog.setLogLevel(AKitLogger.LogLevel.INFO);
-//        return humanInput * this.climber.manualControlPower.get();
-        // TODO: We need to configure a gamepad for human control.
-        return 0.0;
-    }
+//        return humanInput;
+          return 0.0;
+      }
 
     @Override
     protected double getHumanInputMagnitude() {
