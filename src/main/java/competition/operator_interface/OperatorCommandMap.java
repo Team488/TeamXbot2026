@@ -5,6 +5,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
+import competition.command_groups.DriveToShootingPositionCommand;
 import competition.command_groups.FireWhenShooterReadyCommandGroup;
 import competition.command_groups.HopperAndIntakeCommandGroup;
 import competition.command_groups.MaxHoodShootingCommandGroup;
@@ -159,13 +160,16 @@ public class OperatorCommandMap {
     @Inject
     public void setupAutoCommands(Provider<SetAutonomousCommand> setAutonomousCommandProvider,
                                   DriveToOutpostCommand driveToOutpostCommand,
-                                  MoveAcrossFieldCommandGroup moveAcrossFieldCommand
+                                  MoveAcrossFieldCommandGroup moveAcrossFieldCommand,
+                                  DriveToShootingPositionCommand driveToShootingPositionCommand
     ) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
         var moveAcrossField = setAutonomousCommandProvider.get();
         moveAcrossField.setAutoCommand(moveAcrossFieldCommand, Landmarks.blueStartTrenchToOutpost);
         moveAcrossField.includeOnSmartDashboard("Move across field.");
+
+        driveToShootingPositionCommand.includeOnSmartDashboard("Drive to Shooting Position");
     }
 
     @Inject
