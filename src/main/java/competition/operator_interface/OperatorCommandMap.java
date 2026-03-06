@@ -8,6 +8,7 @@ import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
 import competition.command_groups.FireWhenShooterReadyCommandGroup;
 import competition.command_groups.HopperAndIntakeCommandGroup;
 import competition.command_groups.MaxHoodShootingCommandGroup;
+import competition.command_groups.DriveThroughTrenchToNeutralZoneCommand;
 import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.climber.commands.ClimberSetPointCommand;
@@ -159,13 +160,18 @@ public class OperatorCommandMap {
     @Inject
     public void setupAutoCommands(Provider<SetAutonomousCommand> setAutonomousCommandProvider,
                                   DriveToOutpostCommand driveToOutpostCommand,
-                                  MoveAcrossFieldCommandGroup moveAcrossFieldCommand
+                                  MoveAcrossFieldCommandGroup moveAcrossFieldCommand,
+                                  DriveThroughTrenchToNeutralZoneCommand driveThroughTrenchToNeutralZoneCommand
     ) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
         var moveAcrossField = setAutonomousCommandProvider.get();
         moveAcrossField.setAutoCommand(moveAcrossFieldCommand, Landmarks.blueStartTrenchToOutpost);
         moveAcrossField.includeOnSmartDashboard("Move across field.");
+
+        var trenchToAz = setAutonomousCommandProvider.get();
+        trenchToAz.setAutoCommand(driveThroughTrenchToNeutralZoneCommand, Landmarks.blueStartTrenchToOutpost);
+        trenchToAz.includeOnSmartDashboard("trenchToAz");
     }
 
     @Inject

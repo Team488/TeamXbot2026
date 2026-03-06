@@ -33,7 +33,6 @@ public class DriveThroughTrenchToNeutralZoneCommand extends SwerveSimpleBezierCo
     private final PoseSubsystem pose;
     private final SwervePointPathPlanning pathPlanning;
     private final GameField gamefield;
-    private final Distance robotRadius;
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
     @Inject
@@ -46,7 +45,6 @@ public class DriveThroughTrenchToNeutralZoneCommand extends SwerveSimpleBezierCo
         this.pose = pose;
         this.pathPlanning = pathPlanning;
         this.gamefield = gamefield;
-        this.robotRadius = electrical_contract.getRadiusOfRobot();
         this.aprilTagFieldLayout = aprilTagFieldLayout;
     }
 
@@ -90,16 +88,18 @@ public class DriveThroughTrenchToNeutralZoneCommand extends SwerveSimpleBezierCo
 
     private List<XbotSwervePoint> calcSwervePoints() {
         var currentPose = pose.getCurrentPose2d();
+        var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
         var neutralSideTrenchTag = Landmarks.getClosestTrenchNeutralSideIdPose(this.aprilTagFieldLayout,
-                DriverStation.getAlliance().orElse(Alliance.Blue), currentPose);
+                alliance, currentPose);
 
         // If the edge is above the center then we move along 180 deg otherwise move
         // along 0 deg.
+        System.out.println(alliance == Alliance.Blue);
         var multiplier = neutralSideTrenchTag.getY() > this.gamefield.getFieldCenter().getY() ? 1 : -1;
-        var adjustedForRobot = new Translation2d(Units.Meters.of(0),
-                this.robotRadius
-                        /* .plus(this.pathPlanning.getAdditionalClearance())*/
-                        .times(multiplier));
+        var adjustedForRobot = new Translation2d(
+                Units.Meters.of(alliance == Alliance.Blue ? -1.25 : 1.25),
+                Units.Meters.of(0)
+        );
         var targetPose = new Pose2d(
                 neutralSideTrenchTag.getTranslation().plus(adjustedForRobot),
                 Rotation2d.fromDegrees(90 * multiplier)
