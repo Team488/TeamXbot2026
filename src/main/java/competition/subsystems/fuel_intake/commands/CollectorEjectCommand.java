@@ -5,17 +5,18 @@ import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
-public class FuelStopCommand extends BaseCommand {
+public class CollectorEjectCommand extends BaseCommand {
     final CollectorSubsystem collectorSubsystem;
 
     @Inject
-    public FuelStopCommand(CollectorSubsystem collectorSubsystem) {
+    public CollectorEjectCommand(CollectorSubsystem collectorSubsystem) {
         this.collectorSubsystem = collectorSubsystem ;
         this.addRequirements(this.collectorSubsystem);
     }
 
     @Override
     public void initialize() {
-        collectorSubsystem.stop();
+        collectorSubsystem.eject();
+        log.info("Initialized FuelEject");
     }
 }
