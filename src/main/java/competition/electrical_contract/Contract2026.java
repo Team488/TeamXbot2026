@@ -517,7 +517,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public Distance getRadiusOfRobot() {
-        return Units.Inches.of(18);
+        return Units.Inches.of(20);
     }
 
     @Override
