@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.Units;
+import xbot.common.controls.sensors.XGyro;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANLightControllerOutputConfig;
@@ -16,6 +17,7 @@ import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
 import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
+import xbot.common.injection.electrical_contract.IMUInfo;
 import xbot.common.injection.electrical_contract.LEDStripType;
 import xbot.common.injection.electrical_contract.LightControllerType;
 import xbot.common.injection.electrical_contract.MotorControllerType;
@@ -92,6 +94,11 @@ public class Contract2026 extends ElectricalContract {
     @Override
     public DeviceInfo getClimberSensor() {
         return new DeviceInfo("ClimberSensor", 0, PowerSource.RIO);
+    }
+
+    @Override
+    public IMUInfo getIMUInfo() {
+        return new IMUInfo("Pigeon", XGyro.ImuType.pigeon2, XGyro.InterfaceType.CAN, CANBusId.Canivore, 56);
     }
 
     public DeviceInfo pigeon2() {
@@ -510,7 +517,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public Distance getRadiusOfRobot() {
-        return Units.Inches.of(18);
+        return Units.Inches.of(20);
     }
 
     @Override
