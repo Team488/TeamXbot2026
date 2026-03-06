@@ -5,6 +5,7 @@ import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
@@ -44,18 +45,24 @@ public class DriveToShootingPositionCommand extends SwerveSimpleBezierCommand {
     private List<XbotSwervePoint> calcSwervePoints() {
         Pose2d currentPose = pose.getCurrentPose2d();
 
-        return this.pathPlanning.generateSwervePoints(currentPose, this.shootingLocationAndRotation(),
+        return this.pathPlanning.generateSwervePoints(currentPose, this.getShootingPose(),
                 false);
     }
 
-    private Pose2d shootingLocationAndRotation() {
-        Pose2d currentPose = pose.getCurrentPose2d();
-        Pose2d allianceHubPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, DriverStation.getAlliance().orElse(Alliance.Blue));
-        Translation2d translationToHub = allianceHubPose.minus(currentPose).getTranslation();
-        Translation2d translationToClosestShootingPoint = new Translation2d(OPTIMAL_DISTANCE_TO_SHOOT_FROM.in(Units.Meters),
-                translationToHub.getAngle());
+    private Pose2d getShootingPose() {
+        Translation2d robotPosition = pose.getCurrentPose2d().getTranslation();
+        Translation2d hubPosition = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, DriverStation.getAlliance().orElse(Alliance.Blue))
+                .getTranslation();
 
-        return new Pose2d(allianceHubPose.getTranslation().plus(translationToClosestShootingPoint), translationToHub.getAngle());
+        Translation2d vectorToRobot = robotPosition.minus(hubPosition);
+        Rotation2d vectorToRobotAngle = vectorToRobot.getNorm() > 1e-6
+                ? vectorToRobot.getAngle()
+                : Rotation2d.kZero;
+
+        Translation2d shootingPosition = hubPosition.plus(new Translation2d(OPTIMAL_DISTANCE_TO_SHOOT_FROM.in(Units.Meters), vectorToRobotAngle));
+        Rotation2d shootingRotation = vectorToRobotAngle.plus(Rotation2d.kPi);
+
+        return new Pose2d(shootingPosition, shootingRotation);
     }
 
     @Override

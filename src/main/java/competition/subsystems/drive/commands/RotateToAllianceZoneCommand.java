@@ -61,7 +61,7 @@ public class RotateToAllianceZoneCommand extends BaseCommand {
                 alliance,
                 robotPose
         );
-        rotationOffset = new Rotation2d(desiredHeadingOffset.get());
+        rotationOffset = Rotation2d.fromDegrees(desiredHeadingOffset.get().in(Units.Degrees));
 
         // Interpolation instead of a fixed point prevents shooting into the hub wall when we are too close to the hub
         // Uses .getTranslation() for linear interpolation because the interpolation method for poses has some issues
