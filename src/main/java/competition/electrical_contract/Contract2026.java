@@ -50,7 +50,7 @@ public class Contract2026 extends ElectricalContract {
     public boolean areCanCodersReady() { return true; }
 
     @Override
-    public boolean isClimberLeftReady() { return true; }
+    public boolean isClimberLeftReady() { return false; }
 
     @Override
     public CANMotorControllerInfo getClimberMotorLeft() {
@@ -65,7 +65,7 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public boolean isClimberRightReady() { return true; }
+    public boolean isClimberRightReady() { return false; }
 
     @Override
     public CANMotorControllerInfo getClimberMotorRight() {

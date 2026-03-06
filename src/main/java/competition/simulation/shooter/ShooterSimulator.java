@@ -2,6 +2,7 @@ package competition.simulation.shooter;
 
 import competition.Robot;
 import competition.simulation.SimulatorConstants;
+import competition.simulation.intake.CollectorSimulator;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
@@ -12,7 +13,6 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import competition.simulation.intake.IntakeSimulator;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
 import xbot.common.math.PIDManager;
@@ -29,7 +29,6 @@ import java.util.Random;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 @Singleton
@@ -41,7 +40,7 @@ public class ShooterSimulator {
     final MockCANMotorController shooterMotor;
     final MockCANMotorController shooterFeederMotor;
 
-    final IntakeSimulator intakeSimulator;
+    final CollectorSimulator intakeSimulator;
 
     final PIDManager pidManager;
 
@@ -53,7 +52,7 @@ public class ShooterSimulator {
 
     @Inject
     public ShooterSimulator(PoseSubsystem pose, ShooterSubsystem shooter, ShooterFeederSubsystem shooterFeeder,
-                            PropertyFactory pf, IntakeSimulator intakeSimulator, PIDManagerFactory pidManagerFactory) {
+                            PropertyFactory pf, CollectorSimulator intakeSimulator, PIDManagerFactory pidManagerFactory) {
         pf.setPrefix("Simulator/");
         this.pose = pose;
         this.shooter = shooter;
@@ -120,7 +119,7 @@ public class ShooterSimulator {
 
     public void updateShootingProjectile(Arena2026Rebuilt arena) {
         if (isShooting() && random.nextDouble() < ballsPerSecond.get() / 50.0) {
-            if (!intakeSimulator.getPieceFromIntake()) {
+            if (!intakeSimulator.getPieceFromCollector()) {
                 return;
             }
 
