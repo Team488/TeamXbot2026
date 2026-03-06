@@ -73,6 +73,15 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         } else {
             this.intakeDeploySensor = null;
         }
+        if (electricalContract.isIntakeDeployExtendedSensorReady()) {
+            this.intakeDeployExtendedSensor = xDigitalInputFactory.create(
+                    electricalContract.getIntakeDeploySensor(),
+                    getPrefix()
+            );
+            this.registerDataFrameRefreshable(this.intakeDeployExtendedSensor);
+        } else {
+            this.intakeDeployExtendedSensor = null;
+        }
 
         this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", 0.0);
         this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -145.0);
@@ -146,6 +155,14 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         }
         return false;
     }
+
+//    public boolean isTouchingIntakeDeployExtendedSensor() {
+//        if (intakeDeployExtendedSensor != null) {
+//            isCalibrated = true;
+//            return this.intakeDeployExtendedSensor.get();
+//        }
+//        return false;
+//    }
 
     public void stop() {
         if (intakeDeployMotor != null) {
