@@ -53,13 +53,14 @@ public class ClimberMaintainerCommand extends BaseMaintainerCommand<Angle, Doubl
         return error.in(Degrees);
     }
 
-//    @Override
+      @Override
       protected Double getHumanInput() {
-          var humanInput = MathUtil.applyDeadband(manualControlGamepad.getRightStickY(), manualControlDeadband);
+//        var humanInput = MathUtil.applyDeadband(manualControlGamepad.getRightStickY(), manualControlDeadband);
 //        aKitLog.setLogLevel(AKitLogger.LogLevel.DEBUG);
 //        aKitLog.record("ManualControlInput", humanInput);
 //        aKitLog.setLogLevel(AKitLogger.LogLevel.INFO);
-          return humanInput;
+//        return humanInput;
+          return 0.0;
       }
 
     @Override
