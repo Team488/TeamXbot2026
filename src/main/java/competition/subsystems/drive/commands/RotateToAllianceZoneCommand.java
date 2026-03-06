@@ -31,10 +31,7 @@ public class RotateToAllianceZoneCommand extends BaseCommand {
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
     private Pose2d robotPose;
-    private Rotation2d rotationOffset;
-    private Translation2d targetTranslation;
     private final DoubleProperty interpolationFactor;
-    private final AngleProperty desiredHeadingOffset;
     private final BooleanProperty autoAimWhenNotInNeutralZone;
 
     @Inject
@@ -47,7 +44,6 @@ public class RotateToAllianceZoneCommand extends BaseCommand {
         pf.setPrefix(this);
         pf.setDefaultLevel(Property.PropertyLevel.Important);
         interpolationFactor = pf.createPersistentProperty("InterpolationFactor", 0.5);
-        desiredHeadingOffset = pf.createPersistentProperty("DesiredHeadingOffset", Units.Degrees.of(180));
         autoAimWhenNotInNeutralZone = pf.createPersistentProperty("AutoAimWhenNotInNeutralZone", true);
     }
 
@@ -61,13 +57,13 @@ public class RotateToAllianceZoneCommand extends BaseCommand {
                 alliance,
                 robotPose
         );
-        rotationOffset = Rotation2d.fromDegrees(desiredHeadingOffset.get().in(Units.Degrees));
 
         // Interpolation instead of a fixed point prevents shooting into the hub wall when we are too close to the hub
         // Uses .getTranslation() for linear interpolation because the interpolation method for poses has some issues
-        targetTranslation = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance)
+        Translation2d targetTranslation = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance)
                 .getTranslation()
                 .interpolate(closestTrenchNeutralSideIdPose.getTranslation(), interpolationFactor.get());
+
         drive.setLookAtPointTarget(targetTranslation);
         drive.setLookAtPointInverted(true);
     }
