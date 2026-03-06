@@ -50,7 +50,7 @@ public abstract class BaseRobotComponent extends BaseComponent {
 
     public abstract VoltageMonitorSubsystem voltageMonitorSubsystem();
 
-    public abstract JustFireStartingFuelAuto JustShootAuto();
+    public abstract JustFireStartingFuelAuto justShootAuto();
 
     public abstract ClimberSubsystem climberSubsystem();
 }
