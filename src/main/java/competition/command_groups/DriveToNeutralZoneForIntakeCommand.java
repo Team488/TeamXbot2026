@@ -39,13 +39,13 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
     public DriveToNeutralZoneForIntakeCommand(DriveSubsystem drive, PoseSubsystem pose,
             PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
             XSwerveDriveElectricalContract electrical_contract,
+            XSwerveDriveElectricalContract electricalContract,
             RobotAssertionManager robotAssertionManager, SwervePointPathPlanning pathPlanning, GameField gamefield) {
         super(drive, pose, pf, headingModuleFactory, robotAssertionManager);
-        this.drive = drive;
         this.pose = pose;
         this.pathPlanning = pathPlanning;
         this.gamefield = gamefield;
-        this.robotRadius = electrical_contract.getRadiusOfRobot();
+        this.robotRadius = electricalContract.getRadiusOfRobot();
     }
 
     // After some testing, we'll delete this.
