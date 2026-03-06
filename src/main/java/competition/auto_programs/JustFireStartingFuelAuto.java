@@ -5,10 +5,13 @@ import competition.subsystems.hood.commands.HoodSetCommand;
 import competition.subsystems.shooter.ShooterSubsystem;
 import xbot.common.subsystems.autonomous.AutonomousCommandSelector;
 
+import javax.inject.Inject;
+
 import static edu.wpi.first.units.Units.RPM;
 
 public class JustFireStartingFuelAuto extends BaseAutonomousSequentialCommandGroup {
 
+    @Inject
     public JustFireStartingFuelAuto(AutonomousCommandSelector autoSelector,
                                     AutoShootFuelAtStartCommandGroup autoShootFuelAtStartCommandGroup,
                                     ShooterSubsystem shooter,
