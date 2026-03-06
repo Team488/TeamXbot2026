@@ -92,13 +92,14 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
     }
 
     private List<XbotSwervePoint> calcSwervePoints() {
+        var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
         var currentPose = pose.getCurrentPose2d();
         var ballPitEdge = Landmarks.getClosestAutoBallPitEdge(this.gamefield, currentPose,
-                DriverStation.getAlliance().orElse(Alliance.Blue));
+                alliance);
 
         // If the edge is above the center then we move along 180 deg otherwise move
         // along 0 deg.
-        var multiplier = ballPitEdge.getY() > this.gamefield.getFieldCenter().getY() ? 1 : -1;
+        var multiplier = alliance == Alliance.Blue ? -1 : 1;
         var adjustedForRobot = new Translation2d(Units.Meters.of(0),
                 this.robotRadius.times(multiplier));
         var fieldPose = new Pose2d(ballPitEdge.getTranslation().plus(adjustedForRobot), ballPitEdge.getRotation());

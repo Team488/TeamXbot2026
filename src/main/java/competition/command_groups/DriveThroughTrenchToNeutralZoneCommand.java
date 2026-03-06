@@ -50,44 +50,6 @@ public class DriveThroughTrenchToNeutralZoneCommand extends SwerveSimpleBezierCo
         this.aprilTagFieldLayout = aprilTagFieldLayout;
     }
 
-    /* / After some testing, we'll delete this.
-    private List<XbotSwervePoint> calcOldSwervePoints() {
-        Pose2d closestTrench = this.pose.closestAllianceTrench();
-        var fieldCenter = this.gamefield.getFieldCenter();
-        var changeInX = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? -1 : 1;
-        var changeInY = closestTrench.getY() > fieldCenter.getY() ? -1 : 1;
-        var driverSideTransform = new Transform2d(Units.Meters.of(2 * changeInX), Units.Meters.of(0), Rotation2d.kZero);
-        var neutralSideTransform = new Transform2d(Units.Meters.of(2 * -1 * changeInX), Units.Meters.of(0),
-                Rotation2d.kZero);
-        var finalTransform = new Transform2d(Units.Meters.of(3 * -1 * changeInX), Units.Meters.of(1 * changeInY),
-                changeInX * changeInY == 1 ? Rotation2d.kCCW_Pi_2 : Rotation2d.kCW_Pi_2);
-
-        var driverPoint = closestTrench.plus(driverSideTransform);
-        var neutralPoint = closestTrench.plus(neutralSideTransform);
-        var finalPoint = closestTrench.plus(finalTransform);
-
-        var currentPose = pose.getCurrentPose2d();
-        var closestPoint = currentPose.nearest(Arrays.asList(new Pose2d[] { driverPoint, neutralPoint, finalPoint }));
-
-        if (closestPoint == finalPoint) {
-            List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, finalPoint, false);
-            return this.pathPlanning.generateSwervePoints(currentPose, finalPoint, false);
-        } else if (closestPoint == neutralPoint) {
-            List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, neutralPoint,
-                    false);
-            swervePoints.addAll(this.pathPlanning.generateSwervePoints(neutralPoint, finalPoint, false));
-
-            return swervePoints;
-        }
-
-        List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, driverPoint,
-                false);
-        swervePoints.addAll(this.pathPlanning.generateSwervePoints(driverPoint, neutralPoint, false));
-        swervePoints.addAll(this.pathPlanning.generateSwervePoints(neutralPoint, finalPoint, false));
-
-        return swervePoints;
-    }*/
-
     private List<XbotSwervePoint> calcSwervePoints() {
         var currentPose = pose.getCurrentPose2d();
         var neutralSideTrenchTag = Landmarks.getClosestTrenchNeutralSideIdPose(this.aprilTagFieldLayout,
@@ -96,13 +58,11 @@ public class DriveThroughTrenchToNeutralZoneCommand extends SwerveSimpleBezierCo
         // If the edge is above the center then we move along 180 deg otherwise move
         // along 0 deg.
         var multiplier = neutralSideTrenchTag.getY() > this.gamefield.getFieldCenter().getY() ? 1 : -1;
-        var adjustedForRobot = new Translation2d(Units.Meters.of(0),
-                this.robotRadius
-                        /* .plus(this.pathPlanning.getAdditionalClearance())*/
-                        .times(multiplier));
+        var adjustedForOffset = new Translation2d(Units.Meters.of(multiplier),
+                                                 Units.Meters.of(0));
         var targetPose = new Pose2d(
-                neutralSideTrenchTag.getTranslation().plus(adjustedForRobot),
-                Rotation2d.fromDegrees(90 * multiplier)
+                neutralSideTrenchTag.getTranslation().plus(adjustedForOffset),
+                currentPose.getRotation()
         );
 
         return this.pathPlanning.generateSwervePoints(currentPose, targetPose,
