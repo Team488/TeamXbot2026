@@ -72,15 +72,6 @@ public class OperatorCommandMap {
                                    RotateToHubCommand rotateToHubCommand
     ) {
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
-
-        // Map climber related commands
-        var climberRetract = climberSetPoint.get().setGoalAngle(climber.retractedAngle.get());
-        var climberExtend = climberSetPoint.get().setGoalAngle(climber.extendedAngle.get());
-        var climberEngage = climberSetPoint.get().setGoalAngle(climber.engagedAngle.get());
-        operatorInterface.driverGamepad.getPovIfAvailable(270).onTrue(climberRetract);
-        operatorInterface.driverGamepad.getPovIfAvailable(90).onTrue(climberExtend);
-        operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(climberEngage);
-        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Back).onTrue(climber.getCalibrateOffsetRetractCommand());
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(dropHoodForTrenchCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
 
@@ -118,8 +109,6 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupDebugGamepad(OperatorInterface operatorInterface,
-                                  ClimberExtendCommand climberExtendCommand,
-                                  ClimberRetractCommand climberRetractCommand,
 
                                   ShooterOutputCommand shooterOutputCommand,
                                   TrimShooterVelocityUp trimShooterVelocityUp,
@@ -133,12 +122,9 @@ public class OperatorCommandMap {
                                   ShooterFeederFire shooterFeederFire,
                                   HopperRollerSubsystem hopperRollerSubsystem,
                                   CalibrateOffsetDown calibrateOffsetDown,
-                                  CalibrateOffsetUp calibrateOffsetUp,
-                                  ClimberSubsystem climberSubsystem
+                                  CalibrateOffsetUp calibrateOffsetUp
 
     ) {
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(climberRetractCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(climberExtendCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger).onTrue(trimShooterVelocityDown);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger).onTrue(trimShooterVelocityUp);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(shooterOutputCommand);
@@ -149,8 +135,6 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateOffsetUp);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftStick).whileTrue(hopperRollerSubsystem.getEjectCommand());
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightStick).whileTrue(hopperRollerSubsystem.getIntakeCommand());
-
-        operatorInterface.setupDebugGamepad.getPovIfAvailable(0).onTrue(climberSubsystem.getCalibrateOffsetRetractCommand());
         operatorInterface.setupDebugGamepad.getPovIfAvailable(90).whileTrue(fuelEjectCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(180).onTrue(trimHoodUpCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(270).whileTrue(shooterFeederFire);
