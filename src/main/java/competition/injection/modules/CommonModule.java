@@ -70,7 +70,7 @@ public abstract class CommonModule {
     @Provides
     @Singleton
     public static ObstacleMap obstacleMap(ElectricalContract impl) {
-        return new RebuiltObstacleMap(impl);
+        return new RebuiltObstacleMap(fieldLayout(), impl);
     }
 
     @Binds
