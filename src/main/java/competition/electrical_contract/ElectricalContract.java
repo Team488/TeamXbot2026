@@ -5,6 +5,7 @@ import edu.wpi.first.units.measure.Distance;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
+import xbot.common.injection.electrical_contract.IMUInfo;
 import xbot.common.injection.electrical_contract.PDHPort;
 import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
@@ -27,6 +28,8 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public abstract DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance);
 
     public abstract Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance);
+
+    public abstract IMUInfo getIMUInfo();
 
     public abstract boolean isLeftShooterReady();
 

@@ -20,12 +20,14 @@ public class DriveForwardToClimbCommand extends BaseCommand {
         this.addRequirements(drive);
     }
 
-    public void setDuration(double seconds) {
+    public DriveForwardToClimbCommand setDuration(double seconds) {
         this.durationSeconds = seconds;
+        return this;
     }
 
-    public void setPower(double power) {
+    public DriveForwardToClimbCommand setPower(double power) {
         this.forwardPower = power;
+        return this;
     }
 
     @Override
