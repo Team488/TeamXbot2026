@@ -57,7 +57,6 @@ public class PoseSubsystem extends BasePoseSubsystem {
 
     @Inject
     public PoseSubsystem(XGyroFactory gyroFactory,
-            ElectricalContract electricalContract,
             PropertyFactory propManager, DriveSubsystem drive,
                          AprilTagVisionSubsystemExtended aprilTagVisionSubsystem,
                          AprilTagFieldLayout aprilTagFieldLayout) {
