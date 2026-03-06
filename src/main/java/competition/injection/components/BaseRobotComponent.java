@@ -1,5 +1,6 @@
 package competition.injection.components;
 
+import competition.auto_programs.JustFireStartingFuelAuto;
 import competition.operator_interface.OperatorCommandMap;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.SubsystemDefaultCommandMap;
@@ -48,6 +49,8 @@ public abstract class BaseRobotComponent extends BaseComponent {
     public abstract HopperRollerSubsystem hopperRollerSubsystem();
 
     public abstract VoltageMonitorSubsystem voltageMonitorSubsystem();
+
+    public abstract JustFireStartingFuelAuto JustShootAuto();
 
     public abstract ClimberSubsystem climberSubsystem();
 }
