@@ -18,6 +18,7 @@ import xbot.common.injection.swerve.RearLeftDrive;
 import xbot.common.injection.swerve.RearRightDrive;
 import xbot.common.injection.swerve.SwerveComponent;
 import xbot.common.math.PIDManager.PIDManagerFactory;
+import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.Property;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.properties.XPropertyManager;
@@ -33,6 +34,8 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
     private Rotation2d staticHeadingTarget = new Rotation2d(); // The heading you want to constantly be at
     private boolean lookAtPointActive = false;
     private boolean staticHeadingActive = false;
+    private final DoubleProperty maxAutoTargetSpeedMps;
+    private final DoubleProperty maxAutoFuelIntakeTargetSpeedMps;
 
     @Inject
     public DriveSubsystem(PIDManagerFactory pidFactory, PropertyFactory pf,
@@ -44,6 +47,8 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
         pf.setPrefix(this.getPrefix());
         pf.setDefaultLevel(Property.PropertyLevel.Important);
+        this.maxAutoTargetSpeedMps = pf.createPersistentProperty("MaxAutoTargetSpeedMetersPerSecond", 2.5);
+        this.maxAutoFuelIntakeTargetSpeedMps = pf.createPersistentProperty("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.5);
     }
 
     public Translation2d getLookAtPointTarget() {
@@ -76,6 +81,14 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
     public void setLookAtPointTargetActive(boolean lookAtPointActive) {
         this.lookAtPointActive = lookAtPointActive;
+    }
+
+    public double getMaxAutoTargetSpeedMetersPerSecond() {
+        return this.maxAutoTargetSpeedMps.get();
+    }
+
+    public double getMaxAutoFuelIntakeTargetSpeedMetersPerSecond() {
+        return this.maxAutoFuelIntakeTargetSpeedMps.get();
     }
 
     public InstantCommand createSetStaticHeadingTargetCommand(Supplier<Rotation2d> staticHeadingTarget) {

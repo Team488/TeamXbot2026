@@ -48,6 +48,8 @@ public class TrajectoriesCalculation {
     public record ShootingData(Rotation2d fieldOrientatedRotation, AngularVelocity shooterRPM, double ballAngle) {
     }
 
+    private static ShootingData emptyShootingData = new ShootingData(Rotation2d.kZero, Units.RPM.of(0), 0.0);
+
     private record TrajectoryKey(double distance, double shootingSpeed) {
     }
 
@@ -93,7 +95,12 @@ public class TrajectoriesCalculation {
 
         Pose2d shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
         double distance = shooterPose.getTranslation().getDistance(targetPose.getTranslation());
-        HoodTrajectory hoodTrajectory = trajectoryMap.get(new TrajectoryKey(distance, 10.5));
+        var key = new TrajectoryKey(distance, 10.5);
+        if (!trajectoryMap.containsKey(key)) {
+            log.warn("Trajectory not found, potentially trajectories.json not found or the value doesn't exist in trajectories!");
+            return TrajectoriesCalculation.emptyShootingData;
+        }
+        HoodTrajectory hoodTrajectory = trajectoryMap.get(key);
 
         return new ShootingData(finalRotation, Units.RPM.of(trajectoriesShooterRPMFixed.get()), hoodTrajectory.theta);
     }
@@ -101,6 +108,8 @@ public class TrajectoriesCalculation {
     // This method loads the trajectories from the JSON file and populates the
     // HashMap.
     private void loadTrajectories() {
+        this.trajectoryMap = new HashMap<>();
+
         try {
             File configFile = new File(Filesystem.getDeployDirectory(), "Trajectories.json");
 
@@ -109,7 +118,6 @@ public class TrajectoriesCalculation {
 
                 HoodTrajectory[] rawArray = mapper.readValue(configFile, HoodTrajectory[].class);
 
-                trajectoryMap = new HashMap<>();
                 for (HoodTrajectory point : rawArray) {
                     trajectoryMap.put(new TrajectoryKey(point.distance, point.velocity), point);
                 }
