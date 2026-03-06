@@ -37,13 +37,13 @@ public class DriveAcrossNeutralZoneCommand extends SwerveSimpleBezierCommand {
     @Inject
     public DriveAcrossNeutralZoneCommand(DriveSubsystem drive, PoseSubsystem pose,
                                               PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
-                                              XSwerveDriveElectricalContract electrical_contract,
+                                              XSwerveDriveElectricalContract electricalContract,
                                               RobotAssertionManager robotAssertionManager, SwervePointPathPlanning pathPlanning, GameField gamefield) {
         super(drive, pose, pf, headingModuleFactory, robotAssertionManager);
         this.pose = pose;
         this.pathPlanning = pathPlanning;
         this.gamefield = gamefield;
-        this.robotRadius = electrical_contract.getRadiusOfRobot();
+        this.robotRadius = electricalContract.getRadiusOfRobot();
     }
 
     private List<XbotSwervePoint> calcSwervePoints() {
