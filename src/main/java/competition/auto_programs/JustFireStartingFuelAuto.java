@@ -3,6 +3,9 @@ package competition.auto_programs;
 import competition.command_groups.AutoShootFuelAtStartCommandGroup;
 import competition.subsystems.hood.commands.HoodSetCommand;
 import competition.subsystems.shooter.ShooterSubsystem;
+import competition.subsystems.shooter.commands.ShooterOutputCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import xbot.common.subsystems.autonomous.AutonomousCommandSelector;
 
 import javax.inject.Inject;
@@ -14,14 +17,19 @@ public class JustFireStartingFuelAuto extends BaseAutonomousSequentialCommandGro
     @Inject
     public JustFireStartingFuelAuto(AutonomousCommandSelector autoSelector,
                                     AutoShootFuelAtStartCommandGroup autoShootFuelAtStartCommandGroup,
-                                    ShooterSubsystem shooter,
+                                    ShooterOutputCommand shooterOutputCommand,
                                     HoodSetCommand hoodSetCommand) {
         super(autoSelector);
 
 
-        shooter.setTargetValue(RPM.of(3800));
+        shooterOutputCommand.setTargetVelocity(RPM.of(3800));
         hoodSetCommand.setTargetRatio(.6);
-        addCommands(autoShootFuelAtStartCommandGroup);
+        addCommands(
+                new ParallelCommandGroup(
+                shooterOutputCommand,
+                hoodSetCommand
+                ),
+                autoShootFuelAtStartCommandGroup);
 
     }
 }
