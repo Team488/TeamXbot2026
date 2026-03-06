@@ -35,8 +35,8 @@ public class SubsystemDefaultCommandMap {
     }
 
     @Inject
-    public void setupIntakeSubsystem(CollectorSubsystem intake, FuelStopCommand command) {
-        intake.setDefaultCommand(command);
+    public void setupCollectorSubsystem(CollectorSubsystem collect, FuelStopCommand command) {
+        collect.setDefaultCommand(command);
     }
 
     @Inject

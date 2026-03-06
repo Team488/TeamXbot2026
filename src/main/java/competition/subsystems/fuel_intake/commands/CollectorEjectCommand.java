@@ -5,12 +5,12 @@ import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
-public class FuelEjectCommand extends BaseCommand {
+public class CollectorEjectCommand extends BaseCommand {
     final CollectorSubsystem collectorSubsystem;
 
     @Inject
-    public FuelEjectCommand(CollectorSubsystem intakeSubsystem) {
-        this.collectorSubsystem = intakeSubsystem ;
+    public CollectorEjectCommand(CollectorSubsystem collectorSubsystem) {
+        this.collectorSubsystem = collectorSubsystem ;
         this.addRequirements(this.collectorSubsystem);
     }
 

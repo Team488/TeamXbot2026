@@ -43,7 +43,7 @@ public abstract class BaseRobotComponent extends BaseComponent {
 
     public abstract IntakeDeploySubsystem intakeDeploySubsystem();
 
-    public abstract CollectorSubsystem intakeSubsystem();
+    public abstract CollectorSubsystem collectorSubsystem();
 
     public abstract HopperRollerSubsystem hopperRollerSubsystem();
 

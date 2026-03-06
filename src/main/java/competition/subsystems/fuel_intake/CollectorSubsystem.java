@@ -13,7 +13,7 @@ import javax.inject.Singleton;
 public class CollectorSubsystem extends BaseSubsystem {
 
     public final ElectricalContract electricalContract;
-    public final XCANMotorController intakeMotor;
+    public final XCANMotorController collectorMotor;
     DoubleProperty intakePower;
     DoubleProperty ejectPower;
 
@@ -25,14 +25,14 @@ public class CollectorSubsystem extends BaseSubsystem {
         pf.setPrefix(this);
         this.electricalContract = electricalContract;
         if (electricalContract.isFuelIntakeMotorReady()) {
-            this.intakeMotor = motorFactory.create(
+            this.collectorMotor = motorFactory.create(
                     electricalContract.getFuelIntakeMotor(),
                     getPrefix(),
                     "FuelIntakePID"
             );
-            this.registerDataFrameRefreshable(intakeMotor);
+            this.registerDataFrameRefreshable(collectorMotor);
         } else {
-            this.intakeMotor = null;
+            this.collectorMotor = null;
         }
 
         intakePower = pf.createPersistentProperty("FuelIntakePower", 1);
@@ -40,30 +40,30 @@ public class CollectorSubsystem extends BaseSubsystem {
     }
 
     public void intake() {
-        if (intakeMotor == null) {
+        if (collectorMotor == null) {
             return;
         }
-        intakeMotor.setPower(intakePower.get());
+        collectorMotor.setPower(intakePower.get());
     }
 
     public void eject() {
-        if (intakeMotor == null) {
+        if (collectorMotor == null) {
             return;
         }
-        intakeMotor.setPower(ejectPower.get());
+        collectorMotor.setPower(ejectPower.get());
     }
 
     public void stop() {
-        if (intakeMotor == null) {
+        if (collectorMotor == null) {
             return;
         }
-        intakeMotor.setPower(0);
+        collectorMotor.setPower(0);
     }
 
     @Override
     public void periodic() {
         if (electricalContract.isFuelIntakeMotorReady()) {
-            intakeMotor.periodic();
+            collectorMotor.periodic();
         }
     }
 }

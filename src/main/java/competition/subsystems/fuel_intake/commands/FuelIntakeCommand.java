@@ -9,8 +9,8 @@ public class FuelIntakeCommand extends BaseCommand {
     final CollectorSubsystem collectorSubsystem;
 
     @Inject
-    public FuelIntakeCommand(CollectorSubsystem intakeSubsystem) {
-        this.collectorSubsystem = intakeSubsystem ;
+    public FuelIntakeCommand(CollectorSubsystem collectorSubsystem) {
+        this.collectorSubsystem = collectorSubsystem ;
         this.addRequirements(this.collectorSubsystem);
     }
 

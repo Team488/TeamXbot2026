@@ -11,17 +11,17 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class IntakeSimulator {
-    final CollectorSubsystem intake;
+public class CollectorSimulator {
+    final CollectorSubsystem collector;
     final IntakeDeploySimulator intakeDeploySim;
     IntakeSimulation simulation;
 
-    final MockCANMotorController intakeMotor;
+    final MockCANMotorController collectorMotor;
 
     @Inject
-    public IntakeSimulator(CollectorSubsystem intake, IntakeDeploySimulator intakeDeploySim) {
-        this.intake = intake;
-        this.intakeMotor = (MockCANMotorController) intake.intakeMotor;
+    public CollectorSimulator(CollectorSubsystem collect, IntakeDeploySimulator intakeDeploySim) {
+        this.collector = collect;
+        this.collectorMotor = (MockCANMotorController) collect.collectorMotor;
         this.intakeDeploySim = intakeDeploySim;
     }
 
@@ -29,18 +29,18 @@ public class IntakeSimulator {
         this.simulation = IntakeSimulation.OverTheBumperIntake(
                 "Fuel",
                 driveTrainSimulation,
-                SimulatorConstants.intakeWidth,
-                SimulatorConstants.intakeLengthExtended,
+                SimulatorConstants.collectorWidth,
+                SimulatorConstants.collectorLengthExtended,
                 IntakeSimulation.IntakeSide.BACK,
                 SimulatorConstants.fuelCapacity
         );
     }
 
     public boolean isIntaking() {
-        return intakeDeploySim.isDeployed() && intakeMotor.getPower() > 0;
+        return intakeDeploySim.isDeployed() && collectorMotor.getPower() > 0;
     }
 
-    public boolean getPieceFromIntake() {
+    public boolean getPieceFromCollector() {
         return simulation.obtainGamePieceFromIntake();
     }
 
