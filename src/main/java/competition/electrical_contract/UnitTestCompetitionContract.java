@@ -48,6 +48,11 @@ public class UnitTestCompetitionContract extends Contract2026 {
     }
 
     @Override
+    public boolean isClimberLeftReady() {
+        return true;
+    }
+
+    @Override
     public boolean isIntakeDeployAbsoluteEncoderReady() {
         return true;
     }

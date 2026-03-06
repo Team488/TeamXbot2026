@@ -56,12 +56,13 @@ public class PoseSubsystem extends BasePoseSubsystem {
     protected Optional<SwerveModulePosition[]> simulatedModulePositions = Optional.empty();
 
     @Inject
-    public PoseSubsystem(XGyroFactory gyroFactory,
-            ElectricalContract electricalContract,
-            PropertyFactory propManager, DriveSubsystem drive,
+    public PoseSubsystem(ElectricalContract electricalContract,
+                         XGyroFactory gyroFactory,
+                         PropertyFactory propManager,
+                         DriveSubsystem drive,
                          AprilTagVisionSubsystemExtended aprilTagVisionSubsystem,
                          AprilTagFieldLayout aprilTagFieldLayout) {
-        super(gyroFactory, propManager);
+        super(gyroFactory.create(electricalContract.getIMUInfo()), propManager);
         this.drive = drive;
         this.aprilTagVisionSubsystem = aprilTagVisionSubsystem;
         this.aprilTagFieldLayout = aprilTagFieldLayout;
