@@ -18,7 +18,7 @@ public class AutoClimbCommandGroup extends BaseSequentialCommandGroup {
         var RetractwaitCommand = climb.getWaitForAtGoalCommand();
         addCommands(
                 extendCommand.alongWith(ExtendwaitCommand),
-                driveForward.setDuration(2.0).setPower(100),
+                driveForward.setDuration(2.0).setPower(1),
                 retractCommand.alongWith(RetractwaitCommand)
         );
     }
