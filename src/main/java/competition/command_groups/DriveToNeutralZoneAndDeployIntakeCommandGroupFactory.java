@@ -46,9 +46,8 @@ public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
 
         group.addCommands(driveToNeutral);
 
-        var driveAcrossAndIntakeDeployCommandGroup = new ParallelCommandGroup(this.driveAcrossNeutralZoneCommandProvider.get(), intakeDeployExtendCommandProvider.get());
-
-        var driveAcross = new ParallelDeadlineGroup(driveAcrossAndIntakeDeployCommandGroup, fuelIntakeCommandProvider.get());
+        var driveAcrossNeutralZoneAndIntakeDeployCommandGroup = new ParallelCommandGroup(this.driveAcrossNeutralZoneCommandProvider.get(), intakeDeployExtendCommandProvider.get());
+        var driveAcrossIntakeDeployWithFuelIntakeCommand = new ParallelDeadlineGroup(driveAcrossNeutralZoneAndIntakeDeployCommandGroup, fuelIntakeCommandProvider.get());
 
         group.addCommands(driveAcross);
 
