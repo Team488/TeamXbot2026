@@ -28,6 +28,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public final DoubleProperty manualControlPower;
     public Angle motorOffset = Rotations.zero();
     public final XDigitalInput intakeDeploySensor;
+    public final XDigitalInput intakeDeployExtendedSensor;
 
     public boolean isCalibrated = false;
     public final DoubleProperty extendedPosition;
