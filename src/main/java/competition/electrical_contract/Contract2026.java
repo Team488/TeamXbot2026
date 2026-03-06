@@ -83,7 +83,15 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getClimberAbsoluteEncoder() {
-        return new DeviceInfo("ClimberAbsoluteEncoderReady",CANBusId.Canivore, 59);
+        return new DeviceInfo("ClimberAbsoluteEncoderReady", CANBusId.Canivore, 59);
+    }
+
+    @Override
+    public boolean isClimberSensorReady() { return false; }
+
+    @Override
+    public DeviceInfo getClimberSensor() {
+        return new DeviceInfo("ClimberSensor", 0, PowerSource.RIO);
     }
 
     public DeviceInfo pigeon2() {
@@ -92,10 +100,6 @@ public class Contract2026 extends ElectricalContract {
 
     public DeviceInfo candle() {
         return new DeviceInfo("CANdle",CANBusId.Canivore, 57);
-    }
-
-    public DeviceInfo getClimbHome() {
-        return new DeviceInfo("ClimbHomeDIO", 0, PowerSource.RIO);
     }
 
     public boolean intakeDeploySensorReady() { return true; }
@@ -193,7 +197,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getIntakeDeployAbsoluteEncoderMotor() {
-        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady", CANBusId.Canivore, 58);
+        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady",58);
     }
 
     @Override

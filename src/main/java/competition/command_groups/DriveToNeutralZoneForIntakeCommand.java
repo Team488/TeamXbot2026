@@ -29,6 +29,7 @@ import xbot.common.trajectory.XbotSwervePoint;
 import javax.inject.Inject;
 
 public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierCommand {
+    private final DriveSubsystem drive;
     private final PoseSubsystem pose;
     private final SwervePointPathPlanning pathPlanning;
     private final GameField gamefield;
@@ -40,6 +41,7 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
             XSwerveDriveElectricalContract electrical_contract,
             RobotAssertionManager robotAssertionManager, SwervePointPathPlanning pathPlanning, GameField gamefield) {
         super(drive, pose, pf, headingModuleFactory, robotAssertionManager);
+        this.drive = drive;
         this.pose = pose;
         this.pathPlanning = pathPlanning;
         this.gamefield = gamefield;
@@ -58,8 +60,13 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
         var finalTransform = new Transform2d(Units.Meters.of(3 * -1 * changeInX), Units.Meters.of(1 * changeInY),
                 changeInX * changeInY == 1 ? Rotation2d.kCCW_Pi_2 : Rotation2d.kCW_Pi_2);
 
+        var rotationThroughTrench = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue
+                ? Rotation2d.kZero
+                : Rotation2d.kPi;
         var driverPoint = closestTrench.plus(driverSideTransform);
+        var driverPointPose = new Pose2d(driverPoint.getX(), driverPoint.getY(), rotationThroughTrench);
         var neutralPoint = closestTrench.plus(neutralSideTransform);
+        var neutralPointPose = new Pose2d(neutralPoint.getX(), neutralPoint.getY(), rotationThroughTrench);
         var finalPoint = closestTrench.plus(finalTransform);
 
         var currentPose = pose.getCurrentPose2d();
@@ -69,17 +76,17 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
             List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, finalPoint, false);
             return this.pathPlanning.generateSwervePoints(currentPose, finalPoint, false);
         } else if (closestPoint == neutralPoint) {
-            List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, neutralPoint,
+            List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, neutralPointPose,
                     false);
-            swervePoints.addAll(this.pathPlanning.generateSwervePoints(neutralPoint, finalPoint, false));
+            swervePoints.addAll(this.pathPlanning.generateSwervePoints(neutralPointPose, finalPoint, false));
 
             return swervePoints;
         }
 
-        List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, driverPoint,
+        List<XbotSwervePoint> swervePoints = this.pathPlanning.generateSwervePoints(currentPose, driverPointPose,
                 false);
-        swervePoints.addAll(this.pathPlanning.generateSwervePoints(driverPoint, neutralPoint, false));
-        swervePoints.addAll(this.pathPlanning.generateSwervePoints(neutralPoint, finalPoint, false));
+        swervePoints.addAll(this.pathPlanning.generateSwervePoints(driverPointPose, neutralPointPose, false));
+        swervePoints.addAll(this.pathPlanning.generateSwervePoints(neutralPointPose, finalPoint, false));
 
         return swervePoints;
     }
@@ -107,7 +114,8 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
         this.logic.setPrioritizeRotationIfCloseToGoal(true);
         this.logic.setVelocityMode(SwerveSimpleTrajectoryMode.GlobalKinematicsValue);
         super.logic.setGlobalKinematicValues(
-                new SwervePointKinematics(2, 1, 0, 4.5));
+                new SwervePointKinematics(this.drive.getMaxAccelerationMetersPerSecondSquared(), 0, 0,
+                        this.drive.getMaxAutoTargetSpeedMetersPerSecond()));
 
         super.initialize();
     }

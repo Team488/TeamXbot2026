@@ -16,8 +16,9 @@ public class ClimberSetPointCommand extends BaseSetpointCommand {
         this.climber = climber;
     }
 
-    public void setGoalAngle(Angle goalAngle) {
+    public ClimberSetPointCommand setGoalAngle(Angle goalAngle) {
         this.goalAngle = goalAngle;
+        return this;
     }
 
     @Override
