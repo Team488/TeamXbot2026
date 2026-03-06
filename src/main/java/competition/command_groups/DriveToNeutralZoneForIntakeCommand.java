@@ -19,7 +19,6 @@ import xbot.common.logging.RobotAssertionManager;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.drive.SwervePointKinematics;
 import xbot.common.subsystems.drive.SwerveSimpleBezierCommand;
-import xbot.common.subsystems.drive.SwerveSimpleTrajectoryCommand;
 import xbot.common.subsystems.drive.SwerveSimpleTrajectoryMode;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
 import xbot.common.subsystems.oracle.SwervePointPathPlanning;
@@ -38,14 +37,15 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
     @Inject
     public DriveToNeutralZoneForIntakeCommand(DriveSubsystem drive, PoseSubsystem pose,
             PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
-            XSwerveDriveElectricalContract electrical_contract,
+            XSwerveDriveElectricalContract electricalContract,
             RobotAssertionManager robotAssertionManager, SwervePointPathPlanning pathPlanning, GameField gamefield) {
         super(drive, pose, pf, headingModuleFactory, robotAssertionManager);
+
         this.drive = drive;
         this.pose = pose;
         this.pathPlanning = pathPlanning;
         this.gamefield = gamefield;
-        this.robotRadius = electrical_contract.getRadiusOfRobot();
+        this.robotRadius = electricalContract.getRadiusOfRobot();
     }
 
     // After some testing, we'll delete this.
@@ -100,7 +100,7 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
         // along 0 deg.
         var multiplier = ballPitEdge.getY() > this.gamefield.getFieldCenter().getY() ? 1 : -1;
         var adjustedForRobot = new Translation2d(Units.Meters.of(0),
-                this.robotRadius.plus(this.pathPlanning.getAdditionalClearance()).times(multiplier));
+                this.robotRadius.times(multiplier));
         var fieldPose = new Pose2d(ballPitEdge.getTranslation().plus(adjustedForRobot), ballPitEdge.getRotation());
 
         return this.pathPlanning.generateSwervePoints(currentPose, fieldPose,
