@@ -53,26 +53,27 @@ public class RotateToHubCommand extends BaseCommand {
         alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
         rotationOffset = Rotation2d.fromDegrees(desiredHeadingOffset.get().in(Units.Degrees));
         targetTranslation = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance).getTranslation();
+        drive.setLookAtPointTarget(targetTranslation);
+        drive.setLookAtPointInverted(true);
+
     }
 
     @Override
     public void execute() {
-        if (!pose.isFacingTarget(targetTranslation, rotationOffset)) {
-            drive.setStaticHeadingTarget(pose.desiredHeadingToTarget(targetTranslation, rotationOffset));
-            boolean areWeInAllianceZone = Landmarks.isBetweenIdX(
-                    this.aprilTagFieldLayout,
-                    Landmarks.getTrenchDriverDepotSideId(alliance),
-                    Landmarks.getOutpostFiducialId(alliance),
-                    pose.getCurrentPose2d()
-            );
+        boolean areWeInAllianceZone = Landmarks.isBetweenIdX(
+                this.aprilTagFieldLayout,
+                Landmarks.getTrenchDriverDepotSideId(alliance),
+                Landmarks.getOutpostFiducialId(alliance),
+                pose.getCurrentPose2d()
+        );
 
-            drive.setStaticHeadingTargetActive(areWeInAllianceZone || autoAimWhenNotInZone.get());
-        }
+        drive.setLookAtPointTargetActive(areWeInAllianceZone || autoAimWhenNotInZone.get());
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        drive.setStaticHeadingTargetActive(false);
+        drive.setLookAtPointTargetActive(false);
+        drive.setLookAtPointInverted(false);
     }
 }

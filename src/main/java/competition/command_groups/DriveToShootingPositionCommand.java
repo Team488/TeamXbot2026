@@ -55,12 +55,12 @@ public class DriveToShootingPositionCommand extends SwerveSimpleBezierCommand {
                 .getTranslation();
 
         Translation2d vectorToRobot = robotPosition.minus(hubPosition);
-        Rotation2d vectorToRobotAngle = vectorToRobot.getNorm() > 1e-6
+        Rotation2d shootingRotation = vectorToRobot.getNorm() > 0.1
                 ? vectorToRobot.getAngle()
                 : Rotation2d.kZero;
 
-        Translation2d shootingPosition = hubPosition.plus(new Translation2d(OPTIMAL_DISTANCE_TO_SHOOT_FROM.in(Units.Meters), vectorToRobotAngle));
-        Rotation2d shootingRotation = vectorToRobotAngle.plus(Rotation2d.kPi);
+        Translation2d shootingPosition = hubPosition.plus(
+                new Translation2d(OPTIMAL_DISTANCE_TO_SHOOT_FROM.in(Units.Meters), shootingRotation));
 
         return new Pose2d(shootingPosition, shootingRotation);
     }

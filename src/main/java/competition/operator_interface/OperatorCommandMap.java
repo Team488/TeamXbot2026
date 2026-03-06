@@ -108,7 +108,6 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupDebugGamepad(OperatorInterface operatorInterface,
-
                                   ShooterOutputCommand shooterOutputCommand,
                                   TrimShooterVelocityUp trimShooterVelocityUp,
                                   TrimShooterVelocityDown trimShooterVelocityDown,
@@ -122,7 +121,6 @@ public class OperatorCommandMap {
                                   HopperRollerSubsystem hopperRollerSubsystem,
                                   CalibrateOffsetDown calibrateOffsetDown,
                                   CalibrateOffsetUp calibrateOffsetUp
-
     ) {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger).onTrue(trimShooterVelocityDown);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger).onTrue(trimShooterVelocityUp);
@@ -142,16 +140,13 @@ public class OperatorCommandMap {
     @Inject
     public void setupAutoCommands(Provider<SetAutonomousCommand> setAutonomousCommandProvider,
                                   DriveToOutpostCommand driveToOutpostCommand,
-                                  MoveAcrossFieldCommandGroup moveAcrossFieldCommand,
-                                  DriveToShootingPositionCommand driveToShootingPositionCommand
+                                  MoveAcrossFieldCommandGroup moveAcrossFieldCommand
     ) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
         var moveAcrossField = setAutonomousCommandProvider.get();
         moveAcrossField.setAutoCommand(moveAcrossFieldCommand, Landmarks.blueStartTrenchToOutpost);
         moveAcrossField.includeOnSmartDashboard("Move across field.");
-
-        driveToShootingPositionCommand.includeOnSmartDashboard("Drive to Shooting Position");
     }
 
     @Inject
