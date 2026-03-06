@@ -41,8 +41,7 @@ public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
         group.setName("DriveToNeutralZoneAndDeployIntakeCommandGroup");
 
         var driveToNeutral = new DeferredCommand(
-                this.driveToNeutralZoneForIntakeCommandProvider::get, Set.of(drive)
-        );
+                this.driveToNeutralZoneForIntakeCommandProvider::get, Set.of(drive));
 
         group.addCommands(driveToNeutral);
 
