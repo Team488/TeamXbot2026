@@ -171,6 +171,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
         aKitLog.record("IsCalibrated", isCalibrated);
         aKitLog.record("CurrentPosition", getCurrentValue().in(Degrees));
+        aKitLog.record("TargetPosition", getTargetValue().in(Degrees));
     }
 
     public void calibrateOffsetDown() {

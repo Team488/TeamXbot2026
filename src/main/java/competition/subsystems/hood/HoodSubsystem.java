@@ -108,6 +108,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         if (this.hoodServoLeft != null && this.hoodServoRight != null) {
             aKitLog.record("LeftServoPosition", hoodServoLeft.getNormalizedCurrentPosition());
             aKitLog.record("RightServoPosition", hoodServoRight.getNormalizedCurrentPosition());
+            aKitLog.record("HoodTargetPosition", getTargetValue());
         }
     }
 
