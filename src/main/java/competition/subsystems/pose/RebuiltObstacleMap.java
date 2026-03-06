@@ -66,23 +66,23 @@ public class RebuiltObstacleMap extends ObstacleMap {
 
         // Make a transform to find how to go from the center of the hub to the center
         // of the bump.
-        var bumpTranform = new Transform2d(Units.Meters.of(0), hubOffset.plus(BumpObstacle.HALF_HEIGHT),
+        var bumpTransform = new Transform2d(Units.Meters.of(0), hubOffset.plus(BumpObstacle.HALF_HEIGHT),
                 Rotation2d.kZero);
 
         // Add all 4 bumps by using red vs blue, and taking the transform and using it along with the inverse.
-        var blueBump1 = new BumpObstacle(blueAllianceHubPose.plus(bumpTranform).getTranslation());
+        var blueBump1 = new BumpObstacle(blueAllianceHubPose.plus(bumpTransform).getTranslation());
         logObstacle("Bump", blueBump1, BumpObstacle.HALF_WIDTH, BumpObstacle.HALF_HEIGHT);
         obstacles.add(blueBump1);
 
-        var redBump1 = new BumpObstacle(redAllianceHubPose.plus(bumpTranform).getTranslation());
+        var redBump1 = new BumpObstacle(redAllianceHubPose.plus(bumpTransform).getTranslation());
         logObstacle("Bump", redBump1, BumpObstacle.HALF_WIDTH, BumpObstacle.HALF_HEIGHT);
         obstacles.add(redBump1);
 
-        var blueBump2 = new BumpObstacle(blueAllianceHubPose.plus(bumpTranform.inverse()).getTranslation());
+        var blueBump2 = new BumpObstacle(blueAllianceHubPose.plus(bumpTransform.inverse()).getTranslation());
         logObstacle("Bump", blueBump2, BumpObstacle.HALF_WIDTH, BumpObstacle.HALF_HEIGHT);
         obstacles.add(blueBump2);
 
-        var redBump2 = new BumpObstacle(redAllianceHubPose.plus(bumpTranform.inverse()).getTranslation());
+        var redBump2 = new BumpObstacle(redAllianceHubPose.plus(bumpTransform.inverse()).getTranslation());
         logObstacle("Bump", redBump2, BumpObstacle.HALF_WIDTH, BumpObstacle.HALF_HEIGHT);
         obstacles.add(redBump2);
 
