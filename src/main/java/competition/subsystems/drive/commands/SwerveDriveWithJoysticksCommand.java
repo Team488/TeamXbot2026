@@ -39,12 +39,11 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     @Inject
     public SwerveDriveWithJoysticksCommand(
             OperatorInterface oi, DriveSubsystem drive, PoseSubsystem pose, PropertyFactory pf,
-            HeadingModuleFactory headingModuleFactory, HumanVsMachineDeciderFactory hvmFactory,
-            XGyroFactoryImpl xGyroFactory
+            HeadingModuleFactory headingModuleFactory, HumanVsMachineDeciderFactory hvmFactory
     ) {
         pf.setPrefix(this);
         this.drive = drive;
-        this.xGyro = xGyroFactory.create();
+        this.xGyro = pose.imu;
         this.pose = pose;
         this.oi = oi;
         this.headingModule = headingModuleFactory.create(drive.getRotateToHeadingPid());
