@@ -80,7 +80,7 @@ public class AutoLandmarks {
                 .nearest(Landmarks.getAllianceTrenchPoses(this.aprilTagFieldLayout, alliance));
 
         var multiplier = nearestAllianceTrenchPose.getX() > this.gamefield.getFieldCenter().getX() ? 1 : -1;
-        var adjustedForOffset = new Translation2d(Units.Meters.of(1.5).times(multiplier),
+        var adjustedForOffset = new Translation2d(Units.Meters.of(2).times(multiplier),
                 Units.Meters.of(0));
 
         return new Pose2d(nearestAllianceTrenchPose.getTranslation().plus(adjustedForOffset),
