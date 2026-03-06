@@ -3,17 +3,13 @@ package competition.subsystems.pose.obstacles;
 import xbot.common.subsystems.pose.RectangleFieldObstacle;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Distance;
 
 // This is the bump itself.  Using dimensions based on pdf:
 // https://firstfrc.blob.core.windows.net/frc2026/FieldAssets/2026-field-dimension-dwgs.pdf The
 // values are the same between andy mark and welded, but the center is different.  May add 1" to the
 // halfWidth and halfHeight due to there being a +- 2" tolerance here.
 public class BumpObstacle extends RectangleFieldObstacle {
-    public static final Distance HALF_WIDTH = Units.Inches.of(23.5);
-    public static final Distance HALF_HEIGHT = Units.Inches.of(36.5);
-
     public BumpObstacle(Translation2d center) {
-        super(center, HALF_WIDTH, HALF_HEIGHT, true);
+        super(center, Units.Inches.of(23.5), Units.Inches.of(36.5), true);
     }
 }
