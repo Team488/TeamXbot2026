@@ -23,15 +23,11 @@ public class PrepareToShootCommandGroup extends BaseParallelCommandGroup {
     }
 
     @Inject
-    public PrepareToShootCommandGroup(HoodSubsystem hood, HoodSetCommand hoodSet, ShooterSubsystem shooter,
-                                      ShooterOutputCommand shooterOutput) {
-
-        var hoodWaitCommand = hood.getWaitForAtGoalCommand();
-        var shooterWaitCommand = shooter.getWaitForAtGoalCommand();
+    public PrepareToShootCommandGroup(HoodSetCommand hoodSet, ShooterOutputCommand shooterOutput) {
 
         this.outputCommand = shooterOutput;
         this.hoodSetCommand = hoodSet;
 
-        this.addCommands(shooterOutput, shooterWaitCommand, hoodSet, hoodWaitCommand);
+        this.addCommands(shooterOutput, hoodSet);
     }
 }
