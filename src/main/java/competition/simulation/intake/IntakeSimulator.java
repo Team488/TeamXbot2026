@@ -2,7 +2,7 @@ package competition.simulation.intake;
 
 import competition.simulation.SimulatorConstants;
 import competition.simulation.intake_deploy.IntakeDeploySimulator;
-import competition.subsystems.fuel_intake.IntakeSubsystem;
+import competition.subsystems.fuel_intake.CollectorSubsystem;
 import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.drivesims.AbstractDriveTrainSimulation;
 import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
@@ -12,14 +12,14 @@ import javax.inject.Singleton;
 
 @Singleton
 public class IntakeSimulator {
-    final IntakeSubsystem intake;
+    final CollectorSubsystem intake;
     final IntakeDeploySimulator intakeDeploySim;
     IntakeSimulation simulation;
 
     final MockCANMotorController intakeMotor;
 
     @Inject
-    public IntakeSimulator(IntakeSubsystem intake, IntakeDeploySimulator intakeDeploySim) {
+    public IntakeSimulator(CollectorSubsystem intake, IntakeDeploySimulator intakeDeploySim) {
         this.intake = intake;
         this.intakeMotor = (MockCANMotorController) intake.intakeMotor;
         this.intakeDeploySim = intakeDeploySim;

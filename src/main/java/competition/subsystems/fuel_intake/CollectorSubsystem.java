@@ -10,13 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class IntakeSubsystem extends BaseSubsystem {
-
-    public enum IntakeState {
-        INTAKING,
-        EJECTING,
-        STOPPED
-    }
+public class CollectorSubsystem extends BaseSubsystem {
 
     public final ElectricalContract electricalContract;
     public final XCANMotorController intakeMotor;
@@ -24,9 +18,9 @@ public class IntakeSubsystem extends BaseSubsystem {
     DoubleProperty ejectPower;
 
     @Inject
-    public IntakeSubsystem(ElectricalContract electricalContract,
-                           XCANMotorController.XCANMotorControllerFactory motorFactory,
-                           PropertyFactory pf) {
+    public CollectorSubsystem(ElectricalContract electricalContract,
+                              XCANMotorController.XCANMotorControllerFactory motorFactory,
+                              PropertyFactory pf) {
 
         pf.setPrefix(this);
         this.electricalContract = electricalContract;
