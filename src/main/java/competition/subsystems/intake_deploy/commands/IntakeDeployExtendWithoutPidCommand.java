@@ -31,6 +31,10 @@ public class IntakeDeployExtendWithoutPidCommand extends BaseCommand {
     }
 
     public void initialize() {
+        if (this.subsystem.isTouchingIntakeDeployExtendedSensor()) {
+            return;
+        }
+
         if (this.overridePower != 0) {
             this.subsystem.setPower(this.overridePower);
         } else {
