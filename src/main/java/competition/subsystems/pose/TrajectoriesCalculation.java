@@ -1,8 +1,8 @@
 package competition.subsystems.pose;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Singleton;
 
@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
+import xbot.common.properties.StringProperty;
 
 @Singleton()
 public class TrajectoriesCalculation {
@@ -34,6 +35,7 @@ public class TrajectoriesCalculation {
     private final AprilTagFieldLayout aprilTagFieldLayout;
     private final DoubleProperty trajectoriesShooterRPMFixed;
     private final DoubleProperty interpolationFactor;
+    private final StringProperty trajectoryCalcVersion;
 
     public TrajectoriesCalculation(AprilTagFieldLayout aprilTagFieldLayout, PropertyFactory propManager) {
         this.aprilTagFieldLayout = aprilTagFieldLayout;
@@ -41,6 +43,7 @@ public class TrajectoriesCalculation {
 
         this.trajectoriesShooterRPMFixed = propManager.createPersistentProperty("trajectoriesShooterRPMFixed", 4800);
         this.interpolationFactor = propManager.createPersistentProperty("AllianceZoneAimMidpointInterpolationFactor", 0.5);
+        this.trajectoryCalcVersion = propManager.createPersistentProperty("TrajectoryCalcVersion", "dynamic");
     }
 
     // fieldOrientatedRotation Should tell us where the drive system should head.
@@ -64,10 +67,21 @@ public class TrajectoriesCalculation {
         public double velocity;
     }
 
+    public enum ManualShootingDistance {
+        NEAR,
+        MEDIUM,
+        FAR
+    }
+
     public ShootingData calculateAllianceHubShootingData(Pose2d robotPose) {
         Pose2d hubPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout,
                 DriverStation.getAlliance().orElse(Alliance.Blue));
         return calculateTrajectory(robotPose, hubPose);
+    }
+
+    // Take a manual distance approximation in case of pose failure.
+    public ShootingData calculateAllianceHubShootingDataWithManualDistance(Pose2d robotPose, ManualShootingDistance shootingDistance) {
+        return calculateTrajectoryV2KnownPointsToHub(robotPose, shootingDistance);
     }
 
     public ShootingData calculateAllianceZoneShootingData(Pose2d robotPose) {
@@ -87,7 +101,11 @@ public class TrajectoriesCalculation {
     }
 
     private ShootingData calculateTrajectory(Pose2d robotPose, Pose2d targetPose) {
-        return calculateTrajectoryV3Dynamic(robotPose, targetPose);
+        return switch (trajectoryCalcVersion.get()) {
+            case "singleArc" -> calculateTrajectoryV1DumbFixedArcToHub(robotPose);
+            /* V2 needs a manual distance selection, so it's not an option here. Use  */
+            default -> calculateTrajectoryV3Dynamic(robotPose, targetPose);
+        };
     }
 
     // Fixed shooter parameters. Should only be used when things to very wrong.
@@ -100,20 +118,18 @@ public class TrajectoriesCalculation {
         return new ShootingData(finalRotation, Units.RPM.of(/* TODO GET FROM JOSH */488), /* TODO GET FROM JOSH */0.0);
     }
 
-    // "Snap" robot pose to known tested points from which to shoot.
-    // private ShootingData calculateTrajectoryV2KnownPointsToHub(Pose2d robotPose) {
-    //     Pose2d hubPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout,
-    //             DriverStation.getAlliance().orElse(Alliance.Blue));
-    //     Translation2d vectorToTarget = hubPose.minus(robotPose).getTranslation();
-    //     Rotation2d finalRotation = vectorToTarget.getNorm() < 0.01 ? robotPose.getRotation() : vectorToTarget.getAngle();
-    //     Pose2d finalPose = new Pose2d(robotPose.getX(), robotPose.getY(), finalRotation);
-    //     Pose2d shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
+    // Look up known distances based on manual specification rather than pose, in case pose is known to be broken.
+    private ShootingData calculateTrajectoryV2KnownPointsToHub(Pose2d robotPose, ManualShootingDistance manualShootingDistance) {
+        Pose2d hubPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout,
+                DriverStation.getAlliance().orElse(Alliance.Blue));
+        Translation2d vectorToTarget = hubPose.minus(robotPose).getTranslation();
+        Rotation2d finalRotation = vectorToTarget.getNorm() < 0.01 ? robotPose.getRotation() : vectorToTarget.getAngle();
 
-    //     // shooterPose.nearest(knownShootingPositions());
+        var shootingData = knownShootingDistances().get(manualShootingDistance);
 
-
-    //     return new ShootingData(finalRotation, Units.RPM.of(trajectoriesShooterRPMFixed.get()), hoodTrajectory.servoRatio);
-    // }
+        // Target rotation will probably be ignored or corrected if we're using manual distance, but point towards where we think the hub
+        return new ShootingData(finalRotation, shootingData.shooterRPM, shootingData.servoRatio);
+    }
 
     // Look up optimal shooting parameters based on current pose and shooting target's pose.
     private ShootingData calculateTrajectoryV3Dynamic(Pose2d robotPose, Pose2d targetPose) {
@@ -136,10 +152,14 @@ public class TrajectoriesCalculation {
         return new ShootingData(finalRotation, Units.RPM.of(trajectoriesShooterRPMFixed.get()), hoodTrajectory.servoRatio);
     }
 
-    // // Known poses on the field that are good to shoot from.
-    // private Collection<Pose2d> knownShootingPositions() {
-
-    // }
+    // Known poses on the field that are good to shoot from.
+    private Map<ManualShootingDistance, ShootingData> knownShootingDistances() {
+        return Map.of(
+            ManualShootingDistance.NEAR, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488),
+            ManualShootingDistance.MEDIUM, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488),
+            ManualShootingDistance.FAR, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488)
+        );
+    }
 
     // This method loads the trajectories from the JSON file and populates the
     // HashMap.

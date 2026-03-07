@@ -1,6 +1,6 @@
 package competition.command_groups;
 
-import competition.subsystems.fuel_intake.commands.CollectorEjectCommand;
+import competition.subsystems.collector_intake.commands.CollectorEjectCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import xbot.common.command.BaseParallelCommandGroup;
 
