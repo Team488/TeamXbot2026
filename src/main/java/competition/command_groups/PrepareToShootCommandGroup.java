@@ -1,6 +1,8 @@
 package competition.command_groups;
 
+import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.HoodSetCommand;
+import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import edu.wpi.first.units.measure.AngularVelocity;
 import xbot.common.command.BaseParallelCommandGroup;
