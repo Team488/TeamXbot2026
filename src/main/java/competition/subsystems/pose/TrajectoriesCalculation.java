@@ -1,13 +1,12 @@
 package competition.subsystems.pose;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Singleton;
 
-//library used for JSON 
+//library used for JSON
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.logging.log4j.LogManager;
@@ -41,7 +40,7 @@ public class TrajectoriesCalculation {
     public TrajectoriesCalculation(AprilTagFieldLayout aprilTagFieldLayout, PropertyFactory propManager) {
         this.aprilTagFieldLayout = aprilTagFieldLayout;
         this.log = LogManager.getLogger(getClass().getName());
-
+        propManager.setPrefix(this.toString());
         this.trajectoriesShooterRPMFixed = propManager.createPersistentProperty("trajectoriesShooterRPMFixed", 4800);
         this.interpolationFactor = propManager.createPersistentProperty("AllianceZoneAimMidpointInterpolationFactor", 0.5);
         this.trajectoryCalcVersion = propManager.createPersistentProperty("TrajectoryCalcVersion", "dynamic");
@@ -53,7 +52,7 @@ public class TrajectoriesCalculation {
     public record ShootingData(Rotation2d fieldOrientatedRotation, AngularVelocity shooterRPM, double servoRatio) {
     }
 
-    private static ShootingData emptyShootingData = new ShootingData(Rotation2d.kZero, Units.RPM.of(0), 0.0);
+    private static final ShootingData emptyShootingData = new ShootingData(Rotation2d.kZero, Units.RPM.of(0), 0.0);
 
     private record TrajectoryKey(double distance, double shootingSpeed) {
     }
@@ -159,16 +158,16 @@ public class TrajectoriesCalculation {
     // Known poses on the field that are good to shoot from.
     private Map<ManualShootingDistance, ShootingData> knownShootingDistances() {
         return Map.of(
-            ManualShootingDistance.NEAR, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488),
-            ManualShootingDistance.MEDIUM, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488),
-            ManualShootingDistance.FAR, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488)
+                ManualShootingDistance.NEAR, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488),
+                ManualShootingDistance.MEDIUM, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488),
+                ManualShootingDistance.FAR, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488)
         );
     }
 
     // This method loads the trajectories from the JSON file and populates the
     // HashMap.
     private void loadTrajectories() {
-        this.trajectoryMap = new HashMap<>();
+        trajectoryMap = new HashMap<>();
 
         try {
             File configFile = new File(Filesystem.getDeployDirectory(), "Trajectories.json");
