@@ -112,14 +112,14 @@ public class Contract2026 extends ElectricalContract {
     public boolean intakeDeploySensorReady() { return true; }
 
     public DeviceInfo getIntakeDeploySensor() {
-        return new DeviceInfo("IntakeDeploySensor", 1, PowerSource.RIO);
+        return new DeviceInfo("IntakeDeploySensor", 1, true, PowerSource.RIO);
     }
 
     @Override
     public boolean isIntakeDeployExtendedSensorReady() { return true; }
 
     @Override
-    public DeviceInfo getIntakeDeployExtendedSensor() {return new DeviceInfo("IntakeDeployExtendedSensor", 2, PowerSource.RIO);}
+    public DeviceInfo getIntakeDeployExtendedSensor() {return new DeviceInfo("IntakeDeployExtendedSensor", 2, true, PowerSource.RIO);}
 
     @Override                                    
     public boolean isShooterFeederReady() { return true; }
