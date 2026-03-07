@@ -92,20 +92,21 @@ public class OperatorCommandMap {
                                      FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup
     ) {
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger)
-                .whileTrue(minHoodShootingCommandGroup);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger)
-                .whileTrue(maxHoodShootingCommandGroup);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X)
                 .whileTrue(fireWhenReadyShooterCommandGroup);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(hoodExtend);
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(hoodRetract);
 
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X)
+                .whileTrue(minHoodShootingCommandGroup);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B)
+                .whileTrue(maxHoodShootingCommandGroup);
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(intakeDeployExtendCommand);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(intakeCommand);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(intakeDeployRetractCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(intakeDeployRetractCommand);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateIntakeOffsetUp);
+
+        operatorInterface.operatorGamepad.getPovIfAvailable(0).whileTrue(intakeCommand);
     }
 
     @Inject
