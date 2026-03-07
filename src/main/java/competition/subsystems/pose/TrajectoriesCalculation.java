@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 //library used for JSON
@@ -40,7 +39,6 @@ public class TrajectoriesCalculation {
     private final DoubleProperty interpolationFactor;
     private final StringProperty trajectoryCalcVersion;
 
-    @Inject
     public TrajectoriesCalculation(AprilTagFieldLayout aprilTagFieldLayout, PropertyFactory propManager) {
         this.aprilTagFieldLayout = aprilTagFieldLayout;
         this.log = LogManager.getLogger(getClass().getName());
