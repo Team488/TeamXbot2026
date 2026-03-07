@@ -101,19 +101,19 @@ public class TrajectoriesCalculation {
     }
 
     // "Snap" robot pose to known tested points from which to shoot.
-    private ShootingData calculateTrajectoryV2KnownPointsToHub(Pose2d robotPose) {
-        Pose2d hubPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout,
-                DriverStation.getAlliance().orElse(Alliance.Blue));
-        Translation2d vectorToTarget = hubPose.minus(robotPose).getTranslation();
-        Rotation2d finalRotation = vectorToTarget.getNorm() < 0.01 ? robotPose.getRotation() : vectorToTarget.getAngle();
-        Pose2d finalPose = new Pose2d(robotPose.getX(), robotPose.getY(), finalRotation);
-        Pose2d shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
+    // private ShootingData calculateTrajectoryV2KnownPointsToHub(Pose2d robotPose) {
+    //     Pose2d hubPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout,
+    //             DriverStation.getAlliance().orElse(Alliance.Blue));
+    //     Translation2d vectorToTarget = hubPose.minus(robotPose).getTranslation();
+    //     Rotation2d finalRotation = vectorToTarget.getNorm() < 0.01 ? robotPose.getRotation() : vectorToTarget.getAngle();
+    //     Pose2d finalPose = new Pose2d(robotPose.getX(), robotPose.getY(), finalRotation);
+    //     Pose2d shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
 
-        // shooterPose.nearest(knownShootingPositions());
+    //     // shooterPose.nearest(knownShootingPositions());
 
 
-        return new ShootingData(finalRotation, Units.RPM.of(trajectoriesShooterRPMFixed.get()), hoodTrajectory.servoRatio);
-    }
+    //     return new ShootingData(finalRotation, Units.RPM.of(trajectoriesShooterRPMFixed.get()), hoodTrajectory.servoRatio);
+    // }
 
     // Look up optimal shooting parameters based on current pose and shooting target's pose.
     private ShootingData calculateTrajectoryV3Dynamic(Pose2d robotPose, Pose2d targetPose) {
