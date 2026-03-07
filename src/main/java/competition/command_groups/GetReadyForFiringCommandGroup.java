@@ -4,7 +4,6 @@ import competition.subsystems.pose.AutoLandmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.pose.TrajectoriesCalculation;
 import xbot.common.command.BaseParallelCommandGroup;
-import static edu.wpi.first.units.Units.RPM;
 
 import javax.inject.Inject;
 
@@ -24,7 +23,7 @@ public class GetReadyForFiringCommandGroup extends BaseParallelCommandGroup {
         var endPose = autoLandmarks.getClosestShootingPose(startPose);
         var shootingData = trajectoriesCalculation.calculateAllianceHubShootingData(endPose);
 
-        prepareToShootCommandGroup.setShooterGoal(RPM.of(4800));
+        prepareToShootCommandGroup.setShooterGoal(shootingData.shooterRPM());
         prepareToShootCommandGroup.setHoodGoal(shootingData.servoRatio());
 
         this.addCommands(
