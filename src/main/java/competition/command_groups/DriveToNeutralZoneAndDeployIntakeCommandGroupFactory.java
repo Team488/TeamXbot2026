@@ -1,7 +1,7 @@
 package competition.command_groups;
 
+import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -17,7 +17,7 @@ public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
     private final Provider<DriveToNeutralZoneForIntakeCommand> driveToNeutralZoneForIntakeCommandProvider;
     private final Provider<DriveAcrossMidNeutralZoneCommand> driveAcrossMidNeutralZoneCommandProvider;
     private final Provider<IntakeDeployExtendCommand> intakeDeployExtendCommandProvider;
-    private final Provider<FuelIntakeCommand> fuelIntakeCommandProvider;
+    private final Provider<CollectorIntakeCommand> collectorIntakeCommandProvider;
 
     private final DriveSubsystem drive;
 
@@ -26,12 +26,12 @@ public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
             Provider<DriveToNeutralZoneForIntakeCommand> driveToNeutralZoneForIntakeCommandProvider,
             Provider<DriveAcrossMidNeutralZoneCommand> driveAcrossMidNeutralZoneCommandProvider,
             Provider<IntakeDeployExtendCommand> intakeDeployExtendCommandProvider,
-            Provider<FuelIntakeCommand> fuelIntakeCommandProvider,
+            Provider<CollectorIntakeCommand> collectorIntakeCommandProvider,
             DriveSubsystem drive) {
         this.driveToNeutralZoneForIntakeCommandProvider = driveToNeutralZoneForIntakeCommandProvider;
         this.driveAcrossMidNeutralZoneCommandProvider = driveAcrossMidNeutralZoneCommandProvider;
         this.intakeDeployExtendCommandProvider = intakeDeployExtendCommandProvider;
-        this.fuelIntakeCommandProvider = fuelIntakeCommandProvider;
+        this.collectorIntakeCommandProvider = collectorIntakeCommandProvider;
 
         this.drive = drive;
     }
@@ -49,7 +49,7 @@ public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
                 this.driveAcrossMidNeutralZoneCommandProvider.get(), intakeDeployExtendCommandProvider.get());
 
         var driveAcrossIntakeDeployWithFuelIntakeCommand = new ParallelDeadlineGroup(
-                driveAcrossAndIntakeDeployCommandGroup, fuelIntakeCommandProvider.get());
+                driveAcrossAndIntakeDeployCommandGroup, collectorIntakeCommandProvider.get());
 
         group.addCommands(driveAcrossIntakeDeployWithFuelIntakeCommand);
 
