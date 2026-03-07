@@ -37,6 +37,6 @@ public class ShooterOutputCommand extends BaseSetpointCommand {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return true;
     }
 }
