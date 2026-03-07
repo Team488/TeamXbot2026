@@ -1,6 +1,7 @@
 package competition.subsystems.pose;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 
 import javax.inject.Singleton;
@@ -44,8 +45,8 @@ public class TrajectoriesCalculation {
 
     // fieldOrientatedRotation Should tell us where the drive system should head.
     // shooterRPM Tell us what the shooting wheel should spin at.
-    // ballAngle The angle of the hood based on the ball exit angle.
-    public record ShootingData(Rotation2d fieldOrientatedRotation, AngularVelocity shooterRPM, double ballAngle) {
+    // servoRatio The desired servo ratio of the hood for the correct exit angle
+    public record ShootingData(Rotation2d fieldOrientatedRotation, AngularVelocity shooterRPM, double servoRatio) {
     }
 
     private static ShootingData emptyShootingData = new ShootingData(Rotation2d.kZero, Units.RPM.of(0), 0.0);
@@ -59,7 +60,7 @@ public class TrajectoriesCalculation {
     // essentially holds all the values for the JSON to fill hashmap
     public static class HoodTrajectory {
         public double distance;
-        public double theta;
+        public double servoRatio;
         public double velocity;
     }
 
@@ -86,6 +87,36 @@ public class TrajectoriesCalculation {
     }
 
     private ShootingData calculateTrajectory(Pose2d robotPose, Pose2d targetPose) {
+        return calculateTrajectoryV3Dynamic(robotPose, targetPose);
+    }
+
+    // Fixed shooter parameters. Should only be used when things to very wrong.
+    private ShootingData calculateTrajectoryV1DumbFixedArcToHub(Pose2d robotPose) {
+        Pose2d hubPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout,
+                DriverStation.getAlliance().orElse(Alliance.Blue));
+        Translation2d vectorToTarget = hubPose.minus(robotPose).getTranslation();
+        Rotation2d finalRotation = vectorToTarget.getNorm() < 0.01 ? robotPose.getRotation() : vectorToTarget.getAngle();
+
+        return new ShootingData(finalRotation, Units.RPM.of(/* TODO GET FROM JOSH */488), /* TODO GET FROM JOSH */0.0)
+    }
+
+    // "Snap" robot pose to known tested points from which to shoot.
+    private ShootingData calculateTrajectoryV2KnownPointsToHub(Pose2d robotPose) {
+        Pose2d hubPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout,
+                DriverStation.getAlliance().orElse(Alliance.Blue));
+        Translation2d vectorToTarget = hubPose.minus(robotPose).getTranslation();
+        Rotation2d finalRotation = vectorToTarget.getNorm() < 0.01 ? robotPose.getRotation() : vectorToTarget.getAngle();
+        Pose2d finalPose = new Pose2d(robotPose.getX(), robotPose.getY(), finalRotation);
+        Pose2d shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
+
+        shooterPose.nearest(knownShootingPositions());
+
+
+        return new ShootingData(finalRotation, Units.RPM.of(trajectoriesShooterRPMFixed.get()), hoodTrajectory.servoRatio);
+    }
+
+    // Look up optimal shooting parameters based on current pose and shooting target's pose.
+    private ShootingData calculateTrajectoryV3Dynamic(Pose2d robotPose, Pose2d targetPose) {
         if (trajectoryMap == null) {
             loadTrajectories();
         }
@@ -102,8 +133,13 @@ public class TrajectoriesCalculation {
         }
         HoodTrajectory hoodTrajectory = trajectoryMap.get(key);
 
-        return new ShootingData(finalRotation, Units.RPM.of(trajectoriesShooterRPMFixed.get()), hoodTrajectory.theta);
+        return new ShootingData(finalRotation, Units.RPM.of(trajectoriesShooterRPMFixed.get()), hoodTrajectory.servoRatio);
     }
+
+    // // Known poses on the field that are good to shoot from.
+    // private Collection<Pose2d> knownShootingPositions() {
+
+    // }
 
     // This method loads the trajectories from the JSON file and populates the
     // HashMap.
