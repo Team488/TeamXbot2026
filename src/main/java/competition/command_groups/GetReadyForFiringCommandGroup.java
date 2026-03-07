@@ -29,8 +29,6 @@ public class GetReadyForFiringCommandGroup extends BaseParallelCommandGroup {
         this.addCommands(
                 driveToShootingPositionCommand,
                 prepareToShootCommandGroup
-                        .andThen(fireWhenReadyShooterCommandGroup)
-
         );
     }
 }
