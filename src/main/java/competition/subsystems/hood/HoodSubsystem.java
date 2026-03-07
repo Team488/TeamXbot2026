@@ -4,9 +4,12 @@ import competition.electrical_contract.ElectricalContract;
 
 import competition.subsystems.shooter.ShooterSubsystem;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSetpointSubsystem;
+import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.controls.actuators.TimedAndBoundedServo;
 import xbot.common.controls.actuators.XServo;
+import xbot.common.properties.AngleProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -15,10 +18,22 @@ import javax.inject.Singleton;
 
 import java.util.Optional;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
 public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
+
+    public static double getMechanismAngle(double servoPosition) {
+        return Math.acos(mechanismAngleMax - servoPosition * (mechanismAngleMax - mechanismAngleMin));
+    }
+
+    public static double getServoPosition(double ballReleaseAngle) {
+        return Math.acos(mechanismAngleMax - ballReleaseAngle / (mechanismAngleMax - mechanismAngleMin));
+    }
+
+    public static final double mechanismAngleMax = 75.6;
+    public static final double mechanismAngleMin = 41.6;
     // Constants
     public static final double servoMinBound = 0.2;
     public static final double servoMaxBound = 0.8;
@@ -26,7 +41,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
     public final TimedAndBoundedServo hoodServoLeft;
     public final TimedAndBoundedServo hoodServoRight;
-    public ElectricalContract electricalContract;
+    public final ElectricalContract electricalContract;
 
     public DoubleProperty servoTargetNormalized;
     public DoubleProperty trimValue;
@@ -35,6 +50,12 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public DoubleProperty retract;
     public DoubleProperty point1Angle;
     public DoubleProperty point2Angle;
+    public final DoubleProperty servoTargetNormalized;
+    public final DoubleProperty trimValue;
+    public final DoubleProperty trimStep;
+    public final DoubleProperty extend;
+    public final DoubleProperty retract;
+    public DoubleProperty readinessTimeoutSeconds;
 
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
@@ -76,6 +97,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         this.retract = propertyFactory.createPersistentProperty("MinExtensionGoal", 0.0);
         this.point1Angle = propertyFactory.createPersistentProperty("Point 1 Hood Angle", 0.3);  //To change
         this.point2Angle = propertyFactory.createPersistentProperty("Point 2 Hood Angle", 0.6);  //To change
+        this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("ReadinessTimeoutSeconds", 2.0);
     }
 
     public void extend() {
@@ -109,6 +131,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         if (this.hoodServoLeft != null && this.hoodServoRight != null) {
             aKitLog.record("LeftServoPosition", hoodServoLeft.getNormalizedCurrentPosition());
             aKitLog.record("RightServoPosition", hoodServoRight.getNormalizedCurrentPosition());
+            aKitLog.record("HoodTargetPosition", getTargetValue());
         }
     }
 
@@ -158,6 +181,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
     }
 
+
     @Override
     public boolean isCalibrated() {
         // Since this subsystem uses servos with no feedback, we can
@@ -174,5 +198,8 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
             case Point_1 -> point1Angle.get();
             case Point_2 -> point2Angle.get();
         };
+
+    public Command getWaitForAtGoalCommand() {
+        return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
     }
 }

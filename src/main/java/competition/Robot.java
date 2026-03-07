@@ -10,8 +10,6 @@ import competition.injection.components.DaggerSimulationComponent;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
-import competition.subsystems.shooter.ShooterSubsystem;
-import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import org.apache.logging.log4j.LogManager;
@@ -42,6 +40,7 @@ public class Robot extends BaseRobot {
         getInjectorComponent().hopperRollerSubsystem();
         getInjectorComponent().intakeDeploySubsystem();
         getInjectorComponent().voltageMonitorSubsystem();
+        getInjectorComponent().climberSubsystem();
 
         if (BaseRobot.isSimulation()) {
             simulator = getInjectorComponent().simulator();
@@ -53,11 +52,12 @@ public class Robot extends BaseRobot {
         dataFrameRefreshables.add(getInjectorComponent().shooterSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().shooterFeederSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().hoodSubsystem());
-        dataFrameRefreshables.add(getInjectorComponent().intakeSubsystem());
+        dataFrameRefreshables.add(getInjectorComponent().collectorSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().intakeDeploySubsystem());
         dataFrameRefreshables.add(getInjectorComponent().lightsSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().hopperRollerSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().voltageMonitorSubsystem());
+        dataFrameRefreshables.add(getInjectorComponent().climberSubsystem());
     }
 
     protected BaseRobotComponent createDaggerComponent() {

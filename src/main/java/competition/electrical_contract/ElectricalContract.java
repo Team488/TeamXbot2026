@@ -1,9 +1,11 @@
 package competition.electrical_contract;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Distance;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
+import xbot.common.injection.electrical_contract.IMUInfo;
 import xbot.common.injection.electrical_contract.PDHPort;
 import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
@@ -26,6 +28,8 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public abstract DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance);
 
     public abstract Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance);
+
+    public abstract IMUInfo getIMUInfo();
 
     public abstract boolean isLeftShooterReady();
 
@@ -63,9 +67,13 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract CANMotorControllerInfo getClimberMotorRight();
 
-    public abstract boolean isClimberAbsoluteEncoderReady();
+    public abstract  boolean isClimberAbsoluteEncoderReady();
 
     public abstract DeviceInfo getClimberAbsoluteEncoder();
+
+    public abstract boolean isClimberSensorReady();
+
+    public abstract DeviceInfo getClimberSensor();
 
     public abstract boolean isShooterFeederReady();
 
@@ -87,6 +95,10 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract DeviceInfo getIntakeDeploySensor();
 
+    public abstract boolean isIntakeDeployExtendedSensorReady();
+
+    public abstract DeviceInfo getIntakeDeployExtendedSensor();
+
     /**
      * Returns additional PDH connections for non-motor devices (e.g., VRMs, PCMs, buck converters, etc.)
      * Override this method in specific contract implementations to specify these connections.
@@ -104,4 +116,6 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public Map<String, List<String>> getAdditionalPowerBranches() {
         return new HashMap<>();
     }
+
+    public abstract Distance getRadiusOfRobot();
 }
