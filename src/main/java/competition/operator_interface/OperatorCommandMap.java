@@ -5,8 +5,9 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
+import competition.command_groups.FireWhenReadyShooterCommandGroup;
+import competition.command_groups.MinHoodShootingCommandGroup;
 import competition.command_groups.DriveToShootingPositionCommand;
-import competition.command_groups.FireWhenShooterReadyCommandGroup;
 import competition.command_groups.HopperAndIntakeCommandGroup;
 import competition.command_groups.MaxHoodShootingCommandGroup;
 import competition.simulation.commands.ResetSimulatedPoseCommand;
@@ -81,28 +82,32 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupOperatorGamepad(OperatorInterface operatorInterface,
-                                     FireWhenShooterReadyCommandGroup fireWhenShooterReadyCommandGroup,
+                                     MinHoodShootingCommandGroup minHoodShootingCommandGroup,
                                      HoodExtendCommands hoodExtend,
                                      HoodRetractCommands hoodRetract,
                                      IntakeDeployExtendCommand intakeDeployExtendCommand,
                                      IntakeDeployRetractCommand intakeDeployRetractCommand,
                                      CalibrateOffsetUp calibrateIntakeOffsetUp,
                                      HopperAndIntakeCommandGroup intakeCommand,
-                                     MaxHoodShootingCommandGroup maxHoodShootingCommandGroup
+                                     MaxHoodShootingCommandGroup maxHoodShootingCommandGroup,
+                                     FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup
     ) {
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger)
-                .whileTrue(fireWhenShooterReadyCommandGroup);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger)
-                .whileTrue(maxHoodShootingCommandGroup);
+                .whileTrue(fireWhenReadyShooterCommandGroup);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(hoodExtend);
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(hoodRetract);
 
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X)
+                .whileTrue(minHoodShootingCommandGroup);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B)
+                .whileTrue(maxHoodShootingCommandGroup);
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(intakeDeployExtendCommand);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(intakeCommand);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(intakeDeployRetractCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(intakeDeployRetractCommand);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateIntakeOffsetUp);
+
+        operatorInterface.operatorGamepad.getPovIfAvailable(0).whileTrue(intakeCommand);
     }
 
     @Inject
