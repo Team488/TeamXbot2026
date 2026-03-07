@@ -7,8 +7,8 @@ import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.climber.commands.ClimberMaintainerCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
-import competition.subsystems.fuel_intake.IntakeSubsystem;
-import competition.subsystems.fuel_intake.commands.FuelStopCommand;
+import competition.subsystems.collector_intake.CollectorSubsystem;
+import competition.subsystems.collector_intake.commands.CollectorStopCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.HoodMaintainerCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
@@ -35,8 +35,8 @@ public class SubsystemDefaultCommandMap {
     }
 
     @Inject
-    public void setupIntakeSubsystem(IntakeSubsystem intake, FuelStopCommand command) {
-        intake.setDefaultCommand(command);
+    public void setupCollectorSubsystem(CollectorSubsystem collect, CollectorStopCommand command) {
+        collect.setDefaultCommand(command);
     }
 
     @Inject

@@ -27,11 +27,11 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public final XCANMotorController rightShooterMotor;
     public ElectricalContract electricalContract;
 
-    public DoubleProperty shootingTargetVelocity;
-    public DoubleProperty trimValue;
+    public final DoubleProperty shootingTargetVelocity;
+    public final DoubleProperty trimValue;
+    public final DoubleProperty point1RPM;
+    public final DoubleProperty point2RPM;
     public DoubleProperty readinessTimeoutSeconds;
-    public DoubleProperty point1RPM;
-    public DoubleProperty point2RPM;
 
     public AngularVelocity currentTargetVelocity = RPM.of(0);
 
@@ -166,6 +166,8 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         for (var motor : getShooterMotors()) {
             motor.periodic();
         }
+        aKitLog.record("ShooterCurrentVelocity", getCurrentValue());
+        aKitLog.record("isCalibrated", isCalibrated());
     }
 
     @Override

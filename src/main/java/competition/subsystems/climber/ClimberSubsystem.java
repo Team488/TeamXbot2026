@@ -29,8 +29,8 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public final XDigitalInput climberSensor;
     public final DoubleProperty mechanismDegreesPerMotorRotation;
     public final DoubleProperty manualControlPower;
-    public DoubleProperty extendPower;
-    public DoubleProperty retractPower;
+    public final DoubleProperty extendPower;
+    public final DoubleProperty retractPower;
     public DoubleProperty readinessTimeoutSeconds;
     public ClimberState climberState;
     public Angle motorOffset = Degrees.zero();
@@ -155,7 +155,10 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     }
 
     public Angle getCalibratedAngle() {
-        return climberMotorLeft.getPosition().minus(motorOffset);
+        if (climberMotorLeft != null) {
+            return climberMotorLeft.getPosition().minus(motorOffset);
+        }
+        return Degrees.zero();
     }
 
     public void periodic() {
@@ -163,8 +166,6 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         if (isTouchingSensor() && !isCalibrated) {
             calibrateOffsetRetracted();
         }
-        aKitLog.record("TargetPosition", getTargetValue());
-        aKitLog.record("CurrentPosition", getCurrentValue());
 
         if (climberMotorLeft != null) {
             climberMotorLeft.periodic();
@@ -191,9 +192,11 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
                 this.climberMotorRight.setTrapezoidalProfileAcceleration(RotationsPerSecond.per(Second).of(maxPidAcceleration.get()));
             }
         }
-
-        aKitLog.record("IsCalibrated", isCalibrated);
-        aKitLog.record("CurrentPosition", getCurrentValue());
+        if (climberMotorLeft != null) {
+            aKitLog.record("IsCalibrated", isCalibrated);
+            aKitLog.record("TargetPosition", getTargetValue());
+            aKitLog.record("CurrentPosition", getCurrentValue());
+        }
     }
 
     @Override

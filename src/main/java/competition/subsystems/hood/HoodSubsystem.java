@@ -8,6 +8,7 @@ import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.controls.actuators.TimedAndBoundedServo;
 import xbot.common.controls.actuators.XServo;
+import xbot.common.properties.AngleProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -16,10 +17,22 @@ import javax.inject.Singleton;
 
 import java.util.Optional;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
 public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
+
+    public static double getMechanismAngle(double servoPosition) {
+        return Math.acos(mechanismAngleMax - servoPosition * (mechanismAngleMax - mechanismAngleMin));
+    }
+
+    public static double getServoPosition(double ballReleaseAngle) {
+        return Math.acos(mechanismAngleMax - ballReleaseAngle / (mechanismAngleMax - mechanismAngleMin));
+    }
+
+    public static final double mechanismAngleMax = 75.6;
+    public static final double mechanismAngleMin = 41.6;
     // Constants
     public static final double servoMinBound = 0.2;
     public static final double servoMaxBound = 0.8;
@@ -27,13 +40,13 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
     public final TimedAndBoundedServo hoodServoLeft;
     public final TimedAndBoundedServo hoodServoRight;
-    public ElectricalContract electricalContract;
+    public final ElectricalContract electricalContract;
 
-    public DoubleProperty servoTargetNormalized;
-    public DoubleProperty trimValue;
-    public DoubleProperty trimStep;
-    public DoubleProperty extend;
-    public DoubleProperty retract;
+    public final DoubleProperty servoTargetNormalized;
+    public final DoubleProperty trimValue;
+    public final DoubleProperty trimStep;
+    public final DoubleProperty extend;
+    public final DoubleProperty retract;
     public DoubleProperty readinessTimeoutSeconds;
 
     @Inject
@@ -108,6 +121,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         if (this.hoodServoLeft != null && this.hoodServoRight != null) {
             aKitLog.record("LeftServoPosition", hoodServoLeft.getNormalizedCurrentPosition());
             aKitLog.record("RightServoPosition", hoodServoRight.getNormalizedCurrentPosition());
+            aKitLog.record("HoodTargetPosition", getTargetValue());
         }
     }
 
@@ -156,6 +170,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public void setPower(Double power) {
 
     }
+
 
     @Override
     public boolean isCalibrated() {

@@ -23,11 +23,12 @@ import static edu.wpi.first.units.Units.Second;
 
 @Singleton
 public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  {
-   ElectricalContract electricalContract;
+    ElectricalContract electricalContract;
     public final XCANMotorController intakeDeployMotor;
     public final DoubleProperty manualControlPower;
     public Angle motorOffset = Rotations.zero();
     public final XDigitalInput intakeDeploySensor;
+    public final XDigitalInput intakeDeployExtendedSensor;
 
     public boolean isCalibrated = false;
     public final DoubleProperty extendedPosition;
@@ -71,6 +72,15 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             this.registerDataFrameRefreshable(this.intakeDeploySensor);
         } else {
             this.intakeDeploySensor = null;
+        }
+        if (electricalContract.isIntakeDeployExtendedSensorReady()) {
+            this.intakeDeployExtendedSensor = xDigitalInputFactory.create(
+                    electricalContract.getIntakeDeployExtendedSensor(),
+                    getPrefix()
+            );
+            this.registerDataFrameRefreshable(this.intakeDeployExtendedSensor);
+        } else {
+            this.intakeDeployExtendedSensor = null;
         }
 
         this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", 0.0);
@@ -146,6 +156,13 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         return false;
     }
 
+    public boolean isTouchingIntakeDeployExtendedSensor() {
+        if (intakeDeployExtendedSensor != null) {
+            return this.intakeDeployExtendedSensor.get();
+        }
+        return false;
+    }
+
     public void stop() {
         if (intakeDeployMotor != null) {
             intakeDeployMotor.setPower(0);
@@ -186,6 +203,18 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             motorOffset = intakeDeployMotor.getPosition();
             setTargetValue(getCurrentValue());
             isCalibrated = true;
+        }
+    }
+
+    public void intakeDeployGoDown() {
+        if (intakeDeployMotor != null) {
+            setTargetValue(getCurrentValue().minus(Degrees.of(3.0)));
+        }
+    }
+
+    public void intakeDeployGoUp() {
+        if (intakeDeployMotor != null) {
+            setTargetValue(getCurrentValue().plus(Degrees.of(3.0)));
         }
     }
 }
