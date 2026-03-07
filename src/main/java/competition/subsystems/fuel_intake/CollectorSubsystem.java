@@ -14,8 +14,8 @@ public class CollectorSubsystem extends BaseSubsystem {
 
     public final ElectricalContract electricalContract;
     public final XCANMotorController collectorMotor;
-    DoubleProperty intakePower;
-    DoubleProperty ejectPower;
+    final DoubleProperty intakePower;
+    final DoubleProperty ejectPower;
 
     @Inject
     public CollectorSubsystem(ElectricalContract electricalContract,

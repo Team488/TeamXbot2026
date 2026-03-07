@@ -29,8 +29,8 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public final XDigitalInput climberSensor;
     public final DoubleProperty mechanismDegreesPerMotorRotation;
     public final DoubleProperty manualControlPower;
-    public DoubleProperty extendPower;
-    public DoubleProperty retractPower;
+    public final DoubleProperty extendPower;
+    public final DoubleProperty retractPower;
     public DoubleProperty readinessTimeoutSeconds;
     public ClimberState climberState;
     public Angle motorOffset = Degrees.zero();
