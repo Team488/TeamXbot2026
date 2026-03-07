@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 //library used for JSON
@@ -37,6 +38,7 @@ public class TrajectoriesCalculation {
     private final DoubleProperty interpolationFactor;
     private final StringProperty trajectoryCalcVersion;
 
+    @Inject
     public TrajectoriesCalculation(AprilTagFieldLayout aprilTagFieldLayout, PropertyFactory propManager) {
         this.aprilTagFieldLayout = aprilTagFieldLayout;
         this.log = LogManager.getLogger(getClass().getName());
@@ -158,12 +160,26 @@ public class TrajectoriesCalculation {
     // Known poses on the field that are good to shoot from.
     private Map<ManualShootingDistance, ShootingData> knownShootingDistances() {
         return Map.of(
-                ManualShootingDistance.NEAR, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488),
-                ManualShootingDistance.MEDIUM, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488),
-                ManualShootingDistance.FAR, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488)
+                ManualShootingDistance.NEAR,
+                new ShootingData(
+                        new Rotation2d(0),
+                        Units.RPM.of(trajectoriesShooterRPMFixed.get()),
+                        /* TODO GET FROM JOSH */ 0.488
+                ),
+                ManualShootingDistance.MEDIUM,
+                new ShootingData(
+                        new Rotation2d(0),
+                        Units.RPM.of(trajectoriesShooterRPMFixed.get()),
+                        /* TODO GET FROM JOSH */ 0.488
+                ),
+                ManualShootingDistance.FAR,
+                new ShootingData(
+                        new Rotation2d(0),
+                        Units.RPM.of(trajectoriesShooterRPMFixed.get()),
+                        /* TODO GET FROM JOSH */ 0.488
+                )
         );
     }
-
     // This method loads the trajectories from the JSON file and populates the
     // HashMap.
     private void loadTrajectories() {
