@@ -4,10 +4,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
-//library used for JSON 
+//library used for JSON
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.logging.log4j.LogManager;
@@ -38,11 +37,10 @@ public class TrajectoriesCalculation {
     private final DoubleProperty interpolationFactor;
     private final StringProperty trajectoryCalcVersion;
 
-    @Inject
     public TrajectoriesCalculation(AprilTagFieldLayout aprilTagFieldLayout, PropertyFactory propManager) {
         this.aprilTagFieldLayout = aprilTagFieldLayout;
         this.log = LogManager.getLogger(getClass().getName());
-        propManager.setPrefix(this.toString());;
+        propManager.setPrefix(this.toString());
         this.trajectoriesShooterRPMFixed = propManager.createPersistentProperty("trajectoriesShooterRPMFixed", 4800);
         this.interpolationFactor = propManager.createPersistentProperty("AllianceZoneAimMidpointInterpolationFactor", 0.5);
         this.trajectoryCalcVersion = propManager.createPersistentProperty("TrajectoryCalcVersion", "dynamic");
@@ -103,11 +101,14 @@ public class TrajectoriesCalculation {
     }
 
     private ShootingData calculateTrajectory(Pose2d robotPose, Pose2d targetPose) {
-        return switch (trajectoryCalcVersion.get()) {
-            case "singleArc" -> calculateTrajectoryV1DumbFixedArcToHub(robotPose);
+        switch (trajectoryCalcVersion.get()) {
+            case "singleArc":
+                return calculateTrajectoryV1DumbFixedArcToHub(robotPose);
             /* V2 needs a manual distance selection, so it's not an option here. Use  */
-            default -> calculateTrajectoryV3Dynamic(robotPose, targetPose);
-        };
+            case "dynamic":
+            default:
+                return calculateTrajectoryV3Dynamic(robotPose, targetPose);
+        }
     }
 
     // Fixed shooter parameters. Should only be used when things to very wrong.
@@ -157,9 +158,9 @@ public class TrajectoriesCalculation {
     // Known poses on the field that are good to shoot from.
     private Map<ManualShootingDistance, ShootingData> knownShootingDistances() {
         return Map.of(
-            ManualShootingDistance.NEAR, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488),
-            ManualShootingDistance.MEDIUM, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488),
-            ManualShootingDistance.FAR, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488)
+                ManualShootingDistance.NEAR, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488),
+                ManualShootingDistance.MEDIUM, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488),
+                ManualShootingDistance.FAR, new ShootingData(new Rotation2d(0), Units.RPM.of(trajectoriesShooterRPMFixed.get()), /* TODO GET FROM JOSH */0.488)
         );
     }
 
