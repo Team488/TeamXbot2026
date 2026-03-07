@@ -5,7 +5,6 @@ import xbot.common.command.BaseSetpointCommand;
 
 import javax.inject.Inject;
 
-import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 
 public class IntakeDeployExtendCommand extends BaseSetpointCommand {
