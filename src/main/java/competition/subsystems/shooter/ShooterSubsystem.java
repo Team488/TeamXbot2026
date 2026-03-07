@@ -166,7 +166,6 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         for (var motor : getShooterMotors()) {
             motor.periodic();
         }
-        aKitLog.record("ShooterTargetVelocity", currentTargetVelocity);
         aKitLog.record("ShooterCurrentVelocity", getCurrentValue());
         aKitLog.record("isCalibrated", isCalibrated());
     }
