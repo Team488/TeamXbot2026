@@ -31,14 +31,11 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public final DoubleProperty trimValue;
     public final DoubleProperty point1RPM;
     public final DoubleProperty point2RPM;
-    public DoubleProperty readinessTimeoutSeconds;
-    public DoubleProperty point1RPM;
-    public DoubleProperty point2RPM;
+    public final DoubleProperty readinessTimeoutSeconds;
 
     public AngularVelocity currentTargetVelocity = RPM.of(0);
 
     private final Subsystem trimSetpointLock = new Subsystem() {
-
     };
 
     @Inject
@@ -235,4 +232,5 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
             case Point_2 -> point2RPM.get();
         };
     }
+
 }

@@ -43,19 +43,14 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public final TimedAndBoundedServo hoodServoRight;
     public final ElectricalContract electricalContract;
 
-    public DoubleProperty servoTargetNormalized;
-    public DoubleProperty trimValue;
-    public DoubleProperty trimStep;
-    public DoubleProperty extend;
-    public DoubleProperty retract;
-    public DoubleProperty point1Angle;
-    public DoubleProperty point2Angle;
     public final DoubleProperty servoTargetNormalized;
     public final DoubleProperty trimValue;
     public final DoubleProperty trimStep;
     public final DoubleProperty extend;
     public final DoubleProperty retract;
-    public DoubleProperty readinessTimeoutSeconds;
+    public final DoubleProperty point1Angle;
+    public final DoubleProperty point2Angle;
+    public final DoubleProperty readinessTimeoutSeconds;
 
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
@@ -198,7 +193,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
             case Point_1 -> point1Angle.get();
             case Point_2 -> point2Angle.get();
         };
-
+    }
     public Command getWaitForAtGoalCommand() {
         return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
     }
