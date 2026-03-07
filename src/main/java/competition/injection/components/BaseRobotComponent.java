@@ -4,7 +4,7 @@ import competition.operator_interface.OperatorCommandMap;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.SubsystemDefaultCommandMap;
 import competition.subsystems.climber.ClimberSubsystem;
-import competition.subsystems.fuel_intake.CollectorSubsystem;
+import competition.subsystems.collector_intake.CollectorSubsystem;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
