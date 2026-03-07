@@ -22,7 +22,7 @@ public class IntakeDeployExtendWithoutPidCommand extends BaseCommand {
         this.subsystem = subsystem;
 
         pf.setPrefix(this);
-        this.powerProperty = pf.createPersistentProperty("Power", 0.2);
+        this.powerProperty = pf.createPersistentProperty("Power", -0.2);
     }
 
     public IntakeDeployExtendWithoutPidCommand setPower(double power) {

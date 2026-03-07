@@ -111,9 +111,11 @@ public class OperatorCommandMap {
                 .whileTrue(maxHoodShootingCommandGroup);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y)
-                .onTrue(intakeDeployExtendCommand)
-                .whileTrue(new WaitCommand(1).andThen(forceIntakeDownCommand));
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).onTrue(intakeDeployRetractCommand);
+                .onTrue(intakeDeployExtendCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A)
+                .onTrue(intakeDeployRetractCommand);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Back)
+                .whileTrue(forceIntakeDownCommand);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateIntakeOffsetUp);
 
