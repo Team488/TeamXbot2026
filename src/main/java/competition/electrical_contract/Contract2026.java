@@ -7,6 +7,9 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.Units;
+import xbot.common.controls.sensors.XGyro;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANLightControllerInfo;
 import xbot.common.injection.electrical_contract.CANLightControllerOutputConfig;
@@ -14,6 +17,7 @@ import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
 import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
+import xbot.common.injection.electrical_contract.IMUInfo;
 import xbot.common.injection.electrical_contract.LEDStripType;
 import xbot.common.injection.electrical_contract.LightControllerType;
 import xbot.common.injection.electrical_contract.MotorControllerType;
@@ -46,7 +50,7 @@ public class Contract2026 extends ElectricalContract {
     public boolean areCanCodersReady() { return true; }
 
     @Override
-    public boolean isClimberLeftReady() { return true; }
+    public boolean isClimberLeftReady() { return false; }
 
     @Override
     public CANMotorControllerInfo getClimberMotorLeft() {
@@ -61,7 +65,7 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public boolean isClimberRightReady() { return true; }
+    public boolean isClimberRightReady() { return false; }
 
     @Override
     public CANMotorControllerInfo getClimberMotorRight() {
@@ -81,7 +85,20 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getClimberAbsoluteEncoder() {
-        return new DeviceInfo("ClimberAbsoluteEncoderReady",CANBusId.Canivore, 59);
+        return new DeviceInfo("ClimberAbsoluteEncoderReady", CANBusId.Canivore, 59);
+    }
+
+    @Override
+    public boolean isClimberSensorReady() { return false; }
+
+    @Override
+    public DeviceInfo getClimberSensor() {
+        return new DeviceInfo("ClimberSensor", 0, PowerSource.RIO);
+    }
+
+    @Override
+    public IMUInfo getIMUInfo() {
+        return new IMUInfo("Pigeon", XGyro.ImuType.pigeon2, XGyro.InterfaceType.CAN, CANBusId.Canivore, 56);
     }
 
     public DeviceInfo pigeon2() {
@@ -92,15 +109,17 @@ public class Contract2026 extends ElectricalContract {
         return new DeviceInfo("CANdle",CANBusId.Canivore, 57);
     }
 
-    public DeviceInfo getClimbHome() {
-        return new DeviceInfo("ClimbHomeDIO", 0, PowerSource.RIO);
-    }
-
     public boolean intakeDeploySensorReady() { return true; }
 
     public DeviceInfo getIntakeDeploySensor() {
         return new DeviceInfo("IntakeDeploySensor", 1, PowerSource.RIO);
     }
+
+    @Override
+    public boolean isIntakeDeployExtendedSensorReady() { return true; }
+
+    @Override
+    public DeviceInfo getIntakeDeployExtendedSensor() {return new DeviceInfo("IntakeDeployExtendedSensor", 2, PowerSource.RIO);}
 
     @Override                                    
     public boolean isShooterFeederReady() { return true; }
@@ -191,7 +210,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getIntakeDeployAbsoluteEncoderMotor() {
-        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady", CANBusId.Canivore, 58);
+        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady",58);
     }
 
     @Override
@@ -500,6 +519,11 @@ public class Contract2026 extends ElectricalContract {
         branches.put("FrontBuckBoost_Pwr", List.of("Orin_Nano"));
         branches.put("BackBuckBoost_Pwr", List.of("EthernetSwitch"));
         return branches;
+    }
+
+    @Override
+    public Distance getRadiusOfRobot() {
+        return Units.Inches.of(20);
     }
 
     @Override

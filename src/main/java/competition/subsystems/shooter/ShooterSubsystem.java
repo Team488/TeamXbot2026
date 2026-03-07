@@ -27,8 +27,10 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public final XCANMotorController rightShooterMotor;
     public ElectricalContract electricalContract;
 
-    public DoubleProperty shootingTargetVelocity;
-    public DoubleProperty trimValue;
+    public final DoubleProperty shootingTargetVelocity;
+    public final DoubleProperty trimValue;
+    public final DoubleProperty point1RPM;
+    public final DoubleProperty point2RPM;
     public DoubleProperty readinessTimeoutSeconds;
     public DoubleProperty point1RPM;
     public DoubleProperty point2RPM;
@@ -48,30 +50,30 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         var leftShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
                 .withP(0.05)
-                .withI(0.0)
-                .withD(0.0)
+                .withI(0.01)
+                .withD(0.01)
                 .withStaticFeedForward(0.02)
-                .withVelocityFeedForward(0.0095)
+                .withVelocityFeedForward(0.015)
                 .withMinPowerOutput(-1.0)
                 .withMaxPowerOutput(1.0)
                 .build();
 
         var middleShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
                 .withP(0.05)
-                .withI(0.0)
-                .withD(0.0)
+                .withI(0.01)
+                .withD(0.01)
                 .withStaticFeedForward(0.02)
-                .withVelocityFeedForward(0.0095)
+                .withVelocityFeedForward(0.016)
                 .withMinPowerOutput(-1.0)
                 .withMaxPowerOutput(1.0)
                 .build();
 
         var rightShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
                 .withP(0.05)
-                .withI(0.0)
-                .withD(0.0)
+                .withI(0.01)
+                .withD(0.01)
                 .withStaticFeedForward(0.02)
-                .withVelocityFeedForward(0.0095)
+                .withVelocityFeedForward(0.016)
                 .withMinPowerOutput(-1.0)
                 .withMaxPowerOutput(1.0)
                 .build();
@@ -166,6 +168,8 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         for (var motor : getShooterMotors()) {
             motor.periodic();
         }
+        aKitLog.record("ShooterCurrentVelocity", getCurrentValue());
+        aKitLog.record("isCalibrated", isCalibrated());
     }
 
     @Override

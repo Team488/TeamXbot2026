@@ -1,6 +1,6 @@
 package competition.command_groups;
 
-import competition.subsystems.fuel_intake.commands.FuelEjectCommand;
+import competition.subsystems.collector_intake.commands.CollectorEjectCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederEject;
 import xbot.common.command.BaseParallelCommandGroup;
@@ -12,7 +12,7 @@ public class EjectAllCommandGroup extends BaseParallelCommandGroup {
     @Inject
     public EjectAllCommandGroup(HopperRollerSubsystem hopper,
                                 ShooterFeederEject shooterFeederEject,
-                                FuelEjectCommand fuelEjectCommand) {
+                                CollectorEjectCommand fuelEjectCommand) {
         addCommands(
                 hopper.getEjectCommand(),
                 shooterFeederEject,

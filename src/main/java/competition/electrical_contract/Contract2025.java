@@ -5,12 +5,15 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import xbot.common.controls.sensors.XGyro;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
 import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
+import xbot.common.injection.electrical_contract.IMUInfo;
 import xbot.common.injection.electrical_contract.MotorControllerType;
+import xbot.common.injection.electrical_contract.PowerSource;
 import xbot.common.injection.electrical_contract.TalonFxMotorControllerOutputConfig;
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.subsystems.vision.CameraCapabilities;
@@ -28,6 +31,11 @@ public class Contract2025 extends Contract2026 {
 
     @Inject
     public Contract2025() {
+    }
+
+    @Override
+    public IMUInfo getIMUInfo() {
+        return new IMUInfo(XGyro.InterfaceType.spi, PowerSource.RIO);
     }
 
     @Override
@@ -59,6 +67,9 @@ public class Contract2025 extends Contract2026 {
     public boolean isIntakeDeployReady() {
         return false;
     }
+
+    @Override
+    public boolean isIntakeDeployExtendedSensorReady() {return false;}
 
     @Override
     public boolean isLeftShooterReady() {
