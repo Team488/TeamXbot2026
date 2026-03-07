@@ -49,7 +49,7 @@ public class TrajectoriesCalculation {
     public record ShootingData(Rotation2d fieldOrientatedRotation, AngularVelocity shooterRPM, double servoRatio) {
     }
 
-    private static ShootingData emptyShootingData = new ShootingData(Rotation2d.kZero, Units.RPM.of(0), 0.0);
+    private static final ShootingData emptyShootingData = new ShootingData(Rotation2d.kZero, Units.RPM.of(0), 0.0);
 
     private record TrajectoryKey(double distance, double shootingSpeed) {
     }
@@ -97,7 +97,7 @@ public class TrajectoriesCalculation {
         Translation2d vectorToTarget = hubPose.minus(robotPose).getTranslation();
         Rotation2d finalRotation = vectorToTarget.getNorm() < 0.01 ? robotPose.getRotation() : vectorToTarget.getAngle();
 
-        return new ShootingData(finalRotation, Units.RPM.of(/* TODO GET FROM JOSH */488), /* TODO GET FROM JOSH */0.0)
+        return new ShootingData(finalRotation, Units.RPM.of(/* TODO GET FROM JOSH */488), /* TODO GET FROM JOSH */0.0);
     }
 
     // "Snap" robot pose to known tested points from which to shoot.
@@ -144,7 +144,7 @@ public class TrajectoriesCalculation {
     // This method loads the trajectories from the JSON file and populates the
     // HashMap.
     private void loadTrajectories() {
-        this.trajectoryMap = new HashMap<>();
+        trajectoryMap = new HashMap<>();
 
         try {
             File configFile = new File(Filesystem.getDeployDirectory(), "Trajectories.json");
