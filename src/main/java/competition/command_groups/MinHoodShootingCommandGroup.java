@@ -6,14 +6,14 @@ import javax.inject.Inject;
 
 import static edu.wpi.first.units.Units.RPM;
 
-public class MaxHoodShootingCommandGroup extends BaseParallelCommandGroup {
+public class MinHoodShootingCommandGroup extends BaseParallelCommandGroup {
 
     @Inject
-    public MaxHoodShootingCommandGroup(PrepareToShootCommandGroup prepareToShootCommandGroup
+    public MinHoodShootingCommandGroup(PrepareToShootCommandGroup prepareToShootCommandGroup
     ) {
 
         prepareToShootCommandGroup.setShooterGoal(RPM.of(4800));
-        prepareToShootCommandGroup.setHoodGoal(1.0);
+        prepareToShootCommandGroup.setHoodGoal(0.0);
 
         this.addCommands(
                 prepareToShootCommandGroup
