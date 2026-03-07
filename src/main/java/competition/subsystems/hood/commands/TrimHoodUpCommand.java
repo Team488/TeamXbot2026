@@ -8,6 +8,7 @@ import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
+
 public class TrimHoodUpCommand extends BaseCommand {
     final HoodSubsystem hood;
 
