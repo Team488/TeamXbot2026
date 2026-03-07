@@ -2,10 +2,12 @@ package competition.subsystems.pose;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
-//library used for JSON 
+//library used for JSON
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +25,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
+import xbot.common.properties.StringProperty;
 
 @Singleton()
 public class TrajectoriesCalculation {
@@ -33,22 +36,25 @@ public class TrajectoriesCalculation {
     private final AprilTagFieldLayout aprilTagFieldLayout;
     private final DoubleProperty trajectoriesShooterRPMFixed;
     private final DoubleProperty interpolationFactor;
+    private final StringProperty trajectoryCalcVersion;
 
+    @Inject
     public TrajectoriesCalculation(AprilTagFieldLayout aprilTagFieldLayout, PropertyFactory propManager) {
         this.aprilTagFieldLayout = aprilTagFieldLayout;
         this.log = LogManager.getLogger(getClass().getName());
-
+        propManager.setPrefix(this.toString());
         this.trajectoriesShooterRPMFixed = propManager.createPersistentProperty("trajectoriesShooterRPMFixed", 4800);
         this.interpolationFactor = propManager.createPersistentProperty("AllianceZoneAimMidpointInterpolationFactor", 0.5);
+        this.trajectoryCalcVersion = propManager.createPersistentProperty("TrajectoryCalcVersion", "dynamic");
     }
 
     // fieldOrientatedRotation Should tell us where the drive system should head.
     // shooterRPM Tell us what the shooting wheel should spin at.
-    // ballAngle The angle of the hood based on the ball exit angle.
-    public record ShootingData(Rotation2d fieldOrientatedRotation, AngularVelocity shooterRPM, double ballAngle) {
+    // servoRatio The desired servo ratio of the hood for the correct exit angle
+    public record ShootingData(Rotation2d fieldOrientatedRotation, AngularVelocity shooterRPM, double servoRatio) {
     }
 
-    private static ShootingData emptyShootingData = new ShootingData(Rotation2d.kZero, Units.RPM.of(0), 0.0);
+    private static final ShootingData emptyShootingData = new ShootingData(Rotation2d.kZero, Units.RPM.of(0), 0.0);
 
     private record TrajectoryKey(double distance, double shootingSpeed) {
     }
@@ -59,14 +65,25 @@ public class TrajectoriesCalculation {
     // essentially holds all the values for the JSON to fill hashmap
     public static class HoodTrajectory {
         public double distance;
-        public double theta;
+        public double servoRatio;
         public double velocity;
+    }
+
+    public enum ManualShootingDistance {
+        NEAR,
+        MEDIUM,
+        FAR
     }
 
     public ShootingData calculateAllianceHubShootingData(Pose2d robotPose) {
         Pose2d hubPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout,
                 DriverStation.getAlliance().orElse(Alliance.Blue));
         return calculateTrajectory(robotPose, hubPose);
+    }
+
+    // Take a manual distance approximation in case of pose failure.
+    public ShootingData calculateAllianceHubShootingDataWithManualDistance(Pose2d robotPose, ManualShootingDistance shootingDistance) {
+        return calculateTrajectoryV2KnownPointsToHub(robotPose, shootingDistance);
     }
 
     public ShootingData calculateAllianceZoneShootingData(Pose2d robotPose) {
@@ -86,6 +103,41 @@ public class TrajectoriesCalculation {
     }
 
     private ShootingData calculateTrajectory(Pose2d robotPose, Pose2d targetPose) {
+        switch (trajectoryCalcVersion.get()) {
+            case "singleArc":
+                return calculateTrajectoryV1DumbFixedArcToHub(robotPose);
+            /* V2 needs a manual distance selection, so it's not an option here. Use  */
+            case "dynamic":
+            default:
+                return calculateTrajectoryV3Dynamic(robotPose, targetPose);
+        }
+    }
+
+    // Fixed shooter parameters. Should only be used when things to very wrong.
+    private ShootingData calculateTrajectoryV1DumbFixedArcToHub(Pose2d robotPose) {
+        Pose2d hubPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout,
+                DriverStation.getAlliance().orElse(Alliance.Blue));
+        Translation2d vectorToTarget = hubPose.minus(robotPose).getTranslation();
+        Rotation2d finalRotation = vectorToTarget.getNorm() < 0.01 ? robotPose.getRotation() : vectorToTarget.getAngle();
+
+        return new ShootingData(finalRotation, Units.RPM.of(/* TODO GET FROM JOSH */488), /* TODO GET FROM JOSH */0.0);
+    }
+
+    // Look up known distances based on manual specification rather than pose, in case pose is known to be broken.
+    private ShootingData calculateTrajectoryV2KnownPointsToHub(Pose2d robotPose, ManualShootingDistance manualShootingDistance) {
+        Pose2d hubPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout,
+                DriverStation.getAlliance().orElse(Alliance.Blue));
+        Translation2d vectorToTarget = hubPose.minus(robotPose).getTranslation();
+        Rotation2d finalRotation = vectorToTarget.getNorm() < 0.01 ? robotPose.getRotation() : vectorToTarget.getAngle();
+
+        var shootingData = knownShootingDistances().get(manualShootingDistance);
+
+        // Target rotation will probably be ignored or corrected if we're using manual distance, but point towards where we think the hub
+        return new ShootingData(finalRotation, shootingData.shooterRPM, shootingData.servoRatio);
+    }
+
+    // Look up optimal shooting parameters based on current pose and shooting target's pose.
+    private ShootingData calculateTrajectoryV3Dynamic(Pose2d robotPose, Pose2d targetPose) {
         if (trajectoryMap == null) {
             loadTrajectories();
         }
@@ -102,13 +154,36 @@ public class TrajectoriesCalculation {
         }
         HoodTrajectory hoodTrajectory = trajectoryMap.get(key);
 
-        return new ShootingData(finalRotation, Units.RPM.of(trajectoriesShooterRPMFixed.get()), hoodTrajectory.theta);
+        return new ShootingData(finalRotation, Units.RPM.of(trajectoriesShooterRPMFixed.get()), hoodTrajectory.servoRatio);
     }
 
+    // Known poses on the field that are good to shoot from.
+    private Map<ManualShootingDistance, ShootingData> knownShootingDistances() {
+        return Map.of(
+                ManualShootingDistance.NEAR,
+                new ShootingData(
+                        new Rotation2d(0),
+                        Units.RPM.of(trajectoriesShooterRPMFixed.get()),
+                        /* TODO GET FROM JOSH */ 0.488
+                ),
+                ManualShootingDistance.MEDIUM,
+                new ShootingData(
+                        new Rotation2d(0),
+                        Units.RPM.of(trajectoriesShooterRPMFixed.get()),
+                        /* TODO GET FROM JOSH */ 0.488
+                ),
+                ManualShootingDistance.FAR,
+                new ShootingData(
+                        new Rotation2d(0),
+                        Units.RPM.of(trajectoriesShooterRPMFixed.get()),
+                        /* TODO GET FROM JOSH */ 0.488
+                )
+        );
+    }
     // This method loads the trajectories from the JSON file and populates the
     // HashMap.
     private void loadTrajectories() {
-        this.trajectoryMap = new HashMap<>();
+        trajectoryMap = new HashMap<>();
 
         try {
             File configFile = new File(Filesystem.getDeployDirectory(), "Trajectories.json");
