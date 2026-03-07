@@ -3,11 +3,12 @@ package competition.command_groups;
 import competition.subsystems.pose.AutoLandmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.pose.TrajectoriesCalculation;
-import xbot.common.command.BaseParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import xbot.common.command.BaseSequentialCommandGroup;
 
 import javax.inject.Inject;
 
-public class GetReadyForFiringCommandGroup extends BaseParallelCommandGroup {
+public class GetReadyForFiringCommandGroup extends BaseSequentialCommandGroup {
 
     @Inject
     public GetReadyForFiringCommandGroup(TrajectoriesCalculation trajectoriesCalculation,
@@ -26,9 +27,11 @@ public class GetReadyForFiringCommandGroup extends BaseParallelCommandGroup {
         prepareToShootCommandGroup.setShooterGoal(shootingData.shooterRPM());
         prepareToShootCommandGroup.setHoodGoal(shootingData.servoRatio());
 
-        this.addCommands(
-                driveToShootingPositionCommand,
-                prepareToShootCommandGroup
-        );
+        var getReadyToFire = new ParallelCommandGroup(
+                driveToShootingPositionCommand, prepareToShootCommandGroup);
+
+        this.addCommands(getReadyToFire);
+
+        this.addCommands(fireWhenReadyShooterCommandGroup);
     }
 }
