@@ -10,35 +10,29 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class IntakeSubsystem extends BaseSubsystem {
-
-    public enum IntakeState {
-        INTAKING,
-        EJECTING,
-        STOPPED
-    }
+public class CollectorSubsystem extends BaseSubsystem {
 
     public final ElectricalContract electricalContract;
-    public final XCANMotorController intakeMotor;
-    DoubleProperty intakePower;
-    DoubleProperty ejectPower;
+    public final XCANMotorController collectorMotor;
+    final DoubleProperty intakePower;
+    final DoubleProperty ejectPower;
 
     @Inject
-    public IntakeSubsystem(ElectricalContract electricalContract,
-                           XCANMotorController.XCANMotorControllerFactory motorFactory,
-                           PropertyFactory pf) {
+    public CollectorSubsystem(ElectricalContract electricalContract,
+                              XCANMotorController.XCANMotorControllerFactory motorFactory,
+                              PropertyFactory pf) {
 
         pf.setPrefix(this);
         this.electricalContract = electricalContract;
         if (electricalContract.isFuelIntakeMotorReady()) {
-            this.intakeMotor = motorFactory.create(
+            this.collectorMotor = motorFactory.create(
                     electricalContract.getFuelIntakeMotor(),
                     getPrefix(),
                     "FuelIntakePID"
             );
-            this.registerDataFrameRefreshable(intakeMotor);
+            this.registerDataFrameRefreshable(collectorMotor);
         } else {
-            this.intakeMotor = null;
+            this.collectorMotor = null;
         }
 
         intakePower = pf.createPersistentProperty("FuelIntakePower", 1);
@@ -46,30 +40,30 @@ public class IntakeSubsystem extends BaseSubsystem {
     }
 
     public void intake() {
-        if (intakeMotor == null) {
+        if (collectorMotor == null) {
             return;
         }
-        intakeMotor.setPower(intakePower.get());
+        collectorMotor.setPower(intakePower.get());
     }
 
     public void eject() {
-        if (intakeMotor == null) {
+        if (collectorMotor == null) {
             return;
         }
-        intakeMotor.setPower(ejectPower.get());
+        collectorMotor.setPower(ejectPower.get());
     }
 
     public void stop() {
-        if (intakeMotor == null) {
+        if (collectorMotor == null) {
             return;
         }
-        intakeMotor.setPower(0);
+        collectorMotor.setPower(0);
     }
 
     @Override
     public void periodic() {
         if (electricalContract.isFuelIntakeMotorReady()) {
-            intakeMotor.periodic();
+            collectorMotor.periodic();
         }
     }
 }

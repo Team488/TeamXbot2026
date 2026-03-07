@@ -4,10 +4,13 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import xbot.common.command.BaseCommand;
+import xbot.common.properties.AngleProperty;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.Property;
 import xbot.common.properties.PropertyFactory;
@@ -26,7 +29,9 @@ public class RotateToHubCommand extends BaseCommand {
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
     private Alliance alliance;
-    private Translation2d target;
+    private Rotation2d rotationOffset;
+    private Translation2d targetTranslation;
+    private final AngleProperty desiredHeadingOffset;
     private final BooleanProperty autoAimWhenNotInZone;
 
     @Inject
@@ -38,6 +43,7 @@ public class RotateToHubCommand extends BaseCommand {
         this.pf = pf;
         pf.setPrefix(this);
         pf.setDefaultLevel(Property.PropertyLevel.Important);
+        desiredHeadingOffset = pf.createPersistentProperty("DesiredHeadingOffset", Units.Degrees.of(180));
         autoAimWhenNotInZone = pf.createPersistentProperty("AutoAimWhenNotInZone", true);
     }
 
@@ -45,13 +51,14 @@ public class RotateToHubCommand extends BaseCommand {
     public void initialize() {
         log.info("Initializing");
         alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-        target = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance).getTranslation();
+        rotationOffset = Rotation2d.fromDegrees(desiredHeadingOffset.get().in(Units.Degrees));
+        targetTranslation = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance).getTranslation();
     }
 
     @Override
     public void execute() {
-        if (!pose.isFacingTarget(target)) {
-            drive.setStaticHeadingTarget(pose.desiredHeadingToTarget(target));
+        if (!pose.isFacingTarget(targetTranslation, rotationOffset)) {
+            drive.setStaticHeadingTarget(pose.desiredHeadingToTarget(targetTranslation, rotationOffset));
             boolean areWeInAllianceZone = Landmarks.isBetweenIdX(
                     this.aprilTagFieldLayout,
                     Landmarks.getTrenchDriverDepotSideId(alliance),
