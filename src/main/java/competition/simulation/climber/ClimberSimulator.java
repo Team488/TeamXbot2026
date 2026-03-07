@@ -7,6 +7,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.MockDigitalInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import xbot.common.advantage.AKitLogger;
@@ -31,6 +32,7 @@ public class ClimberSimulator {
     final PIDManager pidManager;
     final ClimberSubsystem climber;
     final MockCANMotorController motor;
+    final MockDigitalInput homedSensor;
 
     @Inject
     public ClimberSimulator(ClimberSubsystem climber, PIDManager.PIDManagerFactory pidManagerFactory,
@@ -39,6 +41,7 @@ public class ClimberSimulator {
         aKitLog = new AKitLogger(pf.getPrefix());
         this.climber = climber;
         this.motor = (MockCANMotorController) climber.climberMotorLeft;
+        this.homedSensor = (MockDigitalInput) climber.climberSensor;
         this.pidManager = pidManagerFactory.create(
                 pf.getPrefix() + "ClimberSimulatorPID",
                 0.2,
@@ -63,6 +66,11 @@ public class ClimberSimulator {
         return this.motorSim.getAngularPosition();
     }
 
+    public boolean isHomed() {
+        return getAngularPosition()
+                .isNear(climber.retractedAngle.get(), Degrees.of(5));
+    }
+
     public void update() {
         // Update motor power
         MotorInternalPIDHelper.updateInternalPID(motor, pidManager);
@@ -79,5 +87,8 @@ public class ClimberSimulator {
         var mechanismAngle = getAngularPosition();
         double motorRotation = mechanismAngle.in(Degrees) / climber.mechanismDegreesPerMotorRotation.get();
         this.motor.setPosition(Rotations.of(motorRotation));
+        if (homedSensor != null) {
+            homedSensor.setValue(isHomed());
+        }
     }
 }
