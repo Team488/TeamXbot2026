@@ -38,5 +38,4 @@ public class DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory {
 
         return group;
     }
-
 }
