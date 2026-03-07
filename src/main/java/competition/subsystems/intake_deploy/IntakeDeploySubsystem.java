@@ -158,7 +158,6 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     public boolean isTouchingIntakeDeployExtendedSensor() {
         if (intakeDeployExtendedSensor != null) {
-            isCalibrated = true;
             return this.intakeDeployExtendedSensor.get();
         }
         return false;
