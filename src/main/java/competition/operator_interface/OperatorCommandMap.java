@@ -40,6 +40,7 @@ import xbot.common.subsystems.autonomous.SetAutonomousCommand;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
+
 import static edu.wpi.first.units.Units.RPM;
 
 /**
@@ -167,8 +168,11 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupSimulatorCommands(
-            ResetSimulatedPoseCommand resetPose
+            ResetSimulatedPoseCommand resetSimulatorPositionCommand,
+            Depot depotCollectionAutoCommand
     ) {
-        resetPose.includeOnSmartDashboard();
+        resetSimulatorPositionCommand.includeOnSmartDashboard("Reset Simulator Position");
+        depotCollectionAutoCommand.includeOnSmartDashboard("Depot collection");
+
     }
 }

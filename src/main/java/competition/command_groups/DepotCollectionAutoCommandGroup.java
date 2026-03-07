@@ -25,7 +25,7 @@ public class DepotCollectionAutoCommandGroup extends BaseSequentialCommandGroup 
     public DepotCollectionAutoCommandGroup(Provider<SwerveSimpleTrajectoryCommand> trajectoryProvider,
                                            HopperAndIntakeCommandGroup hopperAndIntakeCommandGroup,
                                            IntakeDeployExtendCommand intakeDeployExtendCommand,
-                                           IntakeDeployStopCommand  intakeDeployStopCommand,
+                                           Intake  intakeDeployStopCommand,
                                            HopperRollerSubsystem hopper,
                                            DriveSubsystem drive,
                                            PoseSubsystem pose) {
