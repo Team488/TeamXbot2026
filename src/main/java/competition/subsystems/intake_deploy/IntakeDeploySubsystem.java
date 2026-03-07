@@ -156,13 +156,13 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         return false;
     }
 
-//    public boolean isTouchingIntakeDeployExtendedSensor() {
-//        if (intakeDeployExtendedSensor != null) {
-//            isCalibrated = true;
-//            return this.intakeDeployExtendedSensor.get();
-//        }
-//        return false;
-//    }
+    public boolean isTouchingIntakeDeployExtendedSensor() {
+        if (intakeDeployExtendedSensor != null) {
+            isCalibrated = true;
+            return this.intakeDeployExtendedSensor.get();
+        }
+        return false;
+    }
 
     public void stop() {
         if (intakeDeployMotor != null) {
