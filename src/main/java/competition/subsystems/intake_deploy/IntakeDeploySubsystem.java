@@ -2,8 +2,10 @@ package competition.subsystems.intake_deploy;
 
 import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Current;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
+import xbot.common.logic.Latch;
 import xbot.common.properties.AngleProperty;
 import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.properties.DoubleProperty;
@@ -14,8 +16,8 @@ import xbot.common.controls.sensors.XDigitalInput;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Second;
@@ -40,6 +42,8 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     // Limb range is the rotations between the Deploy's position and the stowed position, used for calibration.
     public final AngleProperty limbRange;
+
+    private final Latch extendedPositionCalibrationLatch;
 
     @Inject
     public IntakeDeploySubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
@@ -99,6 +103,9 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             this.intakeDeployMotor.setTrapezoidalProfileMaxVelocity(RotationsPerSecond.of(maxPidVelocity.get()));
             this.intakeDeployMotor.setTrapezoidalProfileAcceleration(RotationsPerSecond.per(Second).of(maxPidAcceleration.get()));
         }
+
+        this.extendedPositionCalibrationLatch = new Latch(false, Latch.EdgeType.RisingEdge);
+        this.extendedPositionCalibrationLatch.setObserver((edgeType) -> calibrateOffsetDown());
     }
 
     @Override
@@ -181,6 +188,10 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
                 this.intakeDeployMotor.setTrapezoidalProfileAcceleration(RotationsPerSecond.per(Second).of(maxPidAcceleration.get()));
             }
         }
+
+        // When this becomes true, calibrateOffsetDown() will be called
+        this.extendedPositionCalibrationLatch.setValue(isTouchingIntakeDeployExtendedSensor());
+
         // Sensor reading seems bad - don't trust it for now
         //if (isTouchingIntakeDeploy() && !isCalibrated) {
         //    calibrateOffsetUp();
@@ -216,5 +227,12 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         if (intakeDeployMotor != null) {
             setTargetValue(getCurrentValue().plus(Degrees.of(3.0)));
         }
+    }
+
+    public Current getMotorCurrent() {
+        if (intakeDeployMotor != null) {
+            return intakeDeployMotor.getCurrent();
+        }
+        return Amps.zero();
     }
 }
