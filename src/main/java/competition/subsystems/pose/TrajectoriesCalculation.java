@@ -205,7 +205,6 @@ public class TrajectoriesCalculation {
                 .map(PresetShootingDistanceLookup::presetShootingDistance)
                 .orElse(PresetShootingDistance.NEAR);
     }
-
     // This method loads the trajectories from the JSON file and populates the
     // HashMap.
     private void loadTrajectories() {
