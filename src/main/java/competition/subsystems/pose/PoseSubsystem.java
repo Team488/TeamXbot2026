@@ -216,6 +216,14 @@ public class PoseSubsystem extends BasePoseSubsystem {
         return (Math.toDegrees(angleError) < isFacingTargetMarginOfError.get());
     }
 
+    public boolean isFacingTarget(Translation2d target, Rotation2d desiredHeadingOffset) {
+        Rotation2d desiredHeading = desiredHeadingToTarget(target, desiredHeadingOffset);
+        double rawError = desiredHeading.getRadians() - this.getCurrentHeading().getRadians();
+        double angleError = Math.abs(MathUtil.angleModulus(rawError));
+
+        return (Math.toDegrees(angleError) < isFacingTargetMarginOfError.get());
+    }
+
     public Rotation2d desiredHeadingToTarget(Translation2d target) {
         Pose2d currentPose = this.getCurrentPose2d();
 
@@ -225,6 +233,17 @@ public class PoseSubsystem extends BasePoseSubsystem {
         }
 
         return vectorToTarget.getAngle();
+    }
+
+    public Rotation2d desiredHeadingToTarget(Translation2d target, Rotation2d desiredHeadingOffset) {
+        Pose2d currentPose = this.getCurrentPose2d();
+
+        Translation2d vectorToTarget = target.minus(currentPose.getTranslation());
+        if (vectorToTarget.getNorm() < 0.01) {
+            return currentPose.getRotation();
+        }
+
+        return vectorToTarget.getAngle().plus(desiredHeadingOffset);
     }
 
     // Override methods remain unchanged
@@ -332,5 +351,22 @@ public class PoseSubsystem extends BasePoseSubsystem {
         return currentPose.nearest(poses);
     }
 
-    // End of Closest Landmark Calcs
+    public Pose2d furthestAllianceTrench() {
+        var alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
+
+        var poses = Landmarks.getAllianceTrenchPoses(this.aprilTagFieldLayout, alliance);
+        Pose2d currentPose = getCurrentPose2d();
+        Pose2d furthest = poses.get(0);
+        double maxDist = 0;
+        for (Pose2d pose : poses) {
+            double dist = currentPose.getTranslation().getDistance(pose.getTranslation());
+            if (dist > maxDist) {
+                maxDist = dist;
+                furthest = pose;
+            }
+        }
+        return furthest;
+    }
+
+    // End of Landmark Calcs
 }
