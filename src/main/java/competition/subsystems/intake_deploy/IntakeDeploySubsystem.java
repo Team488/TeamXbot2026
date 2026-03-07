@@ -40,9 +40,6 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public final DoubleProperty maxPidVelocity;
     public final DoubleProperty maxPidAcceleration;
 
-    // Limb range is the rotations between the Deploy's position and the stowed position, used for calibration.
-    public final AngleProperty limbRange;
-
     private final Latch extendedPositionCalibrationLatch;
 
     @Inject
@@ -91,7 +88,6 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -145.0);
 
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.2);
-        this.limbRange = propertyFactory.createPersistentProperty("limbRange", Rotations.of(9.5));
 
         this.mechanismDegreePerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreePerMotorRotation", 15);
         this.mechanismTargetRotation = propertyFactory.createPersistentProperty("MechanismTargetRotation", Degrees.of(0));
