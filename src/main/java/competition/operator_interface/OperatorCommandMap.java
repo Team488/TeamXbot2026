@@ -10,6 +10,7 @@ import competition.command_groups.MinHoodShootingCommandGroup;
 import competition.command_groups.DriveToShootingPositionCommand;
 import competition.command_groups.HopperAndIntakeCommandGroup;
 import competition.command_groups.MaxHoodShootingCommandGroup;
+import competition.command_groups.PrepareToShootCommandGroup;
 import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.climber.commands.ClimberSetPointCommand;
@@ -38,6 +39,8 @@ import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.autonomous.SetAutonomousCommand;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
+
+import static edu.wpi.first.units.Units.RPM;
 
 /**
  * Maps operator interface buttons to commands
@@ -90,7 +93,8 @@ public class OperatorCommandMap {
                                      CalibrateOffsetUp calibrateIntakeOffsetUp,
                                      HopperAndIntakeCommandGroup intakeCommand,
                                      MaxHoodShootingCommandGroup maxHoodShootingCommandGroup,
-                                     FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup
+                                     FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup,
+                                     Provider<PrepareToShootCommandGroup> prepareToShoot
     ) {
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger)
                 .whileTrue(fireWhenReadyShooterCommandGroup);
@@ -108,6 +112,9 @@ public class OperatorCommandMap {
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateIntakeOffsetUp);
 
         operatorInterface.operatorGamepad.getPovIfAvailable(0).whileTrue(intakeCommand);
+
+        // The following is an example, once we've created some preset buttons you can remove thiss
+        var shooterConfigExample = prepareToShoot.get().setHoodGoal(0.0).setShooterGoal(RPM.of(3600));
     }
 
     @Inject

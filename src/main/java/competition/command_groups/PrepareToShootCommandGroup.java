@@ -12,12 +12,14 @@ public class PrepareToShootCommandGroup extends BaseParallelCommandGroup {
     HoodSetCommand hoodSetCommand;
     ShooterOutputCommand outputCommand;
 
-    public void setShooterGoal(AngularVelocity targetVelocity) {
+    public PrepareToShootCommandGroup setShooterGoal(AngularVelocity targetVelocity) {
         this.outputCommand.setTargetVelocity(targetVelocity);
+        return this;
     }
 
-    public void setHoodGoal(double ratio) {
+    public PrepareToShootCommandGroup setHoodGoal(double ratio) {
         this.hoodSetCommand.setTargetRatio(ratio);
+        return this;
     }
 
     @Inject
