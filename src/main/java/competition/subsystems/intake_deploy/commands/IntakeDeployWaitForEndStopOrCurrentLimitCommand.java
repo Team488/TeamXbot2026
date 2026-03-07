@@ -34,7 +34,7 @@ public class IntakeDeployWaitForEndStopOrCurrentLimitCommand extends BaseCommand
     @Override
     public void execute() {
         // Feed in current to the current limit validator
-        this.currentLimitTimer.checkStable(subsystem.isTouchingIntakeDeploy());
+        this.currentLimitTimer.checkStable(isExceedingCurrentLimit());
     }
 
     @Override
