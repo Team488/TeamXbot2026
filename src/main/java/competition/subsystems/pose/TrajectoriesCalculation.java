@@ -109,7 +109,7 @@ public class TrajectoriesCalculation {
         Pose2d finalPose = new Pose2d(robotPose.getX(), robotPose.getY(), finalRotation);
         Pose2d shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
 
-        shooterPose.nearest(knownShootingPositions());
+        // shooterPose.nearest(knownShootingPositions());
 
 
         return new ShootingData(finalRotation, Units.RPM.of(trajectoriesShooterRPMFixed.get()), hoodTrajectory.servoRatio);
