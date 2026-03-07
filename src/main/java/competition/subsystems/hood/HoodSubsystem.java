@@ -40,12 +40,13 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
     public final TimedAndBoundedServo hoodServoLeft;
     public final TimedAndBoundedServo hoodServoRight;
-    public ElectricalContract electricalContract;
-    public DoubleProperty servoTargetNormalized;
-    public DoubleProperty trimValue;
-    public DoubleProperty trimStep;
-    public DoubleProperty extend;
-    public DoubleProperty retract;
+    public final ElectricalContract electricalContract;
+
+    public final DoubleProperty servoTargetNormalized;
+    public final DoubleProperty trimValue;
+    public final DoubleProperty trimStep;
+    public final DoubleProperty extend;
+    public final DoubleProperty retract;
     public DoubleProperty readinessTimeoutSeconds;
 
     @Inject
