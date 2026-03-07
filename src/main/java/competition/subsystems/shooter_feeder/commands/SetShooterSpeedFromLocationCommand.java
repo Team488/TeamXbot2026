@@ -10,7 +10,7 @@ import static edu.wpi.first.units.Units.RPM;
 
 public class SetShooterSpeedFromLocationCommand extends BaseSetpointCommand {
     private final ShooterSubsystem shooter;
-    private FieldScoringLocation currentLocation = FieldScoringLocation.Point_1;
+    private FieldScoringLocation currentLocation = FieldScoringLocation.Min_Distance;
 
     @Inject
     public SetShooterSpeedFromLocationCommand(ShooterSubsystem shooter) {

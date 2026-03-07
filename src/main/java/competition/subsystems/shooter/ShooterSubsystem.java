@@ -30,8 +30,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public DoubleProperty shootingTargetVelocity;
     public DoubleProperty trimValue;
     public DoubleProperty readinessTimeoutSeconds;
-    public DoubleProperty MinDistanceRPM;
-    public DoubleProperty MaxDistanceRPM;
+    public DoubleProperty minDistanceRPM;
+    public DoubleProperty medDistanceRPM;
+    public DoubleProperty maxDistanceRPM;
 
     public AngularVelocity currentTargetVelocity = RPM.of(0);
 
@@ -104,8 +105,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         this.trimValue = propertyFactory.createPersistentProperty("Shooter Trim Value", 0);
         this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("Readiness Timeout Seconds", 2.0);
 
-        this.MinDistanceRPM = propertyFactory.createPersistentProperty("Min Distance RPM", 2000);//to change
-        this.MaxDistanceRPM = propertyFactory.createPersistentProperty("Point 2 RPM", 2500); //to change
+        this.minDistanceRPM = propertyFactory.createPersistentProperty("Min Distance RPM", 2800);
+        this.medDistanceRPM = propertyFactory.createPersistentProperty("Med Distance RPM", 3200);
+        this.maxDistanceRPM = propertyFactory.createPersistentProperty("Max Distance RPM", 3600); //to change
     }
 
     public void stop() {
@@ -221,14 +223,16 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
     }
     public enum FieldScoringLocation {
-        Point_1,
-        Point_2
+        Min_Distance,
+        Med_Distance,
+        Max_Distance
     }
 
     public double getRPMForScoringLocation(FieldScoringLocation location) {
         return switch (location) {
-            case Point_1 -> MinDistanceRPM.get();
-            case Point_2 -> MaxDistanceRPM.get();
+            case Min_Distance -> minDistanceRPM.get();
+            case Med_Distance -> medDistanceRPM.get();
+            case Max_Distance -> maxDistanceRPM.get();
         };
     }
 }
