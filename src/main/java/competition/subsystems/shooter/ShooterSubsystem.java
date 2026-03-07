@@ -27,13 +27,16 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public final XCANMotorController rightShooterMotor;
     public ElectricalContract electricalContract;
 
-    public DoubleProperty shootingTargetVelocity;
-    public DoubleProperty trimValue;
+    public final DoubleProperty shootingTargetVelocity;
+    public final DoubleProperty trimValue;
+    public final DoubleProperty point1RPM;
+    public final DoubleProperty point2RPM;
     public DoubleProperty readinessTimeoutSeconds;
 
     public AngularVelocity currentTargetVelocity = RPM.of(0);
 
     private final Subsystem trimSetpointLock = new Subsystem() {
+
     };
 
     @Inject
@@ -43,19 +46,39 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         propertyFactory.setPrefix(this);
         this.electricalContract = electricalContract;
 
-        var defaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
+        var leftShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
                 .withP(0.05)
-                .withI(0.0)
-                .withD(0.0)
+                .withI(0.01)
+                .withD(0.01)
                 .withStaticFeedForward(0.02)
-                .withVelocityFeedForward(0.0095)
+                .withVelocityFeedForward(0.015)
+                .withMinPowerOutput(-1.0)
+                .withMaxPowerOutput(1.0)
+                .build();
+
+        var middleShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
+                .withP(0.05)
+                .withI(0.01)
+                .withD(0.01)
+                .withStaticFeedForward(0.02)
+                .withVelocityFeedForward(0.016)
+                .withMinPowerOutput(-1.0)
+                .withMaxPowerOutput(1.0)
+                .build();
+
+        var rightShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
+                .withP(0.05)
+                .withI(0.01)
+                .withD(0.01)
+                .withStaticFeedForward(0.02)
+                .withVelocityFeedForward(0.016)
                 .withMinPowerOutput(-1.0)
                 .withMaxPowerOutput(1.0)
                 .build();
 
         if (electricalContract.isLeftShooterReady()) {
             this.leftShooterMotor = xcanMotorControllerFactory.create(electricalContract.getLeftShooterMotor(),
-                    getPrefix(), "ShooterMotor", defaultPIDProperties);
+                    getPrefix(), "leftShooterMotor", leftShooterMotorDefaultPIDProperties);
             this.registerDataFrameRefreshable(leftShooterMotor);
         } else {
             this.leftShooterMotor = null;
@@ -63,7 +86,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         if (electricalContract.isMiddleShooterReady()) {
             this.middleShooterMotor = xcanMotorControllerFactory.create(electricalContract.getMiddleShooterMotor(),
-                    getPrefix(), "ShooterMotor", defaultPIDProperties);
+                    getPrefix(), "middleShooterMotor", middleShooterMotorDefaultPIDProperties);
             this.registerDataFrameRefreshable(middleShooterMotor);
         } else {
             this.middleShooterMotor = null;
@@ -71,7 +94,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         if (electricalContract.isRightShooterReady()) {
             this.rightShooterMotor = xcanMotorControllerFactory.create(electricalContract.getRightShooterMotor(),
-                    getPrefix(), "ShooterMotor", defaultPIDProperties);
+                    getPrefix(), "rightShooterMotor", rightShooterMotorDefaultPIDProperties);
             this.registerDataFrameRefreshable(rightShooterMotor);
         } else {
             this.rightShooterMotor = null;
@@ -80,6 +103,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         this.shootingTargetVelocity = propertyFactory.createPersistentProperty("Shooting Target Velocity", 3000);
         this.trimValue = propertyFactory.createPersistentProperty("Shooter Trim Value", 0);
         this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("Readiness Timeout Seconds", 2.0);
+
+        this.point1RPM = propertyFactory.createPersistentProperty("Point 1 RPM", 2000);//to change
+        this.point2RPM = propertyFactory.createPersistentProperty("Point 2 RPM", 2500); //to change
     }
 
     public void stop() {
@@ -140,6 +166,8 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         for (var motor : getShooterMotors()) {
             motor.periodic();
         }
+        aKitLog.record("ShooterCurrentVelocity", getCurrentValue());
+        aKitLog.record("isCalibrated", isCalibrated());
     }
 
     @Override
@@ -193,5 +221,16 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
     public Command getWaitForAtGoalCommand() {
         return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
+    }
+    public enum FieldScoringLocation {
+        Point_1,
+        Point_2
+    }
+
+    public double getRPMForScoringLocation(FieldScoringLocation location) {
+        return switch (location) {
+            case Point_1 -> point1RPM.get();
+            case Point_2 -> point2RPM.get();
+        };
     }
 }

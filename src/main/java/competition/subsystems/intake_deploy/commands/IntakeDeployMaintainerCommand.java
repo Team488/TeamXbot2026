@@ -23,12 +23,11 @@ public class IntakeDeployMaintainerCommand extends BaseMaintainerCommand<Angle, 
     @Inject
     public IntakeDeployMaintainerCommand(IntakeDeploySubsystem subsystemToMaintain, PropertyFactory pf,
                                          OperatorInterface oi,
-                                         HumanVsMachineDecider.HumanVsMachineDeciderFactory hvmFactory,
-                                         PIDManager.PIDManagerFactory pidManagerFactory) {
+                                         HumanVsMachineDecider.HumanVsMachineDeciderFactory hvmFactory) {
         super(subsystemToMaintain, pf, hvmFactory,0.01,0.01);
         pf.setPrefix(this);
         this.subsystem = subsystemToMaintain;
-        this.manualControlGamepad = oi.setupDebugGamepad;
+        this.manualControlGamepad = oi.operatorGamepad;
         this.manualControlDeadband = oi.getOperatorGamepadTypicalDeadband();
     }
 
@@ -53,7 +52,7 @@ public class IntakeDeployMaintainerCommand extends BaseMaintainerCommand<Angle, 
         aKitLog.setLogLevel(AKitLogger.LogLevel.DEBUG);
         aKitLog.record("ManualControlInput", humanInput);
         aKitLog.setLogLevel(AKitLogger.LogLevel.INFO);
-        return humanInput * this.subsystem.manualControlPower.get();
+        return humanInput;
     }
 
     @Override

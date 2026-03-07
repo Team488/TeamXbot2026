@@ -3,10 +3,12 @@ package competition.subsystems.hood;
 import competition.electrical_contract.ElectricalContract;
 
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSetpointSubsystem;
-import xbot.common.command.BaseSubsystem;
+import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.controls.actuators.TimedAndBoundedServo;
 import xbot.common.controls.actuators.XServo;
+import xbot.common.properties.AngleProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -15,10 +17,22 @@ import javax.inject.Singleton;
 
 import java.util.Optional;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
 public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
+
+    public static double getMechanismAngle(double servoPosition) {
+        return Math.acos(mechanismAngleMax - servoPosition * (mechanismAngleMax - mechanismAngleMin));
+    }
+
+    public static double getServoPosition(double ballReleaseAngle) {
+        return Math.acos(mechanismAngleMax - ballReleaseAngle / (mechanismAngleMax - mechanismAngleMin));
+    }
+
+    public static final double mechanismAngleMax = 75.6;
+    public static final double mechanismAngleMin = 41.6;
     // Constants
     public static final double servoMinBound = 0.2;
     public static final double servoMaxBound = 0.8;
@@ -26,11 +40,14 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
     public final TimedAndBoundedServo hoodServoLeft;
     public final TimedAndBoundedServo hoodServoRight;
-    public ElectricalContract electricalContract;
+    public final ElectricalContract electricalContract;
 
-    public DoubleProperty servoTargetNormalized;
-    public DoubleProperty trimValue;
-    public DoubleProperty trimStep;
+    public final DoubleProperty servoTargetNormalized;
+    public final DoubleProperty trimValue;
+    public final DoubleProperty trimStep;
+    public final DoubleProperty extend;
+    public final DoubleProperty retract;
+    public DoubleProperty readinessTimeoutSeconds;
 
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
@@ -67,7 +84,17 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         this.servoTargetNormalized = propertyFactory.createPersistentProperty(
                 "ServoTargetPositionNormalized", 0);
         this.trimValue = propertyFactory.createPersistentProperty("HoodTrimValue", 0);
-        this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.1);
+        this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.05);
+        this.extend = propertyFactory.createPersistentProperty("MaxExtensionGoal", 1.0);
+        this.retract = propertyFactory.createPersistentProperty("MinExtensionGoal", 0.0);
+        this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("ReadinessTimeoutSeconds", 2.0);
+    }
+
+    public void extend() {
+        setTargetValue(getTargetValue() + trimStep.get());
+    }
+    public void retract() {
+        setTargetValue(getTargetValue() - trimStep.get());
     }
 
     public void runServo() {
@@ -94,6 +121,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         if (this.hoodServoLeft != null && this.hoodServoRight != null) {
             aKitLog.record("LeftServoPosition", hoodServoLeft.getNormalizedCurrentPosition());
             aKitLog.record("RightServoPosition", hoodServoRight.getNormalizedCurrentPosition());
+            aKitLog.record("HoodTargetPosition", getTargetValue());
         }
     }
 
@@ -126,6 +154,15 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
     @Override
     public void setTargetValue(Double targetRatio) {
+        // Check bounds
+        var minPosition = retract.get();
+        var maxPosition = extend.get();
+        if (targetRatio < minPosition) {
+            targetRatio = minPosition;
+        } else if (targetRatio > maxPosition) {
+            targetRatio = maxPosition;
+        }
+
         servoTargetNormalized.set(targetRatio);
     }
 
@@ -133,6 +170,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public void setPower(Double power) {
 
     }
+
 
     @Override
     public boolean isCalibrated() {
@@ -144,5 +182,9 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     @Override
     protected boolean areTwoTargetsEquivalent(Double target1, Double target2) {
         return Math.abs(target1 - target2) < 0.1;
+    }
+
+    public Command getWaitForAtGoalCommand() {
+        return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
     }
 }

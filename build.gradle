@@ -14,7 +14,7 @@ targetCompatibility = JavaVersion.VERSION_17
 
 // When in doubt, use the latest version from
 // https://dev.azure.com/Team488/Team%20488%20Builds/_artifacts/feed/XBot
-def SeriouslyCommonLibVersion = '20260222.5'
+def SeriouslyCommonLibVersion = '20260306.10'
 
 def ROBOT_MAIN_CLASS = "competition.Main"
 
@@ -208,6 +208,12 @@ test {
 // Configuration for AdvantageKit
 task(replayWatch, type: JavaExec) {
     mainClass = "org.littletonrobotics.junction.ReplayWatch"
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+// Configuration for Electrical Report
+task(electricalReport, type: JavaExec) {
+    mainClass = "electrical.report.Main"
     classpath = sourceSets.main.runtimeClasspath
 }
 

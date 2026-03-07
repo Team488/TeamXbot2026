@@ -4,8 +4,13 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import xbot.common.subsystems.pose.GameField;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Singleton;
@@ -44,7 +49,6 @@ public class Landmarks {
     // Blue Outpost
     public static Pose2d blueOutpost = new Pose2d(0, 0.650, Rotation2d.fromDegrees(0));
     public static Pose2d blueOutpostPark = new Pose2d(0.350, 0.650, Rotation2d.fromDegrees(0));
-
     // Blue Tower
     public static Pose2d blueClimbOutpostEdge = new Pose2d(1.510,2.780,Rotation2d.fromDegrees(180));
     public static Pose2d blueClimbMiddleOutpostSide = new Pose2d(1.510,3.120,Rotation2d.fromDegrees(180));
@@ -58,9 +62,18 @@ public class Landmarks {
     public static Pose2d blueOutpostSideFuelFieldCollectionStart = new Pose2d(7.790,1.640, Rotation2d.fromDegrees(90));
     public static Pose2d blueDepotSideFuelFieldCollectionStart = new Pose2d(7.790,6.800, Rotation2d.fromDegrees(270));
 
+    private static Distance halfWidthBallPit = Units.Inches.of(35.95);
+    private static Distance halfHeightBallPit = Units.Inches.of(90.95);
 
+    private static Transform2d[] ballPitTransforms = new Transform2d[] {
+        new Transform2d(halfWidthBallPit, halfHeightBallPit, Rotation2d.kZero),
+        new Transform2d(halfWidthBallPit.times(-1), halfHeightBallPit, Rotation2d.kZero),
+        new Transform2d(halfWidthBallPit, halfHeightBallPit.times(-1), Rotation2d.kZero),        
+        new Transform2d(halfWidthBallPit.times(-1), halfHeightBallPit.times(-1), Rotation2d.kZero),
+    };
 
-
+    // AprilTag Ids for known points
+    // AprilTag IDs
     public static int redCenterHubNeutralSideFiducialId = 4;
     public static int redCenterHubDriverSideFiducialId = 10;
 
@@ -76,8 +89,13 @@ public class Landmarks {
     public static int blueTrenchNeutralOutpostSideId = 17;
     public static int redTrenchNeutralOutpostSideId = 1;
 
+    public static int blueTrenchDriverOutpostSideFiducialId = 28;
+    public static int redTrenchDriverOutpostSideFiducialId = 12;
+
     public static int blueOutpostFiducialId = 29;
     public static int redOutpostFiducialId = 13;
+
+    // Offsets/Transforms
 
 
     public static List<Integer> getAllianceHubCenterFiducialIds(Alliance alliance) {
@@ -139,12 +157,7 @@ public class Landmarks {
         var allianceHubCenterTags = Landmarks.getAllianceHubCenterFiducialIds(alliance);
 
         // Tags to tag poses, to 2d poses
-        List<Pose2d> hubCenterTags = allianceHubCenterTags.stream()
-                .map(aprilTagFieldLayout::getTagPose)
-                .filter(Optional::isPresent)
-                .flatMap(Optional::stream)
-                .map(Pose3d::toPose2d)
-                .toList();
+        List<Pose2d> hubCenterTags = getAprilTagPoses(aprilTagFieldLayout, allianceHubCenterTags);
 
         // Sum across poses to a total X value, same y
         double xTotal = hubCenterTags.stream().map(Pose2d::getX).reduce(0.0, Double::sum);
@@ -161,6 +174,80 @@ public class Landmarks {
         double maxX = Math.max(id1Pose.getX(), id2Pose.getX());
 
         return currentPose.getX() >= minX && currentPose.getX() <= maxX;
+    }
+
+    public static Pose2d getClosestAutoBallPitEdge(GameField field, Pose2d currentPose, Alliance alliance) {
+        var center = field.getFieldCenter();
+        var centerPose = new Pose2d(center, Rotation2d.kZero);
+        var ballPitEdges = Arrays.stream(ballPitTransforms)
+            .map(centerPose::transformBy)
+            .filter(edgePose -> isInAllianceSide(field, edgePose, alliance))
+            .toList();
+
+        var nearestEdge = currentPose.nearest(ballPitEdges);
+
+        if (nearestEdge.getY() > center.getY()) {
+            return new Pose2d(nearestEdge.getTranslation(), Rotation2d.kCW_Pi_2);
+        } else {
+            return new Pose2d(nearestEdge.getTranslation(), Rotation2d.kCCW_Pi_2);
+        }
+    }
+
+    public static Pose2d getFurthestAutoBallPitEdge(GameField field, Pose2d currentPose, Alliance alliance) {
+        var center = field.getFieldCenter();
+        var centerPose = new Pose2d(center, Rotation2d.kZero);
+        var ballPitEdges = Arrays.stream(ballPitTransforms)
+            .map(centerPose::transformBy)
+            .filter(edgePose -> isInAllianceSide(field, edgePose, alliance))
+            .toList();
+
+        Pose2d furthestEdge = ballPitEdges.get(0);
+        double maxDist = 0;
+        for (Pose2d edge : ballPitEdges) {
+            double dist = currentPose.getTranslation().getDistance(edge.getTranslation());
+            if (dist > maxDist) {
+                maxDist = dist;
+                furthestEdge = edge;
+            }
+        }
+
+        if (furthestEdge.getY() > center.getY()) {
+            return new Pose2d(furthestEdge.getTranslation(), Rotation2d.kCW_Pi_2);
+        } else {
+            return new Pose2d(furthestEdge.getTranslation(), Rotation2d.kCCW_Pi_2);
+        }
+    }
+
+    public static boolean isInAllianceSide(GameField field, Pose2d pose, Alliance alliance) {
+        var center = field.getFieldCenter();
+        if (alliance == Alliance.Blue) {
+            return pose.getX() < center.getX();
+        } else if (alliance == Alliance.Red) {
+            return pose.getX() > center.getX();
+        }
+
+        return false;
+    }
+
+    public static List<Pose2d> getAllianceTrenchPoses(AprilTagFieldLayout aprilTagFieldLayout, Alliance alliance) {
+        return getAprilTagPoses(aprilTagFieldLayout, getAllianceTrenchFiducialIds(alliance));
+    }
+
+    private static List<Integer> getAllianceTrenchFiducialIds(Alliance alliance) {
+        return switch (alliance) {
+            case Red -> List.of(redTrenchDriverDepotSideId, redTrenchDriverOutpostSideFiducialId);
+            case Blue -> List.of(blueTrenchDriverDepotSideId, blueTrenchDriverOutpostSideFiducialId);
+        };
+    }
+
+    private static List<Pose2d> getAprilTagPoses(AprilTagFieldLayout aprilTagFieldLayout,
+            List<Integer> aprilTagFiducialIds) {
+        return aprilTagFiducialIds.stream()
+            .map(aprilTagFieldLayout::getTagPose)
+            .filter(Optional::isPresent)
+            .flatMap(Optional::stream)
+            .map(Pose3d::toPose2d)
+            .toList();
     }
 
     public static Pose2d getAprilTagPose(AprilTagFieldLayout aprilTagFieldLayout, int aprilTag) {
