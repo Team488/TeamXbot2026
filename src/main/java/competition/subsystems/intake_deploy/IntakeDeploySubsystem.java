@@ -23,7 +23,7 @@ import static edu.wpi.first.units.Units.Second;
 
 @Singleton
 public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  {
-   ElectricalContract electricalContract;
+    ElectricalContract electricalContract;
     public final XCANMotorController intakeDeployMotor;
     public final DoubleProperty manualControlPower;
     public Angle motorOffset = Rotations.zero();
