@@ -95,6 +95,10 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract DeviceInfo getIntakeDeploySensor();
 
+    public abstract boolean isIntakeDeployExtendedSensorReady();
+
+    public abstract DeviceInfo getIntakeDeployExtendedSensor();
+
     /**
      * Returns additional PDH connections for non-motor devices (e.g., VRMs, PCMs, buck converters, etc.)
      * Override this method in specific contract implementations to specify these connections.

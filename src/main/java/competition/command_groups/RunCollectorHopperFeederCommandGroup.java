@@ -1,6 +1,7 @@
 package competition.command_groups;
 
-import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
+import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
+import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
 import xbot.common.command.BaseParallelCommandGroup;
@@ -11,12 +12,12 @@ public class RunCollectorHopperFeederCommandGroup extends BaseParallelCommandGro
 
     @Inject
     public RunCollectorHopperFeederCommandGroup(HopperRollerSubsystem hopper,
-                                            FuelIntakeCommand fuelIntakeCommand,
+                                            CollectorIntakeCommand collectorIntakeCommand,
                                             ShooterFeederFire shooterFeederFireCommand
     ) {
         var hopperIntakeCommand = hopper.getIntakeCommand();
         this.addCommands(
-                hopperIntakeCommand.alongWith(fuelIntakeCommand).alongWith(shooterFeederFireCommand)
+                hopperIntakeCommand.alongWith(collectorIntakeCommand).alongWith(shooterFeederFireCommand)
         );
     }
 }
