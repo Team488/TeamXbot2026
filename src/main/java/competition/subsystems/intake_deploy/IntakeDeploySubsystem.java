@@ -205,4 +205,16 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             isCalibrated = true;
         }
     }
+
+    public void intakeDeployGoDown() {
+        if (intakeDeployMotor != null) {
+            setTargetValue(getCurrentValue().minus(Degrees.of(3.0)));
+        }
+    }
+
+    public void intakeDeployGoUp() {
+        if (intakeDeployMotor != null) {
+            setTargetValue(getCurrentValue().plus(Degrees.of(3.0)));
+        }
+    }
 }
