@@ -32,7 +32,7 @@ public class SetShooterSpeedFromLocationCommand extends BaseSetpointCommand {
     public void execute() {
         double speed = shooter.getRPMForScoringLocation(currentLocation);
         shooter.setTargetValue(RPM.of(speed));
-        shooter.runMotorsAtVelocity(shooter.getTrimmedTargetValue());
+        // shooter.runMotorsAtVelocity(shooter.getTrimmedTargetValue());
     }
 
     @Override

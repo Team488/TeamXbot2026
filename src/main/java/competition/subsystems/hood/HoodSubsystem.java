@@ -2,6 +2,7 @@ package competition.subsystems.hood;
 
 import competition.electrical_contract.ElectricalContract;
 
+import competition.subsystems.shooter.ShooterSubsystem;
 import edu.wpi.first.units.measure.Time;
 import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.controls.actuators.TimedAndBoundedServo;
@@ -32,6 +33,8 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public DoubleProperty trimStep;
     public DoubleProperty extend;
     public DoubleProperty retract;
+    public DoubleProperty point1Angle;
+    public DoubleProperty point2Angle;
 
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
@@ -71,6 +74,8 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.05);
         this.extend = propertyFactory.createPersistentProperty("MaxExtensionGoal", 1.0);
         this.retract = propertyFactory.createPersistentProperty("MinExtensionGoal", 0.0);
+        this.point1Angle = propertyFactory.createPersistentProperty("Point 1 Hood Angle", 0.3);  //To change
+        this.point2Angle = propertyFactory.createPersistentProperty("Point 2 Hood Angle", 0.6);  //To change
     }
 
     public void extend() {
@@ -163,5 +168,11 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     @Override
     protected boolean areTwoTargetsEquivalent(Double target1, Double target2) {
         return Math.abs(target1 - target2) < 0.1;
+    }
+    public double getAngleForScoringLocation(ShooterSubsystem.FieldScoringLocation location) {
+        return switch (location) {
+            case Point_1 -> point1Angle.get();
+            case Point_2 -> point2Angle.get();
+        };
     }
 }
