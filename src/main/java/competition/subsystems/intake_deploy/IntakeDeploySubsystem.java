@@ -203,8 +203,10 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     public void calibrateOffsetDown() {
         if (intakeDeployMotor != null) {
-            motorOffset = intakeDeployMotor.getPosition().minus(limbRange.get());
-            setTargetValue(getCurrentValue());
+            // calculate the motorOffset such that the current position is extendedPosition.get() degrees
+            motorOffset = intakeDeployMotor.getPosition().minus(
+                    Rotations.of(extendedPosition.get() / mechanismDegreePerMotorRotation.get())
+            );
             isCalibrated = true;
         }
     }
