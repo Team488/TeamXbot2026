@@ -113,6 +113,7 @@ public class OperatorCommandMap {
 
         operatorInterface.operatorGamepad.getPovIfAvailable(0).whileTrue(intakeCommand);
 
+        // The following is an example, once we've created some preset buttons you can remove thiss
         var shooterConfigExample = prepareToShoot.get().setHoodGoal(0.0).setShooterGoal(RPM.of(3600));
     }
 
