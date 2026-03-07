@@ -2,6 +2,7 @@ package competition.subsystems.intake_deploy;
 
 import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Current;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.properties.AngleProperty;
@@ -14,6 +15,7 @@ import xbot.common.controls.sensors.XDigitalInput;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Rotations;
@@ -181,6 +183,11 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
                 this.intakeDeployMotor.setTrapezoidalProfileAcceleration(RotationsPerSecond.per(Second).of(maxPidAcceleration.get()));
             }
         }
+
+        if (this.isTouchingIntakeDeployExtendedSensor()) {
+            calibrateOffsetDown();
+        }
+
         // Sensor reading seems bad - don't trust it for now
         //if (isTouchingIntakeDeploy() && !isCalibrated) {
         //    calibrateOffsetUp();
@@ -216,5 +223,12 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         if (intakeDeployMotor != null) {
             setTargetValue(getCurrentValue().plus(Degrees.of(3.0)));
         }
+    }
+
+    public Current getMotorCurrent() {
+        if (intakeDeployMotor != null) {
+            return intakeDeployMotor.getCurrent();
+        }
+        return Amps.zero();
     }
 }
