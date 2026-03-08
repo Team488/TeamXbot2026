@@ -11,14 +11,14 @@ import java.util.Set;
 
 public class DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory {
     private final Provider<DriveFromNeutralZoneToAllianceCommand> driveFromNeutralZoneToAllianceCommandProvider;
+    private final Provider<GetReadyForFiringCommandGroup> getReadyForFiringCommandGroup;
 
     private final DriveSubsystem drive;
-    private final GetReadyForFiringCommandGroup getReadyForFiringCommandGroup;
 
     @Inject
     public DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory(
             Provider<DriveFromNeutralZoneToAllianceCommand> driveFromNeutralZoneToAllianceCommandProvider,
-            GetReadyForFiringCommandGroup getReadyForFiringCommandGroup,
+            Provider<GetReadyForFiringCommandGroup> getReadyForFiringCommandGroup,
             DriveSubsystem drive) {
         this.driveFromNeutralZoneToAllianceCommandProvider = driveFromNeutralZoneToAllianceCommandProvider;
         this.getReadyForFiringCommandGroup = getReadyForFiringCommandGroup;
@@ -34,7 +34,9 @@ public class DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory {
                 this.driveFromNeutralZoneToAllianceCommandProvider::get, Set.of(drive));
         group.addCommands(driveToAlliance);
 
-        group.addCommands(this.getReadyForFiringCommandGroup);
+        var getReadyForFiring = new DeferredCommand(
+                this.getReadyForFiringCommandGroup::get, Set.of(drive));
+        group.addCommands(getReadyForFiring);
 
         return group;
     }
