@@ -16,6 +16,7 @@ import javax.inject.Singleton;
 
 import java.util.Optional;
 
+import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
@@ -130,7 +131,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
     @Override
     public Double getCurrentValue() {
-        return hoodServoLeft.getNormalizedCurrentPosition();
+        return 0.0;
     }
 
     @Override

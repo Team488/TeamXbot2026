@@ -170,17 +170,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
     @Override
     public AngularVelocity getCurrentValue() {
-        var shooterMotors = getHealthyShooterMotors();
-        if (shooterMotors.isEmpty()) {
-            return RPM.zero();
-        }
-
-        double total = 0;
-        for (var motor : shooterMotors) {
-            total += motor.getVelocity().in(RPM);
-        }
-        double averageSpeed = total / shooterMotors.size();
-        return RPM.of(averageSpeed);
+        return RPM.of(0 );
     }
 
     @Override
