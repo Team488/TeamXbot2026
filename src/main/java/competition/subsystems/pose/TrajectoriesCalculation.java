@@ -46,8 +46,9 @@ public class TrajectoriesCalculation {
         this.log = LogManager.getLogger(getClass().getName());
         propManager.setPrefix(this.toString());
         this.trajectoriesShooterRPMFixed = propManager.createPersistentProperty("trajectoriesShooterRPMFixed", 4800);
-        this.interpolationFactor = propManager.createPersistentProperty("AllianceZoneAimMidpointInterpolationFactor", 0.5);
-        this.trajectoryCalcVersion = propManager.createPersistentProperty("TrajectoryCalcVersion", "3");
+        this.interpolationFactor = propManager.createPersistentProperty("AllianceZoneAimMidpointInterpolationFactor",
+                0.5);
+        this.trajectoryCalcVersion = propManager.createPersistentProperty("TrajectoryCalcVersion", "2");
     }
 
     // fieldOrientatedRotation Should tell us where the drive system should head.
@@ -88,10 +89,10 @@ public class TrajectoriesCalculation {
         Pose2d closestTrenchNeutralSideIdPose = Landmarks.getClosestTrenchNeutralSideIdPose(
                 aprilTagFieldLayout,
                 DriverStation.getAlliance().orElse(Alliance.Blue),
-                robotPose
-        );
+                robotPose);
 
-        Translation2d target = Landmarks.getAllianceHubPose(aprilTagFieldLayout, DriverStation.getAlliance().orElse(Alliance.Blue))
+        Translation2d target = Landmarks
+                .getAllianceHubPose(aprilTagFieldLayout, DriverStation.getAlliance().orElse(Alliance.Blue))
                 .getTranslation()
                 .interpolate(closestTrenchNeutralSideIdPose.getTranslation(), interpolationFactor.get());
 
@@ -103,56 +104,60 @@ public class TrajectoriesCalculation {
     private ShootingData calculateTrajectory(Pose2d robotPose, Pose2d targetPose) {
         switch (trajectoryCalcVersion.get()) {
             case "1":
-                return calculateTrajectoryV1DumbFixedArcToHub(robotPose);
+                return this.calculateTrajectoryV1DumbFixedArcToHub(robotPose, targetPose);
             case "2":
-                return calculateTrajectoryV2KnownDistance(robotPose, targetPose);
-            case "dynamic":
+                return this.calculateTrajectoryV2KnownDistance(robotPose, targetPose);
+            case "3":
             default:
-                return calculateTrajectoryV3Dynamic(robotPose, targetPose);
+                return this.calculateTrajectoryV3Dynamic(robotPose, targetPose);
         }
     }
 
-    // Fixed shooter parameters. Should only be used when things to very wrong.
-    private ShootingData calculateTrajectoryV1DumbFixedArcToHub(Pose2d robotPose) {
-        Pose2d hubPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout,
-                DriverStation.getAlliance().orElse(Alliance.Blue));
-        Translation2d vectorToTarget = hubPose.minus(robotPose).getTranslation();
-        Rotation2d finalRotation = vectorToTarget.getNorm() < 0.01 ? robotPose.getRotation() : vectorToTarget.getAngle();
+    private Rotation2d rotationToShootFrom(Pose2d robotPose, Pose2d targetPose) {
+        Translation2d vectorToTarget = targetPose.minus(robotPose).getTranslation();
 
-        return new ShootingData(finalRotation, Units.RPM.of(/* TODO GET FROM JOSH */488), /* TODO GET FROM JOSH */0.0);
+        return vectorToTarget.getNorm() < 0.01 ? robotPose.getRotation() : vectorToTarget.getAngle();
     }
 
-    // Look up known distances based on a preset distances rather than continuous adjustment.
+    // Fixed shooter parameters. Should only be used when things to very wrong.
+    private ShootingData calculateTrajectoryV1DumbFixedArcToHub(Pose2d robotPose, Pose2d targetPose) {
+        return new ShootingData(this.rotationToShootFrom(robotPose, targetPose), Units.RPM.of(3800), 0.2);
+    }
+
+    // Look up known distances based on a preset distances rather than continuous
+    // adjustment.
     private ShootingData calculateTrajectoryV2KnownDistance(Pose2d robotPose, Pose2d targetPose) {
         Translation2d vectorToTarget = targetPose.minus(robotPose).getTranslation();
-        Rotation2d finalRotation = vectorToTarget.getNorm() < 0.01 ? robotPose.getRotation() : vectorToTarget.getAngle();
+        var preset = this.getPresetShootingDistance(Units.Meters.of(vectorToTarget.getNorm()));
+        var shootingData = this.getKnownShootingParameters(preset);
 
-        var preset = getPresetShootingDistance(Units.Meters.of(vectorToTarget.getNorm()));
-        var shootingData = getKnownShootingParameters(preset);
-
-        // Target rotation will probably be ignored or corrected if we're using manual distance, but point towards where we think the hub
-        return new ShootingData(finalRotation, shootingData.shooterRPM, shootingData.servoRatio);
+        // Target rotation will probably be ignored or corrected if we're using manual
+        // distance, but point towards where we think the hub
+        return new ShootingData(this.rotationToShootFrom(robotPose, targetPose), shootingData.shooterRPM,
+                shootingData.servoRatio);
     }
 
-    // Look up optimal shooting parameters based on current pose and shooting target's pose.
+    // Look up optimal shooting parameters based on current pose and shooting
+    // target's pose.
     private ShootingData calculateTrajectoryV3Dynamic(Pose2d robotPose, Pose2d targetPose) {
         if (trajectoryMap == null) {
             loadTrajectories();
         }
-        Translation2d vectorToTarget = targetPose.minus(robotPose).getTranslation();
-        Rotation2d finalRotation = vectorToTarget.getNorm() < 0.01 ? robotPose.getRotation() : vectorToTarget.getAngle();
+        Rotation2d finalRotation = this.rotationToShootFrom(robotPose, targetPose);
         Pose2d finalPose = new Pose2d(robotPose.getX(), robotPose.getY(), finalRotation);
 
         Pose2d shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
         double distance = shooterPose.getTranslation().getDistance(targetPose.getTranslation());
         var key = new TrajectoryKey(distance, 10.5);
         if (!trajectoryMap.containsKey(key)) {
-            log.warn("Trajectory not found, potentially trajectories.json not found or the value doesn't exist in trajectories!");
+            log.warn(
+                    "Trajectory not found, potentially trajectories.json not found or the value doesn't exist in trajectories!");
             return TrajectoriesCalculation.emptyShootingData;
         }
         HoodTrajectory hoodTrajectory = trajectoryMap.get(key);
 
-        return new ShootingData(finalRotation, Units.RPM.of(trajectoriesShooterRPMFixed.get()), hoodTrajectory.servoRatio);
+        return new ShootingData(finalRotation, Units.RPM.of(trajectoriesShooterRPMFixed.get()),
+                hoodTrajectory.servoRatio);
     }
 
     // Known poses on the field that are good to shoot from.
@@ -162,27 +167,23 @@ public class TrajectoriesCalculation {
                 return new ShootingData(
                         new Rotation2d(0),
                         Units.RPM.of(3800),
-                        0.25
-                );
+                        0.25);
             case TOWER_CLOSE:
                 return new ShootingData(
                         new Rotation2d(0),
                         Units.RPM.of(3600),
-                        0.0
-                );
+                        0.0);
             case TRENCH:
                 return new ShootingData(
                         new Rotation2d(0),
                         Units.RPM.of(3800),
-                        0.2
-                );
+                        0.2);
             case NEAR:
             default:
                 return new ShootingData(
                         new Rotation2d(0),
                         Units.RPM.of(2600),
-                        0.0
-                );
+                        0.0);
         }
     }
 
@@ -192,16 +193,17 @@ public class TrajectoriesCalculation {
     // Convert numeric distance to known distance presets.
     private PresetShootingDistance getPresetShootingDistance(Distance distance) {
         var presets = List.of(
-            // Note: robot radius corrections below are educated guesses but don't matter precisely here.
-            new PresetShootingDistanceLookup(Units.Meters.of(0.94 + 0.34), PresetShootingDistance.NEAR),
-            new PresetShootingDistanceLookup(Units.Meters.of(3.34 + 0.34), PresetShootingDistance.TRENCH),
-            new PresetShootingDistanceLookup(Units.Meters.of(3.52 - 0.60), PresetShootingDistance.TOWER_CLOSE),
-            new PresetShootingDistanceLookup(Units.Meters.of(3.52 + 0.34), PresetShootingDistance.TOWER_FAR)
-        );
+                // Note: robot radius corrections below are educated guesses but don't matter
+                // precisely here.
+                new PresetShootingDistanceLookup(Units.Meters.of(0.94 + 0.34), PresetShootingDistance.NEAR),
+                new PresetShootingDistanceLookup(Units.Meters.of(3.34 + 0.34), PresetShootingDistance.TRENCH),
+                new PresetShootingDistanceLookup(Units.Meters.of(3.52 - 0.60), PresetShootingDistance.TOWER_CLOSE),
+                new PresetShootingDistanceLookup(Units.Meters.of(3.52 + 0.34), PresetShootingDistance.TOWER_FAR));
         return presets.stream()
-            .min(Comparator.comparingDouble(preset -> Math.abs(distance.abs(Units.Meter) - preset.distance.abs(Units.Meter))))
-            .map(PresetShootingDistanceLookup::presetShootingDistance)
-            .orElse(PresetShootingDistance.NEAR);
+                .min(Comparator.comparingDouble(
+                        preset -> Math.abs(distance.abs(Units.Meter) - preset.distance.abs(Units.Meter))))
+                .map(PresetShootingDistanceLookup::presetShootingDistance)
+                .orElse(PresetShootingDistance.NEAR);
     }
 
     // This method loads the trajectories from the JSON file and populates the
