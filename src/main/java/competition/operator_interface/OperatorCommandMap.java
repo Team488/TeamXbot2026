@@ -98,7 +98,6 @@ public class OperatorCommandMap {
                                      ForceIntakeDownToEndStopCommand forceIntakeDownCommand,
                                      CalibrateOffsetUp calibrateIntakeOffsetUp,
                                      HopperAndIntakeCommandGroup intakeCommand,
-                                     MaxHoodShootingCommandGroup maxHoodShootingCommandGroup,
                                      FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup,
                                      Provider<PrepareToShootCommandGroup> prepareToShootCommand
     ) {
@@ -111,6 +110,12 @@ public class OperatorCommandMap {
         var prepareToShootMaxiumum = prepareToShootCommand.get()
                 .setHoodGoal(hoodSubsystem.maxDistanceGoal.get())
                 .setShooterGoal(RPM.of(shooterSubsystem.maxDistanceRPM.get()));
+        var prepareToShootNeutralToAllianceZone = prepareToShootCommand.get()
+                .setHoodGoal(hoodSubsystem.neutralToAllianceZoneGoal.get())
+                .setShooterGoal(RPM.of(shooterSubsystem.neutralToAllianceZoneRPM.get()));
+        var prepareToShootOpposingAllianceZone = prepareToShootCommand.get()
+                .setHoodGoal(hoodSubsystem.opposingAllianceZoneGoal.get())
+                .setShooterGoal(RPM.of(shooterSubsystem.opposingAllianceZoneRPM.get()));
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger)
                 .whileTrue(fireWhenReadyShooterCommandGroup);
@@ -120,8 +125,6 @@ public class OperatorCommandMap {
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X)
                 .whileTrue(minHoodShootingCommandGroup);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B)
-                .whileTrue(maxHoodShootingCommandGroup);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y)
                 .onTrue(intakeDeployExtendCommand);
