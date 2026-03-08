@@ -2,6 +2,7 @@ package competition.subsystems.hood;
 
 import competition.electrical_contract.ElectricalContract;
 
+import competition.subsystems.shooter.ShooterSubsystem;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSetpointSubsystem;
@@ -47,7 +48,9 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public final DoubleProperty trimStep;
     public final DoubleProperty extend;
     public final DoubleProperty retract;
-    public DoubleProperty readinessTimeoutSeconds;
+    public final DoubleProperty point1Ratio;
+    public final DoubleProperty point2Ratio;
+    public final DoubleProperty readinessTimeoutSeconds;
 
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
@@ -87,6 +90,8 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.05);
         this.extend = propertyFactory.createPersistentProperty("MaxExtensionGoal", 1.0);
         this.retract = propertyFactory.createPersistentProperty("MinExtensionGoal", 0.0);
+        this.point1Ratio = propertyFactory.createPersistentProperty("Point 1 Hood Angle", 0.3);  //To change
+        this.point2Ratio = propertyFactory.createPersistentProperty("Point 2 Hood Angle", 0.6);  //To change
         this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("ReadinessTimeoutSeconds", 2.0);
     }
 
@@ -183,8 +188,14 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     protected boolean areTwoTargetsEquivalent(Double target1, Double target2) {
         return Math.abs(target1 - target2) < 0.1;
     }
-
+    public double getAngleForScoringLocation(ShooterSubsystem.FieldScoringLocation location) {
+        return switch (location) {
+            case Point_1 -> point1Ratio.get();
+            case Point_2 -> point2Ratio.get();
+        };
+    }
     public Command getWaitForAtGoalCommand() {
         return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
     }
 }
+
