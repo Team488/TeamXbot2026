@@ -6,6 +6,7 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
+import java.util.function.DoubleSupplier;
 
 /**
  * Extend the intake deploy mechanism without relying on PID. Used for driving the intake down towards the end stop.
@@ -14,7 +15,7 @@ public class IntakeDeployExtendWithoutPidCommand extends BaseCommand {
     private final IntakeDeploySubsystem subsystem;
 
     private final DoubleProperty powerProperty;
-    private double overridePower = 0;
+    private DoubleSupplier overrideSupplier = null;
 
     @Inject
     public IntakeDeployExtendWithoutPidCommand(IntakeDeploySubsystem subsystem, PropertyFactory pf) {
@@ -25,18 +26,14 @@ public class IntakeDeployExtendWithoutPidCommand extends BaseCommand {
         this.powerProperty = pf.createPersistentProperty("Power", -0.2);
     }
 
-    public IntakeDeployExtendWithoutPidCommand setPower(double power) {
-        this.overridePower = power;
+    public IntakeDeployExtendWithoutPidCommand setPower(DoubleSupplier supplier) {
+        this.overrideSupplier = supplier;
         return this;
     }
 
     public void initialize() {
-        if (this.subsystem.isTouchingIntakeDeployExtendedSensor()) {
-            return;
-        }
-
-        if (this.overridePower != 0) {
-            this.subsystem.setPower(this.overridePower);
+        if (this.overrideSupplier != null) {
+            this.subsystem.setPower(this.overrideSupplier.getAsDouble());
         } else {
             this.subsystem.setPower(this.powerProperty.get());
         }
