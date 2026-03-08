@@ -14,12 +14,13 @@ import competition.command_groups.PrepareToShootCommandGroup;
 import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.climber.commands.ClimberSetPointCommand;
+import competition.subsystems.collector_intake.commands.CollectorEjectCommand;
+import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
-import competition.subsystems.collector_intake.commands.CollectorEjectCommand;
-import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
+import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.DropHoodForTrenchCommand;
 import competition.subsystems.hood.commands.HoodExtendCommands;
 import competition.subsystems.hood.commands.HoodRetractCommands;
@@ -32,11 +33,11 @@ import competition.subsystems.intake_deploy.commands.ForceIntakeDownToEndStopCom
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import competition.subsystems.pose.Landmarks;
+import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.autonomous.SetAutonomousCommand;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
@@ -88,6 +89,8 @@ public class OperatorCommandMap {
     @Inject
     public void setupOperatorGamepad(OperatorInterface operatorInterface,
                                      MinHoodShootingCommandGroup minHoodShootingCommandGroup,
+                                     HoodSubsystem hoodSubsystem,
+                                     ShooterSubsystem shooterSubsystem,
                                      HoodExtendCommands hoodExtend,
                                      HoodRetractCommands hoodRetract,
                                      IntakeDeployExtendCommand intakeDeployExtendCommand,
@@ -97,8 +100,18 @@ public class OperatorCommandMap {
                                      HopperAndIntakeCommandGroup intakeCommand,
                                      MaxHoodShootingCommandGroup maxHoodShootingCommandGroup,
                                      FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup,
-                                     Provider<PrepareToShootCommandGroup> prepareToShoot
+                                     Provider<PrepareToShootCommandGroup> prepareToShootCommand
     ) {
+        var prepareToShootMinimum = prepareToShootCommand.get()
+                .setHoodGoal(hoodSubsystem.minDistanceGoal.get())
+                .setShooterGoal(RPM.of(shooterSubsystem.minDistanceRPM.get()));
+        var prepareToShootMedium = prepareToShootCommand.get()
+                .setHoodGoal(hoodSubsystem.medDistanceGoal.get())
+                .setShooterGoal(RPM.of(shooterSubsystem.medDistanceRPM.get()));
+        var prepareToShootMaxiumum = prepareToShootCommand.get()
+                .setHoodGoal(hoodSubsystem.maxDistanceGoal.get())
+                .setShooterGoal(RPM.of(shooterSubsystem.maxDistanceRPM.get()));
+
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger)
                 .whileTrue(fireWhenReadyShooterCommandGroup);
 
@@ -116,13 +129,12 @@ public class OperatorCommandMap {
                 .onTrue(intakeDeployRetractCommand);
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Back)
                 .whileTrue(forceIntakeDownCommand);
+        operatorInterface.operatorGamepad.getPovIfAvailable(270).whileTrue(prepareToShootMinimum);
+        operatorInterface.operatorGamepad.getPovIfAvailable(90).whileTrue(prepareToShootMaxiumum);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateIntakeOffsetUp);
 
         operatorInterface.operatorGamepad.getPovIfAvailable(0).whileTrue(intakeCommand);
-
-        // The following is an example, once we've created some preset buttons you can remove thiss
-        var shooterConfigExample = prepareToShoot.get().setHoodGoal(0.0).setShooterGoal(RPM.of(3600));
     }
 
     @Inject
