@@ -169,8 +169,6 @@ public class OperatorCommandMap {
         var moveAcrossField = setAutonomousCommandProvider.get();
         moveAcrossField.setAutoCommand(moveAcrossFieldCommand, Landmarks.blueStartTrenchToOutpost);
         moveAcrossField.includeOnSmartDashboard("Move across field.");
-
-        driveToShootingPositionCommand.includeOnSmartDashboard("Drive to Shooting Position");
     }
 
     @Inject
