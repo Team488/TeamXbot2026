@@ -54,13 +54,23 @@ public class AutoLandmarks {
         var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
         var ballPitEdge = Landmarks.getClosestAutoBallPitEdge(this.gamefield, pose, alliance);
 
-        var multiplier = ballPitEdge.getY() > this.gamefield.getFieldCenter().getY() ? 1 : -1;
-        var adjustedForRobot = new Translation2d(Units.Meters.of(0),
-                this.robotRadius.plus(this.pathPlanning.getAdditionalClearance()).times(multiplier));
+        var multiplierY = ballPitEdge.getY() > this.gamefield.getFieldCenter().getY() ? 1 : -1;
+        var multiplierX = ballPitEdge.getX() > this.gamefield.getFieldCenter().getX() ? 1 : -1;
+        var adjustedForRobot = new Translation2d(Units.Meters.of(1).times(multiplierX),
+                this.robotRadius.plus(this.pathPlanning.getAdditionalClearance()).times(multiplierY));
 
         var adjustedTransform = new Transform2d(adjustedForRobot, Rotation2d.kZero);
         return new Pose2d(ballPitEdge.getX(), this.gamefield.getFieldCenter().getY(),
-                pose.getRotation()).transformBy(adjustedTransform);
+                ballPitEdge.getRotation()).transformBy(adjustedTransform);
+    }
+
+    public Pose2d getMidBallPitTurnAroundCollectionPose(Pose2d pose) {
+        var midPoint = this.getMidBallPitCollectionPose(pose);
+
+        var multiplier = midPoint.getX() > this.gamefield.getFieldCenter().getX() ? 1 : -1;
+        var adjustTurnAround = new Translation2d(Units.Meters.of(0.25).times(multiplier),
+                Units.Meters.of(0));
+        return new Pose2d(midPoint.getTranslation().plus(adjustTurnAround), midPoint.getRotation().rotateBy(Rotation2d.kPi));
     }
 
     public Pose2d getFinishBallPitCollectionPose(Pose2d pose) {
