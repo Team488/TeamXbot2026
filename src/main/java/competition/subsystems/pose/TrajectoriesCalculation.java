@@ -42,7 +42,7 @@ public class TrajectoriesCalculation {
     public TrajectoriesCalculation(AprilTagFieldLayout aprilTagFieldLayout, PropertyFactory propManager) {
         this.aprilTagFieldLayout = aprilTagFieldLayout;
         this.log = LogManager.getLogger(getClass().getName());
-        propManager.setPrefix(this.toString());
+        propManager.setPrefix("TrajectoriesCalculation");
         this.trajectoriesShooterRPMFixed = propManager.createPersistentProperty("trajectoriesShooterRPMFixed", 4800);
         this.interpolationFactor = propManager.createPersistentProperty("AllianceZoneAimMidpointInterpolationFactor", 0.5);
         this.trajectoryCalcVersion = propManager.createPersistentProperty("TrajectoryCalcVersion", "dynamic");
@@ -113,7 +113,7 @@ public class TrajectoriesCalculation {
         }
     }
 
-    // Fixed shooter parameters. Should only be used when things to very wrong.
+    // Fixed shooter parameters. Should only be used when things go very wrong.
     private ShootingData calculateTrajectoryV1DumbFixedArcToHub(Pose2d robotPose) {
         Pose2d hubPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout,
                 DriverStation.getAlliance().orElse(Alliance.Blue));
