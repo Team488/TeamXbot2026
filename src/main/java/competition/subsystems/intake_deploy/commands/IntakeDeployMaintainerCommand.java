@@ -38,7 +38,7 @@ public class IntakeDeployMaintainerCommand extends BaseMaintainerCommand<Angle, 
 
     @Override
     protected void calibratedMachineControlAction() {
-        subsystem.setPositionGoal(subsystem.getTargetValue());
+//        subsystem.setPositionGoal(subsystem.getTargetValue());
     }
 
     @Override
