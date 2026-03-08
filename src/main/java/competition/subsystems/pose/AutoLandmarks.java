@@ -23,7 +23,7 @@ public class AutoLandmarks {
     private final Distance robotRadius;
     private final AprilTagFieldLayout aprilTagFieldLayout;
     private final SwervePointPathPlanning pathPlanning;
-    private static final Distance OPTIMAL_DISTANCE_TO_SHOOT_FROM = Units.Inches.of(90);
+    private static final Distance OPTIMAL_DISTANCE_TO_SHOOT_FROM = Units.Inches.of(103.5);
 
     @Inject
     public AutoLandmarks(ElectricalContract electricalContract,
