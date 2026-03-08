@@ -87,8 +87,8 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
                 "ServoTargetPositionNormalized", 0);
         this.trimValue = propertyFactory.createPersistentProperty("HoodTrimValue", 0);
         this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.05);
-        this.extend = propertyFactory.createPersistentProperty("MaxExtension", 1.0);
-        this.retract = propertyFactory.createPersistentProperty("MinExtension", 0.0);
+        this.extend = propertyFactory.createPersistentProperty("MaxExtensionGoal", 1.0);
+        this.retract = propertyFactory.createPersistentProperty("MinExtensionGoal", 0.0);
         this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("ReadinessTimeoutSeconds", 2.0);
 
         this.minDistanceGoal = propertyFactory.createPersistentProperty("Hood Min Distance Goal", 0.0);
