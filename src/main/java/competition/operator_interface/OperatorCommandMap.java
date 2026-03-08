@@ -101,14 +101,14 @@ public class OperatorCommandMap {
                                      Provider<PrepareToShootCommandGroup> prepareToShootCommand
     ) {
         var prepareToShootMinimum = prepareToShootCommand.get()
-                .setHoodGoal(hoodSubsystem.minDistanceGoal.get())
-                .setShooterGoal(RPM.of(shooterSubsystem.minDistanceRPM.get()));
+                .setHoodGoal(hoodSubsystem.minDistanceGoal::get)
+                .setShooterGoal(() -> RPM.of(shooterSubsystem.minDistanceRPM.get()));
         var prepareToShootMedium = prepareToShootCommand.get()
-                .setHoodGoal(hoodSubsystem.medDistanceGoal.get())
-                .setShooterGoal(RPM.of(shooterSubsystem.medDistanceRPM.get()));
+                .setHoodGoal(hoodSubsystem.medDistanceGoal::get)
+                .setShooterGoal(() -> RPM.of(shooterSubsystem.medDistanceRPM.get()));
         var prepareToShootMaxiumum = prepareToShootCommand.get()
-                .setHoodGoal(hoodSubsystem.maxDistanceGoal.get())
-                .setShooterGoal(RPM.of(shooterSubsystem.maxDistanceRPM.get()));
+                .setHoodGoal(hoodSubsystem.maxDistanceGoal::get)
+                .setShooterGoal(() -> RPM.of(shooterSubsystem.maxDistanceRPM.get()));
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger)
                 .whileTrue(fireWhenReadyShooterCommandGroup);

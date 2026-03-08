@@ -8,10 +8,13 @@ import javax.inject.Inject;
 
 import static edu.wpi.first.units.Units.RPM;
 
+import java.util.function.Supplier;
+
 public class ShooterOutputCommand extends BaseSetpointCommand {
     private final ShooterSubsystem shooter;
     private boolean usingCustomGoal = false;
     private AngularVelocity targetVelocity;
+    private Supplier<AngularVelocity> targetVelocitySupplier = null;
 
     @Inject
     public ShooterOutputCommand(ShooterSubsystem shooterSubsystem) {
@@ -25,10 +28,17 @@ public class ShooterOutputCommand extends BaseSetpointCommand {
         this.usingCustomGoal = true;
     }
 
+    public void setTargetVelocity(Supplier<AngularVelocity> targetVelocitySupplier) {
+        this.targetVelocitySupplier = targetVelocitySupplier;
+        this.usingCustomGoal = true;
+    }
+
     @Override
     public void initialize() {
         if (!this.usingCustomGoal) {
             this.targetVelocity = RPM.of(this.shooter.shootingTargetVelocity.get());
+        } else if (this.targetVelocitySupplier != null) {
+            this.targetVelocity = this.targetVelocitySupplier.get();
         }
 
         log.info("Shooting at {} RPM", this.targetVelocity.in(RPM));
