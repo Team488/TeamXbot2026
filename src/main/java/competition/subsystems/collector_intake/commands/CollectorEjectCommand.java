@@ -1,6 +1,6 @@
-package competition.subsystems.fuel_intake.commands;
+package competition.subsystems.collector_intake.commands;
 
-import competition.subsystems.fuel_intake.CollectorSubsystem;
+import competition.subsystems.collector_intake.CollectorSubsystem;
 import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
