@@ -98,7 +98,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public IMUInfo getIMUInfo() {
-        return new IMUInfo("Pigeon", XGyro.ImuType.pigeon2, XGyro.InterfaceType.CAN, CANBusId.Canivore, 56);
+        return new IMUInfo(XGyro.InterfaceType.spi, PowerSource.RIO);
     }
 
     public DeviceInfo pigeon2() {
