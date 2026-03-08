@@ -116,7 +116,10 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         // Checks the right joystick input to see if we want to snap to a certain side
         // Apparently, we need to invert the x input here as it has been inverted for other commands already
         // And of course, we must rotate -90 (similar to how we got raw translation) for default alignment
-        XYPair joystickInput = new XYPair(-oi.driverGamepad.getRightVector().getX(), oi.driverGamepad.getRightVector().getY()).rotate(-90);
+        // Deadband is applied to prevent joystick drift from causing unintended heading changes
+        double rightX = MathUtils.deadband(-oi.driverGamepad.getRightVector().getX(), 0.15);
+        double rightY = MathUtils.deadband(oi.driverGamepad.getRightVector().getY(), 0.15);
+        XYPair joystickInput = new XYPair(rightX, rightY).rotate(-90);
 
         if (xGyro != null && xGyro.isBroken()){
             joystickInput = new XYPair(0,0);
