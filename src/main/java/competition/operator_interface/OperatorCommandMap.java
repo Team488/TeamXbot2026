@@ -5,6 +5,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
+import competition.command_groups.DepotCollectionAutoCommandGroup;
 import competition.command_groups.FireWhenReadyShooterCommandGroup;
 import competition.command_groups.MinHoodShootingCommandGroup;
 import competition.command_groups.DriveToShootingPositionCommand;
@@ -169,7 +170,7 @@ public class OperatorCommandMap {
     @Inject
     public void setupSimulatorCommands(
             ResetSimulatedPoseCommand resetSimulatorPositionCommand,
-            Depot depotCollectionAutoCommand
+            DepotCollectionAutoCommandGroup depotCollectionAutoCommand
     ) {
         resetSimulatorPositionCommand.includeOnSmartDashboard("Reset Simulator Position");
         depotCollectionAutoCommand.includeOnSmartDashboard("Depot collection");
