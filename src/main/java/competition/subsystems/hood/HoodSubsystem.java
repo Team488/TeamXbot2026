@@ -16,7 +16,6 @@ import javax.inject.Singleton;
 
 import java.util.Optional;
 
-import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton

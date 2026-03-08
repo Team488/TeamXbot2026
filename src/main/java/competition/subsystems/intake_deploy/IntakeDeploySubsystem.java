@@ -1,7 +1,6 @@
 package competition.subsystems.intake_deploy;
 
 import competition.electrical_contract.ElectricalContract;
-import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import xbot.common.controls.actuators.XCANMotorController;
