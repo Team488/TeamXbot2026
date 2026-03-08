@@ -50,6 +50,8 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public final DoubleProperty minDistanceGoal;
     public final DoubleProperty medDistanceGoal;
     public final DoubleProperty maxDistanceGoal;
+    public final DoubleProperty neutralToAllianceZoneGoal;
+    public final DoubleProperty opposingAllianceZoneGoal;
 
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
@@ -94,6 +96,8 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         this.minDistanceGoal = propertyFactory.createPersistentProperty("Hood Min Distance Goal", 0.0);
         this.medDistanceGoal = propertyFactory.createPersistentProperty("Hood Med Distance Goal", 0.5); //change this later
         this.maxDistanceGoal = propertyFactory.createPersistentProperty("Hood Max Distance Goal", 1.0); //change this later
+        this.neutralToAllianceZoneGoal = propertyFactory.createPersistentProperty("Hood Neutral To Alliance Zone Goal", 1.0);
+        this.opposingAllianceZoneGoal = propertyFactory.createPersistentProperty("Hood Opposing Alliance Zone Goal", 1.0);
     }
 
     public void extend() {

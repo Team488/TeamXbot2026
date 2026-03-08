@@ -33,6 +33,8 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public DoubleProperty minDistanceRPM;
     public DoubleProperty medDistanceRPM;
     public DoubleProperty maxDistanceRPM;
+    public DoubleProperty neutralToAllianceZoneRPM;
+    public DoubleProperty opposingAllianceZoneRPM;
 
     public AngularVelocity currentTargetVelocity = RPM.of(0);
 
@@ -108,6 +110,8 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         this.minDistanceRPM = propertyFactory.createPersistentProperty("Min Distance RPM", 2800);
         this.medDistanceRPM = propertyFactory.createPersistentProperty("Med Distance RPM", 3200);
         this.maxDistanceRPM = propertyFactory.createPersistentProperty("Max Distance RPM", 3600); //to change
+        this.neutralToAllianceZoneRPM = propertyFactory.createPersistentProperty("Neutral To Alliance Zone RPM", 3600);
+        this.opposingAllianceZoneRPM = propertyFactory.createPersistentProperty("Opposing Alliance Zone RPM", 4800);
     }
 
     public void stop() {
@@ -227,7 +231,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public enum FieldScoringLocation {
         Min_Distance,
         Med_Distance,
-        Max_Distance
+        Max_Distance,
+        NeutralToAllianceZone,
+        OpposingAllianceZone
     }
 
     public double getRPMForScoringLocation(FieldScoringLocation location) {
@@ -235,6 +241,8 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
             case Min_Distance -> minDistanceRPM.get();
             case Med_Distance -> medDistanceRPM.get();
             case Max_Distance -> maxDistanceRPM.get();
+            case NeutralToAllianceZone -> neutralToAllianceZoneRPM.get();
+            case OpposingAllianceZone -> opposingAllianceZoneRPM.get();
         };
     }
 }
