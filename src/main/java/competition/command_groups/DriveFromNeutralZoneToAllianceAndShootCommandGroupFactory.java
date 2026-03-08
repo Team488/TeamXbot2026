@@ -30,13 +30,8 @@ public class DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory {
         var group = new SequentialCommandGroup();
         group.setName("DriveToNeutralZoneAndDeployIntakeCommandGroup");
 
-        var driveToAlliance = new DeferredCommand(
-                this.driveFromNeutralZoneToAllianceCommandProvider::get, Set.of(drive));
-        group.addCommands(driveToAlliance);
-
-        var getReadyForFiring = new DeferredCommand(
-                this.getReadyForFiringCommandGroup::get, Set.of(drive));
-        group.addCommands(getReadyForFiring);
+        group.addCommands(this.driveFromNeutralZoneToAllianceCommandProvider.get());
+        group.addCommands(this.getReadyForFiringCommandGroup.get());
 
         return group;
     }
