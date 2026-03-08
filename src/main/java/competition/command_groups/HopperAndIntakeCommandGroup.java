@@ -15,7 +15,7 @@ public class HopperAndIntakeCommandGroup extends BaseParallelCommandGroup {
                                        CollectorIntakeCommand fuelIntakeCommand,
                                        IntakeDeploySubsystem intakeDeploy,
                                        IntakeDeployExtendWithoutPidCommand intakeDown) {
-        intakeDown.setPower(intakeDeploy.collectionDownwardPressure.get());
+        intakeDown.setPower(intakeDeploy.collectionDownwardPressure::get);
         addCommands(intakeDown, fuelIntakeCommand, hopperRoller.getIntakeCommand());
     }
 }
