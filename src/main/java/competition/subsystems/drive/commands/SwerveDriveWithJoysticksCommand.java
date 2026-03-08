@@ -124,13 +124,18 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         // Checks the right joystick input to see if we want to snap to a certain side
         // Apparently, we need to invert the x input here as it has been inverted for other commands already
         // And of course, we must rotate -90 (similar to how we got raw translation) for default alignment
-        Translation2d joystickInput = oi.driverGamepad.getRightVector().rotateBy(Rotation2d.fromDegrees(-90));
-
+        Translation2d joystickInput;
         if (xGyro != null && xGyro.isBroken()){
             joystickInput = new Translation2d();
+        } else {
+            joystickInput = oi.driverGamepad.getRightVector();
         }
+        Translation2d processedInput = new Translation2d(
+                -joystickInput.getX(),
+                joystickInput.getY()
+        ).rotateBy(Rotation2d.fromDegrees(-90));
 
-        SwerveSuggestedRotation suggested = advisor.getSuggestedRotationValue(joystickInput, triggerRotateIntent);
+        SwerveSuggestedRotation suggested = advisor.getSuggestedRotationValue(processedInput, triggerRotateIntent);
         return processSuggestedRotationValueIntoPower(suggested);
     }
 
