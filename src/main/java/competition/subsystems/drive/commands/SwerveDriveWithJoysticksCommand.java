@@ -2,6 +2,8 @@ package competition.subsystems.drive.commands;
 
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import xbot.common.controls.sensors.XGyro;
 import xbot.common.controls.sensors.XGyroFactoryImpl;
@@ -39,7 +41,8 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     @Inject
     public SwerveDriveWithJoysticksCommand(
             OperatorInterface oi, DriveSubsystem drive, PoseSubsystem pose, PropertyFactory pf,
-            HeadingModuleFactory headingModuleFactory, HumanVsMachineDeciderFactory hvmFactory
+            HeadingModuleFactory headingModuleFactory, HumanVsMachineDeciderFactory hvmFactory,
+            SwerveDriveRotationAdvisor.Factory advisorFactory
     ) {
         pf.setPrefix(this);
         this.drive = drive;
@@ -48,7 +51,8 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         this.oi = oi;
         this.headingModule = headingModuleFactory.create(drive.getRotateToHeadingPid());
         this.hvmDecider = hvmFactory.create(pf.getPrefix());
-        this.advisor = new SwerveDriveRotationAdvisor(pose, drive, pf, hvmDecider);
+        this.advisor = advisorFactory.create(hvmDecider);
+        this.advisor.setSnappingZoneCount(8);
         pf.setDefaultLevel(Property.PropertyLevel.Important);
         this.overallDrivingPowerScale = pf.createPersistentProperty("DrivingPowerScale", 1.0);
         this.overallTurningPowerScale = pf.createPersistentProperty("TurningPowerScale", 1.0);
@@ -86,6 +90,10 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
                 pose.getCurrentHeading().getDegrees(),
                 new XYPair(0,0)
         );
+
+        aKitLog.record("HumanTranslationIntentX", translationIntent.x);
+        aKitLog.record("HumanTranslationIntentY", translationIntent.y);
+        aKitLog.record("HumanRotationIntent", rawRotationIntent);
     }
 
     private XYPair getRawHumanTranslationIntent() {
@@ -116,10 +124,10 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         // Checks the right joystick input to see if we want to snap to a certain side
         // Apparently, we need to invert the x input here as it has been inverted for other commands already
         // And of course, we must rotate -90 (similar to how we got raw translation) for default alignment
-        XYPair joystickInput = new XYPair(-oi.driverGamepad.getRightVector().getX(), oi.driverGamepad.getRightVector().getY()).rotate(-90);
+        Translation2d joystickInput = oi.driverGamepad.getRightVector().rotateBy(Rotation2d.fromDegrees(-90));
 
         if (xGyro != null && xGyro.isBroken()){
-            joystickInput = new XYPair(0,0);
+            joystickInput = new Translation2d();
         }
 
         SwerveSuggestedRotation suggested = advisor.getSuggestedRotationValue(joystickInput, triggerRotateIntent);
