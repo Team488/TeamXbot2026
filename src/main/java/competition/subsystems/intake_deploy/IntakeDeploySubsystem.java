@@ -39,6 +39,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public final DoubleProperty mechanismDegreePerMotorRotation;
     public final DoubleProperty maxPidVelocity;
     public final DoubleProperty maxPidAcceleration;
+    public final DoubleProperty collectionDownwardPressure;
 
     private final Latch extendedPositionCalibrationLatch;
 
@@ -94,6 +95,8 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
         this.maxPidVelocity = propertyFactory.createPersistentProperty("PidMaxMotorVelocity-RotationsPerSecond", 100);
         this.maxPidAcceleration = propertyFactory.createPersistentProperty("PidMaxMotorAcceleration-RotationsPerSecondPerSecond", 300);
+
+        this.collectionDownwardPressure = propertyFactory.createPersistentProperty("Collection Downward Pressure Power", -0.1);
 
         if (this.intakeDeployMotor != null) {
             this.intakeDeployMotor.setTrapezoidalProfileMaxVelocity(RotationsPerSecond.of(maxPidVelocity.get()));
