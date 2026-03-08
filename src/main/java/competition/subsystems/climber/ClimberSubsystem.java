@@ -201,8 +201,9 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     @Override
     public Angle getCurrentValue() {
-
-        return Degrees.of(0.0);
+        return Degrees.of(
+                getCalibratedAngle().in(Rotations) * mechanismDegreesPerMotorRotation.get()
+        );
     }
 
     @Override
