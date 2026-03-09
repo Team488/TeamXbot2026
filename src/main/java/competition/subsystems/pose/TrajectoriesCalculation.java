@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,12 +34,39 @@ import xbot.common.properties.StringProperty;
 public class TrajectoriesCalculation {
     private static final Transform2d HOOD_OFFSET_FROM_CENTER_ROBOT = new Transform2d(Units.Inches.of(-23.5),
             Units.Inches.of(0), Rotation2d.kZero);
+    private static Map<PresetShootingDistance, PresetShootingProperties> presetShootingLookup;
 
     private final Logger log;
     private final AprilTagFieldLayout aprilTagFieldLayout;
     private final DoubleProperty trajectoriesShooterRPMFixed;
     private final DoubleProperty interpolationFactor;
     private final StringProperty trajectoryCalcVersion;
+
+    private static void getOrCreatePresetLookup(PropertyFactory propManager) {
+        if (presetShootingLookup == null) {
+            presetShootingLookup = Map.of(PresetShootingDistance.NEAR,
+                    new PresetShootingProperties(
+                            propManager.createPersistentProperty("PresetShooting.NEAR RPM", 2600),
+                            propManager.createPersistentProperty("PresetShooting.NEAR Hood ServoRatio", 0.0)),
+                    PresetShootingDistance.TOWER_CLOSE,
+                    new PresetShootingProperties(
+                            propManager.createPersistentProperty("PresetShooting.TOWER_CLOSE RPM", 3600),
+                            propManager.createPersistentProperty("PresetShooting.TOWER_CLOSE Hood ServoRatio", 0.0)),
+                    PresetShootingDistance.TOWER_FAR,
+                    new PresetShootingProperties(
+                            propManager.createPersistentProperty("PresetShooting.TOWER_FAR RPM", 3800),
+                            propManager.createPersistentProperty("PresetShooting.TOWER_FAR Hood ServoRatio", 0.25)),
+                    PresetShootingDistance.TRENCH,
+                    new PresetShootingProperties(
+                            propManager.createPersistentProperty("PresetShooting.TRENCH RPM", 3800),
+                            propManager.createPersistentProperty("PresetShooting.TRENCH Hood ServoRatio", 0.2)),
+                    PresetShootingDistance.CORNER,
+                    new PresetShootingProperties(
+                            propManager.createPersistentProperty("PresetShooting.CORNER RPM", 4000),
+                            propManager.createPersistentProperty("PresetShooting.CORNER Hood ServoRatio", 0.8)));
+
+        }
+    }
 
     @Inject
     public TrajectoriesCalculation(AprilTagFieldLayout aprilTagFieldLayout, PropertyFactory propManager) {
@@ -49,6 +77,7 @@ public class TrajectoriesCalculation {
         this.interpolationFactor = propManager.createPersistentProperty("AllianceZoneAimMidpointInterpolationFactor",
                 0.5);
         this.trajectoryCalcVersion = propManager.createPersistentProperty("TrajectoryCalcVersion", "2");
+        getOrCreatePresetLookup(propManager);
     }
 
     // fieldOrientatedRotation Should tell us where the drive system should head.
@@ -57,7 +86,10 @@ public class TrajectoriesCalculation {
     public record ShootingData(Rotation2d fieldOrientatedRotation, AngularVelocity shooterRPM, double servoRatio) {
     }
 
-    private record PresetShooting(DoubleProperty shooterRpmProperty, double 
+    public record PresetShootingData(AngularVelocity shooterRPM, double hoodServoRatio) { }
+
+    private record PresetShootingProperties(DoubleProperty shooterRpmProperty, DoubleProperty hoodServoRatio) {
+    }
 
     private static final ShootingData emptyShootingData = new ShootingData(Rotation2d.kZero, Units.RPM.of(0), 0.0);
 
@@ -78,7 +110,8 @@ public class TrajectoriesCalculation {
         NEAR,
         TOWER_CLOSE,
         TOWER_FAR,
-        TRENCH
+        TRENCH,
+        CORNER
     }
 
     public ShootingData calculateAllianceHubShootingData(Pose2d robotPose) {
@@ -101,6 +134,14 @@ public class TrajectoriesCalculation {
         Pose2d targetPose = new Pose2d(target, Rotation2d.kZero);
 
         return calculateTrajectory(robotPose, targetPose);
+    }
+
+    public PresetShootingData getPresetShootingSettings(PresetShootingDistance shootingDistance) {
+        var mapLookup = presetShootingLookup.get(shootingDistance);
+
+        return new PresetShootingData(
+                        Units.RPM.of(mapLookup.shooterRpmProperty.get()),
+                        mapLookup.hoodServoRatio.get());
     }
 
     private ShootingData calculateTrajectory(Pose2d robotPose, Pose2d targetPose) {
@@ -131,12 +172,12 @@ public class TrajectoriesCalculation {
     private ShootingData calculateTrajectoryV2KnownDistance(Pose2d robotPose, Pose2d targetPose) {
         Translation2d vectorToTarget = targetPose.minus(robotPose).getTranslation();
         var preset = this.getPresetShootingDistance(Units.Meters.of(vectorToTarget.getNorm()));
-        var shootingData = this.getKnownShootingParameters(preset);
+        var shootingData = this.getPresetShootingSettings(preset);
 
         // Target rotation will probably be ignored or corrected if we're using manual
         // distance, but point towards where we think the hub
         return new ShootingData(this.rotationToShootFrom(robotPose, targetPose), shootingData.shooterRPM,
-                shootingData.servoRatio);
+                shootingData.hoodServoRatio);
     }
 
     // Look up optimal shooting parameters based on current pose and shooting
@@ -162,33 +203,6 @@ public class TrajectoriesCalculation {
                 hoodTrajectory.servoRatio);
     }
 
-    // Known poses on the field that are good to shoot from.
-    private ShootingData getKnownShootingParameters(PresetShootingDistance presetDistance) {
-        switch (presetDistance) {
-            case TOWER_FAR:
-                return new ShootingData(
-                        new Rotation2d(0),
-                        Units.RPM.of(3800),
-                        0.25);
-            case TOWER_CLOSE:
-                return new ShootingData(
-                        new Rotation2d(0),
-                        Units.RPM.of(3600),
-                        0.0);
-            case TRENCH:
-                return new ShootingData(
-                        new Rotation2d(0),
-                        Units.RPM.of(3800),
-                        0.2);
-            case NEAR:
-            default:
-                return new ShootingData(
-                        new Rotation2d(0),
-                        Units.RPM.of(2600),
-                        0.0);
-        }
-    }
-
     private record PresetShootingDistanceLookup(Distance distance, PresetShootingDistance presetShootingDistance) {
     }
 
@@ -200,13 +214,15 @@ public class TrajectoriesCalculation {
                 new PresetShootingDistanceLookup(Units.Meters.of(0.94 + 0.34), PresetShootingDistance.NEAR),
                 new PresetShootingDistanceLookup(Units.Meters.of(3.34 + 0.34), PresetShootingDistance.TRENCH),
                 new PresetShootingDistanceLookup(Units.Meters.of(3.52 - 0.60), PresetShootingDistance.TOWER_CLOSE),
-                new PresetShootingDistanceLookup(Units.Meters.of(3.52 + 0.34), PresetShootingDistance.TOWER_FAR));
+                new PresetShootingDistanceLookup(Units.Meters.of(3.52 + 0.34), PresetShootingDistance.TOWER_FAR),
+                new PresetShootingDistanceLookup(Units.Meters.of(6.27 - 0.6), PresetShootingDistance.CORNER));
         return presets.stream()
                 .min(Comparator.comparingDouble(
                         preset -> Math.abs(distance.abs(Units.Meter) - preset.distance.abs(Units.Meter))))
                 .map(PresetShootingDistanceLookup::presetShootingDistance)
                 .orElse(PresetShootingDistance.NEAR);
     }
+
     // This method loads the trajectories from the JSON file and populates the
     // HashMap.
     private void loadTrajectories() {
