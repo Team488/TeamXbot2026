@@ -50,8 +50,8 @@ public class TrajectoriesCalculation {
                             propManager.createPersistentProperty("PresetShooting.NEAR Hood ServoRatio", 0.0)),
                     PresetShootingDistance.TOWER_CLOSE,
                     new PresetShootingProperties(
-                            propManager.createPersistentProperty("PresetShooting.TOWER_CLOSE RPM", 3600),
-                            propManager.createPersistentProperty("PresetShooting.TOWER_CLOSE Hood ServoRatio", 0.0)),
+                            propManager.createPersistentProperty("PresetShooting.TOWER_CLOSE RPM", 3400),
+                            propManager.createPersistentProperty("PresetShooting.TOWER_CLOSE Hood ServoRatio", 0.2)),
                     PresetShootingDistance.TOWER_FAR,
                     new PresetShootingProperties(
                             propManager.createPersistentProperty("PresetShooting.TOWER_FAR RPM", 3800),
@@ -62,8 +62,8 @@ public class TrajectoriesCalculation {
                             propManager.createPersistentProperty("PresetShooting.TRENCH Hood ServoRatio", 0.2)),
                     PresetShootingDistance.CORNER,
                     new PresetShootingProperties(
-                            propManager.createPersistentProperty("PresetShooting.CORNER RPM", 4000),
-                            propManager.createPersistentProperty("PresetShooting.CORNER Hood ServoRatio", 0.8)));
+                            propManager.createPersistentProperty("PresetShooting.CORNER RPM", 3600),
+                            propManager.createPersistentProperty("PresetShooting.CORNER Hood ServoRatio", 1)));
 
         }
     }
