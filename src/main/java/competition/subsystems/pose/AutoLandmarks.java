@@ -68,10 +68,11 @@ public class AutoLandmarks {
         var startPoseCollection = this.getStartCollectionPose(pose);
         var nearestAllianceTrenchPose = pose
                 .nearest(Landmarks.getAllianceTrenchPoses(this.aprilTagFieldLayout, alliance));
-        var multiplier = startPoseCollection.getX() > this.gamefield.getFieldCenter().getX() ? 1 : -1;
+        var multiplierX = startPoseCollection.getX() > this.gamefield.getFieldCenter().getX() ? 1 : -1;
+        var multiplierY = this.gamefield.getFieldCenter().getY() > nearestAllianceTrenchPose.getY()  ? 1 : -1;
 
-        return new Pose2d(startPoseCollection.getX() + multiplier, nearestAllianceTrenchPose.getY(),
-                startPoseCollection.getRotation().plus(Rotation2d.kPi));
+        return new Pose2d(startPoseCollection.getX() + multiplierX, nearestAllianceTrenchPose.getY() + (0.125 * multiplierY),
+                startPoseCollection.getRotation().plus(Rotation2d.kCW_Pi_2));
     }
 
     public Pose2d getAllianceShootingStartingPose(Pose2d pose) {
