@@ -11,17 +11,17 @@ import java.util.Set;
 
 public class DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory {
     private final Provider<DriveFromNeutralZoneToAllianceCommand> driveFromNeutralZoneToAllianceCommandProvider;
-    private final Provider<DriveToShootingPositionCommand> driveToShootingPositionCommandProvider;
+    private final Provider<GetReadyForFiringCommandGroup> getReadyForFiringCommandGroup;
 
     private final DriveSubsystem drive;
 
     @Inject
     public DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory(
             Provider<DriveFromNeutralZoneToAllianceCommand> driveFromNeutralZoneToAllianceCommandProvider,
-            Provider<DriveToShootingPositionCommand> driveToShootingPositionCommandProvider,
+            Provider<GetReadyForFiringCommandGroup> getReadyForFiringCommandGroup,
             DriveSubsystem drive) {
         this.driveFromNeutralZoneToAllianceCommandProvider = driveFromNeutralZoneToAllianceCommandProvider;
-        this.driveToShootingPositionCommandProvider = driveToShootingPositionCommandProvider;
+        this.getReadyForFiringCommandGroup = getReadyForFiringCommandGroup;
 
         this.drive = drive;
     }
@@ -30,14 +30,9 @@ public class DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory {
         var group = new SequentialCommandGroup();
         group.setName("DriveToNeutralZoneAndDeployIntakeCommandGroup");
 
-        var driveToAlliance = new DeferredCommand(
-                this.driveFromNeutralZoneToAllianceCommandProvider::get, Set.of(drive));
-        group.addCommands(driveToAlliance);
-
-        var driveToShootingPosition = new DeferredCommand(this.driveToShootingPositionCommandProvider::get, Set.of(drive));
-        group.addCommands(driveToShootingPosition);
+        group.addCommands(this.driveFromNeutralZoneToAllianceCommandProvider.get());
+        group.addCommands(this.getReadyForFiringCommandGroup.get());
 
         return group;
     }
-
 }
