@@ -2,6 +2,7 @@ package competition.auto_programs.vision;
 
 import competition.auto_programs.BaseAutonomousSequentialCommandGroup;
 import competition.command_groups.DriveToOutpostAndDeployHopperCommandGroupFactory;
+import competition.command_groups.DriveWithinAllianceAndShootCommandGroupFactory;
 import xbot.common.subsystems.autonomous.AutonomousCommandSelector;
 
 import javax.inject.Inject;
@@ -11,8 +12,8 @@ public class CollectFromOutpostAndShootCommandGroup extends BaseAutonomousSequen
 
     @Inject
     public CollectFromOutpostAndShootCommandGroup(AutonomousCommandSelector autoSelector,
-            Provider<DriveToOutpostAndDeployHopperCommandGroupFactory> driveToOutpostAndDeployHopperCommandGroupFactory
-            /*Provider<DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory> driveFromNeutralZoneToAllianceAndShootCommandGroupProvider*/) {
+            Provider<DriveToOutpostAndDeployHopperCommandGroupFactory> driveToOutpostAndDeployHopperCommandGroupFactory,
+            Provider<DriveWithinAllianceAndShootCommandGroupFactory> driveWithinAllianceAndShootCommandGroupFactory) {
         super(autoSelector);
 
         getAutoStatusChangeCommand("Starting CollectFromOutpostAndShootCommandGroup");
@@ -21,9 +22,10 @@ public class CollectFromOutpostAndShootCommandGroup extends BaseAutonomousSequen
 
         this.addCommands(driveAndDeployCommand);
 
-        // var driveToAllianceZone = driveFromNeutralZoneToAllianceAndShootCommandGroupProvider.get().create()
-        //         .alongWith(getAutoStatusChangeCommand("Driving to alliance and shoot"));
 
-        // this.addCommands(driveToAllianceZone);
+        var driveToShoot = driveWithinAllianceAndShootCommandGroupFactory.get().create()
+                .alongWith(getAutoStatusChangeCommand("Heading to shoot"));
+
+        this.addCommands(driveToShoot);
     }
 }
