@@ -8,7 +8,6 @@ import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.controls.actuators.TimedAndBoundedServo;
 import xbot.common.controls.actuators.XServo;
-import xbot.common.properties.AngleProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -17,7 +16,6 @@ import javax.inject.Singleton;
 
 import java.util.Optional;
 
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
@@ -47,7 +45,11 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public final DoubleProperty trimStep;
     public final DoubleProperty extend;
     public final DoubleProperty retract;
-    public DoubleProperty readinessTimeoutSeconds;
+    public final DoubleProperty readinessTimeoutSeconds;
+
+    public final DoubleProperty minDistanceGoal;
+    public final DoubleProperty medDistanceGoal;
+    public final DoubleProperty maxDistanceGoal;
 
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
@@ -88,6 +90,10 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         this.extend = propertyFactory.createPersistentProperty("MaxExtensionGoal", 1.0);
         this.retract = propertyFactory.createPersistentProperty("MinExtensionGoal", 0.0);
         this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("ReadinessTimeoutSeconds", 2.0);
+
+        this.minDistanceGoal = propertyFactory.createPersistentProperty("Hood Min Distance Goal", 0.0);
+        this.medDistanceGoal = propertyFactory.createPersistentProperty("Hood Med Distance Goal", 0.5); //change this later
+        this.maxDistanceGoal = propertyFactory.createPersistentProperty("Hood Max Distance Goal", 1.0); //change this later
     }
 
     public void extend() {

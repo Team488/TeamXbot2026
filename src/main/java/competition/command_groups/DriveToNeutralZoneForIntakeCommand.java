@@ -105,9 +105,6 @@ public class DriveToNeutralZoneForIntakeCommand extends SwerveSimpleBezierComman
 
     @Override
     public void initialize() {
-        var headingPID = this.drive.getRotateToHeadingPid();
-        headingPID.setErrorThreshold(5);
-
         super.logic.setKeyPoints(this.calcSwervePoints());
 
         this.logic.setPrioritizeRotationIfCloseToGoal(true);

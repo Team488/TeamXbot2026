@@ -23,7 +23,7 @@ public class AutoLandmarks {
     private final Distance robotRadius;
     private final AprilTagFieldLayout aprilTagFieldLayout;
     private final SwervePointPathPlanning pathPlanning;
-    private static final Distance OPTIMAL_DISTANCE_TO_SHOOT_FROM = Units.Inches.of(90);
+    private static final Distance OPTIMAL_DISTANCE_TO_SHOOT_FROM = Units.Inches.of(103.5);
 
     @Inject
     public AutoLandmarks(ElectricalContract electricalContract,
@@ -54,13 +54,13 @@ public class AutoLandmarks {
         var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
         var ballPitEdge = Landmarks.getClosestAutoBallPitEdge(this.gamefield, pose, alliance);
 
-        var multiplier = ballPitEdge.getY() > this.gamefield.getFieldCenter().getY() ? 1 : -1;
-        var adjustedForRobot = new Translation2d(Units.Meters.of(0),
-                this.robotRadius.plus(this.pathPlanning.getAdditionalClearance()).times(multiplier));
+        var multiplierY = ballPitEdge.getY() > this.gamefield.getFieldCenter().getY() ? 1 : -1;
+        var multiplierX = ballPitEdge.getX() > this.gamefield.getFieldCenter().getX() ? 1 : -1;
+        var adjustedForRobot = new Translation2d(Units.Meters.of(0.5).times(multiplierX),
+                this.robotRadius.plus(this.pathPlanning.getAdditionalClearance()).times(multiplierY));
 
-        var adjustedTransform = new Transform2d(adjustedForRobot, Rotation2d.kZero);
-        return new Pose2d(ballPitEdge.getX(), this.gamefield.getFieldCenter().getY(),
-                pose.getRotation()).transformBy(adjustedTransform);
+        var adjustedTranslation = new Translation2d(ballPitEdge.getX(), this.gamefield.getFieldCenter().getY()).plus(adjustedForRobot);
+        return new Pose2d(adjustedTranslation, ballPitEdge.getRotation());
     }
 
     public Pose2d getFinishBallPitCollectionPose(Pose2d pose) {
@@ -68,10 +68,11 @@ public class AutoLandmarks {
         var startPoseCollection = this.getStartCollectionPose(pose);
         var nearestAllianceTrenchPose = pose
                 .nearest(Landmarks.getAllianceTrenchPoses(this.aprilTagFieldLayout, alliance));
-        var multiplier = startPoseCollection.getX() > this.gamefield.getFieldCenter().getX() ? 1 : -1;
+        var multiplierX = startPoseCollection.getX() > this.gamefield.getFieldCenter().getX() ? 1 : -1;
+        var multiplierY = this.gamefield.getFieldCenter().getY() > nearestAllianceTrenchPose.getY()  ? 1 : -1;
 
-        return new Pose2d(startPoseCollection.getX() + multiplier, nearestAllianceTrenchPose.getY(),
-                startPoseCollection.getRotation().plus(Rotation2d.kPi));
+        return new Pose2d(startPoseCollection.getX() + multiplierX, nearestAllianceTrenchPose.getY() + (0.125 * multiplierY),
+                startPoseCollection.getRotation().plus(Rotation2d.kCW_Pi_2));
     }
 
     public Pose2d getAllianceShootingStartingPose(Pose2d pose) {
