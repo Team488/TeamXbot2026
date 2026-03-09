@@ -13,7 +13,7 @@ public class SetShooterSpeedFromLocationCommand extends BaseSetpointCommand {
     private FieldScoringLocation currentLocation = FieldScoringLocation.Min_Distance;
 
     @Inject
-    public SetShooterSpeedFromLocationCommand(ShooterSubsystem shooter) {
+    public SetShooterSpeedFromLocationCommand(ShooterSubsystem shooter, TrajectoriesCalculation trajectoriesCalculation) {
         super(shooter);
         this.shooter = shooter;
     }

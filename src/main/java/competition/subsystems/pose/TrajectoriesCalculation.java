@@ -57,6 +57,8 @@ public class TrajectoriesCalculation {
     public record ShootingData(Rotation2d fieldOrientatedRotation, AngularVelocity shooterRPM, double servoRatio) {
     }
 
+    private record PresetShooting(DoubleProperty shooterRpmProperty, double 
+
     private static final ShootingData emptyShootingData = new ShootingData(Rotation2d.kZero, Units.RPM.of(0), 0.0);
 
     private record TrajectoryKey(double distance, double shootingSpeed) {
