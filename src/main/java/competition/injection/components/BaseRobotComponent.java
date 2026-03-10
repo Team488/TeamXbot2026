@@ -8,6 +8,7 @@ import competition.subsystems.collector_intake.CollectorSubsystem;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
+import competition.subsystems.intake_deploy.commands.IntakeDeployAutoCalibrateCommandFactory;
 import competition.subsystems.lights.LightsSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
@@ -50,4 +51,6 @@ public abstract class BaseRobotComponent extends BaseComponent {
     public abstract VoltageMonitorSubsystem voltageMonitorSubsystem();
 
     public abstract ClimberSubsystem climberSubsystem();
+
+    public abstract IntakeDeployAutoCalibrateCommandFactory intakeDeployCalibrationRoutineFactory();
 }
