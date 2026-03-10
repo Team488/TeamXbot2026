@@ -86,7 +86,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         }
 
         this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", 0.0);
-        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -145.0);
+        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -185.0);
 
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.2);
 
@@ -192,10 +192,13 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         // When this becomes true, calibrateOffsetDown() will be called
         this.extendedPositionCalibrationLatch.setValue(isTouchingIntakeDeployExtendedSensor());
 
-        // Sensor reading seems bad - don't trust it for now
-        //if (isTouchingIntakeDeploy() && !isCalibrated) {
-        //    calibrateOffsetUp();
-        //}
+        if (isTouchingIntakeDeploy() && !isCalibrated) {
+            calibrateOffsetUp();
+        }
+
+        if (isTouchingIntakeDeployExtendedSensor() && !isCalibrated) {
+            calibrateOffsetDown();
+        }
 
         aKitLog.record("IsCalibrated", isCalibrated);
         aKitLog.record("CurrentPosition", getCurrentValue().in(Degrees));
