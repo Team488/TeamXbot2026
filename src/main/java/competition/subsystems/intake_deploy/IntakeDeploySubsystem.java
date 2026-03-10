@@ -191,10 +191,13 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         // When this becomes true, calibrateOffsetDown() will be called
         this.extendedPositionCalibrationLatch.setValue(isTouchingIntakeDeployExtendedSensor());
 
-        // Sensor reading seems bad - don't trust it for now
-        //if (isTouchingIntakeDeploy() && !isCalibrated) {
-        //    calibrateOffsetUp();
-        //}
+        if (isTouchingIntakeDeploy() && !isCalibrated) {
+            calibrateOffsetUp();
+        }
+
+        if (isTouchingIntakeDeployExtendedSensor() && !isCalibrated) {
+            calibrateOffsetDown();
+        }
 
         aKitLog.record("IsCalibrated", isCalibrated);
         aKitLog.record("CurrentPosition", getCurrentValue().in(Degrees));
