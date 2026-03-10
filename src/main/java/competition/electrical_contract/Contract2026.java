@@ -528,10 +528,10 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public CameraInfo[] getCameraInfo() {
-        double sideAprilCameraXDisplacement = 11.1004 / PoseSubsystem.INCHES_IN_A_METER;
-        double sideAprilCameraYDisplacement = -11.0 / PoseSubsystem.INCHES_IN_A_METER;
-        double sideAprilCameraZDisplacement = 6.96 / PoseSubsystem.INCHES_IN_A_METER;
-        double sideAprilCameraPitch = Math.toRadians(-25);
+        double sideAprilCameraXDisplacement = 0.2965;
+        double sideAprilCameraYDisplacement = -0.28;
+        double sideAprilCameraZDisplacement = 0.19;
+        double sideAprilCameraPitch = Math.toRadians(-25.5);
 
         return new CameraInfo[]{
                 new CameraInfo("Apriltag_Left_Camera",
@@ -562,8 +562,8 @@ public class Contract2026 extends ElectricalContract {
                         "AprilTagBack",
                         new Transform3d(new Translation3d(
                                 0,
-                                -12.959212 / PoseSubsystem.INCHES_IN_A_METER,
-                                17.768664 / PoseSubsystem.INCHES_IN_A_METER),
+                                -0.3429,
+                                0.487),
                                 new Rotation3d(0, Math.toRadians(-15), Math.toRadians(180))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
         };
