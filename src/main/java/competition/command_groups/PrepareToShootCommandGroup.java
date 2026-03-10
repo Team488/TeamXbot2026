@@ -6,6 +6,8 @@ import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import edu.wpi.first.units.measure.AngularVelocity;
 import xbot.common.command.BaseParallelCommandGroup;
 
+import java.util.function.Supplier;
+
 import javax.inject.Inject;
 
 public class PrepareToShootCommandGroup extends BaseParallelCommandGroup {
@@ -19,15 +21,24 @@ public class PrepareToShootCommandGroup extends BaseParallelCommandGroup {
         return this;
     }
 
+    public PrepareToShootCommandGroup setShooterGoal(Supplier<AngularVelocity> targetVelocitySupplier) {
+        this.outputCommand.setTargetVelocity(targetVelocitySupplier);
+        return this;
+    }
+
     public PrepareToShootCommandGroup setHoodGoal(double ratio) {
         this.hoodSetCommand.setTargetRatio(ratio);
         return this;
     }
 
+    public PrepareToShootCommandGroup setHoodGoal(Supplier<Double> targetRatioSupplier) {
+        this.hoodSetCommand.setTargetRatio(targetRatioSupplier);
+        return this;
+    }
+
     public PrepareToShootCommandGroup setPresetLocation(TrajectoriesCalculation.PresetShootingDistance presetShootingDistance) {
-        var settings = this.trajectoriesCalculation.getPresetShootingSettings(presetShootingDistance);
-        this.outputCommand.setTargetVelocity(settings.shooterRPM());
-        this.hoodSetCommand.setTargetRatio(settings.hoodServoRatio());
+        this.outputCommand.setTargetVelocity(() -> this.trajectoriesCalculation.getPresetShootingSettings(presetShootingDistance).shooterRPM());
+        this.hoodSetCommand.setTargetRatio(() -> this.trajectoriesCalculation.getPresetShootingSettings(presetShootingDistance).hoodServoRatio());
         return this;
     }
 
