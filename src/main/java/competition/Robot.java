@@ -12,6 +12,7 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xbot.common.command.BaseRobot;
@@ -93,6 +94,22 @@ public class Robot extends BaseRobot {
 
     public BaseRobotComponent getInjectorComponent() {
         return (BaseRobotComponent)super.getInjectorComponent();
+    }
+
+    @Override
+    public void autonomousInit() {
+        super.autonomousInit();
+        // Force intake to calibrate if it's not calibrated yet.
+        var intakeCalibrationCommand = getInjectorComponent().intakeDeployCalibrationRoutineFactory().create();
+        CommandScheduler.getInstance().schedule(intakeCalibrationCommand);
+    }
+
+    @Override
+    public void teleopInit() {
+        super.teleopInit();
+        // Force intake to calibrate if it's not calibrated yet.
+        var intakeCalibrationCommand = getInjectorComponent().intakeDeployCalibrationRoutineFactory().create();
+        CommandScheduler.getInstance().schedule(intakeCalibrationCommand);
     }
 
     @Override

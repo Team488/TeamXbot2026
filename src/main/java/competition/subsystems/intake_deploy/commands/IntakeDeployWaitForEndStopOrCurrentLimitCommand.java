@@ -8,6 +8,9 @@ import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
 import static edu.wpi.first.units.Units.Amps;
 
 /**
@@ -20,6 +23,9 @@ public class IntakeDeployWaitForEndStopOrCurrentLimitCommand extends BaseCommand
     private final DoubleProperty currentLimitTimeoutSeconds;
     private final DoubleProperty endStopCurrentLimit;
 
+    private BooleanSupplier isTouchingSensorSupplier = this::getDefaultIsTouchingSensor;
+    private DoubleSupplier currentLimitSupplier = this::getDefaultCurrentLimit;
+
     @Inject
     public IntakeDeployWaitForEndStopOrCurrentLimitCommand(IntakeDeploySubsystem subsystem, PropertyFactory pf) {
         this.subsystem = subsystem;
@@ -31,6 +37,24 @@ public class IntakeDeployWaitForEndStopOrCurrentLimitCommand extends BaseCommand
         this.currentLimitTimer = new TimeStableValidator(this.currentLimitTimeoutSeconds::get);
     }
 
+    public IntakeDeployWaitForEndStopOrCurrentLimitCommand setIsTouchingSensorSupplier(BooleanSupplier supplier) {
+        this.isTouchingSensorSupplier = supplier;
+        return this;
+    }
+
+    public IntakeDeployWaitForEndStopOrCurrentLimitCommand setCurrentLimitSupplier(DoubleSupplier supplier) {
+        this.currentLimitSupplier = supplier;
+        return this;
+    }
+
+    private boolean getDefaultIsTouchingSensor() {
+        return this.subsystem.isTouchingIntakeDeployExtendedSensor();
+    }
+
+    private double getDefaultCurrentLimit() {
+        return this.endStopCurrentLimit.get();
+    }
+
     @Override
     public void execute() {
         // Feed in current to the current limit validator
@@ -39,12 +63,11 @@ public class IntakeDeployWaitForEndStopOrCurrentLimitCommand extends BaseCommand
 
     @Override
     public boolean isFinished() {
-        return (
-                this.subsystem.isTouchingIntakeDeployExtendedSensor()
-                        || (isExceedingCurrentLimit() && this.currentLimitTimer.peekStable()));
+        return isTouchingSensorSupplier.getAsBoolean()
+                || (isExceedingCurrentLimit() && this.currentLimitTimer.peekStable());
     }
 
     private boolean isExceedingCurrentLimit() {
-        return this.subsystem.getMotorCurrent().in(Amps) >= this.endStopCurrentLimit.get();
+        return this.subsystem.getMotorCurrent().in(Amps) >= currentLimitSupplier.getAsDouble();
     }
 }
