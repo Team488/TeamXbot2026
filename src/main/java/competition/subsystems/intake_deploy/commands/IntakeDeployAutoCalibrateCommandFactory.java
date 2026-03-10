@@ -24,6 +24,7 @@ public class IntakeDeployAutoCalibrateCommandFactory {
     private final Provider<IntakeDeployExtendWithoutPidCommand> extendCommandProvider;
     private final DoubleProperty currentLimit;
     private final DoubleProperty autoCalibratePower;
+    private final DoubleProperty autoCalibrateTimeoutSeconds;
 
     @Inject
     public IntakeDeployAutoCalibrateCommandFactory(PropertyFactory pf,
@@ -35,8 +36,9 @@ public class IntakeDeployAutoCalibrateCommandFactory {
         this.extendCommandProvider = extendCommandProvider;
 
         pf.setPrefix(this.getClass().getSimpleName());
-        this.currentLimit = pf.createPersistentProperty("CurrentLimitAmps", 10.0);
-        this.autoCalibratePower = pf.createPersistentProperty("AutoCalibratePower", -0.1);
+        this.currentLimit = pf.createPersistentProperty("CurrentLimitAmps", 20.0);
+        this.autoCalibratePower = pf.createPersistentProperty("AutoCalibratePower", 0.3);
+        this.autoCalibrateTimeoutSeconds = pf.createPersistentProperty("AutoCalibrateTimeoutSeconds", 3.0);
     }
 
     public Command create() {
@@ -48,7 +50,7 @@ public class IntakeDeployAutoCalibrateCommandFactory {
         return new ConditionalCommand(
             new InstantCommand(() -> log.info("IntakeDeploy is already calibrated, skipping auto-calibration.")),
             new ParallelDeadlineGroup(waitCommand, extendCommand)
-                    .withTimeout(Seconds.of(2)),
+                    .withTimeout(autoCalibrateTimeoutSeconds.get()),
             subsystem::isCalibrated
         );
     }
