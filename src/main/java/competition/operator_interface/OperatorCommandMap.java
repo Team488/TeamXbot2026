@@ -33,6 +33,7 @@ import competition.subsystems.intake_deploy.commands.ForceIntakeDownToEndStopCom
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import competition.subsystems.pose.Landmarks;
+import competition.subsystems.pose.TrajectoriesCalculation;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
@@ -99,15 +100,10 @@ public class OperatorCommandMap {
                                      FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup,
                                      Provider<PrepareToShootCommandGroup> prepareToShootCommand
     ) {
-        var prepareToShootMinimum = prepareToShootCommand.get()
-                .setHoodGoal(hoodSubsystem.minDistanceGoal::get)
-                .setShooterGoal(() -> RPM.of(shooterSubsystem.minDistanceRPM.get()));
-        var prepareToShootMedium = prepareToShootCommand.get()
-                .setHoodGoal(hoodSubsystem.medDistanceGoal::get)
-                .setShooterGoal(() -> RPM.of(shooterSubsystem.medDistanceRPM.get()));
-        var prepareToShootMaxiumum = prepareToShootCommand.get()
-                .setHoodGoal(hoodSubsystem.maxDistanceGoal::get)
-                .setShooterGoal(() -> RPM.of(shooterSubsystem.maxDistanceRPM.get()));
+        var prepareToShootNear = prepareToShootCommand.get().setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR);
+        var prepareToShootTowerClose = prepareToShootCommand.get().setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TOWER_CLOSE);
+        var prepareToShootTrench = prepareToShootCommand.get().setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
+        var prepareToShootCorner = prepareToShootCommand.get().setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.CORNER);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger)
                 .whileTrue(fireWhenReadyShooterCommandGroup);
@@ -117,9 +113,10 @@ public class OperatorCommandMap {
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger).whileTrue(intakeCommand);
 
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(prepareToShootMinimum);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(prepareToShootMedium);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(prepareToShootMaxiumum);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(prepareToShootNear);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(prepareToShootTowerClose);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(prepareToShootCorner);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(prepareToShootTrench);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Back).whileTrue(forceIntakeDownCommand);
 

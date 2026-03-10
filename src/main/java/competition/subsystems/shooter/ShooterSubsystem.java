@@ -26,13 +26,11 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public final XCANMotorController middleShooterMotor;
     public final XCANMotorController rightShooterMotor;
     public ElectricalContract electricalContract;
+    public PropertyFactory propertyFactory;
 
     public final DoubleProperty shootingTargetVelocity;
     public final DoubleProperty trimValue;
     public DoubleProperty readinessTimeoutSeconds;
-    public DoubleProperty minDistanceRPM;
-    public DoubleProperty medDistanceRPM;
-    public DoubleProperty maxDistanceRPM;
 
     public AngularVelocity currentTargetVelocity = RPM.of(0);
 
@@ -44,7 +42,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public ShooterSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
                             ElectricalContract electricalContract, PropertyFactory propertyFactory) {
 
-        propertyFactory.setPrefix(this);
+        this.propertyFactory = propertyFactory;
+
+        this.propertyFactory.setPrefix(this);
         this.electricalContract = electricalContract;
 
         var leftShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
@@ -101,13 +101,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
             this.rightShooterMotor = null;
         }
 
-        this.shootingTargetVelocity = propertyFactory.createPersistentProperty("Shooting Target Velocity", 3000);
-        this.trimValue = propertyFactory.createPersistentProperty("Shooter Trim Value", 0);
-        this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("Readiness Timeout Seconds", 2.0);
-
-        this.minDistanceRPM = propertyFactory.createPersistentProperty("Min Distance RPM", 2800);
-        this.medDistanceRPM = propertyFactory.createPersistentProperty("Med Distance RPM", 3200);
-        this.maxDistanceRPM = propertyFactory.createPersistentProperty("Max Distance RPM", 3600); //to change
+        this.shootingTargetVelocity = this.propertyFactory.createPersistentProperty("Shooting Target Velocity", 3000);
+        this.trimValue = this.propertyFactory.createPersistentProperty("Shooter Trim Value", 0);
+        this.readinessTimeoutSeconds = this.propertyFactory.createPersistentProperty("Readiness Timeout Seconds", 2.0);
     }
 
     public void stop() {
@@ -223,18 +219,5 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
     public Command getWaitForAtGoalCommand() {
         return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
-    }
-    public enum FieldScoringLocation {
-        Min_Distance,
-        Med_Distance,
-        Max_Distance
-    }
-
-    public double getRPMForScoringLocation(FieldScoringLocation location) {
-        return switch (location) {
-            case Min_Distance -> minDistanceRPM.get();
-            case Med_Distance -> medDistanceRPM.get();
-            case Max_Distance -> maxDistanceRPM.get();
-        };
     }
 }
