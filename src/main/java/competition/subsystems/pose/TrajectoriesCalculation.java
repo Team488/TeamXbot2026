@@ -54,8 +54,8 @@ public class TrajectoriesCalculation {
                             propManager.createPersistentProperty("PresetShooting.TOWER_CLOSE Hood ServoRatio", 0.2)),
                     PresetShootingDistance.TOWER_FAR,
                     new PresetShootingProperties(
-                            propManager.createPersistentProperty("PresetShooting.TOWER_FAR RPM", 3800),
-                            propManager.createPersistentProperty("PresetShooting.TOWER_FAR Hood ServoRatio", 0.25)),
+                            propManager.createPersistentProperty("PresetShooting.TOWER_FAR RPM", 3600),
+                            propManager.createPersistentProperty("PresetShooting.TOWER_FAR Hood ServoRatio", 0.2)),
                     PresetShootingDistance.TRENCH,
                     new PresetShootingProperties(
                             propManager.createPersistentProperty("PresetShooting.TRENCH RPM", 3800),
@@ -214,7 +214,7 @@ public class TrajectoriesCalculation {
                 new PresetShootingDistanceLookup(Units.Meters.of(0.94 + 0.34), PresetShootingDistance.NEAR),
                 new PresetShootingDistanceLookup(Units.Meters.of(3.34 + 0.34), PresetShootingDistance.TRENCH),
                 new PresetShootingDistanceLookup(Units.Meters.of(3.52 - 0.60), PresetShootingDistance.TOWER_CLOSE),
-                new PresetShootingDistanceLookup(Units.Meters.of(3.52 + 0.34), PresetShootingDistance.TOWER_FAR),
+                new PresetShootingDistanceLookup(Units.Meters.of(2.64 + 0.34), PresetShootingDistance.TOWER_FAR),
                 new PresetShootingDistanceLookup(Units.Meters.of(6.27 - 0.6), PresetShootingDistance.CORNER));
         return presets.stream()
                 .min(Comparator.comparingDouble(
