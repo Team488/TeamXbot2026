@@ -2,6 +2,7 @@ package competition.injection.components;
 
 import competition.auto_programs.JustFireStartingFuelAuto;
 import competition.operator_interface.OperatorCommandMap;
+import competition.operator_interface.OperatorInterface;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.SubsystemDefaultCommandMap;
 import competition.subsystems.climber.ClimberSubsystem;
@@ -56,4 +57,6 @@ public abstract class BaseRobotComponent extends BaseComponent {
     public abstract ClimberSubsystem climberSubsystem();
 
     public abstract IntakeDeployAutoCalibrateCommandFactory intakeDeployCalibrationRoutineFactory();
+
+    public abstract OperatorInterface operatorInterface();
 }
