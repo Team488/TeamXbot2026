@@ -101,7 +101,7 @@ public class OperatorCommandMap {
                                      Provider<PrepareToShootCommandGroup> prepareToShootCommand
     ) {
         var prepareToShootNear = prepareToShootCommand.get().setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR);
-        var prepareToShootTowerClose = prepareToShootCommand.get().setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TOWER_CLOSE);
+        var prepareToShootTowerClose = prepareToShootCommand.get().setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TOWER_FAR);
         var prepareToShootTrench = prepareToShootCommand.get().setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
         var prepareToShootCorner = prepareToShootCommand.get().setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.CORNER);
 
