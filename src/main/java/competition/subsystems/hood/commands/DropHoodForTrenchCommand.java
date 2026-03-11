@@ -33,6 +33,12 @@ public class DropHoodForTrenchCommand extends BaseCommand {
     }
 
     @Override
+    public void end(boolean isInterrupted) {
+        super.end(isInterrupted);
+        oi.driverGamepad.getRumbleManager().stopGamepadRumble();
+    }
+
+    @Override
     public boolean isFinished() {
         return false;
     }
