@@ -22,10 +22,12 @@ public class AutoShootFuelAtStartCommandGroup extends BaseSequentialCommandGroup
                                             PropertyFactory pf, AngularVelocityProperty avp) {
         fireTimeoutSec = pf.createPersistentProperty("Fire Timeout", 4.0);
         autoStartAngle = pf.createPersistentProperty("Hood Angle", 0.5);
-        autoStartRPM =
+        autoStartRPM = avp;
+        autoStartRPM.set(RPM.of(3000));
 
-        addCommands(prepare,
-                    fire.withTimeout(fireTimeoutSec.get())
-        );
+        prepare.setHoodGoal(autoStartAngle.get());
+        prepare.setShooterGoal(autoStartRPM.get());
+
+        addCommands(prepare, fire.withTimeout(fireTimeoutSec.get()));
     }
 }
