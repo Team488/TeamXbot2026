@@ -1,5 +1,6 @@
 package competition.injection.components;
 
+import competition.auto_programs.ShootFromTrenchCommandGroup;
 import competition.operator_interface.OperatorCommandMap;
 import competition.operator_interface.OperatorInterface;
 import competition.simulation.BaseSimulator;
@@ -54,6 +55,8 @@ public abstract class BaseRobotComponent extends BaseComponent {
     public abstract ClimberSubsystem climberSubsystem();
 
     public abstract IntakeDeployAutoCalibrateCommandFactory intakeDeployCalibrationRoutineFactory();
+
+    public abstract ShootFromTrenchCommandGroup shootFromTrenchCommandGroup();
 
     public abstract OperatorInterface operatorInterface();
 }
