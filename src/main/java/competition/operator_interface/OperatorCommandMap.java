@@ -16,6 +16,7 @@ import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.climber.commands.ClimberSetPointCommand;
 import competition.subsystems.collector_intake.commands.CollectorEjectCommand;
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
+import competition.subsystems.drive.commands.DriveForwardCommand;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
@@ -140,7 +141,8 @@ public class OperatorCommandMap {
                                   ShooterFeederFire shooterFeederFire,
                                   HopperRollerSubsystem hopperRollerSubsystem,
                                   CalibrateOffsetDown calibrateOffsetDown,
-                                  CalibrateOffsetUp calibrateOffsetUp
+                                  CalibrateOffsetUp calibrateOffsetUp,
+                                  DriveForwardCommand driveForwardCommand
 
     ) {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger).onTrue(trimShooterVelocityDown);
@@ -156,6 +158,7 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getPovIfAvailable(90).whileTrue(collectorEjectCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(180).onTrue(trimHoodUpCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(270).whileTrue(shooterFeederFire);
+        driveForwardCommand.setTarget(2);
     }
 
     @Inject
