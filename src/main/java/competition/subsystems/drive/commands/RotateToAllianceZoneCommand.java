@@ -5,10 +5,13 @@ import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import xbot.common.command.BaseCommand;
+import xbot.common.properties.AngleProperty;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.Property;
@@ -27,13 +30,13 @@ public class RotateToAllianceZoneCommand extends BaseCommand {
      */
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
-    private Alliance alliance;
+    private Pose2d robotPose;
     private final DoubleProperty interpolationFactor;
     private final BooleanProperty autoAimWhenNotInNeutralZone;
 
     @Inject
     public RotateToAllianceZoneCommand(DriveSubsystem drive, PoseSubsystem pose, AprilTagFieldLayout aprilTagFieldLayout,
-                              PropertyFactory pf) {
+                                       PropertyFactory pf) {
         this.drive = drive;
         this.pose = pose;
         this.aprilTagFieldLayout = aprilTagFieldLayout;
@@ -47,12 +50,8 @@ public class RotateToAllianceZoneCommand extends BaseCommand {
     @Override
     public void initialize() {
         log.info("Initializing");
-        alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-    }
-
-    @Override
-    public void execute() {
-        Pose2d robotPose = pose.getCurrentPose2d();
+        robotPose = pose.getCurrentPose2d();
+        Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
         Pose2d closestTrenchNeutralSideIdPose = Landmarks.getClosestTrenchNeutralSideIdPose(
                 aprilTagFieldLayout,
                 alliance,
@@ -61,26 +60,30 @@ public class RotateToAllianceZoneCommand extends BaseCommand {
 
         // Interpolation instead of a fixed point prevents shooting into the hub wall when we are too close to the hub
         // Uses .getTranslation() for linear interpolation because the interpolation method for poses has some issues
-        Translation2d target = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance)
+        Translation2d targetTranslation = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance)
                 .getTranslation()
                 .interpolate(closestTrenchNeutralSideIdPose.getTranslation(), interpolationFactor.get());
 
-        if (!pose.isFacingTarget(target)) {
-            drive.setStaticHeadingTarget(pose.desiredHeadingToTarget(target));
-            boolean areWeInNeutralZone = Landmarks.isBetweenIdX(
-                    this.aprilTagFieldLayout,
-                    Landmarks.getAllianceHubNeutralSideFiducialId(Alliance.Blue),
-                    Landmarks.getAllianceHubNeutralSideFiducialId(Alliance.Red),
-                    robotPose
-            );
+        drive.setLookAtPointTarget(targetTranslation);
+        drive.setLookAtPointInverted(true);
+    }
 
-            drive.setStaticHeadingTargetActive(areWeInNeutralZone || autoAimWhenNotInNeutralZone.get());
-        }
+    @Override
+    public void execute() {
+        boolean areWeInNeutralZone = Landmarks.isBetweenIdX(
+                this.aprilTagFieldLayout,
+                Landmarks.getAllianceHubNeutralSideFiducialId(Alliance.Blue),
+                Landmarks.getAllianceHubNeutralSideFiducialId(Alliance.Red),
+                robotPose
+        );
+
+        drive.setLookAtPointTargetActive(areWeInNeutralZone || autoAimWhenNotInNeutralZone.get());
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
         drive.setStaticHeadingTargetActive(false);
+        drive.setLookAtPointInverted(false);
     }
 }

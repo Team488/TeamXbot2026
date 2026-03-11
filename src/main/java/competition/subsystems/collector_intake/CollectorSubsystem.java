@@ -1,4 +1,4 @@
-package competition.subsystems.fuel_intake;
+package competition.subsystems.collector_intake;
 
 import competition.electrical_contract.ElectricalContract;
 import xbot.common.command.BaseSubsystem;
@@ -14,8 +14,8 @@ public class CollectorSubsystem extends BaseSubsystem {
 
     public final ElectricalContract electricalContract;
     public final XCANMotorController collectorMotor;
-    DoubleProperty intakePower;
-    DoubleProperty ejectPower;
+    final DoubleProperty intakePower;
+    final DoubleProperty ejectPower;
 
     @Inject
     public CollectorSubsystem(ElectricalContract electricalContract,
