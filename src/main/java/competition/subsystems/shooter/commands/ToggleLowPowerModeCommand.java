@@ -16,7 +16,7 @@ public class ToggleLowPowerModeCommand extends BaseCommand{
 
     public void initialize() {
         if (!shooter.isInLowPowerMode) {
-            shooter.LowPowerMode();
+            shooter.lowPowerMode();
             shooter.isInLowPowerMode = true;
         } else  {
             shooter.isInLowPowerMode = false;

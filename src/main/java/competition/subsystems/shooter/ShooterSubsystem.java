@@ -228,7 +228,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
     }
 
-    public void LowPowerMode() {
+    public void lowPowerMode() {
         leftShooterMotor.setVelocityTarget(RotationsPerSecond.of(0));
         rightShooterMotor.setVelocityTarget(RotationsPerSecond.of(0));
     }
