@@ -17,11 +17,11 @@ import xbot.common.injection.swerve.FrontRightDrive;
 import xbot.common.injection.swerve.RearLeftDrive;
 import xbot.common.injection.swerve.RearRightDrive;
 import xbot.common.injection.swerve.SwerveComponent;
+import xbot.common.math.PIDDefaults;
 import xbot.common.math.PIDManager.PIDManagerFactory;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.Property;
 import xbot.common.properties.PropertyFactory;
-import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
 
 import java.util.function.Supplier;
@@ -50,6 +50,34 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
         pf.setDefaultLevel(Property.PropertyLevel.Important);
         this.maxAutoTargetSpeedMps = pf.createPersistentProperty("MaxAutoTargetSpeedMetersPerSecond", 2.5);
         this.maxAutoFuelIntakeTargetSpeedMps = pf.createPersistentProperty("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.5);
+    }
+
+    @Override
+    protected PIDDefaults getPositionalPIDDefaults() {
+        return new PIDDefaults(
+                1.08, // P
+                0, // I
+                4.0, // D
+                0.0, // F
+                0.6, // Max output
+                -0.6, // Min output
+                0.05, // Error threshold
+                0.005, // Derivative threshold
+                0.2); // Time threshold
+    }
+
+    @Override
+    protected PIDDefaults getHeadingPIDDefaults() {
+        return new PIDDefaults(
+                0.005, // P
+                0.000001, // I
+                0.02, // D
+                0.0, // F
+                0.75, // Max output
+                -0.75, // Min output
+                2.0, // Error threshold
+                0.2, // Derivative threshold
+                0.2); // Time threshold
     }
 
     public Translation2d getLookAtPointTarget() {
