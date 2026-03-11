@@ -10,6 +10,7 @@ import xbot.common.properties.PropertyFactory;
 import javax.inject.Inject;
 
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 public class AutoShootFuelAtStartCommandGroup extends BaseSequentialCommandGroup {
 
@@ -19,11 +20,10 @@ public class AutoShootFuelAtStartCommandGroup extends BaseSequentialCommandGroup
 
     @Inject
     public AutoShootFuelAtStartCommandGroup(PrepareToShootCommandGroup prepare, FireWhenShooterReadyCommandGroup fire,
-                                            PropertyFactory pf, AngularVelocityProperty avp) {
+                                            PropertyFactory pf) {
         fireTimeoutSec = pf.createPersistentProperty("Fire Timeout", 4.0);
         autoStartAngle = pf.createPersistentProperty("Hood Angle", 0.5);
-        autoStartRPM = avp;
-        autoStartRPM.set(RPM.of(3000));
+        autoStartRPM = pf.createPersistentProperty("Rotation Per Second", RotationsPerSecond.of(50));
 
         prepare.setHoodGoal(autoStartAngle.get());
         prepare.setShooterGoal(autoStartRPM.get());
