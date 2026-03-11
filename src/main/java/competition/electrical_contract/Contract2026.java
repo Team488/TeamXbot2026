@@ -218,7 +218,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getHoodServoLeft() {
-        return new DeviceInfo("HoodServoLeft", 0);
+        return new DeviceInfo("HoodServoLeft", 8);
     }
 
     @Override
@@ -226,7 +226,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getHoodServoRight() {
-        return new DeviceInfo("HoodServoRight", 1);
+        return new DeviceInfo("HoodServoRight", 9);
     }
     
     // OrangePis - powered via buck converters (see getAdditionalPowerBranches)
