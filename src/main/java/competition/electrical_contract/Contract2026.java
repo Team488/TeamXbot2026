@@ -98,7 +98,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public IMUInfo getIMUInfo() {
-        return new IMUInfo("Pigeon", XGyro.ImuType.pigeon2, XGyro.InterfaceType.CAN, CANBusId.Canivore, 56);
+        return new IMUInfo(XGyro.InterfaceType.spi, PowerSource.RIO);
     }
 
     public DeviceInfo pigeon2() {
@@ -112,8 +112,14 @@ public class Contract2026 extends ElectricalContract {
     public boolean intakeDeploySensorReady() { return true; }
 
     public DeviceInfo getIntakeDeploySensor() {
-        return new DeviceInfo("IntakeDeploySensor", 1, PowerSource.RIO);
+        return new DeviceInfo("IntakeDeploySensor", 1, true, PowerSource.RIO);
     }
+
+    @Override
+    public boolean isIntakeDeployExtendedSensorReady() { return true; }
+
+    @Override
+    public DeviceInfo getIntakeDeployExtendedSensor() {return new DeviceInfo("IntakeDeployExtendedSensor", 2, true, PowerSource.RIO);}
 
     @Override                                    
     public boolean isShooterFeederReady() { return true; }
@@ -212,7 +218,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getHoodServoLeft() {
-        return new DeviceInfo("HoodServoLeft", 0);
+        return new DeviceInfo("HoodServoLeft", 8);
     }
 
     @Override
@@ -220,7 +226,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getHoodServoRight() {
-        return new DeviceInfo("HoodServoRight", 1);
+        return new DeviceInfo("HoodServoRight", 9);
     }
     
     // OrangePis - powered via buck converters (see getAdditionalPowerBranches)
@@ -522,10 +528,10 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public CameraInfo[] getCameraInfo() {
-        double sideAprilCameraXDisplacement = 11.1004 / PoseSubsystem.INCHES_IN_A_METER;
-        double sideAprilCameraYDisplacement = -11.0 / PoseSubsystem.INCHES_IN_A_METER;
-        double sideAprilCameraZDisplacement = 6.96 / PoseSubsystem.INCHES_IN_A_METER;
-        double sideAprilCameraPitch = Math.toRadians(-25);
+        double sideAprilCameraXDisplacement = 0.2965;
+        double sideAprilCameraYDisplacement = -0.28;
+        double sideAprilCameraZDisplacement = 0.19;
+        double sideAprilCameraPitch = Math.toRadians(-25.5);
 
         return new CameraInfo[]{
                 new CameraInfo("Apriltag_Left_Camera",
@@ -556,8 +562,8 @@ public class Contract2026 extends ElectricalContract {
                         "AprilTagBack",
                         new Transform3d(new Translation3d(
                                 0,
-                                -12.959212 / PoseSubsystem.INCHES_IN_A_METER,
-                                17.768664 / PoseSubsystem.INCHES_IN_A_METER),
+                                -0.3429,
+                                0.487),
                                 new Rotation3d(0, Math.toRadians(-15), Math.toRadians(180))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
         };

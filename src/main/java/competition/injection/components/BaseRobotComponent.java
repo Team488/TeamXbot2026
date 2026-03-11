@@ -1,13 +1,15 @@
 package competition.injection.components;
 
 import competition.operator_interface.OperatorCommandMap;
+import competition.operator_interface.OperatorInterface;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.SubsystemDefaultCommandMap;
 import competition.subsystems.climber.ClimberSubsystem;
-import competition.subsystems.fuel_intake.IntakeSubsystem;
+import competition.subsystems.collector_intake.CollectorSubsystem;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
+import competition.subsystems.intake_deploy.commands.IntakeDeployAutoCalibrateCommandFactory;
 import competition.subsystems.lights.LightsSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
@@ -43,11 +45,15 @@ public abstract class BaseRobotComponent extends BaseComponent {
 
     public abstract IntakeDeploySubsystem intakeDeploySubsystem();
 
-    public abstract IntakeSubsystem intakeSubsystem();
+    public abstract CollectorSubsystem collectorSubsystem();
 
     public abstract HopperRollerSubsystem hopperRollerSubsystem();
 
     public abstract VoltageMonitorSubsystem voltageMonitorSubsystem();
 
     public abstract ClimberSubsystem climberSubsystem();
+
+    public abstract IntakeDeployAutoCalibrateCommandFactory intakeDeployCalibrationRoutineFactory();
+
+    public abstract OperatorInterface operatorInterface();
 }
