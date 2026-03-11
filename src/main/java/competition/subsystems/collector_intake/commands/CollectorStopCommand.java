@@ -1,15 +1,15 @@
-package competition.subsystems.fuel_intake.commands;
+package competition.subsystems.collector_intake.commands;
 
-import competition.subsystems.fuel_intake.CollectorSubsystem;
+import competition.subsystems.collector_intake.CollectorSubsystem;
 import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
-public class FuelStopCommand extends BaseCommand {
+public class CollectorStopCommand extends BaseCommand {
     final CollectorSubsystem collectorSubsystem;
 
     @Inject
-    public FuelStopCommand(CollectorSubsystem collectorSubsystem) {
+    public CollectorStopCommand(CollectorSubsystem collectorSubsystem) {
         this.collectorSubsystem = collectorSubsystem ;
         this.addRequirements(this.collectorSubsystem);
     }

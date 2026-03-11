@@ -1,6 +1,6 @@
 package competition.command_groups;
 
-import competition.subsystems.fuel_intake.commands.FuelIntakeCommand;
+import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
@@ -19,7 +19,7 @@ public class FireWhenShooterReadyCommandGroup extends BaseParallelCommandGroup {
                                             HoodSubsystem hoodSubsystem,
                                             ShooterOutputCommand shooterOutputCommand,
                                             ShooterFeederFire shooterFeederFireCommand,
-                                            FuelIntakeCommand fuelIntakeCommand
+                                            CollectorIntakeCommand fuelIntakeCommand
     ) {
         var waitForShooterCommand = shooterSubsystem.getWaitForAtGoalCommand();
         var waitForHoodCommand =  hoodSubsystem.getWaitForAtGoalCommand();

@@ -1,10 +1,8 @@
 package competition.auto_programs.vision;
 
 import competition.auto_programs.BaseAutonomousSequentialCommandGroup;
+import competition.command_groups.DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory;
 import competition.command_groups.DriveToNeutralZoneAndDeployIntakeCommandGroupFactory;
-import competition.subsystems.pose.Landmarks;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import xbot.common.subsystems.autonomous.AutonomousCommandSelector;
 
 import javax.inject.Inject;
@@ -14,14 +12,19 @@ public class MoveAcrossFieldCommandGroup extends BaseAutonomousSequentialCommand
 
     @Inject
     public MoveAcrossFieldCommandGroup(AutonomousCommandSelector autoSelector,
-            Provider<DriveToNeutralZoneAndDeployIntakeCommandGroupFactory> driveToNeutralZoneAndDeployIntakeCommandProvider) {
+            Provider<DriveToNeutralZoneAndDeployIntakeCommandGroupFactory> driveToNeutralZoneAndDeployIntakeCommandProvider,
+            Provider<DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory> driveFromNeutralZoneToAllianceAndShootCommandGroupProvider) {
         super(autoSelector);
 
         getAutoStatusChangeCommand("Starting MoveAcrossFieldCommandGroup");
-        var driveToNeutralZone =
-            driveToNeutralZoneAndDeployIntakeCommandProvider.get().create()
-            .alongWith(getAutoStatusChangeCommand("Driving to neutral zone"));
+        var driveToNeutralZone = driveToNeutralZoneAndDeployIntakeCommandProvider.get().create()
+                .alongWith(getAutoStatusChangeCommand("Driving to neutral zone and back"));
 
         this.addCommands(driveToNeutralZone);
+
+        var driveToAllianceZone = driveFromNeutralZoneToAllianceAndShootCommandGroupProvider.get().create()
+                .alongWith(getAutoStatusChangeCommand("Driving to alliance and shoot"));
+
+        this.addCommands(driveToAllianceZone);
     }
 }

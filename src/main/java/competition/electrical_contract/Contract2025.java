@@ -69,6 +69,9 @@ public class Contract2025 extends Contract2026 {
     }
 
     @Override
+    public boolean isIntakeDeployExtendedSensorReady() {return false;}
+
+    @Override
     public boolean isLeftShooterReady() {
         return false;
     }

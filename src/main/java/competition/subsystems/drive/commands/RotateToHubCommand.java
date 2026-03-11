@@ -26,7 +26,6 @@ public class RotateToHubCommand extends BaseCommand {
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
     private Alliance alliance;
-    private Translation2d target;
     private final BooleanProperty autoAimWhenNotInZone;
 
     @Inject
@@ -45,27 +44,28 @@ public class RotateToHubCommand extends BaseCommand {
     public void initialize() {
         log.info("Initializing");
         alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-        target = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance).getTranslation();
+        Translation2d targetTranslation = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance).getTranslation();
+        drive.setLookAtPointTarget(targetTranslation);
+        drive.setLookAtPointInverted(true);
+
     }
 
     @Override
     public void execute() {
-        if (!pose.isFacingTarget(target)) {
-            drive.setStaticHeadingTarget(pose.desiredHeadingToTarget(target));
-            boolean areWeInAllianceZone = Landmarks.isBetweenIdX(
-                    this.aprilTagFieldLayout,
-                    Landmarks.getTrenchDriverDepotSideId(alliance),
-                    Landmarks.getOutpostFiducialId(alliance),
-                    pose.getCurrentPose2d()
-            );
+        boolean areWeInAllianceZone = Landmarks.isBetweenIdX(
+                this.aprilTagFieldLayout,
+                Landmarks.getTrenchDriverDepotSideId(alliance),
+                Landmarks.getOutpostFiducialId(alliance),
+                pose.getCurrentPose2d()
+        );
 
-            drive.setStaticHeadingTargetActive(areWeInAllianceZone || autoAimWhenNotInZone.get());
-        }
+        drive.setLookAtPointTargetActive(areWeInAllianceZone || autoAimWhenNotInZone.get());
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        drive.setStaticHeadingTargetActive(false);
+        drive.setLookAtPointTargetActive(false);
+        drive.setLookAtPointInverted(false);
     }
 }
