@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import competition.auto_programs.ShootFromTrenchCommandGroup;
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
+import competition.command_groups.FireWhenReadyAndRetractIntakeDeployCommandGroup;
 import competition.command_groups.FireWhenReadyShooterCommandGroup;
 import competition.command_groups.HopperAndIntakeEjectCommandGroup;
 import competition.command_groups.MinHoodShootingCommandGroup;
@@ -99,6 +100,7 @@ public class OperatorCommandMap {
                                      HopperAndIntakeCommandGroup intakeCommand,
                                      HopperAndIntakeEjectCommandGroup ejectCommand,
                                      FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup,
+                                     FireWhenReadyAndRetractIntakeDeployCommandGroup fireWhenReadyAndRetractIntakeDeployCommandGroup,
                                      Provider<PrepareToShootCommandGroup> prepareToShootCommand
     ) {
         var prepareToShootNear = prepareToShootCommand.get().setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR);
@@ -124,6 +126,8 @@ public class OperatorCommandMap {
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateIntakeOffsetUp);
 
         operatorInterface.operatorGamepad.getPovIfAvailable(180).whileTrue(ejectCommand);
+        operatorInterface.operatorGamepad.getPovIfAvailable(0)
+                .whileTrue(fireWhenReadyAndRetractIntakeDeployCommandGroup);
     }
 
     @Inject
