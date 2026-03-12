@@ -1,6 +1,7 @@
 package competition.subsystems.hood.commands;
 
 import competition.subsystems.hood.HoodSubsystem;
+import edu.wpi.first.wpilibj.DriverStation;
 import xbot.common.command.BaseMaintainerCommand;
 import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.logic.HumanVsMachineDecider;
@@ -26,6 +27,13 @@ public class HoodMaintainerCommand extends BaseMaintainerCommand<Double, Double>
     @Override
     protected void coastAction() {
 
+    }
+
+    @Override
+    protected void initializeMachineControlAction() {
+        if (this.hood.getSetpointLock().getCurrentCommand() != null && !DriverStation.isAutonomous()) {
+            this.hood.getSetpointLock().getCurrentCommand().cancel();
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package competition.subsystems.shooter.commands;
 
 import competition.subsystems.shooter.ShooterSubsystem;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.DriverStation;
 import xbot.common.command.BaseMaintainerCommand;
 import xbot.common.logic.HumanVsMachineDecider;
 import xbot.common.properties.PropertyFactory;
@@ -29,6 +30,13 @@ public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<Angular
     @Override
     protected void coastAction() {
         shooterWheel.stop();
+    }
+
+    @Override
+    protected void initializeMachineControlAction() {
+        if (this.shooterWheel.getSetpointLock().getCurrentCommand() != null && !DriverStation.isAutonomous()) {
+            this.shooterWheel.getSetpointLock().getCurrentCommand().cancel();
+        }
     }
 
     @Override
