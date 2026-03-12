@@ -23,7 +23,7 @@ import xbot.common.subsystems.pose.BasePoseSubsystem;
 public class Robot extends BaseRobot {
     Logger log = LogManager.getLogger(Robot.class);
 
-    public static final double LOOP_INTERVAL = 0.02;
+    public static final double LOOP_INTERVAL = 0.04;
 
     BaseSimulator simulator;
     OperatorInterface oi;
