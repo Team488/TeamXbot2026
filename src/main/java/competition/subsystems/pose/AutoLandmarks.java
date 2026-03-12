@@ -156,7 +156,6 @@ public class AutoLandmarks {
     }
 
     private DriverStation.Alliance getAlliance() {
-        return Alliance.Blue;
-        // return DriverStation.getAlliance().orElse(Alliance.Blue);
+        return DriverStation.getAlliance().orElse(Alliance.Blue);
     }
 }
