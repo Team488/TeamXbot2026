@@ -23,9 +23,8 @@ public class ShootFromHubCommandGroup extends BaseAutonomousSequentialCommandGro
         getAutoStatusChangeCommand("Starting ShootFromHubCommandGroup");
         var intakeCalibrationCommand = intakeDeployAutoCalibrateCommandFactory.create();
         prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR);
-        var calibrateAndShoot = new ParallelCommandGroup(intakeCalibrationCommand, prepareToShootCommandGroup);
+        var calibrateAndShoot = new ParallelCommandGroup(intakeCalibrationCommand, prepareToShootCommandGroup, fireWhenReadyShooterCommandGroup);
 
         this.addCommands(calibrateAndShoot);
-        this.addCommands(fireWhenReadyShooterCommandGroup);
     }
 }
