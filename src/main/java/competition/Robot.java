@@ -50,6 +50,7 @@ public class Robot extends BaseRobot {
         }
 
         oi = getInjectorComponent().operatorInterface();
+        autonomousCommandSelector.setCurrentAutonomousCommand(getInjectorComponent().shootFromTrenchCommandGroup());
 
         dataFrameRefreshables.add((DriveSubsystem)getInjectorComponent().driveSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().poseSubsystem());
@@ -103,17 +104,11 @@ public class Robot extends BaseRobot {
     @Override
     public void autonomousInit() {
         super.autonomousInit();
-        // Force intake to calibrate if it's not calibrated yet.
-        var intakeCalibrationCommand = getInjectorComponent().intakeDeployCalibrationRoutineFactory().create();
-        CommandScheduler.getInstance().schedule(intakeCalibrationCommand);
     }
 
     @Override
     public void teleopInit() {
         super.teleopInit();
-        // Force intake to calibrate if it's not calibrated yet.
-        var intakeCalibrationCommand = getInjectorComponent().intakeDeployCalibrationRoutineFactory().create();
-        CommandScheduler.getInstance().schedule(intakeCalibrationCommand);
     }
 
     @Override
