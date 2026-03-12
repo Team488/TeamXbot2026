@@ -1,20 +1,67 @@
 {
   "hubs": [
     {
-      "x": -1233,
-      "y": 76,
-      "width": 1102,
-      "height": 654,
+      "x": 14,
+      "y": 51,
+      "width": 1100,
+      "height": 650,
       "state": {
         "sidebar": {
           "width": 300,
           "expanded": [
+            "/AdvantageKit/RealOutputs",
+            "/AdvantageKit/RealOutputs/Simulator/FieldSimulation",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState",
+            "/Preferences/SwerveSteeringSubsystem",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/0",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/1",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/2",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/3",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState/3",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState/0",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState/1",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState/2",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState/0/angle",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/RobotPoses",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/RobotPosesAccepted",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/TagPoses",
+            "/AdvantageKit/RealOutputs/AprilTagVisionSubsystemExtended/Cameras/AprilTagFront/RobotPosesRejected",
+            "/AdvantageKit/RealOutputs/PoseSubsystem/RobotPose",
+            "/AdvantageKit/RealOutputs/PoseSubsystem/SwerveVisionEnhancedPose",
+            "/AdvantageKit/RealOutputs/PoseSubsystem/VisionEnhancedPose",
+            "/AdvantageKit/PowerDistribution/ChannelCurrent",
+            "/Preferences/ShooterSubsystem",
+            "/AdvantageKit/RealOutputs/ShooterWheelMaintainerCommand",
+            "/Preferences/ShooterFeederSubsystem",
+            "/Preferences/IntakeDeploySubsystem",
+            "/AdvantageKit/IntakeDeployMotor/CANMotorController",
+            "/AdvantageKit/IntakeDeployAbsoluteEncoderReady/AbsoluteEncoder",
+            "/Preferences/IntakeDeployMaintainerCommand",
+            "/AdvantageKit/RealOutputs/IntakeDeployMaintainerCommand",
+            "/AdvantageKit/DriverStation/Joystick2",
+            "/AdvantageKit/DriverStation/Joystick2/AxisValues",
+            "/AdvantageKit",
+            "/AdvantageKit/RealOutputs/Commands",
+            "/AdvantageKit/RealOutputs/Performance/Subsystems",
+            "/AdvantageKit/RealOutputs/RunningCommands",
+            "/AdvantageKit/IntakeDeploySubsystem",
+            "/AdvantageKit/IntakeDeploySubsystem/IntakeDeployExtendedSensorDigitalInput",
+            "/AdvantageKit/IntakeDeploySubsystem/IntakeDeploySensorDigitalInput",
+            "/AdvantageKit/IntakeDeployMotor",
+            "/Preferences/HopperRollerSubsystem",
+            "/AdvantageKit/RealOutputs/IntakeDeploySubsystem",
             "/Preferences",
-            "/AdvantageKit"
+            "/Preferences/PoseSubsystem",
+            "/AdvantageKit/RealOutputs/PoseSubsystem",
+            "/AdvantageKit/RealOutputs/PoseSubsystem/CameraPose",
+            "/AdvantageKit/RealOutputs/PoseSubsystem/CameraPose/0"
           ]
         },
         "tabs": {
-          "selected": 7,
+          "selected": 2,
           "tabs": [
             {
               "type": 0,
@@ -67,7 +114,7 @@
                     "logType": "Pose2d",
                     "visible": true,
                     "options": {
-                      "model": "2026 KitBot",
+                      "model": "Xbot 2026",
                       "color": "#00ff00"
                     }
                   },
@@ -77,7 +124,7 @@
                     "logType": "Pose2d",
                     "visible": true,
                     "options": {
-                      "model": "2026 KitBot"
+                      "model": "Xbot 2026"
                     }
                   },
                   {
@@ -105,8 +152,44 @@
                     "logType": "Pose2d",
                     "visible": true,
                     "options": {
-                      "model": "2026 KitBot",
+                      "model": "Xbot 2026",
                       "color": "#ff8c00"
+                    }
+                  },
+                  {
+                    "type": "robot",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/PoseSubsystem/CameraPose/0",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {
+                      "model": "Camera"
+                    }
+                  },
+                  {
+                    "type": "robot",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/PoseSubsystem/CameraPose/1",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {
+                      "model": "Camera"
+                    }
+                  },
+                  {
+                    "type": "robot",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/PoseSubsystem/CameraPose/2",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {
+                      "model": "Camera"
+                    }
+                  },
+                  {
+                    "type": "robot",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/PoseSubsystem/CameraPose/3",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {
+                      "model": "Camera"
                     }
                   }
                 ],
@@ -117,14 +200,14 @@
                 "cameraIndex": -1,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  -0.6547130166187072,
-                  5.835649761227683,
-                  -6.111545785305621
+                  1.4695761589768238e-15,
+                  5.999999999999999,
+                  -12
                 ],
                 "cameraTarget": [
-                  -0.4750224254835664,
-                  -1.9141772758047795,
-                  0.8981926656629698
+                  0,
+                  0.5,
+                  0
                 ]
               },
               "controlsHeight": 200
@@ -242,7 +325,7 @@
                 "leftFilter": 0,
                 "rightFilter": 0
               },
-              "controllerUUID": "zxzqrsbubnozaca6mhbf6yktsfqct6zc",
+              "controllerUUID": "66ebkf1wcsxlu3o8m52t03b74oav29zs",
               "renderer": null,
               "controlsHeight": 200
             },
@@ -285,7 +368,7 @@
                 "rightSources": [
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/ShooterLeftMotor/CANMotorController/Current",
+                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/3",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -295,7 +378,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/ShooterMiddleMotor/CANMotorController/Current",
+                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/2",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -305,7 +388,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/ShooterRightMotor/CANMotorController/Current",
+                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/4",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -372,28 +455,6 @@
                 "leftSources": [
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/IntakeDeploySubsystem//MechanismTargetRotation-in-Degrees",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#80588e",
-                      "size": "normal"
-                    }
-                  }
-                ],
-                "rightSources": [
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/IntakeDeployMotor/CANMotorController/Current",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#e5b31b",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
                     "logKey": "NT:/AdvantageKit/IntakeDeployMotor/CANMotorController/Voltage",
                     "logType": "Number",
                     "visible": true,
@@ -404,11 +465,43 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/IntakeDeploySubsystem//ManualControlPower",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/IntakeDeploySubsystem/CurrentPosition",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#c0b487",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/IntakeDeployMaintainerCommand/ManualControlInput",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#d993aa",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/IntakeDeployMaintainerCommand/RawManualControlInput",
                     "logType": "Number",
                     "visible": true,
                     "options": {
                       "color": "#af2437",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/IntakeDeployMotor/CANMotorController/Current",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#e48b32",
                       "size": "normal"
                     }
                   }
@@ -422,12 +515,30 @@
                     "options": {
                       "color": "#3b875a"
                     }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/AdvantageKit/IntakeDeploySubsystem/IntakeDeployExtendedSensorDigitalInput/Signal",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#e5b31b"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/AdvantageKit/IntakeDeploySubsystem/IntakeDeploySensorDigitalInput/Signal",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#80588e"
+                    }
                   }
                 ],
                 "leftLockedRange": null,
                 "rightLockedRange": null,
                 "leftUnitConversion": {
-                  "autoTarget": "degrees",
+                  "autoTarget": null,
                   "preset": null
                 },
                 "rightUnitConversion": {
