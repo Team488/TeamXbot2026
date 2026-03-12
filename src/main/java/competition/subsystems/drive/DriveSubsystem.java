@@ -75,7 +75,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
                 0.0, // F
                 0.75, // Max output
                 -0.75, // Min output
-                2.0, // Error threshold
+                5.0, // Error threshold
                 0.2, // Derivative threshold
                 0.2); // Time threshold
     }
