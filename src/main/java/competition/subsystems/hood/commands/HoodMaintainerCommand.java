@@ -1,6 +1,7 @@
 package competition.subsystems.hood.commands;
 
 import competition.subsystems.hood.HoodSubsystem;
+import edu.wpi.first.wpilibj.DriverStation;
 import xbot.common.command.BaseMaintainerCommand;
 import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.logic.HumanVsMachineDecider;
@@ -26,6 +27,15 @@ public class HoodMaintainerCommand extends BaseMaintainerCommand<Double, Double>
     @Override
     protected void coastAction() {
 
+    }
+
+    @Override
+    protected void initializeMachineControlAction() {
+        // The base implementation here will reset the target (probably incorrectly). Fixing it here
+        // to avoid side-effects while we reason through a better implementation of the base class.
+        if (this.hood.getSetpointLock().getCurrentCommand() != null && !DriverStation.isAutonomous()) {
+            this.hood.getSetpointLock().getCurrentCommand().cancel();
+        }
     }
 
     @Override
