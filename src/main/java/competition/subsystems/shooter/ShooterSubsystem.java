@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 @Singleton
 public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Double> {
@@ -31,6 +33,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public final DoubleProperty defaultShootingVelocity;
     public final DoubleProperty trimValue;
     public DoubleProperty readinessTimeoutSeconds;
+    boolean isInLowPowerMode = false;
 
     public AngularVelocity currentTargetVelocity = RPM.of(0);
 
@@ -125,8 +128,22 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     }
 
     public void runMotorsAtVelocity(AngularVelocity velocity) {
-        for (var motor : getShooterMotors()) {
-            motor.setVelocityTarget(velocity);
+        if (!isInLowPowerMode) {
+            for (var motor : getShooterMotors()) {
+                motor.setVelocityTarget(velocity);
+            }
+        } else {
+            if (leftShooterMotor != null) {
+                leftShooterMotor.setVelocityTarget(RotationsPerSecond.of(0));
+            }
+            if (middleShooterMotor != null) {
+                middleShooterMotor.setVelocityTarget(velocity);
+            }
+            if (rightShooterMotor != null) {
+                rightShooterMotor.setVelocityTarget(RotationsPerSecond.of(0));
+            }
+
+
         }
     }
 
@@ -167,6 +184,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         aKitLog.record("ShooterCurrentVelocity", getCurrentValue());
         aKitLog.record("ShooterTargetVelocity", getTargetValue());
         aKitLog.record("isCalibrated", isCalibrated());
+        aKitLog.record("LowPowerMode", isInLowPowerMode);
     }
 
     @Override
@@ -220,5 +238,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
     public Command getWaitForAtGoalCommand() {
         return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
+    }
+
+    public void setLowPowerMode(boolean newValue) {
+        this.isInLowPowerMode = newValue;
     }
 }
