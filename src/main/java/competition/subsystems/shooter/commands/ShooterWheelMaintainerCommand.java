@@ -34,6 +34,8 @@ public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<Angular
 
     @Override
     protected void initializeMachineControlAction() {
+        // The base implementation here will reset the target (probably incorrectly). Fixing it here
+        // to avoid side-effects while we reason through a better implementation of the base class.
         if (this.shooterWheel.getSetpointLock().getCurrentCommand() != null && !DriverStation.isAutonomous()) {
             this.shooterWheel.getSetpointLock().getCurrentCommand().cancel();
         }

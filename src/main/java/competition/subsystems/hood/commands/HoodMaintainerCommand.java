@@ -31,6 +31,8 @@ public class HoodMaintainerCommand extends BaseMaintainerCommand<Double, Double>
 
     @Override
     protected void initializeMachineControlAction() {
+        // The base implementation here will reset the target (probably incorrectly). Fixing it here
+        // to avoid side-effects while we reason through a better implementation of the base class.
         if (this.hood.getSetpointLock().getCurrentCommand() != null && !DriverStation.isAutonomous()) {
             this.hood.getSetpointLock().getCurrentCommand().cancel();
         }
