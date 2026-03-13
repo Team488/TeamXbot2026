@@ -4,28 +4,25 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import competition.auto_programs.ShootFromHubCommandGroup;
 import competition.auto_programs.ShootFromTrenchCommandGroup;
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
 import competition.command_groups.FireWhenReadyAndRetractIntakeDeployCommandGroup;
 import competition.command_groups.FireWhenReadyShooterCommandGroup;
-import competition.command_groups.HopperAndIntakeEjectCommandGroup;
-import competition.command_groups.MinHoodShootingCommandGroup;
 import competition.command_groups.HopperAndIntakeCommandGroup;
-import competition.command_groups.MaxHoodShootingCommandGroup;
+import competition.command_groups.HopperAndIntakeEjectCommandGroup;
 import competition.command_groups.PrepareToShootCommandGroup;
 import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.climber.commands.ClimberSetPointCommand;
 import competition.subsystems.collector_intake.commands.CollectorEjectCommand;
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
-import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
+import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.DropHoodForTrenchCommand;
-import competition.subsystems.hood.commands.HoodExtendCommands;
-import competition.subsystems.hood.commands.HoodRetractCommands;
 import competition.subsystems.hood.commands.TrimHoodDownCommand;
 import competition.subsystems.hood.commands.TrimHoodUpCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
@@ -45,8 +42,6 @@ import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.autonomous.SetAutonomousCommand;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
-
-import static edu.wpi.first.units.Units.RPM;
 
 /**
  * Maps operator interface buttons to commands
@@ -165,10 +160,10 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupAutoCommands(Provider<SetAutonomousCommand> setAutonomousCommandProvider,
-                                  DriveToOutpostCommand driveToOutpostCommand,
-                                  MoveAcrossFieldCommandGroup moveAcrossFieldCommand,
-                                  ShootFromTrenchCommandGroup shootFromTrenchCommandGroup
-    ) {
+            DriveToOutpostCommand driveToOutpostCommand,
+            MoveAcrossFieldCommandGroup moveAcrossFieldCommand,
+            ShootFromTrenchCommandGroup shootFromTrenchCommandGroup,
+            ShootFromHubCommandGroup shootFromHubCommandGroup) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
         var moveAcrossField = setAutonomousCommandProvider.get();
@@ -178,6 +173,10 @@ public class OperatorCommandMap {
         var shootFromTrench = setAutonomousCommandProvider.get();
         shootFromTrench.setAutoCommand(shootFromTrenchCommandGroup, Landmarks.blueStartTrenchToOutpost);
         shootFromTrench.includeOnSmartDashboard("Shoot from trench.");
+
+        var shootFromHub = setAutonomousCommandProvider.get();
+        shootFromHub.setAutoCommand(shootFromHubCommandGroup, Landmarks.blueStartTrenchToOutpost);
+        shootFromHub.includeOnSmartDashboard("Shoot from hub.");
     }
 
     @Inject
