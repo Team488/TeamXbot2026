@@ -1,6 +1,9 @@
 
 package competition;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import competition.injection.components.BaseRobotComponent;
 import competition.injection.components.DaggerRobotComponent;
 import competition.injection.components.DaggerRobotComponent2023;
@@ -13,9 +16,6 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import xbot.common.command.BaseRobot;
 import xbot.common.math.FieldPose;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
@@ -23,7 +23,7 @@ import xbot.common.subsystems.pose.BasePoseSubsystem;
 public class Robot extends BaseRobot {
     Logger log = LogManager.getLogger(Robot.class);
 
-    public static final double LOOP_INTERVAL = 0.02;
+    public static final double LOOP_INTERVAL = 0.04;
 
     BaseSimulator simulator;
     OperatorInterface oi;

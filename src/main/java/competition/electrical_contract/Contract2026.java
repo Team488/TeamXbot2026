@@ -523,13 +523,13 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public Distance getRadiusOfRobot() {
-        return Units.Inches.of(20);
+        return Units.Inches.of(18);
     }
 
     @Override
     public CameraInfo[] getCameraInfo() {
-        double sideAprilCameraXDisplacement = 0.2965;
-        double sideAprilCameraYDisplacement = -0.28;
+        double sideAprilCameraXDisplacement = -0.28;
+        double sideAprilCameraYDisplacement = 0.2965;
         double sideAprilCameraZDisplacement = 0.19;
         double sideAprilCameraPitch = Math.toRadians(-25.5);
 
@@ -545,8 +545,8 @@ public class Contract2026 extends ElectricalContract {
                 new CameraInfo("Apriltag_Right_Camera",
                         "AprilTagRight",
                         new Transform3d(new Translation3d(
-                                -sideAprilCameraXDisplacement,
-                                sideAprilCameraYDisplacement,
+                                sideAprilCameraXDisplacement,
+                                -sideAprilCameraYDisplacement,
                                 sideAprilCameraZDisplacement),
                                 new Rotation3d(0, sideAprilCameraPitch, Math.toRadians(270))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
@@ -561,8 +561,8 @@ public class Contract2026 extends ElectricalContract {
                 new CameraInfo("Apriltag_Back_Camera",
                         "AprilTagBack",
                         new Transform3d(new Translation3d(
-                                0,
                                 -0.3429,
+                                0,
                                 0.487),
                                 new Rotation3d(0, Math.toRadians(-15), Math.toRadians(180))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
