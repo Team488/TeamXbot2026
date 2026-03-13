@@ -44,6 +44,7 @@ public class DriveForwardCommand extends SwerveSimpleTrajectoryCommand {
     }
 
     public double currentHeading() {
+        return pose.getCurrentHeading().getDegrees();
     }
 
     public void setTarget(double d) {
