@@ -5,6 +5,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import competition.auto_programs.AimAndShootFromHereCommand;
+import competition.auto_programs.ShootFromHubCommandGroup;
 import competition.auto_programs.ShootFromTrenchCommandGroup;
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
 import competition.command_groups.FireWhenReadyAndRetractIntakeDeployCommandGroup;
@@ -181,7 +182,8 @@ public class OperatorCommandMap {
             DriveToOutpostCommand driveToOutpostCommand,
             MoveAcrossFieldCommandGroup moveAcrossFieldCommand,
             ShootFromTrenchCommandGroup shootFromTrenchCommandGroup,
-            AimAndShootFromHereCommand aimAndShootFromHereCommand) {
+            AimAndShootFromHereCommand aimAndShootFromHereCommand,
+            ShootFromHubCommandGroup shootFromHubCommandGroup) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
         var moveAcrossField = setAutonomousCommandProvider.get();
@@ -195,6 +197,10 @@ public class OperatorCommandMap {
         var aimAndShootFromHere = setAutonomousCommandProvider.get();
         aimAndShootFromHere.setAutoCommand(aimAndShootFromHereCommand, Landmarks.blueStartTrenchToOutpost);
         aimAndShootFromHere.includeOnSmartDashboard("Aim and Shoot from current location.");
+      
+        var shootFromHub = setAutonomousCommandProvider.get();
+        shootFromHub.setAutoCommand(shootFromHubCommandGroup, Landmarks.blueStartTrenchToOutpost);
+        shootFromHub.includeOnSmartDashboard("Shoot from hub.");
     }
 
     @Inject

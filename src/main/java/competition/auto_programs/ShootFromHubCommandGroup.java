@@ -10,19 +10,19 @@ import xbot.common.subsystems.autonomous.AutonomousCommandSelector;
 
 import javax.inject.Inject;
 
-public class ShootFromTrenchCommandGroup extends BaseAutonomousSequentialCommandGroup {
+public class ShootFromHubCommandGroup extends BaseAutonomousSequentialCommandGroup {
 
     @Inject
-    public ShootFromTrenchCommandGroup(AutonomousCommandSelector autoSelector,
+    public ShootFromHubCommandGroup(AutonomousCommandSelector autoSelector,
             TrajectoriesCalculation trajectoriesCalculation,
             FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup,
             PrepareToShootCommandGroup prepareToShootCommandGroup,
             IntakeDeployAutoCalibrateCommandFactory intakeDeployAutoCalibrateCommandFactory) {
         super(autoSelector);
 
-        getAutoStatusChangeCommand("Starting ShootFromTrenchCommandGroup");
+        getAutoStatusChangeCommand("Starting ShootFromHubCommandGroup");
         var intakeCalibrationCommand = intakeDeployAutoCalibrateCommandFactory.create();
-        prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
+        prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR);
         var calibrateAndShoot = new ParallelCommandGroup(intakeCalibrationCommand, prepareToShootCommandGroup, fireWhenReadyShooterCommandGroup);
 
         this.addCommands(calibrateAndShoot);
