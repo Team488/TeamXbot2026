@@ -57,10 +57,7 @@ public class CollectorSubsystem extends BaseSubsystem {
     }
 
     public void stop() {
-        if (collectorMotor == null) {
-            return;
-        }
-        collectorMotor.setPower(0);
+        this.setPower(0.0);
     }
 
     public void setPower(double power) {
