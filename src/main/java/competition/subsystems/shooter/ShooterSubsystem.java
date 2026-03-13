@@ -33,7 +33,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public final DoubleProperty shootingTargetVelocity;
     public final DoubleProperty trimValue;
     public DoubleProperty readinessTimeoutSeconds;
-    public boolean isInLowPowerMode = false;
+    boolean isInLowPowerMode = false;
 
     public AngularVelocity currentTargetVelocity = RPM.of(0);
 
@@ -132,8 +132,18 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
             for (var motor : getShooterMotors()) {
                 motor.setVelocityTarget(velocity);
             }
-        } else  {
-            middleShooterMotor.setVelocityTarget(velocity);
+        } else {
+            if (leftShooterMotor != null) {
+                leftShooterMotor.setVelocityTarget(RotationsPerSecond.of(0));
+            }
+            if (middleShooterMotor != null) {
+                middleShooterMotor.setVelocityTarget(velocity);
+            }
+            if (rightShooterMotor != null) {
+                rightShooterMotor.setVelocityTarget(RotationsPerSecond.of(0));
+            }
+
+
         }
     }
 
@@ -173,6 +183,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         }
         aKitLog.record("ShooterCurrentVelocity", getCurrentValue());
         aKitLog.record("isCalibrated", isCalibrated());
+        aKitLog.record("LowPowerMode", isInLowPowerMode);
     }
 
     @Override
@@ -228,8 +239,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
     }
 
-    public void lowPowerMode() {
-        leftShooterMotor.setVelocityTarget(RotationsPerSecond.of(0));
-        rightShooterMotor.setVelocityTarget(RotationsPerSecond.of(0));
+    public void setLowPowerMode(boolean newValue) {
+        this.isInLowPowerMode = newValue;
     }
 }
