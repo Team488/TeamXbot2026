@@ -8,7 +8,7 @@ import competition.subsystems.pose.TrajectoriesCalculation;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import xbot.common.command.BaseCommand;
 
-public class ContinuousPrepareToShootCommandGroup extends BaseCommand {
+public class ContinuousPrepareToShootFromHereCommand extends BaseCommand {
 
     private final HoodSetCommand hoodSetCommand;
     private final ShooterOutputCommand outputCommand;
@@ -20,10 +20,10 @@ public class ContinuousPrepareToShootCommandGroup extends BaseCommand {
         ALLIANCE_ZONE
     }
 
-    private ShootingTarget target;
+    private ShootingTarget target = ShootingTarget.HUB;
 
     @Inject
-    public ContinuousPrepareToShootCommandGroup(HoodSetCommand hoodSet,
+    public ContinuousPrepareToShootFromHereCommand(HoodSetCommand hoodSet,
             ShooterOutputCommand shooterOutput,
             PoseSubsystem poseSubsystem,
             TrajectoriesCalculation trajectoriesCalculation) {
@@ -35,14 +35,14 @@ public class ContinuousPrepareToShootCommandGroup extends BaseCommand {
 
     @Override
     public void initialize() {
-        this.setTargets();
+        this.prepareToShootAtTarget();
 
         super.initialize();
     }
 
     @Override
     public void execute() {
-        this.setTargets();
+        this.prepareToShootAtTarget();
 
         super.execute();
     }
@@ -51,7 +51,7 @@ public class ContinuousPrepareToShootCommandGroup extends BaseCommand {
         this.target = shootingTarget;
     }
 
-    private void setTargets() {
+    private void prepareToShootAtTarget() {
         var pose = this.poseSubsystem.getCurrentPose2d();
         TrajectoriesCalculation.ShootingData data;
         switch (this.target) {
