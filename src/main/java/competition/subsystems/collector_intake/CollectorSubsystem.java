@@ -65,14 +65,12 @@ public class CollectorSubsystem extends BaseSubsystem {
             return;
         }
 
-        if (!intakeDeploySubsystem.isCalibrated) {
-            return;
-        }
 
-        if (intakeDeploySubsystem.getCurrentValue().gt(collectorAngle.get())) {
-            collectorMotor.setPower(power);
-        } else  {
+        if (intakeDeploySubsystem.isCalibrated && intakeDeploySubsystem.getCurrentValue().lt(collectorAngle.get())) {
             collectorMotor.setPower(0.0);
+
+        } else  {
+            collectorMotor.setPower(power);
         }
     }
 
