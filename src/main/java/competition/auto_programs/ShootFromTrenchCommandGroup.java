@@ -23,9 +23,8 @@ public class ShootFromTrenchCommandGroup extends BaseAutonomousSequentialCommand
         getAutoStatusChangeCommand("Starting ShootFromTrenchCommandGroup");
         var intakeCalibrationCommand = intakeDeployAutoCalibrateCommandFactory.create();
         prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
-        var calibrateAndShoot = new ParallelCommandGroup(intakeCalibrationCommand, prepareToShootCommandGroup);
+        var calibrateAndShoot = new ParallelCommandGroup(intakeCalibrationCommand, prepareToShootCommandGroup, fireWhenReadyShooterCommandGroup);
 
         this.addCommands(calibrateAndShoot);
-        this.addCommands(fireWhenReadyShooterCommandGroup);
     }
 }
