@@ -218,7 +218,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getHoodServoLeft() {
-        return new DeviceInfo("HoodServoLeft", 0);
+        return new DeviceInfo("HoodServoLeft", 8);
     }
 
     @Override
@@ -226,7 +226,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getHoodServoRight() {
-        return new DeviceInfo("HoodServoRight", 1);
+        return new DeviceInfo("HoodServoRight", 9);
     }
     
     // OrangePis - powered via buck converters (see getAdditionalPowerBranches)
@@ -523,15 +523,15 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public Distance getRadiusOfRobot() {
-        return Units.Inches.of(20);
+        return Units.Inches.of(18);
     }
 
     @Override
     public CameraInfo[] getCameraInfo() {
-        double sideAprilCameraXDisplacement = 11.1004 / PoseSubsystem.INCHES_IN_A_METER;
-        double sideAprilCameraYDisplacement = -11.0 / PoseSubsystem.INCHES_IN_A_METER;
-        double sideAprilCameraZDisplacement = 6.96 / PoseSubsystem.INCHES_IN_A_METER;
-        double sideAprilCameraPitch = Math.toRadians(-25);
+        double sideAprilCameraXDisplacement = -0.28;
+        double sideAprilCameraYDisplacement = 0.2965;
+        double sideAprilCameraZDisplacement = 0.19;
+        double sideAprilCameraPitch = Math.toRadians(-25.5);
 
         return new CameraInfo[]{
                 new CameraInfo("Apriltag_Left_Camera",
@@ -545,8 +545,8 @@ public class Contract2026 extends ElectricalContract {
                 new CameraInfo("Apriltag_Right_Camera",
                         "AprilTagRight",
                         new Transform3d(new Translation3d(
-                                -sideAprilCameraXDisplacement,
-                                sideAprilCameraYDisplacement,
+                                sideAprilCameraXDisplacement,
+                                -sideAprilCameraYDisplacement,
                                 sideAprilCameraZDisplacement),
                                 new Rotation3d(0, sideAprilCameraPitch, Math.toRadians(270))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
@@ -561,9 +561,9 @@ public class Contract2026 extends ElectricalContract {
                 new CameraInfo("Apriltag_Back_Camera",
                         "AprilTagBack",
                         new Transform3d(new Translation3d(
+                                -0.3429,
                                 0,
-                                -12.959212 / PoseSubsystem.INCHES_IN_A_METER,
-                                17.768664 / PoseSubsystem.INCHES_IN_A_METER),
+                                0.487),
                                 new Rotation3d(0, Math.toRadians(-15), Math.toRadians(180))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
         };

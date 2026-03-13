@@ -1,19 +1,21 @@
 
 package competition;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import competition.injection.components.BaseRobotComponent;
 import competition.injection.components.DaggerRobotComponent;
 import competition.injection.components.DaggerRobotComponent2023;
 import competition.injection.components.DaggerRobotComponent2025;
 import competition.injection.components.DaggerRoboxComponent;
 import competition.injection.components.DaggerSimulationComponent;
+import competition.operator_interface.OperatorInterface;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import xbot.common.command.BaseRobot;
 import xbot.common.math.FieldPose;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
@@ -21,9 +23,10 @@ import xbot.common.subsystems.pose.BasePoseSubsystem;
 public class Robot extends BaseRobot {
     Logger log = LogManager.getLogger(Robot.class);
 
-    public static final double LOOP_INTERVAL = 0.02;
+    public static final double LOOP_INTERVAL = 0.04;
 
     BaseSimulator simulator;
+    OperatorInterface oi;
 
     Robot() {
         super(LOOP_INTERVAL);
@@ -45,6 +48,9 @@ public class Robot extends BaseRobot {
         if (BaseRobot.isSimulation()) {
             simulator = getInjectorComponent().simulator();
         }
+
+        oi = getInjectorComponent().operatorInterface();
+        autonomousCommandSelector.setCurrentAutonomousCommand(getInjectorComponent().shootFromTrenchCommandGroup());
 
         dataFrameRefreshables.add((DriveSubsystem)getInjectorComponent().driveSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().poseSubsystem());
@@ -96,6 +102,16 @@ public class Robot extends BaseRobot {
     }
 
     @Override
+    public void autonomousInit() {
+        super.autonomousInit();
+    }
+
+    @Override
+    public void teleopInit() {
+        super.teleopInit();
+    }
+
+    @Override
     public void simulationInit() {
         super.simulationInit();
         // Automatically enables the robot; remove this line of code if you want the robot
@@ -122,6 +138,15 @@ public class Robot extends BaseRobot {
 
         if (simulator != null) {
             simulator.update();
+        }
+    }
+
+    @Override
+    protected void sharedPeriodic() {
+        super.sharedPeriodic();
+
+        if (this.oi != null) {
+            this.oi.periodic();
         }
     }
 }

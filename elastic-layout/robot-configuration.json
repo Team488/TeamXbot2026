@@ -3,6 +3,67 @@
   "grid_size": 128,
   "tabs": [
     {
+      "name": "Autonomous",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "Move midway through field and back.",
+            "x": 512.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Move midway through field and back.",
+              "period": 0.06,
+              "show_type": true
+            }
+          },
+          {
+            "title": "Shoot from trench.",
+            "x": 512.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Shoot from trench.",
+              "period": 0.06,
+              "show_type": true
+            }
+          },
+          {
+            "title": "Current autonomous command name",
+            "x": 128.0,
+            "y": 128.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/AutonomousCommandSelector/Current autonomous command name",
+              "period": 0.06,
+              "data_type": "string",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Shoot from hub.",
+            "x": 512.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Shoot from hub.",
+              "period": 0.06,
+              "show_type": true
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "Drive PID",
       "grid_layout": {
         "layouts": [
@@ -63,7 +124,7 @@
           },
           {
             "title": "Drive PID",
-            "x": 640.0,
+            "x": 512.0,
             "y": 128.0,
             "width": 256.0,
             "height": 640.0,
@@ -174,7 +235,7 @@
           },
           {
             "title": "Steering PID",
-            "x": 1024.0,
+            "x": 768.0,
             "y": 128.0,
             "width": 256.0,
             "height": 640.0,
@@ -276,6 +337,89 @@
                 "type": "Text Display",
                 "properties": {
                   "topic": "/Preferences/SwerveSteeringSubsystem/SteeringPID/0/kVelocityFeedForward",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              }
+            ]
+          },
+          {
+            "title": "Heading PID",
+            "x": 1024.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 512.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "P",
+                "x": 1152.0,
+                "y": 128.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/DriveSubsystem/HeadingPID/P",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "I",
+                "x": 1152.0,
+                "y": 256.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/DriveSubsystem/HeadingPID/I",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "D",
+                "x": 1152.0,
+                "y": 256.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/DriveSubsystem/HeadingPID/D",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "F",
+                "x": 1152.0,
+                "y": 512.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/DriveSubsystem/HeadingPID/F",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "IZone",
+                "x": 1152.0,
+                "y": 512.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/DriveSubsystem/HeadingPID/IZone",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true

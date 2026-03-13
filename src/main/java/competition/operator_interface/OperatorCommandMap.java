@@ -4,27 +4,25 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import competition.auto_programs.ShootFromHubCommandGroup;
+import competition.auto_programs.ShootFromTrenchCommandGroup;
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
+import competition.command_groups.FireWhenReadyAndRetractIntakeDeployCommandGroup;
 import competition.command_groups.FireWhenReadyShooterCommandGroup;
-import competition.command_groups.HopperAndIntakeEjectCommandGroup;
-import competition.command_groups.MinHoodShootingCommandGroup;
-import competition.command_groups.DriveToShootingPositionCommand;
 import competition.command_groups.HopperAndIntakeCommandGroup;
-import competition.command_groups.MaxHoodShootingCommandGroup;
+import competition.command_groups.HopperAndIntakeEjectCommandGroup;
 import competition.command_groups.PrepareToShootCommandGroup;
 import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.climber.commands.ClimberSetPointCommand;
 import competition.subsystems.collector_intake.commands.CollectorEjectCommand;
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
-import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
+import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.DropHoodForTrenchCommand;
-import competition.subsystems.hood.commands.HoodExtendCommands;
-import competition.subsystems.hood.commands.HoodRetractCommands;
 import competition.subsystems.hood.commands.TrimHoodDownCommand;
 import competition.subsystems.hood.commands.TrimHoodUpCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
@@ -34,6 +32,7 @@ import competition.subsystems.intake_deploy.commands.ForceIntakeDownToEndStopCom
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import competition.subsystems.pose.Landmarks;
+import competition.subsystems.pose.TrajectoriesCalculation;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
@@ -43,8 +42,6 @@ import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.autonomous.SetAutonomousCommand;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
-
-import static edu.wpi.first.units.Units.RPM;
 
 /**
  * Maps operator interface buttons to commands
@@ -98,17 +95,13 @@ public class OperatorCommandMap {
                                      HopperAndIntakeCommandGroup intakeCommand,
                                      HopperAndIntakeEjectCommandGroup ejectCommand,
                                      FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup,
+                                     FireWhenReadyAndRetractIntakeDeployCommandGroup fireWhenReadyAndRetractIntakeDeployCommandGroup,
                                      Provider<PrepareToShootCommandGroup> prepareToShootCommand
     ) {
-        var prepareToShootMinimum = prepareToShootCommand.get()
-                .setHoodGoal(hoodSubsystem.minDistanceGoal.get())
-                .setShooterGoal(RPM.of(shooterSubsystem.minDistanceRPM.get()));
-        var prepareToShootMedium = prepareToShootCommand.get()
-                .setHoodGoal(hoodSubsystem.medDistanceGoal.get())
-                .setShooterGoal(RPM.of(shooterSubsystem.medDistanceRPM.get()));
-        var prepareToShootMaxiumum = prepareToShootCommand.get()
-                .setHoodGoal(hoodSubsystem.maxDistanceGoal.get())
-                .setShooterGoal(RPM.of(shooterSubsystem.maxDistanceRPM.get()));
+        var prepareToShootNear = prepareToShootCommand.get().setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR);
+        var prepareToShootTowerClose = prepareToShootCommand.get().setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TOWER_FAR);
+        var prepareToShootTrench = prepareToShootCommand.get().setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
+        var prepareToShootCorner = prepareToShootCommand.get().setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.CORNER);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger)
                 .whileTrue(fireWhenReadyShooterCommandGroup);
@@ -118,15 +111,18 @@ public class OperatorCommandMap {
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger).whileTrue(intakeCommand);
 
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(prepareToShootMinimum);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(prepareToShootMedium);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(prepareToShootMaxiumum);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(prepareToShootNear);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(prepareToShootTowerClose);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(prepareToShootCorner);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(prepareToShootTrench);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Back).whileTrue(forceIntakeDownCommand);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateIntakeOffsetUp);
 
         operatorInterface.operatorGamepad.getPovIfAvailable(180).whileTrue(ejectCommand);
+        operatorInterface.operatorGamepad.getPovIfAvailable(0)
+                .whileTrue(fireWhenReadyAndRetractIntakeDeployCommandGroup);
     }
 
     @Inject
@@ -164,17 +160,23 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupAutoCommands(Provider<SetAutonomousCommand> setAutonomousCommandProvider,
-                                  DriveToOutpostCommand driveToOutpostCommand,
-                                  MoveAcrossFieldCommandGroup moveAcrossFieldCommand,
-                                  DriveToShootingPositionCommand driveToShootingPositionCommand
-    ) {
+            DriveToOutpostCommand driveToOutpostCommand,
+            MoveAcrossFieldCommandGroup moveAcrossFieldCommand,
+            ShootFromTrenchCommandGroup shootFromTrenchCommandGroup,
+            ShootFromHubCommandGroup shootFromHubCommandGroup) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
         var moveAcrossField = setAutonomousCommandProvider.get();
         moveAcrossField.setAutoCommand(moveAcrossFieldCommand, Landmarks.blueStartTrenchToOutpost);
-        moveAcrossField.includeOnSmartDashboard("Move across field.");
+        moveAcrossField.includeOnSmartDashboard("Move midway through field and back.");
 
-        driveToShootingPositionCommand.includeOnSmartDashboard("Drive to Shooting Position");
+        var shootFromTrench = setAutonomousCommandProvider.get();
+        shootFromTrench.setAutoCommand(shootFromTrenchCommandGroup, Landmarks.blueStartTrenchToOutpost);
+        shootFromTrench.includeOnSmartDashboard("Shoot from trench.");
+
+        var shootFromHub = setAutonomousCommandProvider.get();
+        shootFromHub.setAutoCommand(shootFromHubCommandGroup, Landmarks.blueStartTrenchToOutpost);
+        shootFromHub.includeOnSmartDashboard("Shoot from hub.");
     }
 
     @Inject
