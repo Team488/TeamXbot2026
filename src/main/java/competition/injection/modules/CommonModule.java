@@ -99,7 +99,7 @@ public abstract class CommonModule {
 
     @Binds
     @Singleton
-    public abstract ISwerveAdvisorDriveSupport getSwerveAdvisorDriveSuppor(DriveSubsystem impl);
+    public abstract ISwerveAdvisorDriveSupport getSwerveAdvisorDriveSupport(DriveSubsystem impl);
 
     @Binds
     @Singleton
