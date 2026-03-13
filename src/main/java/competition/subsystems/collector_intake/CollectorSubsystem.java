@@ -71,6 +71,8 @@ public class CollectorSubsystem extends BaseSubsystem {
 
         if (intakeDeploySubsystem.getCurrentValue().gt(collectorAngle.get())) {
             collectorMotor.setPower(power);
+        } else  {
+            collectorMotor.setPower(0.0);
         }
     }
 
