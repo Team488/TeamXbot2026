@@ -70,7 +70,7 @@ public class ShooterSimulator {
 
         this.pidManager = pidManagerFactory.create(
                 pf.getPrefix() + "ShooterSimulationPID",
-                0.2,
+                0.000005,
                 0.001,
                 0.0,
                 0.0,
