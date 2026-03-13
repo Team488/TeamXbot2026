@@ -30,7 +30,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public ElectricalContract electricalContract;
     public PropertyFactory propertyFactory;
 
-    public final DoubleProperty shootingTargetVelocity;
+    public final DoubleProperty defaultShootingVelocity;
     public final DoubleProperty trimValue;
     public DoubleProperty readinessTimeoutSeconds;
     boolean isInLowPowerMode = false;
@@ -104,7 +104,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
             this.rightShooterMotor = null;
         }
 
-        this.shootingTargetVelocity = this.propertyFactory.createPersistentProperty("Shooting Target Velocity", 3000);
+        this.defaultShootingVelocity = this.propertyFactory.createPersistentProperty("Default Shooter Velocity RPM", 3000);
         this.trimValue = this.propertyFactory.createPersistentProperty("Shooter Trim Value", 0);
         this.readinessTimeoutSeconds = this.propertyFactory.createPersistentProperty("Readiness Timeout Seconds", 2.0);
     }
@@ -182,6 +182,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
             motor.periodic();
         }
         aKitLog.record("ShooterCurrentVelocity", getCurrentValue());
+        aKitLog.record("ShooterTargetVelocity", getTargetValue());
         aKitLog.record("isCalibrated", isCalibrated());
         aKitLog.record("LowPowerMode", isInLowPowerMode);
     }
