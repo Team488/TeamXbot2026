@@ -2,16 +2,16 @@ package competition.command_groups;
 
 import javax.inject.Inject;
 
-import competition.subsystems.hood.commands.HoodSetCommand;
+import competition.subsystems.hood.HoodSubsystem;
+import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.pose.TrajectoriesCalculation;
-import competition.subsystems.shooter.commands.ShooterOutputCommand;
-import xbot.common.command.BaseCommand;
+import xbot.common.command.BaseSetpointCommand;
 
-public class ContinuousPrepareToShootFromHereCommand extends BaseCommand {
+public class ContinuousPrepareToShootFromHereCommand extends BaseSetpointCommand {
 
-    private final HoodSetCommand hoodSetCommand;
-    private final ShooterOutputCommand outputCommand;
+    private final HoodSubsystem hood;
+    private final ShooterSubsystem shooter;
     private final PoseSubsystem poseSubsystem;
     private final TrajectoriesCalculation trajectoriesCalculation;
 
@@ -23,12 +23,13 @@ public class ContinuousPrepareToShootFromHereCommand extends BaseCommand {
     private ShootingTarget target = ShootingTarget.HUB;
 
     @Inject
-    public ContinuousPrepareToShootFromHereCommand(HoodSetCommand hoodSet,
-            ShooterOutputCommand shooterOutput,
+    public ContinuousPrepareToShootFromHereCommand(HoodSubsystem hood,
+            ShooterSubsystem shooter,
             PoseSubsystem poseSubsystem,
             TrajectoriesCalculation trajectoriesCalculation) {
-        this.hoodSetCommand = hoodSet;
-        this.outputCommand = shooterOutput;
+        super(hood, shooter);
+        this.hood = hood;
+        this.shooter = shooter;
         this.poseSubsystem = poseSubsystem;
         this.trajectoriesCalculation = trajectoriesCalculation;
     }
@@ -64,7 +65,7 @@ public class ContinuousPrepareToShootFromHereCommand extends BaseCommand {
                 break;
         }
 
-        this.outputCommand.setTargetVelocity(() -> data.shooterRPM());
-        this.hoodSetCommand.setTargetRatio(() -> data.servoRatio());
+        this.shooter.setTargetValue(data.shooterRPM());
+        this.hood.setTargetValue(data.servoRatio());
     }
 }

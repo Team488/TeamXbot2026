@@ -1253,14 +1253,14 @@
         "layouts": [],
         "containers": [
           {
-            "title": "Shoot at any range.",
+            "title": "Aim and Shoot from current location.",
             "x": 512.0,
-            "y": 128.0,
+            "y": 256.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Command",
             "properties": {
-              "topic": "/SmartDashboard/Shoot at any range.",
+              "topic": "/SmartDashboard/Aim and Shoot from current location.",
               "period": 0.06,
               "show_type": true
             }
