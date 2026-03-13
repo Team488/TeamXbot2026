@@ -1,6 +1,8 @@
 package competition.subsystems.drive.commands;
 
 import competition.subsystems.drive.DriveSubsystem;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import xbot.common.command.BaseCommand;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.math.XYPair;
@@ -21,6 +23,7 @@ public class DriveForwardCommand extends SwerveSimpleTrajectoryCommand {
     public PoseSubsystem pose;
     public final DriveSubsystem drive;
     public final DoubleProperty power;
+    public Transform2d transform2d;
     public double target = 0;
 
     @Inject
@@ -37,16 +40,10 @@ public class DriveForwardCommand extends SwerveSimpleTrajectoryCommand {
 
     @Override
     public void initialize() {
-        drive.move(new XYPair(power.get(), 0), 0);
-        double currentHeading = pose.getCurrentHeading().getDegrees(); //get heading and set target
-        // get current heading, error, speed, power
-        //if (target is out of bounds)
-        //calibrate/set it back to original heading
-
+        double currentHeading = pose.getCurrentHeading().getDegrees();
     }
 
     public double currentHeading() {
-        return pose.getCurrentHeading().getDegrees(); //get heading and set target
     }
 
     public void setTarget(double d) {
@@ -54,26 +51,22 @@ public class DriveForwardCommand extends SwerveSimpleTrajectoryCommand {
     }
 
     public boolean reachedTarget() {
-        
+        double error = Math.abs(currentHeading()-target);
+        return error < 2;
     }
 
         public void execute() {
-        double error = currentHeading().minus(target);
+            double error = target - currentHeading();
+            drive.move(new XYPair(power.get(), 0), 0);
     }
 
     public boolean isFinished() {
-        if (reachedTarget()) {
-            end();
-        }
-        //double error = pose.getCurrentHeading().getDegrees() - goal;
-        //double speed = pose.getCurrentHeading().getDegrees() - previousPos;
-
-        //return Math.abs(error) < 0.05 && Math.abs(speed) < 0.05;
-
-        //add it finishes when reached to a specific distance
+        return reachedTarget();
     }
 
-    public void end() {
-        power.set(0.0);
+    public void end(boolean interrupted) {
+        if (interrupted) {
+            drive.stop();
+        }
     }
 }
