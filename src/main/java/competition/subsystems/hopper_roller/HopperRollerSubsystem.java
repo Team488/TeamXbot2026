@@ -5,11 +5,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.NamedRunCommand;
 import xbot.common.controls.actuators.XCANMotorController;
+import xbot.common.properties.AngularVelocityProperty;
+import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import static edu.wpi.first.units.Units.RPM;
 
 @Singleton
 public class HopperRollerSubsystem extends BaseSubsystem {
@@ -18,6 +22,9 @@ public class HopperRollerSubsystem extends BaseSubsystem {
     public final XCANMotorController hopperRollerMotor;
     final DoubleProperty ejectPower;
     final DoubleProperty intakePower;
+    final AngularVelocityProperty intakeVelocity;
+    final AngularVelocityProperty ejectVelocity;
+    final BooleanProperty useVelocityControl;
 
     @Inject
     public HopperRollerSubsystem(ElectricalContract electricalContract,
@@ -39,20 +46,32 @@ public class HopperRollerSubsystem extends BaseSubsystem {
 
         intakePower = pf.createPersistentProperty("Intake Power", 0.8);
         ejectPower = pf.createPersistentProperty("Eject Power", -0.8);
+
+        useVelocityControl = pf.createPersistentProperty("Use Velocity Control", false);
+        intakeVelocity = pf.createPersistentProperty("Intake Velocity", RPM.of(3000));
+        ejectVelocity = pf.createPersistentProperty("Eject Velocity", RPM.of(-3000));
     }
 
     public void setEjectPower() {
         if (hopperRollerMotor == null) {
             return;
         }
-        hopperRollerMotor.setPower(ejectPower.get());
+        if (useVelocityControl.get()) {
+            hopperRollerMotor.setVelocityTarget(ejectVelocity.get());
+        } else {
+            hopperRollerMotor.setPower(ejectPower.get());
+        }
     }
 
     public void setIntakePower() {
         if (hopperRollerMotor == null) {
             return;
         }
-        hopperRollerMotor.setPower(intakePower.get());
+        if (useVelocityControl.get()) {
+            hopperRollerMotor.setVelocityTarget(intakeVelocity.get());
+        } else {
+            hopperRollerMotor.setPower(intakePower.get());
+        }
     }
 
     public void stop() {
