@@ -33,10 +33,12 @@ public class LightsSubsystem extends BaseSubsystem {
     @Override
     public void periodic() {
         super.periodic();
-        if (intakeDeploy.isCalibrated) {
-            lights.larson(0, Hertz.of(25), Color.kHotPink, LarsonBounceValue.Back);
-        } else {
-            lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
+        if (lights != null) {
+            if (intakeDeploy.isCalibrated) {
+                lights.larson(0, Hertz.of(25), Color.kHotPink, LarsonBounceValue.Back);
+            } else {
+                lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
+            }
         }
     }
 }
