@@ -85,7 +85,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             this.intakeDeployExtendedSensor = null;
         }
 
-        this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", 0.0);
+        this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", -5.0);
         this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -185.0);
 
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.2);
