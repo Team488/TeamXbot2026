@@ -33,7 +33,7 @@ public class AutoLandmarks {
     private final AprilTagFieldLayout aprilTagFieldLayout;
     private final SwervePointPathPlanning pathPlanning;
     private final DoubleProperty trenchPlanningOffsetMeters;
-    private static final Distance OPTIMAL_DISTANCE_TO_SHOOT_FROM = Units.Inches.of(103.5);
+    private static final Distance OPTIMAL_DISTANCE_TO_SHOOT_FROM = Units.Meters.of(2.64 + 0.34);
 
     @Inject
     public AutoLandmarks(ElectricalContract electricalContract,
