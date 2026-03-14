@@ -561,7 +561,7 @@ public class Contract2026 extends ElectricalContract {
                         "AprilTagFront",
                         new Transform3d(new Translation3d(
                                 0,
-                                1.432327 / PoseSubsystem.INCHES_IN_A_METER,
+                                0.25 / PoseSubsystem.INCHES_IN_A_METER,
                                 20.075958 / PoseSubsystem.INCHES_IN_A_METER),
                                 new Rotation3d(0, Math.toRadians(-23), Math.toRadians(0))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
