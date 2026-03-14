@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import xbot.common.controls.sensors.XGyro;
-import xbot.common.controls.sensors.XGyroFactoryImpl;
 import xbot.common.logic.HumanVsMachineDecider;
 import xbot.common.logic.HumanVsMachineDecider.HumanVsMachineDeciderFactory;
 import xbot.common.subsystems.drive.swerve.SwerveSuggestedRotation;
@@ -32,8 +31,10 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
     XGyro xGyro;
 
-    DoubleProperty overallDrivingPowerScale;
-    DoubleProperty overallTurningPowerScale;
+    final DoubleProperty overallDrivingPowerScale;
+    final DoubleProperty overallTurningPowerScale;
+    final DoubleProperty precisionTranslationScale;
+    final DoubleProperty extremePrecisionTranslationScale;
 
     SwerveDriveRotationAdvisor advisor;
     HumanVsMachineDecider hvmDecider;
@@ -54,8 +55,12 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         this.advisor = advisorFactory.create(hvmDecider);
         this.advisor.setSnappingZoneCount(8);
         pf.setDefaultLevel(Property.PropertyLevel.Important);
-        this.overallDrivingPowerScale = pf.createPersistentProperty("DrivingPowerScale", 1.0);
+        this.overallDrivingPowerScale = pf.createPersistentProperty("DrivingPowerScale", 0.5);
         this.overallTurningPowerScale = pf.createPersistentProperty("TurningPowerScale", 1.0);
+        this.precisionTranslationScale = pf.createPersistentProperty("PrecisionTranslationScale", 0.5);
+        this.extremePrecisionTranslationScale = pf.createPersistentProperty(
+                "ExtremePrecisionTranslationScale", 0.15);
+
         this.addRequirements(drive);
     }
 
@@ -157,9 +162,9 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         if (!drive.isUnlockFullDrivePowerActive()) {
             // Scale translationIntent if precision modes active, values from XBot2024 repository
             if (drive.isExtremePrecisionTranslationActive()) {
-                intent = intent.scale(0.15);
+                intent = intent.scale(extremePrecisionTranslationScale.get());
             } else if (drive.isPrecisionTranslationActive()) {
-                intent = intent.scale(0.50);
+                intent = intent.scale(precisionTranslationScale.get());
             }
         }
         return intent;
