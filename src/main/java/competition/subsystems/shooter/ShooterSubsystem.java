@@ -128,22 +128,8 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     }
 
     public void runMotorsAtVelocity(AngularVelocity velocity) {
-        if (!isInLowPowerMode) {
-            for (var motor : getShooterMotors()) {
-                motor.setVelocityTarget(velocity);
-            }
-        } else {
-            if (leftShooterMotor != null) {
-                leftShooterMotor.setVelocityTarget(RotationsPerSecond.of(0));
-            }
-            if (middleShooterMotor != null) {
-                middleShooterMotor.setVelocityTarget(velocity);
-            }
-            if (rightShooterMotor != null) {
-                rightShooterMotor.setVelocityTarget(RotationsPerSecond.of(0));
-            }
-
-
+        for (var motor : getHealthyShooterMotors()) {
+            motor.setVelocityTarget(velocity);
         }
     }
 
@@ -172,9 +158,28 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     }
 
     public List<XCANMotorController> getHealthyShooterMotors() {
-        return getShooterMotors().stream()
-                .filter(motor -> motor.getHealth() == DeviceHealth.Healthy)
-                .toList();
+        // Low power mode, pick one motor, prioritizing the middle motor,
+        // but falling back to one of the others if middle is unhealthy.
+        if (isInLowPowerMode
+                && middleShooterMotor != null
+                && middleShooterMotor.getHealth() == DeviceHealth.Healthy) {
+            return List.of(middleShooterMotor);
+        } else if (isInLowPowerMode
+                && leftShooterMotor != null
+                && leftShooterMotor.getHealth() == DeviceHealth.Healthy) {
+            return List.of(leftShooterMotor);
+        } else if (isInLowPowerMode
+                && rightShooterMotor != null
+                && rightShooterMotor.getHealth() == DeviceHealth.Healthy) {
+            return List.of(rightShooterMotor);
+        } else if (isInLowPowerMode) {
+            return List.of();
+        } else {
+            // Not low power mode, run everything
+            return getShooterMotors().stream()
+                    .filter(motor -> motor.getHealth() == DeviceHealth.Healthy)
+                    .toList();
+        }
     }
 
     public void periodic() {
