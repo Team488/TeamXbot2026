@@ -308,7 +308,7 @@ public class Contract2026 extends ElectricalContract {
                             30,
                             PDHPort.PDH10,
                             new TalonFxMotorControllerOutputConfig()
-                                    .withStatorCurrentLimit(Amps.of(50)));
+                                    .withStatorCurrentLimit(Amps.of(40)));
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -317,7 +317,7 @@ public class Contract2026 extends ElectricalContract {
                             38,
                             PDHPort.PDH18,
                             new TalonFxMotorControllerOutputConfig()
-                                    .withStatorCurrentLimit(Amps.of(50)));
+                                    .withStatorCurrentLimit(Amps.of(40)));
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -326,7 +326,7 @@ public class Contract2026 extends ElectricalContract {
                             28,
                             PDHPort.PDH08,
                             new TalonFxMotorControllerOutputConfig()
-                                    .withStatorCurrentLimit(Amps.of(50)));
+                                    .withStatorCurrentLimit(Amps.of(40)));
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -335,7 +335,7 @@ public class Contract2026 extends ElectricalContract {
                             20,
                             PDHPort.PDH00,
                             new TalonFxMotorControllerOutputConfig()
-                                    .withStatorCurrentLimit(Amps.of(50)));
+                                    .withStatorCurrentLimit(Amps.of(40)));
             default -> null;
         };
     }
@@ -354,7 +354,7 @@ public class Contract2026 extends ElectricalContract {
                             PDHPort.PDH11,
                             new TalonFxMotorControllerOutputConfig()
                                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                    .withStatorCurrentLimit(Amps.of(40)));
+                                    .withStatorCurrentLimit(Amps.of(20)));
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -364,7 +364,7 @@ public class Contract2026 extends ElectricalContract {
                             PDHPort.PDH19,
                             new TalonFxMotorControllerOutputConfig()
                                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                    .withStatorCurrentLimit(Amps.of(40)));
+                                    .withStatorCurrentLimit(Amps.of(20)));
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -374,7 +374,7 @@ public class Contract2026 extends ElectricalContract {
                             PDHPort.PDH09,
                             new TalonFxMotorControllerOutputConfig()
                                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                    .withStatorCurrentLimit(Amps.of(40)));
+                                    .withStatorCurrentLimit(Amps.of(20)));
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -384,7 +384,7 @@ public class Contract2026 extends ElectricalContract {
                             PDHPort.PDH01,
                             new TalonFxMotorControllerOutputConfig()
                                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                    .withStatorCurrentLimit(Amps.of(40)));
+                                    .withStatorCurrentLimit(Amps.of(20)));
             default -> null;
         };
     }
