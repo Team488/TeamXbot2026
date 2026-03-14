@@ -130,8 +130,9 @@ public class Contract2026 extends ElectricalContract {
                 CANBusId.Canivore,
                 37,
                 PDHPort.PDH17,
-                new CANMotorControllerOutputConfig()
-                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
+                new TalonFxMotorControllerOutputConfig()
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                        .withStatorCurrentLimit(Amps.of(35)));
     }
 
     @Override
@@ -151,10 +152,10 @@ public class Contract2026 extends ElectricalContract {
                 22,
                 PDHPort.PDH02,
                 new TalonFxMotorControllerOutputConfig()
-                        .withStatorCurrentLimit(Amps.of(100))
+                        .withStatorCurrentLimit(Amps.of(50))
                         .withSupplyCurrentLimit(
+                                Amps.of(40),
                                 Amps.of(60),
-                                Amps.of(80),
                                 Seconds.of(1)));
     }
 
@@ -167,10 +168,10 @@ public class Contract2026 extends ElectricalContract {
                 PDHPort.PDH03,
                 new TalonFxMotorControllerOutputConfig()
                         .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                        .withStatorCurrentLimit(Amps.of(100))
+                        .withStatorCurrentLimit(Amps.of(50))
                         .withSupplyCurrentLimit(
+                                Amps.of(40),
                                 Amps.of(60),
-                                Amps.of(80),
                                 Seconds.of(1)));
     }
 
@@ -183,10 +184,10 @@ public class Contract2026 extends ElectricalContract {
                 PDHPort.PDH04,
                 new TalonFxMotorControllerOutputConfig()
                         .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                        .withStatorCurrentLimit(Amps.of(100))
+                        .withStatorCurrentLimit(Amps.of(50))
                         .withSupplyCurrentLimit(
+                                Amps.of(40),
                                 Amps.of(60),
-                                Amps.of(80),
                                 Seconds.of(1)));
     }
 
@@ -306,7 +307,8 @@ public class Contract2026 extends ElectricalContract {
                             CANBusId.Canivore,
                             30,
                             PDHPort.PDH10,
-                            new TalonFxMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
+                            new TalonFxMotorControllerOutputConfig()
+                                    .withStatorCurrentLimit(Amps.of(40)));
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -314,7 +316,8 @@ public class Contract2026 extends ElectricalContract {
                             CANBusId.Canivore,
                             38,
                             PDHPort.PDH18,
-                            new TalonFxMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
+                            new TalonFxMotorControllerOutputConfig()
+                                    .withStatorCurrentLimit(Amps.of(40)));
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -322,7 +325,8 @@ public class Contract2026 extends ElectricalContract {
                             CANBusId.Canivore,
                             28,
                             PDHPort.PDH08,
-                            new TalonFxMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
+                            new TalonFxMotorControllerOutputConfig()
+                                    .withStatorCurrentLimit(Amps.of(40)));
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -330,7 +334,8 @@ public class Contract2026 extends ElectricalContract {
                             CANBusId.Canivore,
                             20,
                             PDHPort.PDH00,
-                            new TalonFxMotorControllerOutputConfig().withStatorCurrentLimit(Amps.of(60)));
+                            new TalonFxMotorControllerOutputConfig()
+                                    .withStatorCurrentLimit(Amps.of(40)));
             default -> null;
         };
     }
@@ -349,7 +354,7 @@ public class Contract2026 extends ElectricalContract {
                             PDHPort.PDH11,
                             new TalonFxMotorControllerOutputConfig()
                                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                    .withStatorCurrentLimit(Amps.of(40)));
+                                    .withStatorCurrentLimit(Amps.of(20)));
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -359,7 +364,7 @@ public class Contract2026 extends ElectricalContract {
                             PDHPort.PDH19,
                             new TalonFxMotorControllerOutputConfig()
                                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                    .withStatorCurrentLimit(Amps.of(40)));
+                                    .withStatorCurrentLimit(Amps.of(20)));
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -369,7 +374,7 @@ public class Contract2026 extends ElectricalContract {
                             PDHPort.PDH09,
                             new TalonFxMotorControllerOutputConfig()
                                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                    .withStatorCurrentLimit(Amps.of(40)));
+                                    .withStatorCurrentLimit(Amps.of(20)));
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -379,7 +384,7 @@ public class Contract2026 extends ElectricalContract {
                             PDHPort.PDH01,
                             new TalonFxMotorControllerOutputConfig()
                                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                    .withStatorCurrentLimit(Amps.of(40)));
+                                    .withStatorCurrentLimit(Amps.of(20)));
             default -> null;
         };
     }
@@ -394,8 +399,9 @@ public class Contract2026 extends ElectricalContract {
                 CANBusId.Canivore,
                 32,
                 PDHPort.PDH12,
-                new CANMotorControllerOutputConfig()
-                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
+                new TalonFxMotorControllerOutputConfig()
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                        .withStatorCurrentLimit(Amps.of(30)));
     }
 
     @Override
@@ -420,7 +426,8 @@ public class Contract2026 extends ElectricalContract {
                 CANBusId.Canivore,
                 33,
                 PDHPort.PDH13,
-                new CANMotorControllerOutputConfig());
+                new TalonFxMotorControllerOutputConfig()
+                        .withStatorCurrentLimit(Amps.of(40)));
     }
 
     @Override
@@ -554,7 +561,7 @@ public class Contract2026 extends ElectricalContract {
                         "AprilTagFront",
                         new Transform3d(new Translation3d(
                                 0,
-                                1.432327 / PoseSubsystem.INCHES_IN_A_METER,
+                                0.25 / PoseSubsystem.INCHES_IN_A_METER,
                                 20.075958 / PoseSubsystem.INCHES_IN_A_METER),
                                 new Rotation3d(0, Math.toRadians(-23), Math.toRadians(0))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),

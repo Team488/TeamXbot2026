@@ -36,6 +36,8 @@ import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.TrajectoriesCalculation;
 import competition.subsystems.shooter.ShooterSubsystem;
+import competition.subsystems.shooter.commands.LowPowerModeOffCommand;
+import competition.subsystems.shooter.commands.LowPowerModeOnCommand;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
@@ -76,7 +78,11 @@ public class OperatorCommandMap {
                                    ClimberSubsystem climber,
                                    DropHoodForTrenchCommand dropHoodForTrenchCommand,
                                    RotateToHubCommand rotateToHubCommand,
+                                   LowPowerModeOnCommand lowPowerModeOnCommand,
+                                   LowPowerModeOffCommand lowPowerModeOffCommand,
                                    DriveSubsystem driveSubsystem) {
+        operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(lowPowerModeOnCommand);
+        operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X)
                 .whileTrue(dropHoodForTrenchCommand);
