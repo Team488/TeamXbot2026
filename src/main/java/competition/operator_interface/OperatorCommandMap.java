@@ -18,6 +18,7 @@ import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.climber.commands.ClimberSetPointCommand;
 import competition.subsystems.collector_intake.commands.CollectorEjectCommand;
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
+import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
@@ -39,6 +40,7 @@ import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.autonomous.SetAutonomousCommand;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
@@ -62,23 +64,30 @@ public class OperatorCommandMap {
             ShooterOutputCommand shooterOutputCommand,
             TrimShooterVelocityUp trimShooterVelocityUp,
             TrimShooterVelocityDown trimShooterVelocityDown) {
-
     }
 
     @Inject
     public void setupDriveCommands(OperatorInterface operatorInterface,
-            SetRobotHeadingCommand resetHeading,
-            DebugSwerveModuleCommand debugModule,
-            ChangeActiveSwerveModuleCommand changeActiveModule,
-            SwerveDriveWithJoysticksCommand typicalSwerveDrive,
-            Provider<ClimberSetPointCommand> climberSetPoint,
-            ClimberSubsystem climber,
-            DropHoodForTrenchCommand dropHoodForTrenchCommand,
-            RotateToHubCommand rotateToHubCommand) {
+                                   SetRobotHeadingCommand resetHeading,
+                                   DebugSwerveModuleCommand debugModule,
+                                   ChangeActiveSwerveModuleCommand changeActiveModule,
+                                   SwerveDriveWithJoysticksCommand typicalSwerveDrive,
+                                   Provider<ClimberSetPointCommand> climberSetPoint,
+                                   ClimberSubsystem climber,
+                                   DropHoodForTrenchCommand dropHoodForTrenchCommand,
+                                   RotateToHubCommand rotateToHubCommand,
+                                   DriveSubsystem driveSubsystem) {
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X)
                 .whileTrue(dropHoodForTrenchCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
+
+        var precisionTranslationCommand = new StartEndCommand(
+                () -> driveSubsystem.setPrecisionTranslationActive(true),
+                () -> driveSubsystem.setPrecisionTranslationActive(false)
+        );
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Y)
+                .whileTrue(precisionTranslationCommand);
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
