@@ -2,6 +2,7 @@ package competition.auto_programs.vision;
 
 import competition.auto_programs.BaseAutonomousSequentialCommandGroup;
 import competition.command_groups.FireWhenReadyShooterCommandGroup;
+import competition.command_groups.NoWaitFinishedShootingCommand;
 import competition.command_groups.PrepareToShootCommandGroup;
 import competition.command_groups.DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory;
 import competition.command_groups.DriveToNeutralZoneAndDeployIntakeCommandGroupFactory;
@@ -26,6 +27,7 @@ public class ShootFromTrenchThenMoveToNeutralCommand extends BaseAutonomousSeque
            PrepareToShootCommandGroup prepareToShootCommandGroup,
            Provider<DriveToNeutralZoneAndDeployIntakeCommandGroupFactory> driveToNeutralZoneAndDeployIntakeCommandProvider,
            Provider<DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory> driveFromNeutralZoneToAllianceAndShootCommandGroupProvider,
+                                                   Provider<NoWaitFinishedShootingCommand> finishedShootingCommandProvider,
            IntakeDeployAutoCalibrateCommandFactory intakeDeployAutoCalibrateCommandFactory,
            PropertyFactory pf) {
         super(autoSelector);
@@ -40,6 +42,7 @@ public class ShootFromTrenchThenMoveToNeutralCommand extends BaseAutonomousSeque
                 .withTimeout(timeout.get());
 
         this.addCommands(calibrateAndShoot);
+        this.addCommands(finishedShootingCommandProvider.get().alongWith(getAutoStatusChangeCommand("Running finished shooting command.")));
 
         var driveToNeutralZone = driveToNeutralZoneAndDeployIntakeCommandProvider.get().create()
                 .alongWith(getAutoStatusChangeCommand("Driving to neutral zone and back"));
