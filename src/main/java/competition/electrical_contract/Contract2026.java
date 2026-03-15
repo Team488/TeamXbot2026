@@ -219,7 +219,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getHoodServoLeft() {
-        return new DeviceInfo("HoodServoLeft", 8);
+        return new DeviceInfo("HoodServoLeft", 7);
     }
 
     @Override
