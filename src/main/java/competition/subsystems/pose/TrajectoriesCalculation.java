@@ -41,6 +41,7 @@ public class TrajectoriesCalculation {
     private final AprilTagFieldLayout aprilTagFieldLayout;
     private final DoubleProperty trajectoriesShooterRPMFixed;
     private final DoubleProperty interpolationFactor;
+    private final DoubleProperty v3DistanceOffsetMeters;
     private final StringProperty trajectoryCalcVersion;
 
     private static void getOrCreatePresetLookup(PropertyFactory propManager) {
@@ -78,6 +79,7 @@ public class TrajectoriesCalculation {
         this.interpolationFactor = propManager.createPersistentProperty("AllianceZoneAimMidpointInterpolationFactor",
                 0.5);
         this.trajectoryCalcVersion = propManager.createPersistentProperty("TrajectoryCalcVersion", "3");
+        this.v3DistanceOffsetMeters = propManager.createPersistentProperty("v3DistanceOffsetMeters", 0.3);
         getOrCreatePresetLookup(propManager);
     }
 
@@ -197,16 +199,17 @@ public class TrajectoriesCalculation {
         Pose2d shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
         double distance = shooterPose.getTranslation().getDistance(targetPose.getTranslation());
         var roundedDistance = Math.round(distance * 100.0) / 100.0;
-        var key = new TrajectoryKey(roundedDistance);
+        var offsetDistance = roundedDistance + v3DistanceOffsetMeters.get();
+        var key = new TrajectoryKey(offsetDistance);
         var hoodTrajectory = this.searchForHoodTrajectory(key);
         if (hoodTrajectory.isEmpty()) {
             log.warn(
-                    "Trajectory not found, potentially trajectories.json not found or the value doesn't exist in trajectories!");
+                    "Trajectory not found, potentially trajectories.json not found or the value doesn't exist in trajectories for distance.");
             return TrajectoriesCalculation.emptyShootingData;
         }
         var matchedTrajectory = hoodTrajectory.get();
 
-        return new ShootingData(finalRotation, Units.RPM.of(matchedTrajectory.RPM), matchedTrajectory.servo);
+        return new ShootingData(finalRotation, Units.RPM.of(matchedTrajectory.RPM), 0);
     }
 
     private Optional<HoodTrajectory> searchForHoodTrajectory(TrajectoryKey key) {

@@ -1,317 +1,1248 @@
 [
   {
-    "distance": 1.231,
-    "theta": 77.6,
-    "velocity": 6.363,
-    "servo": 0,
-    "RPM": 2600
-  },
-  {
-    "distance": 1.295,
-    "theta": 77.6,
-    "velocity": 6.486,
-    "servo": 0,
-    "RPM": 2650
-  },
-  {
-    "distance": 1.361,
-    "theta": 77.6,
-    "velocity": 6.608,
-    "servo": 0,
-    "RPM": 2700
-  },
-  {
-    "distance": 1.427,
-    "theta": 77.6,
-    "velocity": 6.73,
-    "servo": 0,
-    "RPM": 2750
-  },
-  {
-    "distance": 1.493,
-    "theta": 77.6,
-    "velocity": 6.853,
-    "servo": 0,
-    "RPM": 2800
-  },
-  {
-    "distance": 1.559,
-    "theta": 77.6,
-    "velocity": 6.975,
-    "servo": 0,
-    "RPM": 2850
-  },
-  {
-    "distance": 1.624,
-    "theta": 77.6,
-    "velocity": 7.097,
-    "servo": 0,
-    "RPM": 2900
-  },
-  {
-    "distance": 1.69,
-    "theta": 77.6,
-    "velocity": 7.22,
-    "servo": 0,
-    "RPM": 2950
-  },
-  {
-    "distance": 1.758,
-    "theta": 77.6,
-    "velocity": 7.342,
-    "servo": 0,
-    "RPM": 3000
-  },
-  {
-    "distance": 1.826,
-    "theta": 77.6,
-    "velocity": 7.464,
-    "servo": 0,
-    "RPM": 3050
-  },
-  {
-    "distance": 1.895,
-    "theta": 77.6,
-    "velocity": 7.587,
-    "servo": 0,
-    "RPM": 3100
-  },
-  {
-    "distance": 1.962,
-    "theta": 77.6,
-    "velocity": 7.709,
-    "servo": 0,
-    "RPM": 3150
-  },
-  {
-    "distance": 2.033,
-    "theta": 77.6,
-    "velocity": 7.832,
-    "servo": 0,
-    "RPM": 3200
-  },
-  {
-    "distance": 2.103,
-    "theta": 77.6,
-    "velocity": 7.954,
-    "servo": 0,
-    "RPM": 3250
-  },
-  {
-    "distance": 2.173,
-    "theta": 77.6,
-    "velocity": 8.076,
-    "servo": 0,
-    "RPM": 3300
-  },
-  {
-    "distance": 2.244,
-    "theta": 77.6,
-    "velocity": 8.199,
-    "servo": 0,
-    "RPM": 3350
-  },
-  {
-    "distance": 2.312,
-    "theta": 77.6,
-    "velocity": 8.321,
-    "servo": 0,
-    "RPM": 3400
-  },
-  {
-    "distance": 2.385,
-    "theta": 77.6,
-    "velocity": 8.443,
-    "servo": 0,
-    "RPM": 3450
-  },
-  {
-    "distance": 2.456,
-    "theta": 77.6,
-    "velocity": 8.566,
-    "servo": 0,
-    "RPM": 3500
-  },
-  {
-    "distance": 2.53,
-    "theta": 77.6,
-    "velocity": 8.688,
-    "servo": 0,
-    "RPM": 3550
-  },
-  {
-    "distance": 2.602,
-    "theta": 77.6,
-    "velocity": 8.811,
-    "servo": 0,
-    "RPM": 3600
-  },
-  {
-    "distance": 2.675,
-    "theta": 77.6,
-    "velocity": 8.933,
-    "servo": 0,
-    "RPM": 3650
-  },
-  {
-    "distance": 2.749,
-    "theta": 77.6,
-    "velocity": 9.055,
-    "servo": 0,
-    "RPM": 3700
-  },
-  {
-    "distance": 2.823,
-    "theta": 77.6,
-    "velocity": 9.178,
-    "servo": 0,
-    "RPM": 3750
-  },
-  {
-    "distance": 2.898,
-    "theta": 77.6,
+    "distance": 3.797,
+    "theta": 73.2,
     "velocity": 9.3,
-    "servo": 0,
+    "servo": 0.2,
     "RPM": 3800
   },
   {
-    "distance": 2.973,
-    "theta": 77.6,
-    "velocity": 9.422,
-    "servo": 0,
-    "RPM": 3850
+    "distance": 3.814,
+    "theta": 73.1,
+    "velocity": 9.3,
+    "servo": 0.20452,
+    "RPM": 3800
   },
   {
-    "distance": 3.049,
-    "theta": 77.6,
-    "velocity": 9.545,
-    "servo": 0,
-    "RPM": 3900
+    "distance": 3.836,
+    "theta": 73.0,
+    "velocity": 9.3,
+    "servo": 0.20904,
+    "RPM": 3800
   },
   {
-    "distance": 3.126,
-    "theta": 77.6,
-    "velocity": 9.667,
-    "servo": 0,
-    "RPM": 3950
+    "distance": 3.853,
+    "theta": 72.9,
+    "velocity": 9.3,
+    "servo": 0.213559,
+    "RPM": 3800
   },
   {
-    "distance": 3.201,
-    "theta": 77.6,
-    "velocity": 9.789,
-    "servo": 0,
-    "RPM": 4000
+    "distance": 3.874,
+    "theta": 72.8,
+    "velocity": 9.3,
+    "servo": 0.218079,
+    "RPM": 3800
   },
   {
-    "distance": 3.279,
-    "theta": 77.6,
-    "velocity": 9.912,
-    "servo": 0,
-    "RPM": 4050
+    "distance": 3.891,
+    "theta": 72.7,
+    "velocity": 9.3,
+    "servo": 0.222599,
+    "RPM": 3800
   },
   {
-    "distance": 3.357,
-    "theta": 77.6,
-    "velocity": 10.034,
-    "servo": 0,
-    "RPM": 4100
+    "distance": 3.912,
+    "theta": 72.6,
+    "velocity": 9.3,
+    "servo": 0.227119,
+    "RPM": 3800
   },
   {
-    "distance": 3.434,
-    "theta": 77.6,
-    "velocity": 10.157,
-    "servo": 0,
-    "RPM": 4150
+    "distance": 3.929,
+    "theta": 72.5,
+    "velocity": 9.3,
+    "servo": 0.231638,
+    "RPM": 3800
   },
   {
-    "distance": 3.511,
-    "theta": 77.6,
-    "velocity": 10.279,
-    "servo": 0,
-    "RPM": 4200
+    "distance": 3.95,
+    "theta": 72.4,
+    "velocity": 9.3,
+    "servo": 0.236158,
+    "RPM": 3800
   },
   {
-    "distance": 3.591,
-    "theta": 77.6,
-    "velocity": 10.401,
-    "servo": 0,
-    "RPM": 4250
+    "distance": 3.967,
+    "theta": 72.3,
+    "velocity": 9.3,
+    "servo": 0.240678,
+    "RPM": 3800
   },
   {
-    "distance": 3.669,
-    "theta": 77.6,
-    "velocity": 10.524,
-    "servo": 0,
-    "RPM": 4300
+    "distance": 3.988,
+    "theta": 72.2,
+    "velocity": 9.3,
+    "servo": 0.245198,
+    "RPM": 3800
   },
   {
-    "distance": 3.747,
-    "theta": 77.6,
-    "velocity": 10.646,
-    "servo": 0,
-    "RPM": 4350
+    "distance": 4.005,
+    "theta": 72.1,
+    "velocity": 9.3,
+    "servo": 0.249718,
+    "RPM": 3800
   },
   {
-    "distance": 3.826,
-    "theta": 77.6,
-    "velocity": 10.768,
-    "servo": 0,
-    "RPM": 4400
+    "distance": 4.022,
+    "theta": 72.0,
+    "velocity": 9.3,
+    "servo": 0.254237,
+    "RPM": 3800
   },
   {
-    "distance": 3.905,
-    "theta": 77.6,
-    "velocity": 10.891,
-    "servo": 0,
-    "RPM": 4450
+    "distance": 4.042,
+    "theta": 71.9,
+    "velocity": 9.3,
+    "servo": 0.258757,
+    "RPM": 3800
   },
   {
-    "distance": 3.985,
-    "theta": 77.6,
-    "velocity": 11.013,
-    "servo": 0,
-    "RPM": 4500
+    "distance": 4.059,
+    "theta": 71.8,
+    "velocity": 9.3,
+    "servo": 0.263277,
+    "RPM": 3800
   },
   {
-    "distance": 4.065,
-    "theta": 77.6,
-    "velocity": 11.136,
-    "servo": 0,
-    "RPM": 4550
+    "distance": 4.08,
+    "theta": 71.7,
+    "velocity": 9.3,
+    "servo": 0.267797,
+    "RPM": 3800
   },
   {
-    "distance": 4.146,
-    "theta": 77.6,
-    "velocity": 11.258,
-    "servo": 0,
-    "RPM": 4600
+    "distance": 4.096,
+    "theta": 71.6,
+    "velocity": 9.3,
+    "servo": 0.272316,
+    "RPM": 3800
   },
   {
-    "distance": 4.228,
-    "theta": 77.6,
-    "velocity": 11.38,
-    "servo": 0,
-    "RPM": 4650
+    "distance": 4.117,
+    "theta": 71.5,
+    "velocity": 9.3,
+    "servo": 0.276836,
+    "RPM": 3800
   },
   {
-    "distance": 4.307,
-    "theta": 77.6,
-    "velocity": 11.503,
-    "servo": 0,
-    "RPM": 4700
+    "distance": 4.133,
+    "theta": 71.4,
+    "velocity": 9.3,
+    "servo": 0.281356,
+    "RPM": 3800
   },
   {
-    "distance": 4.388,
-    "theta": 77.6,
-    "velocity": 11.625,
-    "servo": 0,
-    "RPM": 4750
+    "distance": 4.154,
+    "theta": 71.3,
+    "velocity": 9.3,
+    "servo": 0.285876,
+    "RPM": 3800
   },
   {
-    "distance": 4.47,
-    "theta": 77.6,
-    "velocity": 11.747,
-    "servo": 0,
-    "RPM": 4800
+    "distance": 4.17,
+    "theta": 71.2,
+    "velocity": 9.3,
+    "servo": 0.290395,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.187,
+    "theta": 71.1,
+    "velocity": 9.3,
+    "servo": 0.294915,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.207,
+    "theta": 71.0,
+    "velocity": 9.3,
+    "servo": 0.299435,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.222,
+    "theta": 70.9,
+    "velocity": 9.3,
+    "servo": 0.303955,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.243,
+    "theta": 70.8,
+    "velocity": 9.3,
+    "servo": 0.308475,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.259,
+    "theta": 70.7,
+    "velocity": 9.3,
+    "servo": 0.312994,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.28,
+    "theta": 70.6,
+    "velocity": 9.3,
+    "servo": 0.317514,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.295,
+    "theta": 70.5,
+    "velocity": 9.3,
+    "servo": 0.322034,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.311,
+    "theta": 70.4,
+    "velocity": 9.3,
+    "servo": 0.326554,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.332,
+    "theta": 70.3,
+    "velocity": 9.3,
+    "servo": 0.331073,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.347,
+    "theta": 70.2,
+    "velocity": 9.3,
+    "servo": 0.335593,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.368,
+    "theta": 70.1,
+    "velocity": 9.3,
+    "servo": 0.340113,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.383,
+    "theta": 70.0,
+    "velocity": 9.3,
+    "servo": 0.344633,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.398,
+    "theta": 69.9,
+    "velocity": 9.3,
+    "servo": 0.349153,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.419,
+    "theta": 69.8,
+    "velocity": 9.3,
+    "servo": 0.353672,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.434,
+    "theta": 69.7,
+    "velocity": 9.3,
+    "servo": 0.358192,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.45,
+    "theta": 69.6,
+    "velocity": 9.3,
+    "servo": 0.362712,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.469,
+    "theta": 69.5,
+    "velocity": 9.3,
+    "servo": 0.367232,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.484,
+    "theta": 69.4,
+    "velocity": 9.3,
+    "servo": 0.371751,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.504,
+    "theta": 69.3,
+    "velocity": 9.3,
+    "servo": 0.376271,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.519,
+    "theta": 69.2,
+    "velocity": 9.3,
+    "servo": 0.380791,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.534,
+    "theta": 69.1,
+    "velocity": 9.3,
+    "servo": 0.385311,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.554,
+    "theta": 69.0,
+    "velocity": 9.3,
+    "servo": 0.389831,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.569,
+    "theta": 68.9,
+    "velocity": 9.3,
+    "servo": 0.39435,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.584,
+    "theta": 68.8,
+    "velocity": 9.3,
+    "servo": 0.39887,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.603,
+    "theta": 68.7,
+    "velocity": 9.3,
+    "servo": 0.40339,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.618,
+    "theta": 68.6,
+    "velocity": 9.3,
+    "servo": 0.40791,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.633,
+    "theta": 68.5,
+    "velocity": 9.3,
+    "servo": 0.412429,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.652,
+    "theta": 68.4,
+    "velocity": 9.3,
+    "servo": 0.416949,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.667,
+    "theta": 68.3,
+    "velocity": 9.3,
+    "servo": 0.421469,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.682,
+    "theta": 68.2,
+    "velocity": 9.3,
+    "servo": 0.425989,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.701,
+    "theta": 68.1,
+    "velocity": 9.3,
+    "servo": 0.430508,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.715,
+    "theta": 68.0,
+    "velocity": 9.3,
+    "servo": 0.435028,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.73,
+    "theta": 67.9,
+    "velocity": 9.3,
+    "servo": 0.439548,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.749,
+    "theta": 67.8,
+    "velocity": 9.3,
+    "servo": 0.444068,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.763,
+    "theta": 67.7,
+    "velocity": 9.3,
+    "servo": 0.448588,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.777,
+    "theta": 67.6,
+    "velocity": 9.3,
+    "servo": 0.453107,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.796,
+    "theta": 67.5,
+    "velocity": 9.3,
+    "servo": 0.457627,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.81,
+    "theta": 67.4,
+    "velocity": 9.3,
+    "servo": 0.462147,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.824,
+    "theta": 67.3,
+    "velocity": 9.3,
+    "servo": 0.466667,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.843,
+    "theta": 67.2,
+    "velocity": 9.3,
+    "servo": 0.471186,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.857,
+    "theta": 67.1,
+    "velocity": 9.3,
+    "servo": 0.475706,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.87,
+    "theta": 67.0,
+    "velocity": 9.3,
+    "servo": 0.480226,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.89,
+    "theta": 66.9,
+    "velocity": 9.3,
+    "servo": 0.484746,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.903,
+    "theta": 66.8,
+    "velocity": 9.3,
+    "servo": 0.489266,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.916,
+    "theta": 66.7,
+    "velocity": 9.3,
+    "servo": 0.493785,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.936,
+    "theta": 66.6,
+    "velocity": 9.3,
+    "servo": 0.498305,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.949,
+    "theta": 66.5,
+    "velocity": 9.3,
+    "servo": 0.502825,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.962,
+    "theta": 66.4,
+    "velocity": 9.3,
+    "servo": 0.507345,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.975,
+    "theta": 66.3,
+    "velocity": 9.3,
+    "servo": 0.511864,
+    "RPM": 3800
+  },
+  {
+    "distance": 4.994,
+    "theta": 66.2,
+    "velocity": 9.3,
+    "servo": 0.516384,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.007,
+    "theta": 66.1,
+    "velocity": 9.3,
+    "servo": 0.520904,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.02,
+    "theta": 66.0,
+    "velocity": 9.3,
+    "servo": 0.525424,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.034,
+    "theta": 65.9,
+    "velocity": 9.3,
+    "servo": 0.529944,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.052,
+    "theta": 65.8,
+    "velocity": 9.3,
+    "servo": 0.534463,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.065,
+    "theta": 65.7,
+    "velocity": 9.3,
+    "servo": 0.538983,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.077,
+    "theta": 65.6,
+    "velocity": 9.3,
+    "servo": 0.543503,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.096,
+    "theta": 65.5,
+    "velocity": 9.3,
+    "servo": 0.548023,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.109,
+    "theta": 65.4,
+    "velocity": 9.3,
+    "servo": 0.552542,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.121,
+    "theta": 65.3,
+    "velocity": 9.3,
+    "servo": 0.557062,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.134,
+    "theta": 65.2,
+    "velocity": 9.3,
+    "servo": 0.561582,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.153,
+    "theta": 65.1,
+    "velocity": 9.3,
+    "servo": 0.566102,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.165,
+    "theta": 65.0,
+    "velocity": 9.3,
+    "servo": 0.570621,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.177,
+    "theta": 64.9,
+    "velocity": 9.3,
+    "servo": 0.575141,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.189,
+    "theta": 64.8,
+    "velocity": 9.3,
+    "servo": 0.579661,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.202,
+    "theta": 64.7,
+    "velocity": 9.3,
+    "servo": 0.584181,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.22,
+    "theta": 64.6,
+    "velocity": 9.3,
+    "servo": 0.588701,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.232,
+    "theta": 64.5,
+    "velocity": 9.3,
+    "servo": 0.59322,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.244,
+    "theta": 64.4,
+    "velocity": 9.3,
+    "servo": 0.59774,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.256,
+    "theta": 64.3,
+    "velocity": 9.3,
+    "servo": 0.60226,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.274,
+    "theta": 64.2,
+    "velocity": 9.3,
+    "servo": 0.60678,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.286,
+    "theta": 64.1,
+    "velocity": 9.3,
+    "servo": 0.611299,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.298,
+    "theta": 64.0,
+    "velocity": 9.3,
+    "servo": 0.615819,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.309,
+    "theta": 63.9,
+    "velocity": 9.3,
+    "servo": 0.620339,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.321,
+    "theta": 63.8,
+    "velocity": 9.3,
+    "servo": 0.624859,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.339,
+    "theta": 63.7,
+    "velocity": 9.3,
+    "servo": 0.629379,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.35,
+    "theta": 63.6,
+    "velocity": 9.3,
+    "servo": 0.633898,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.362,
+    "theta": 63.5,
+    "velocity": 9.3,
+    "servo": 0.638418,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.373,
+    "theta": 63.4,
+    "velocity": 9.3,
+    "servo": 0.642938,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.385,
+    "theta": 63.3,
+    "velocity": 9.3,
+    "servo": 0.647458,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.402,
+    "theta": 63.2,
+    "velocity": 9.3,
+    "servo": 0.651977,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.413,
+    "theta": 63.1,
+    "velocity": 9.3,
+    "servo": 0.656497,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.424,
+    "theta": 63.0,
+    "velocity": 9.3,
+    "servo": 0.661017,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.435,
+    "theta": 62.9,
+    "velocity": 9.3,
+    "servo": 0.665537,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.446,
+    "theta": 62.8,
+    "velocity": 9.3,
+    "servo": 0.670056,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.464,
+    "theta": 62.7,
+    "velocity": 9.3,
+    "servo": 0.674576,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.475,
+    "theta": 62.6,
+    "velocity": 9.3,
+    "servo": 0.679096,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.486,
+    "theta": 62.5,
+    "velocity": 9.3,
+    "servo": 0.683616,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.496,
+    "theta": 62.4,
+    "velocity": 9.3,
+    "servo": 0.688136,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.507,
+    "theta": 62.3,
+    "velocity": 9.3,
+    "servo": 0.692655,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.517,
+    "theta": 62.2,
+    "velocity": 9.3,
+    "servo": 0.697175,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.529,
+    "theta": 62.1,
+    "velocity": 9.3,
+    "servo": 0.701695,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.546,
+    "theta": 62.0,
+    "velocity": 9.3,
+    "servo": 0.706215,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.556,
+    "theta": 61.9,
+    "velocity": 9.3,
+    "servo": 0.710734,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.566,
+    "theta": 61.8,
+    "velocity": 9.3,
+    "servo": 0.715254,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.576,
+    "theta": 61.7,
+    "velocity": 9.3,
+    "servo": 0.719774,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.586,
+    "theta": 61.6,
+    "velocity": 9.3,
+    "servo": 0.724294,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.597,
+    "theta": 61.5,
+    "velocity": 9.3,
+    "servo": 0.728814,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.607,
+    "theta": 61.4,
+    "velocity": 9.3,
+    "servo": 0.733333,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.624,
+    "theta": 61.3,
+    "velocity": 9.3,
+    "servo": 0.737853,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.634,
+    "theta": 61.2,
+    "velocity": 9.3,
+    "servo": 0.742373,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.644,
+    "theta": 61.1,
+    "velocity": 9.3,
+    "servo": 0.746893,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.653,
+    "theta": 61.0,
+    "velocity": 9.3,
+    "servo": 0.751412,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.663,
+    "theta": 60.9,
+    "velocity": 9.3,
+    "servo": 0.755932,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.673,
+    "theta": 60.8,
+    "velocity": 9.3,
+    "servo": 0.760452,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.682,
+    "theta": 60.7,
+    "velocity": 9.3,
+    "servo": 0.764972,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.692,
+    "theta": 60.6,
+    "velocity": 9.3,
+    "servo": 0.769492,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.709,
+    "theta": 60.5,
+    "velocity": 9.3,
+    "servo": 0.774011,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.718,
+    "theta": 60.4,
+    "velocity": 9.3,
+    "servo": 0.778531,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.727,
+    "theta": 60.3,
+    "velocity": 9.3,
+    "servo": 0.783051,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.737,
+    "theta": 60.2,
+    "velocity": 9.3,
+    "servo": 0.787571,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.746,
+    "theta": 60.1,
+    "velocity": 9.3,
+    "servo": 0.79209,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.755,
+    "theta": 60.0,
+    "velocity": 9.3,
+    "servo": 0.79661,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.764,
+    "theta": 59.9,
+    "velocity": 9.3,
+    "servo": 0.80113,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.773,
+    "theta": 59.8,
+    "velocity": 9.3,
+    "servo": 0.80565,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.782,
+    "theta": 59.7,
+    "velocity": 9.3,
+    "servo": 0.810169,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.791,
+    "theta": 59.6,
+    "velocity": 9.3,
+    "servo": 0.814689,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.8,
+    "theta": 59.5,
+    "velocity": 9.3,
+    "servo": 0.819209,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.809,
+    "theta": 59.4,
+    "velocity": 9.3,
+    "servo": 0.823729,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.825,
+    "theta": 59.3,
+    "velocity": 9.3,
+    "servo": 0.828249,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.833,
+    "theta": 59.2,
+    "velocity": 9.3,
+    "servo": 0.832768,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.842,
+    "theta": 59.1,
+    "velocity": 9.3,
+    "servo": 0.837288,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.85,
+    "theta": 59.0,
+    "velocity": 9.3,
+    "servo": 0.841808,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.859,
+    "theta": 58.9,
+    "velocity": 9.3,
+    "servo": 0.846328,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.867,
+    "theta": 58.8,
+    "velocity": 9.3,
+    "servo": 0.850847,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.875,
+    "theta": 58.7,
+    "velocity": 9.3,
+    "servo": 0.855367,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.884,
+    "theta": 58.6,
+    "velocity": 9.3,
+    "servo": 0.859887,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.892,
+    "theta": 58.5,
+    "velocity": 9.3,
+    "servo": 0.864407,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.9,
+    "theta": 58.4,
+    "velocity": 9.3,
+    "servo": 0.868927,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.908,
+    "theta": 58.3,
+    "velocity": 9.3,
+    "servo": 0.873446,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.916,
+    "theta": 58.2,
+    "velocity": 9.3,
+    "servo": 0.877966,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.924,
+    "theta": 58.1,
+    "velocity": 9.3,
+    "servo": 0.882486,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.931,
+    "theta": 58.0,
+    "velocity": 9.3,
+    "servo": 0.887006,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.939,
+    "theta": 57.9,
+    "velocity": 9.3,
+    "servo": 0.891525,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.947,
+    "theta": 57.8,
+    "velocity": 9.3,
+    "servo": 0.896045,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.954,
+    "theta": 57.7,
+    "velocity": 9.3,
+    "servo": 0.900565,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.962,
+    "theta": 57.6,
+    "velocity": 9.3,
+    "servo": 0.905085,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.969,
+    "theta": 57.5,
+    "velocity": 9.3,
+    "servo": 0.909605,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.977,
+    "theta": 57.4,
+    "velocity": 9.3,
+    "servo": 0.914124,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.984,
+    "theta": 57.3,
+    "velocity": 9.3,
+    "servo": 0.918644,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.991,
+    "theta": 57.2,
+    "velocity": 9.3,
+    "servo": 0.923164,
+    "RPM": 3800
+  },
+  {
+    "distance": 5.999,
+    "theta": 57.1,
+    "velocity": 9.3,
+    "servo": 0.927684,
+    "RPM": 3800
+  },
+  {
+    "distance": 6.006,
+    "theta": 57.0,
+    "velocity": 9.3,
+    "servo": 0.932203,
+    "RPM": 3800
+  },
+  {
+    "distance": 6.013,
+    "theta": 56.9,
+    "velocity": 9.3,
+    "servo": 0.936723,
+    "RPM": 3800
+  },
+  {
+    "distance": 6.02,
+    "theta": 56.8,
+    "velocity": 9.3,
+    "servo": 0.941243,
+    "RPM": 3800
+  },
+  {
+    "distance": 6.027,
+    "theta": 56.7,
+    "velocity": 9.3,
+    "servo": 0.945763,
+    "RPM": 3800
+  },
+  {
+    "distance": 6.034,
+    "theta": 56.6,
+    "velocity": 9.3,
+    "servo": 0.950282,
+    "RPM": 3800
+  },
+  {
+    "distance": 6.041,
+    "theta": 56.5,
+    "velocity": 9.3,
+    "servo": 0.954802,
+    "RPM": 3800
+  },
+  {
+    "distance": 6.047,
+    "theta": 56.4,
+    "velocity": 9.3,
+    "servo": 0.959322,
+    "RPM": 3800
+  },
+  {
+    "distance": 6.054,
+    "theta": 56.3,
+    "velocity": 9.3,
+    "servo": 0.963842,
+    "RPM": 3800
+  },
+  {
+    "distance": 6.061,
+    "theta": 56.2,
+    "velocity": 9.3,
+    "servo": 0.968362,
+    "RPM": 3800
+  },
+  {
+    "distance": 6.067,
+    "theta": 56.1,
+    "velocity": 9.3,
+    "servo": 0.972881,
+    "RPM": 3800
+  },
+  {
+    "distance": 6.074,
+    "theta": 56.0,
+    "velocity": 9.3,
+    "servo": 0.977401,
+    "RPM": 3800
+  },
+  {
+    "distance": 6.08,
+    "theta": 55.9,
+    "velocity": 9.3,
+    "servo": 0.981921,
+    "RPM": 3800
+  },
+  {
+    "distance": 6.087,
+    "theta": 55.8,
+    "velocity": 9.3,
+    "servo": 0.986441,
+    "RPM": 3800
+  },
+  {
+    "distance": 6.093,
+    "theta": 55.7,
+    "velocity": 9.3,
+    "servo": 0.99096,
+    "RPM": 3800
+  },
+  {
+    "distance": 6.099,
+    "theta": 55.6,
+    "velocity": 9.3,
+    "servo": 0.99548,
+    "RPM": 3800
+  },
+  {
+    "distance": 6.105,
+    "theta": 55.5,
+    "velocity": 9.3,
+    "servo": 1.0,
+    "RPM": 3800
   }
 ]
