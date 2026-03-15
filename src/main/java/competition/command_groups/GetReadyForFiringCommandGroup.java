@@ -18,14 +18,7 @@ public class GetReadyForFiringCommandGroup extends BaseSequentialCommandGroup {
                                          PrepareToShootCommandGroup prepareToShootCommandGroup,
                                          DriveToShootingPositionCommand driveToShootingPositionCommand
     ) {
-
-        var currentPose = pose.getCurrentPose2d();
-        var startPose = autoLandmarks.getAllianceShootingStartingPose(currentPose);
-        var endPose = autoLandmarks.getClosestShootingPose(startPose);
-        var shootingData = trajectoriesCalculation.calculateAllianceHubShootingData(endPose);
-
-        prepareToShootCommandGroup.setShooterGoal(shootingData.shooterRPM());
-        prepareToShootCommandGroup.setHoodGoal(shootingData.servoRatio());
+        prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TOWER_FAR);
 
         var getReadyToFire = new ParallelCommandGroup(
                 driveToShootingPositionCommand, prepareToShootCommandGroup);
