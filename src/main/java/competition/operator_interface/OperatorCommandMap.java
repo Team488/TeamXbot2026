@@ -8,6 +8,7 @@ import competition.auto_programs.AimAndShootFromHereCommand;
 import competition.auto_programs.ShootFromHubCommandGroup;
 import competition.auto_programs.ShootFromTrenchCommandGroup;
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
+import competition.auto_programs.vision.ShootFromTrenchThenMoveToNeutralCommand;
 import competition.command_groups.vision.DriveThroughAllianceTrenchCommand;
 import competition.command_groups.FireWhenReadyAndRetractIntakeDeployCommandGroup;
 import competition.command_groups.FireWhenReadyShooterCommandGroup;
@@ -189,6 +190,7 @@ public class OperatorCommandMap {
     public void setupAutoCommands(Provider<SetAutonomousCommand> setAutonomousCommandProvider,
             DriveToOutpostCommand driveToOutpostCommand,
             MoveAcrossFieldCommandGroup moveAcrossFieldCommand,
+            ShootFromTrenchThenMoveToNeutralCommand shootFromTrenchThenMoveToNeutralCommand,
             ShootFromTrenchCommandGroup shootFromTrenchCommandGroup,
             ShootFromHubCommandGroup shootFromHubCommandGroup) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
@@ -204,6 +206,10 @@ public class OperatorCommandMap {
         var shootFromHub = setAutonomousCommandProvider.get();
         shootFromHub.setAutoCommand(shootFromHubCommandGroup, Landmarks.blueStartTrenchToOutpost);
         shootFromHub.includeOnSmartDashboard("Shoot from hub.");
+
+        var shootFromTrenchThenMove = setAutonomousCommandProvider.get();
+        shootFromTrenchThenMove.setAutoCommand(shootFromTrenchThenMoveToNeutralCommand, Landmarks.blueStartTrenchToOutpost);
+        shootFromTrenchThenMove.includeOnSmartDashboard("Shoot from trench then collect from netural zone.");
     }
 
     @Inject
