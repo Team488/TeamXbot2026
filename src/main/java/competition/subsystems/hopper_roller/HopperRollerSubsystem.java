@@ -43,7 +43,7 @@ public class HopperRollerSubsystem extends BaseSubsystem {
                     "HopperRollerPID",
                     new XCANMotorControllerPIDProperties.Builder()
                             .withP(0.0)
-                            .withVelocityFeedForward(0.1)
+                            .withVelocityFeedForward(0.01)
                             .build()
             );
             this.registerDataFrameRefreshable(hopperRollerMotor);
