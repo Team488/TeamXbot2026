@@ -77,7 +77,7 @@ public class TrajectoriesCalculation {
         this.trajectoriesShooterRPMFixed = propManager.createPersistentProperty("trajectoriesShooterRPMFixed", 4800);
         this.interpolationFactor = propManager.createPersistentProperty("AllianceZoneAimMidpointInterpolationFactor",
                 0.5);
-        this.trajectoryCalcVersion = propManager.createPersistentProperty("TrajectoryCalcVersion", "2");
+        this.trajectoryCalcVersion = propManager.createPersistentProperty("TrajectoryCalcVersion", "3");
         getOrCreatePresetLookup(propManager);
     }
 
