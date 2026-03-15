@@ -1,26 +1,23 @@
-
 package competition.command_groups;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import competition.command_groups.vision.BaseDriveWithSimpleBezierCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.AutoLandmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.properties.PropertyFactory;
-import xbot.common.subsystems.drive.SwervePointKinematics;
-import xbot.common.subsystems.drive.SwerveSimpleBezierCommand;
-import xbot.common.subsystems.drive.SwerveSimpleTrajectoryMode;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
 import xbot.common.subsystems.oracle.SwervePointPathPlanning;
 import xbot.common.subsystems.pose.GameField;
 import xbot.common.trajectory.XbotSwervePoint;
 
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-
-public class DriveAcrossMidNeutralZoneCommand extends SwerveSimpleBezierCommand {
+public class DriveAcrossMidNeutralZoneCommand extends BaseDriveWithSimpleBezierCommand {
     private final AutoLandmarks autoLandmarks;
-    private final DriveSubsystem drive;
     private final PoseSubsystem pose;
     private final SwervePointPathPlanning pathPlanning;
 
@@ -30,7 +27,6 @@ public class DriveAcrossMidNeutralZoneCommand extends SwerveSimpleBezierCommand 
             RobotAssertionManager robotAssertionManager, SwervePointPathPlanning pathPlanning, GameField gamefield,
             AutoLandmarks autoLandmarks) {
         super(drive, pose, pf, headingModuleFactory, robotAssertionManager);
-        this.drive = drive;
         this.pose = pose;
         this.pathPlanning = pathPlanning;
         this.autoLandmarks = autoLandmarks;
@@ -52,12 +48,7 @@ public class DriveAcrossMidNeutralZoneCommand extends SwerveSimpleBezierCommand 
     @Override
     public void initialize() {
         super.logic.setKeyPoints(this.calcSwervePoints());
-
-        this.logic.setPrioritizeRotationIfCloseToGoal(true);
-        this.logic.setVelocityMode(SwerveSimpleTrajectoryMode.GlobalKinematicsValue);
-        super.logic.setGlobalKinematicValues(
-                new SwervePointKinematics(this.drive.getMaxAccelerationMetersPerSecondSquared(), 0, 0,
-                        this.drive.getMaxAutoFuelIntakeTargetSpeedMetersPerSecond()));
+        super.setMaxSpeed(MaxSpeed.Intake);
 
         super.initialize();
     }

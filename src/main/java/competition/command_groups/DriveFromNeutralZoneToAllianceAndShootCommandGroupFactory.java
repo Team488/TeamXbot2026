@@ -13,8 +13,6 @@ public class DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory {
     private final Provider<DriveFromNeutralZoneToAllianceCommand> driveFromNeutralZoneToAllianceCommandProvider;
     private final Provider<GetReadyForFiringCommandGroup> getReadyForFiringCommandGroup;
 
-    private final DriveSubsystem drive;
-
     @Inject
     public DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory(
             Provider<DriveFromNeutralZoneToAllianceCommand> driveFromNeutralZoneToAllianceCommandProvider,
@@ -22,8 +20,6 @@ public class DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory {
             DriveSubsystem drive) {
         this.driveFromNeutralZoneToAllianceCommandProvider = driveFromNeutralZoneToAllianceCommandProvider;
         this.getReadyForFiringCommandGroup = getReadyForFiringCommandGroup;
-
-        this.drive = drive;
     }
 
     public SequentialCommandGroup create() {
