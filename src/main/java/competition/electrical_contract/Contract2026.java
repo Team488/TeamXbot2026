@@ -308,7 +308,7 @@ public class Contract2026 extends ElectricalContract {
                             30,
                             PDHPort.PDH10,
                             new TalonFxMotorControllerOutputConfig()
-                                    .withStatorCurrentLimit(Amps.of(50)));
+                                    .withStatorCurrentLimit(Amps.of(45)));
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -317,7 +317,7 @@ public class Contract2026 extends ElectricalContract {
                             38,
                             PDHPort.PDH18,
                             new TalonFxMotorControllerOutputConfig()
-                                    .withStatorCurrentLimit(Amps.of(50)));
+                                    .withStatorCurrentLimit(Amps.of(45)));
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -326,7 +326,7 @@ public class Contract2026 extends ElectricalContract {
                             28,
                             PDHPort.PDH08,
                             new TalonFxMotorControllerOutputConfig()
-                                    .withStatorCurrentLimit(Amps.of(50)));
+                                    .withStatorCurrentLimit(Amps.of(45)));
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -335,7 +335,7 @@ public class Contract2026 extends ElectricalContract {
                             20,
                             PDHPort.PDH00,
                             new TalonFxMotorControllerOutputConfig()
-                                    .withStatorCurrentLimit(Amps.of(50)));
+                                    .withStatorCurrentLimit(Amps.of(45)));
             default -> null;
         };
     }
