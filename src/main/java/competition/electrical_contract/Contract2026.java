@@ -354,7 +354,7 @@ public class Contract2026 extends ElectricalContract {
                             PDHPort.PDH11,
                             new TalonFxMotorControllerOutputConfig()
                                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                    .withStatorCurrentLimit(Amps.of(20)));
+                                    .withStatorCurrentLimit(Amps.of(40)));
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -364,7 +364,7 @@ public class Contract2026 extends ElectricalContract {
                             PDHPort.PDH19,
                             new TalonFxMotorControllerOutputConfig()
                                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                    .withStatorCurrentLimit(Amps.of(20)));
+                                    .withStatorCurrentLimit(Amps.of(40)));
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -374,7 +374,7 @@ public class Contract2026 extends ElectricalContract {
                             PDHPort.PDH09,
                             new TalonFxMotorControllerOutputConfig()
                                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                    .withStatorCurrentLimit(Amps.of(20)));
+                                    .withStatorCurrentLimit(Amps.of(40)));
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -384,7 +384,7 @@ public class Contract2026 extends ElectricalContract {
                             PDHPort.PDH01,
                             new TalonFxMotorControllerOutputConfig()
                                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                    .withStatorCurrentLimit(Amps.of(20)));
+                                    .withStatorCurrentLimit(Amps.of(40)));
             default -> null;
         };
     }
