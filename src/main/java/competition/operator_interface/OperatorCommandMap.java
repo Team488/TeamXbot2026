@@ -8,6 +8,7 @@ import competition.auto_programs.AimAndShootFromHereCommand;
 import competition.auto_programs.ShootFromHubCommandGroup;
 import competition.auto_programs.ShootFromTrenchCommandGroup;
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
+import competition.command_groups.vision.DriveThroughAllianceTrenchCommand;
 import competition.command_groups.FireWhenReadyAndRetractIntakeDeployCommandGroup;
 import competition.command_groups.FireWhenReadyShooterCommandGroup;
 import competition.command_groups.HopperAndIntakeCommandGroup;
@@ -41,6 +42,7 @@ import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
+import xbot.common.command.SmartDashboardCommandPutter;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.autonomous.SetAutonomousCommand;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
@@ -188,7 +190,6 @@ public class OperatorCommandMap {
             DriveToOutpostCommand driveToOutpostCommand,
             MoveAcrossFieldCommandGroup moveAcrossFieldCommand,
             ShootFromTrenchCommandGroup shootFromTrenchCommandGroup,
-            AimAndShootFromHereCommand aimAndShootFromHereCommand,
             ShootFromHubCommandGroup shootFromHubCommandGroup) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
@@ -199,10 +200,6 @@ public class OperatorCommandMap {
         var shootFromTrench = setAutonomousCommandProvider.get();
         shootFromTrench.setAutoCommand(shootFromTrenchCommandGroup, Landmarks.blueStartTrenchToOutpost);
         shootFromTrench.includeOnSmartDashboard("Shoot from trench.");
-
-        var aimAndShootFromHere = setAutonomousCommandProvider.get();
-        aimAndShootFromHere.setAutoCommand(aimAndShootFromHereCommand, Landmarks.blueStartTrenchToOutpost);
-        aimAndShootFromHere.includeOnSmartDashboard("Aim and Shoot from current location.");
       
         var shootFromHub = setAutonomousCommandProvider.get();
         shootFromHub.setAutoCommand(shootFromHubCommandGroup, Landmarks.blueStartTrenchToOutpost);
@@ -213,5 +210,12 @@ public class OperatorCommandMap {
     public void setupSimulatorCommands(
             ResetSimulatedPoseCommand resetPose) {
         resetPose.includeOnSmartDashboard();
+    }
+
+    @Inject
+    public void setupTestingCommands(AimAndShootFromHereCommand aimAndShootFromHereCommand,
+                                     DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand) {
+        aimAndShootFromHereCommand.includeOnSmartDashboard();
+        driveThroughAllianceTrenchCommand.includeOnSmartDashboard();
     }
 }

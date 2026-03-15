@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xbot.common.advantage.AKitLogger;
 import xbot.common.advantage.DataFrameRefreshable;
+import xbot.common.command.BaseRobot;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.injection.swerve.FrontLeftDrive;
 import xbot.common.injection.swerve.FrontRightDrive;
@@ -68,6 +69,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
     @Override
     protected PIDDefaults getHeadingPIDDefaults() {
+        var errorThreshold = BaseRobot.isSimulation() ? 5.0 : 2.0;
         return new PIDDefaults(
                 0.005, // P
                 0.000001, // I
@@ -75,7 +77,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
                 0.0, // F
                 0.75, // Max output
                 -0.75, // Min output
-                2.0, // Error threshold
+                errorThreshold, // Error threshold
                 0.2, // Derivative threshold
                 0.2); // Time threshold
     }
