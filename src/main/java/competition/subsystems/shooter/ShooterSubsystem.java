@@ -8,6 +8,7 @@ import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
+import xbot.common.properties.AngularVelocityProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.resiliency.DeviceHealth;
@@ -19,8 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
@@ -38,6 +37,8 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     boolean isInLowPowerMode = false;
 
     public AngularVelocity currentTargetVelocity = RPM.of(0);
+
+    public AngularVelocityProperty lowPowerModeVelocity;
 
     private final Subsystem trimSetpointLock = new Subsystem() {
 
@@ -120,6 +121,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         this.defaultShootingVelocity = this.propertyFactory.createPersistentProperty("Default Shooter Velocity RPM", 3000);
         this.trimValue = this.propertyFactory.createPersistentProperty("Shooter Trim Value", 0);
         this.readinessTimeoutSeconds = this.propertyFactory.createPersistentProperty("Readiness Timeout Seconds", 2.0);
+        this.lowPowerModeVelocity = this.propertyFactory.createPersistentProperty("LowPowerModeVelocity", RPM.of(150));
     }
 
     public void stop() {
@@ -141,8 +143,22 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     }
 
     public void runMotorsAtVelocity(AngularVelocity velocity) {
-        for (var motor : getHealthyShooterMotors()) {
+        var allMotors = getShooterMotors();
+        var healthyMotors = getHealthyShooterMotors();
+        for (var motor : healthyMotors) {
             motor.setVelocityTarget(velocity);
+        }
+
+        if (isInLowPowerMode) {
+            // In low power mode, we want all the other motors that are NOT our
+            // main healthy motor, that is still healthy.
+            var otherMotors = allMotors.stream()
+                    .filter(motor -> !healthyMotors.contains(motor)
+                            && motor.getHealth() == DeviceHealth.Healthy)
+                    .toList();
+            for (var motor : otherMotors) {
+                motor.setVelocityTarget(lowPowerModeVelocity.get());
+            }
         }
     }
 
