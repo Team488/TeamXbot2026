@@ -22,6 +22,7 @@ import competition.subsystems.collector_intake.commands.CollectorEjectCommand;
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
+import competition.subsystems.drive.commands.RobloxDriveWithJoysticksCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.hood.HoodSubsystem;
@@ -81,13 +82,19 @@ public class OperatorCommandMap {
                                    DropHoodForTrenchCommand dropHoodForTrenchCommand,
                                    RotateToHubCommand rotateToHubCommand,
                                    LowPowerModeOnCommand lowPowerModeOnCommand,
-                                   LowPowerModeOffCommand lowPowerModeOffCommand) {
+                                   LowPowerModeOffCommand lowPowerModeOffCommand,
+                                   RobloxDriveWithJoysticksCommand robloxDriveWithJoysticksCommand,
+                                   SwerveDriveWithJoysticksCommand swerveDriveWithJoysticksCommand
+
+    ) {
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(lowPowerModeOnCommand);
         operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X)
                 .whileTrue(dropHoodForTrenchCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.B).onTrue(robloxDriveWithJoysticksCommand);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Y).onTrue(swerveDriveWithJoysticksCommand);
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
@@ -202,7 +209,7 @@ public class OperatorCommandMap {
         var shootFromTrench = setAutonomousCommandProvider.get();
         shootFromTrench.setAutoCommand(shootFromTrenchCommandGroup, Landmarks.blueStartTrenchToOutpost);
         shootFromTrench.includeOnSmartDashboard("Shoot from trench.");
-      
+
         var shootFromHub = setAutonomousCommandProvider.get();
         shootFromHub.setAutoCommand(shootFromHubCommandGroup, Landmarks.blueStartTrenchToOutpost);
         shootFromHub.includeOnSmartDashboard("Shoot from hub.");
