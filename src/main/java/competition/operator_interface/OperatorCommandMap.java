@@ -84,7 +84,7 @@ public class OperatorCommandMap {
                                    LowPowerModeOnCommand lowPowerModeOnCommand,
                                    LowPowerModeOffCommand lowPowerModeOffCommand,
                                    RobloxDriveWithJoysticksCommand robloxDriveWithJoysticksCommand,
-                                   SwerveDriveWithJoysticksCommand swerveDriveWithJoysticksCommand
+                                   Provider<SwerveDriveWithJoysticksCommand> swerveDriveWithJoysticksCommandProvider
 
     ) {
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(lowPowerModeOnCommand);
@@ -92,9 +92,12 @@ public class OperatorCommandMap {
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X)
                 .whileTrue(dropHoodForTrenchCommand);
-        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand.alongWith(swerveDriveWithJoysticksCommandProvider.get()));
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.B).onTrue(robloxDriveWithJoysticksCommand);
-        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Y).onTrue(swerveDriveWithJoysticksCommand);
+
+        var swerveDriveCommand = swerveDriveWithJoysticksCommandProvider.get();
+
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Y).onTrue(swerveDriveCommand);
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
