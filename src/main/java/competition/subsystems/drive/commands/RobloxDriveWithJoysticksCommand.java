@@ -204,8 +204,8 @@ public class RobloxDriveWithJoysticksCommand extends BaseCommand {
         XYPair translationIntent = new XYPair(xIntent, yIntent);
 
         if (
-            DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) ==
-            DriverStation.Alliance.Red
+            DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
+            == DriverStation.Alliance.Red
         ) {
             translationIntent.rotate(180);
         }
