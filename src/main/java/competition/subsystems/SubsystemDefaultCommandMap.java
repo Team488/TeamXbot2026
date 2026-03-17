@@ -33,7 +33,7 @@ public class SubsystemDefaultCommandMap {
     @Inject
     public void setupDriveSubsystem(
         DriveSubsystem driveSubsystem,
-        RobloxDriveWithJoysticksCommand command
+        SwerveDriveWithJoysticksCommand command
     ) {
         driveSubsystem.setDefaultCommand(command);
     }
