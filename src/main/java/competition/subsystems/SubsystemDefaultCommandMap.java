@@ -1,24 +1,25 @@
 package competition.subsystems;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.climber.commands.ClimberMaintainerCommand;
-import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.collector_intake.CollectorSubsystem;
 import competition.subsystems.collector_intake.commands.CollectorStopCommand;
+import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.drive.commands.RobloxDriveWithJoysticksCommand;
+import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
+import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.HoodMaintainerCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
+import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployMaintainerCommand;
 import competition.subsystems.shooter.ShooterSubsystem;
-import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.shooter.commands.ShooterStopCommand;
 import competition.subsystems.shooter.commands.ShooterWheelMaintainerCommand;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederStop;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * For setting the default commands on subsystems
@@ -30,41 +31,60 @@ public class SubsystemDefaultCommandMap {
     public SubsystemDefaultCommandMap() {}
 
     @Inject
-    public void setupDriveSubsystem(DriveSubsystem driveSubsystem, SwerveDriveWithJoysticksCommand command) {
+    public void setupDriveSubsystem(
+        DriveSubsystem driveSubsystem,
+        RobloxDriveWithJoysticksCommand command
+    ) {
         driveSubsystem.setDefaultCommand(command);
     }
 
     @Inject
-    public void setupCollectorSubsystem(CollectorSubsystem collect, CollectorStopCommand command) {
+    public void setupCollectorSubsystem(
+        CollectorSubsystem collect,
+        CollectorStopCommand command
+    ) {
         collect.setDefaultCommand(command);
     }
 
     @Inject
-    public void setupShooterSubsystem(ShooterSubsystem shooter,
-                                      ShooterWheelMaintainerCommand command,
-                                      ShooterStopCommand stopCommand) {
+    public void setupShooterSubsystem(
+        ShooterSubsystem shooter,
+        ShooterWheelMaintainerCommand command,
+        ShooterStopCommand stopCommand
+    ) {
         shooter.setDefaultCommand(command);
         shooter.getSetpointLock().setDefaultCommand(stopCommand);
     }
 
     @Inject
-    public void setupClimberSubsystem(ClimberSubsystem climber, ClimberMaintainerCommand command) {
+    public void setupClimberSubsystem(
+        ClimberSubsystem climber,
+        ClimberMaintainerCommand command
+    ) {
         climber.setDefaultCommand(command);
     }
 
     @Inject
-    public void setupShooterFeederSubsystem(ShooterFeederSubsystem shooterFeeder, ShooterFeederStop command) {
+    public void setupShooterFeederSubsystem(
+        ShooterFeederSubsystem shooterFeeder,
+        ShooterFeederStop command
+    ) {
         shooterFeeder.setDefaultCommand(command);
     }
 
     @Inject
-    public void setupIntakeDeploySubsystem(IntakeDeploySubsystem intakeDeploy,
-                                           IntakeDeployMaintainerCommand command) {
+    public void setupIntakeDeploySubsystem(
+        IntakeDeploySubsystem intakeDeploy,
+        IntakeDeployMaintainerCommand command
+    ) {
         intakeDeploy.setDefaultCommand(command);
     }
 
     @Inject
-    public void setupHoodSubsystem(HoodSubsystem hood, HoodMaintainerCommand command) {
+    public void setupHoodSubsystem(
+        HoodSubsystem hood,
+        HoodMaintainerCommand command
+    ) {
         hood.setDefaultCommand(command);
     }
 
