@@ -10,13 +10,10 @@ public class WaitForHoodAndShooterToBeAtGoalCommandGroup extends BaseParallelCom
 
     @Inject
     public WaitForHoodAndShooterToBeAtGoalCommandGroup(ShooterSubsystem shooterSubsystem,
-                                                       HoodSubsystem hoodSubsystem
-    ) {
+                                                       HoodSubsystem hoodSubsystem) {
         var waitForShooterCommand = shooterSubsystem.getWaitForAtGoalCommand();
         var waitForHoodCommand = hoodSubsystem.getWaitForAtGoalCommand();
-        this.addCommands(
-                waitForShooterCommand,
-                waitForHoodCommand
-        );
+
+        this.addCommands(waitForShooterCommand, waitForHoodCommand);
     }
 }

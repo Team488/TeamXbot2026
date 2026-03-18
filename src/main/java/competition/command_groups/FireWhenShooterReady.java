@@ -7,11 +7,11 @@ import javax.inject.Inject;
 public class FireWhenShooterReady extends BaseParallelCommandGroup {
 
     @Inject
-    public FireWhenShooterReady(WaitForHoodShooterGoalCommandGroup waitForHoodShooterGoalCommandGroup,
+    public FireWhenShooterReady(WaitForHoodAndShooterToBeAtGoalCommandGroup waitForHoodAndShooterToBeAtGoalCommandGroup,
                                 RunCollectorHopperFeederCommandGroup runCollectorHopperFeederCommandGroup
     ) {
         this.addCommands(
-                waitForHoodShooterGoalCommandGroup
+                waitForHoodAndShooterToBeAtGoalCommandGroup
                         .andThen(runCollectorHopperFeederCommandGroup)
         );
     }
