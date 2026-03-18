@@ -75,6 +75,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
                     electricalContract.getIntakeDeployAbsoluteEncoder(),
                     this.getPrefix()
             );
+            registerDataFrameRefreshable(this.intakeDeployEncoder);
         } else {
             this.intakeDeployEncoder = null;
         }
