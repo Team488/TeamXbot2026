@@ -1,7 +1,7 @@
 package competition.auto_programs.vision;
 
 import competition.auto_programs.BaseAutonomousSequentialCommandGroup;
-import competition.command_groups.FireWhenReadyShooterCommandGroup;
+import competition.command_groups.FireWhenShooterReady;
 import competition.command_groups.NoWaitFinishedShootingCommand;
 import competition.command_groups.PrepareToShootCommandGroup;
 import competition.command_groups.DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory;
@@ -23,7 +23,7 @@ public class ShootFromTrenchThenMoveToNeutralCommand extends BaseAutonomousSeque
     @Inject
     public ShootFromTrenchThenMoveToNeutralCommand(AutonomousCommandSelector autoSelector,
            TrajectoriesCalculation trajectoriesCalculation,
-           FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup,
+           FireWhenShooterReady fireWhenShooterReady,
            PrepareToShootCommandGroup prepareToShootCommandGroup,
            Provider<DriveToNeutralZoneAndDeployIntakeCommandGroupFactory> driveToNeutralZoneAndDeployIntakeCommandProvider,
            Provider<DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory> driveFromNeutralZoneToAllianceAndShootCommandGroupProvider,
@@ -38,7 +38,7 @@ public class ShootFromTrenchThenMoveToNeutralCommand extends BaseAutonomousSeque
         getAutoStatusChangeCommand("Starting ShootFromTrenchThenMoveToNeutralCommand");
         var intakeCalibrationCommand = intakeDeployAutoCalibrateCommandFactory.create();
         prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
-        var calibrateAndShoot = new ParallelCommandGroup(intakeCalibrationCommand, prepareToShootCommandGroup, fireWhenReadyShooterCommandGroup)
+        var calibrateAndShoot = new ParallelCommandGroup(intakeCalibrationCommand, prepareToShootCommandGroup, fireWhenShooterReady)
                 .withTimeout(timeout.get());
 
         this.addCommands(calibrateAndShoot);

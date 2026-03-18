@@ -1,7 +1,6 @@
 package competition.auto_programs;
 
-import competition.auto_programs.BaseAutonomousSequentialCommandGroup;
-import competition.command_groups.FireWhenReadyShooterCommandGroup;
+import competition.command_groups.FireWhenShooterReady;
 import competition.command_groups.PrepareToShootCommandGroup;
 import competition.subsystems.intake_deploy.commands.IntakeDeployAutoCalibrateCommandFactory;
 import competition.subsystems.pose.TrajectoriesCalculation;
@@ -19,7 +18,7 @@ public class ShootFromTrenchCommandGroup extends BaseAutonomousSequentialCommand
     @Inject
     public ShootFromTrenchCommandGroup(AutonomousCommandSelector autoSelector,
            TrajectoriesCalculation trajectoriesCalculation,
-           FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup,
+           FireWhenShooterReady fireWhenShooterReady,
            PrepareToShootCommandGroup prepareToShootCommandGroup,
            IntakeDeployAutoCalibrateCommandFactory intakeDeployAutoCalibrateCommandFactory,
            PropertyFactory pf) {
@@ -31,7 +30,7 @@ public class ShootFromTrenchCommandGroup extends BaseAutonomousSequentialCommand
         getAutoStatusChangeCommand("Starting ShootFromTrenchCommandGroup");
         var intakeCalibrationCommand = intakeDeployAutoCalibrateCommandFactory.create();
         prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
-        var calibrateAndShoot = new ParallelCommandGroup(intakeCalibrationCommand, prepareToShootCommandGroup, fireWhenReadyShooterCommandGroup)
+        var calibrateAndShoot = new ParallelCommandGroup(intakeCalibrationCommand, prepareToShootCommandGroup, fireWhenShooterReady)
                 .withTimeout(timeout.get());
 
         this.addCommands(calibrateAndShoot);
