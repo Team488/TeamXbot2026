@@ -10,6 +10,7 @@ import competition.auto_programs.ShootFromTrenchCommandGroup;
 import competition.auto_programs.vision.JustDriveNeutralMoveCommand;
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
 import competition.auto_programs.vision.ShootFromTrenchThenMoveToNeutralCommand;
+import competition.command_groups.XPositionCommandGroup;
 import competition.command_groups.vision.DriveThroughAllianceTrenchCommand;
 import competition.command_groups.FireWhenReadyAndRetractIntakeDeployCommandGroup;
 import competition.command_groups.FireWhenReadyShooterCommandGroup;
@@ -82,13 +83,16 @@ public class OperatorCommandMap {
                                    DropHoodForTrenchCommand dropHoodForTrenchCommand,
                                    RotateToHubCommand rotateToHubCommand,
                                    LowPowerModeOnCommand lowPowerModeOnCommand,
-                                   LowPowerModeOffCommand lowPowerModeOffCommand) {
+                                   LowPowerModeOffCommand lowPowerModeOffCommand,
+                                   XPositionCommandGroup xPositionCommandGroup
+    ) {
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(lowPowerModeOnCommand);
         operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X)
                 .whileTrue(dropHoodForTrenchCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(xPositionCommandGroup);
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
