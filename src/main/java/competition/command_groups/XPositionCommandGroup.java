@@ -12,10 +12,10 @@ public class XPositionCommandGroup extends BaseParallelCommandGroup {
     public XPositionCommandGroup(BaseSwerveDriveSubsystem baseSwerveDriveSubsystem) {
 
         //Turns the wheels into an X shape so it is harder to shove our robot
-        var XPosition = new NamedInstantCommand("XPosition", baseSwerveDriveSubsystem::setWheelsToXMode);
+        var xPosition = new NamedInstantCommand("XPosition", baseSwerveDriveSubsystem::setWheelsToXMode);
 
         this.addCommands(
-                XPosition
+                xPosition
         );
     }
 }
