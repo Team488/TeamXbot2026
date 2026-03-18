@@ -7,7 +7,10 @@ import javax.inject.Singleton;
 import competition.auto_programs.AimAndShootFromHereCommand;
 import competition.auto_programs.ShootFromHubCommandGroup;
 import competition.auto_programs.ShootFromTrenchCommandGroup;
+import competition.auto_programs.vision.JustDriveNeutralMoveCommand;
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
+import competition.auto_programs.vision.ShootFromTrenchThenMoveToNeutralCommand;
+import competition.command_groups.vision.DriveThroughAllianceTrenchCommand;
 import competition.command_groups.FireWhenReadyAndRetractIntakeDeployCommandGroup;
 import competition.command_groups.FireWhenReadyShooterCommandGroup;
 import competition.command_groups.HopperAndIntakeCommandGroup;
@@ -43,6 +46,7 @@ import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import xbot.common.command.SmartDashboardCommandPutter;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.autonomous.SetAutonomousCommand;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
@@ -196,9 +200,10 @@ public class OperatorCommandMap {
     public void setupAutoCommands(Provider<SetAutonomousCommand> setAutonomousCommandProvider,
             DriveToOutpostCommand driveToOutpostCommand,
             MoveAcrossFieldCommandGroup moveAcrossFieldCommand,
+            ShootFromTrenchThenMoveToNeutralCommand shootFromTrenchThenMoveToNeutralCommand,
             ShootFromTrenchCommandGroup shootFromTrenchCommandGroup,
-            AimAndShootFromHereCommand aimAndShootFromHereCommand,
-            ShootFromHubCommandGroup shootFromHubCommandGroup) {
+            ShootFromHubCommandGroup shootFromHubCommandGroup,
+            JustDriveNeutralMoveCommand justDriveNeutralMoveCommand) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
         var moveAcrossField = setAutonomousCommandProvider.get();
@@ -208,19 +213,30 @@ public class OperatorCommandMap {
         var shootFromTrench = setAutonomousCommandProvider.get();
         shootFromTrench.setAutoCommand(shootFromTrenchCommandGroup, Landmarks.blueStartTrenchToOutpost);
         shootFromTrench.includeOnSmartDashboard("Shoot from trench.");
-
-        var aimAndShootFromHere = setAutonomousCommandProvider.get();
-        aimAndShootFromHere.setAutoCommand(aimAndShootFromHereCommand, Landmarks.blueStartTrenchToOutpost);
-        aimAndShootFromHere.includeOnSmartDashboard("Aim and Shoot from current location.");
       
         var shootFromHub = setAutonomousCommandProvider.get();
         shootFromHub.setAutoCommand(shootFromHubCommandGroup, Landmarks.blueStartTrenchToOutpost);
         shootFromHub.includeOnSmartDashboard("Shoot from hub.");
+
+        var shootFromTrenchThenMove = setAutonomousCommandProvider.get();
+        shootFromTrenchThenMove.setAutoCommand(shootFromTrenchThenMoveToNeutralCommand, Landmarks.blueStartTrenchToOutpost);
+        shootFromTrenchThenMove.includeOnSmartDashboard("Shoot from trench then collect from netural zone.");
+
+        var justDrivePortionOfAuto = setAutonomousCommandProvider.get();
+        justDrivePortionOfAuto.setAutoCommand(justDriveNeutralMoveCommand, Landmarks.blueStartTrenchToOutpost);
+        justDrivePortionOfAuto.includeOnSmartDashboard("Just drive Portion of Auto.");
     }
 
     @Inject
     public void setupSimulatorCommands(
             ResetSimulatedPoseCommand resetPose) {
         resetPose.includeOnSmartDashboard();
+    }
+
+    @Inject
+    public void setupTestingCommands(AimAndShootFromHereCommand aimAndShootFromHereCommand,
+                                     DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand) {
+        aimAndShootFromHereCommand.includeOnSmartDashboard();
+        driveThroughAllianceTrenchCommand.includeOnSmartDashboard();
     }
 }

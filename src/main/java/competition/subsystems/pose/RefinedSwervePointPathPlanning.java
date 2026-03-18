@@ -50,9 +50,11 @@ public class RefinedSwervePointPathPlanning {
         for (int i = pathIndexStart; i < path.size(); i++) {
             var pathPoint = path.get(i);
             trajectoryPoses.add(pathPoint);
-            swervePoints.add(new XbotSwervePoint(pathPoint, 2));
+            swervePoints.add(new XbotSwervePoint(pathPoint, 0.001));
         }
         aKitLog.record(prefix + "/trajectory", trajectoryPoses.toArray(new Pose2d[0]));
+        aKitLog.record(prefix + "/pathCount", path.size());
+        aKitLog.record(prefix + "/pathIndexStart", pathIndexStart);
 
         return swervePoints;
     }

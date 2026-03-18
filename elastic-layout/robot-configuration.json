@@ -59,6 +59,19 @@
               "period": 0.06,
               "show_type": true
             }
+          },
+          {
+            "title": "Shoot from trench then collect from netural zone.",
+            "x": 512.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Shoot from trench then collect from netural zone.",
+              "period": 0.06,
+              "show_type": true
+            }
           }
         ]
       }
@@ -118,6 +131,34 @@
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
+                }
+              },
+              {
+                "title": "MaxAutoTargetSpeedMetersPerSecond",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/DriveSubsystem//MaxAutoTargetSpeedMetersPerSecond",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "MaxAutoFuelIntakeTargetSpeedMetersPerSecond",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/DriveSubsystem//MaxAutoFuelIntakeTargetSpeedMetersPerSecond",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
                 }
               }
             ]
@@ -1253,14 +1294,27 @@
         "layouts": [],
         "containers": [
           {
-            "title": "Aim and Shoot from current location.",
-            "x": 512.0,
+            "title": "AimAndShootFromHereCommand",
+            "x": 128.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/AimAndShootFromHereCommand",
+              "period": 0.06,
+              "show_type": true
+            }
+          },
+          {
+            "title": "DriveThroughAllianceTrenchCommand",
+            "x": 128.0,
             "y": 256.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Command",
             "properties": {
-              "topic": "/SmartDashboard/Aim and Shoot from current location.",
+              "topic": "/SmartDashboard/DriveThroughAllianceTrenchCommand",
               "period": 0.06,
               "show_type": true
             }
