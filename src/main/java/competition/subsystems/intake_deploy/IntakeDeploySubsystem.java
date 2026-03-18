@@ -5,6 +5,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
+import xbot.common.controls.sensors.XAbsoluteEncoder;
 import xbot.common.logic.Latch;
 import xbot.common.properties.AngleProperty;
 import xbot.common.command.BaseSetpointSubsystem;
@@ -12,6 +13,7 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
 import xbot.common.controls.sensors.XDigitalInput;
+import xbot.common.resiliency.DeviceHealth;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -27,6 +29,7 @@ import static edu.wpi.first.units.Units.Second;
 public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  {
     ElectricalContract electricalContract;
     public final XCANMotorController intakeDeployMotor;
+    public final XAbsoluteEncoder intakeDeployEncoder;
     public final DoubleProperty manualControlPower;
     public Angle motorOffset = Rotations.zero();
     public final XDigitalInput intakeDeploySensor;
@@ -45,6 +48,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     @Inject
     public IntakeDeploySubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
+                                 XAbsoluteEncoder.XAbsoluteEncoderFactory xAbsoluteEncoderFactory,
                                  ElectricalContract electricalContract, PropertyFactory propertyFactory,
                                  XDigitalInput.XDigitalInputFactory xDigitalInputFactory) {
         propertyFactory.setPrefix(this);
@@ -64,6 +68,15 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             this.registerDataFrameRefreshable(this.intakeDeployMotor);
         } else {
             this.intakeDeployMotor = null;
+        }
+
+        if (electricalContract.isIntakeDeployAbsoluteEncoderReady()) {
+            this.intakeDeployEncoder = xAbsoluteEncoderFactory.create(
+                    electricalContract.getIntakeDeployAbsoluteEncoder(),
+                    this.getPrefix()
+            );
+        } else {
+            this.intakeDeployEncoder = null;
         }
 
         if (electricalContract.intakeDeploySensorReady()){
@@ -90,7 +103,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.2);
 
-        this.mechanismDegreePerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreePerMotorRotation", 15);
+        this.mechanismDegreePerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreePerMotorRotation", 360);
         this.mechanismTargetRotation = propertyFactory.createPersistentProperty("MechanismTargetRotation", Degrees.of(0));
 
         this.maxPidVelocity = propertyFactory.createPersistentProperty("PidMaxMotorVelocity-RotationsPerSecond", 100);
@@ -109,6 +122,10 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     @Override
     public Angle getCurrentValue() {
+        if (intakeDeployEncoder != null) {
+            return intakeDeployEncoder.getAbsolutePosition();
+        }
+
         return Degrees.of(
                 intakeDeployMotor.getPosition().minus(motorOffset).in(Rotations) * mechanismDegreePerMotorRotation.get()
         );
@@ -138,16 +155,19 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
                 return;
             }
 
-            intakeDeployMotor.setPositionTarget(
-                    Rotations.of(goal.in(Degrees) / mechanismDegreePerMotorRotation.get()).plus(motorOffset),
-                    XCANMotorController.MotorPidMode.TrapezoidalVoltage
-            );
+            // With CANCoder as a remote sensor, we can directly set the position target in degrees without needing
+            // to convert to motor rotations
+            intakeDeployMotor.setPositionTarget(goal, XCANMotorController.MotorPidMode.TrapezoidalVoltage);
         }
     }
 
     @Override
     public boolean isCalibrated() {
-        return this.isCalibrated;
+        if (this.intakeDeployEncoder != null && this.intakeDeployEncoder.getHealth() == DeviceHealth.Healthy) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override
