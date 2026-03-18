@@ -54,11 +54,11 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         propertyFactory.setPrefix(this);
 
         var defaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
-                .withP(5.0)
+                .withP(40.0)
                 .withI(0.0)
                 .withD(0.0)
-                .withMinPowerOutput(-0.2)
-                .withMaxPowerOutput(0.2)
+                .withMinPowerOutput(-0.4)
+                .withMaxPowerOutput(0.4)
                 .build();
 
         if (electricalContract.isIntakeDeployReady()) {
@@ -100,15 +100,15 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         }
 
         this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", 0.0);
-        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -185.0);
+        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -135.0);
 
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.2);
 
         this.mechanismDegreePerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreePerMotorRotation", 360);
         this.mechanismTargetRotation = propertyFactory.createPersistentProperty("MechanismTargetRotation", Degrees.of(0));
 
-        this.maxPidVelocity = propertyFactory.createPersistentProperty("PidMaxMotorVelocity-RotationsPerSecond", 100);
-        this.maxPidAcceleration = propertyFactory.createPersistentProperty("PidMaxMotorAcceleration-RotationsPerSecondPerSecond", 300);
+        this.maxPidVelocity = propertyFactory.createPersistentProperty("PidMaxMotorVelocity-RotationsPerSecond", 200);
+        this.maxPidAcceleration = propertyFactory.createPersistentProperty("PidMaxMotorAcceleration-RotationsPerSecondPerSecond", 200);
 
         this.collectionDownwardPressure = propertyFactory.createPersistentProperty("Collection Downward Pressure Power", -0.1);
 
@@ -164,7 +164,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     @Override
     public boolean isCalibrated() {
-        if (this.intakeDeployEncoder != null && this.intakeDeployEncoder.getHealth() == DeviceHealth.Healthy) {
+        if (this.intakeDeployEncoder != null) {
             return true;
         }
 

@@ -208,7 +208,7 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public boolean isIntakeDeployAbsoluteEncoderReady() { return false; }
+    public boolean isIntakeDeployAbsoluteEncoderReady() { return true; }
 
     @Override
     public DeviceInfo getIntakeDeployAbsoluteEncoder() {
