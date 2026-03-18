@@ -5,6 +5,7 @@ import competition.subsystems.drive.DriveSubsystem;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import org.dyn4j.geometry.Rotation;
 import xbot.common.controls.sensors.XGyro;
 import xbot.common.logic.HumanVsMachineDecider;
 import xbot.common.logic.HumanVsMachineDecider.HumanVsMachineDeciderFactory;
@@ -36,7 +37,6 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     final DoubleProperty precisionTranslationScale;
     final DoubleProperty extremePrecisionTranslationScale;
     final DoubleProperty precisionRotationScale;
-    final DoubleProperty extremePrecisionRotationScale;
 
     SwerveDriveRotationAdvisor advisor;
     HumanVsMachineDecider hvmDecider;
@@ -63,7 +63,6 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         this.extremePrecisionTranslationScale = pf.createPersistentProperty(
                 "ExtremePrecisionTranslationScale", 0.15);
         precisionRotationScale = pf.createPersistentProperty("PrecisionRotationScale", 0.5);
-        extremePrecisionRotationScale = pf.createPersistentProperty("ExtremePrecisionRotationScale", 0.15);
 
         this.addRequirements(drive);
     }
@@ -144,8 +143,16 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
                 joystickInput.getY()
         ).rotateBy(Rotation2d.fromDegrees(-90));
 
+        if (!drive.isUnlockFullDrivePowerActive()) {
+            if (drive.isPrecisionRotationActive()) {
+                triggerRotateIntent *= precisionRotationScale.get();
+            }
+        }
+
         SwerveSuggestedRotation suggested = advisor.getSuggestedRotationValue(processedInput, triggerRotateIntent);
-        return processSuggestedRotationValueIntoPower(suggested);
+
+
+         return processSuggestedRotationValueIntoPower(suggested);
     }
 
     private XYPair getSuggestedTranslationIntent(XYPair intent) {
@@ -166,9 +173,9 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         if (!drive.isUnlockFullDrivePowerActive()) {
             // Scale translationIntent if precision modes active, values from XBot2024 repository
             if (drive.isExtremePrecisionTranslationActive()) {
-                intent = intent.scale(extremePrecisionTranslationScale.get(), extremePrecisionRotationScale.get());
+                intent = intent.scale(extremePrecisionTranslationScale.get());
             } else if (drive.isPrecisionTranslationActive()) {
-                intent = intent.scale(precisionTranslationScale.get(), precisionRotationScale.get());
+                intent = intent.scale(precisionTranslationScale.get());
             }
         }
         return intent;

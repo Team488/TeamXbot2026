@@ -24,6 +24,7 @@ import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
+import competition.subsystems.drive.commands.PrecisionModeCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.hood.HoodSubsystem;
@@ -84,7 +85,8 @@ public class OperatorCommandMap {
                                    RotateToHubCommand rotateToHubCommand,
                                    LowPowerModeOnCommand lowPowerModeOnCommand,
                                    LowPowerModeOffCommand lowPowerModeOffCommand,
-                                   DriveSubsystem driveSubsystem) {
+                                   DriveSubsystem driveSubsystem,
+                                   PrecisionModeCommand precisionModeCommand) {
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(lowPowerModeOnCommand);
         operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
@@ -92,12 +94,8 @@ public class OperatorCommandMap {
                 .whileTrue(dropHoodForTrenchCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
 
-        var precisionTranslationCommand = new StartEndCommand(
-                () -> driveSubsystem.setPrecisionTranslationActive(true),
-                () -> driveSubsystem.setPrecisionTranslationActive(false)
-        );
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Y)
-                .whileTrue(precisionTranslationCommand);
+                .whileTrue(precisionModeCommand);
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
