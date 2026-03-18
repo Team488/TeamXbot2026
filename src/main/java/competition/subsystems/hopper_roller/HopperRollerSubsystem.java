@@ -11,6 +11,8 @@ import xbot.common.properties.PropertyFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 @Singleton
 public class HopperRollerSubsystem extends BaseSubsystem {
 
@@ -18,6 +20,7 @@ public class HopperRollerSubsystem extends BaseSubsystem {
     public final XCANMotorController hopperRollerMotor;
     final DoubleProperty ejectPower;
     final DoubleProperty intakePower;
+    public final DoubleProperty voltageRampTime;
 
     @Inject
     public HopperRollerSubsystem(ElectricalContract electricalContract,
@@ -26,12 +29,19 @@ public class HopperRollerSubsystem extends BaseSubsystem {
 
         pf.setPrefix(this);
         this.electricalContract = electricalContract;
+        this.voltageRampTime = pf.createPersistentProperty("VoltageRampTime", 0.1);
         if (electricalContract.isHopperRollerReady()) {
             this.hopperRollerMotor = motorFactory.create(
                     electricalContract.getHopperRollerMotor(),
                     getPrefix(),
                     "HopperRollerPID"
             );
+            this.hopperRollerMotor.setOpenLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get()));
+            this.hopperRollerMotor.setClosedLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get()));
             this.registerDataFrameRefreshable(hopperRollerMotor);
         } else {
             this.hopperRollerMotor = null;
