@@ -21,6 +21,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Seconds;
 
 
 @Singleton
@@ -40,6 +41,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public final DoubleProperty maxPidVelocity;
     public final DoubleProperty maxPidAcceleration;
     public final DoubleProperty collectionDownwardPressure;
+    public final DoubleProperty voltageRampTime;
 
     private final Latch extendedPositionCalibrationLatch;
 
@@ -57,10 +59,17 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
                 .withMaxPowerOutput(0.2)
                 .build();
 
+        this.voltageRampTime = propertyFactory.createPersistentProperty("VoltageRampTime", 0.1);
+
         if (electricalContract.isIntakeDeployReady()) {
             this.intakeDeployMotor = xcanMotorControllerFactory.create(electricalContract.getIntakeDeployMotor(),
                     getPrefix(), "IntakeDeployPID", defaultPIDProperties);
-
+            this.intakeDeployMotor.setOpenLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get()));
+            this.intakeDeployMotor.setClosedLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get()));
             this.registerDataFrameRefreshable(this.intakeDeployMotor);
         } else {
             this.intakeDeployMotor = null;
