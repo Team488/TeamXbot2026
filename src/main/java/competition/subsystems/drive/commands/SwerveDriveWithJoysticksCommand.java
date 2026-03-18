@@ -35,6 +35,8 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     final DoubleProperty overallTurningPowerScale;
     final DoubleProperty precisionTranslationScale;
     final DoubleProperty extremePrecisionTranslationScale;
+    final DoubleProperty precisionRotationScale;
+    final DoubleProperty extremePrecisionRotationScale;
 
     SwerveDriveRotationAdvisor advisor;
     HumanVsMachineDecider hvmDecider;
@@ -60,6 +62,8 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         this.precisionTranslationScale = pf.createPersistentProperty("PrecisionTranslationScale", 0.5);
         this.extremePrecisionTranslationScale = pf.createPersistentProperty(
                 "ExtremePrecisionTranslationScale", 0.15);
+        precisionRotationScale = pf.createPersistentProperty("PrecisionRotationScale", 0.5);
+        extremePrecisionRotationScale = pf.createPersistentProperty("ExtremePrecisionRotationScale", 0.15);
 
         this.addRequirements(drive);
     }
@@ -162,9 +166,9 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         if (!drive.isUnlockFullDrivePowerActive()) {
             // Scale translationIntent if precision modes active, values from XBot2024 repository
             if (drive.isExtremePrecisionTranslationActive()) {
-                intent = intent.scale(extremePrecisionTranslationScale.get());
+                intent = intent.scale(extremePrecisionTranslationScale.get(), extremePrecisionRotationScale.get());
             } else if (drive.isPrecisionTranslationActive()) {
-                intent = intent.scale(precisionTranslationScale.get());
+                intent = intent.scale(precisionTranslationScale.get(), precisionRotationScale.get());
             }
         }
         return intent;
