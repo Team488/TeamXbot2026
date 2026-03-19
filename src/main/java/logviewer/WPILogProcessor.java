@@ -35,7 +35,7 @@ public class WPILogProcessor {
                 entryTypes.put(start.entry, start.type);
                 entryData.put(start.entry, new ArrayList<>());
 
-                allEntries.add(start.name + " (" + start.type + ")");
+                allEntries.add(start.name);
             } else if (!record.isControl()) {
                 int entry = record.getEntry();
                 String type = entryTypes.get(entry);
