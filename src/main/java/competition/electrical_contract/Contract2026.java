@@ -109,18 +109,6 @@ public class Contract2026 extends ElectricalContract {
         return new DeviceInfo("CANdle",CANBusId.Canivore, 57);
     }
 
-    public boolean intakeDeploySensorReady() { return false; }
-
-    public DeviceInfo getIntakeDeploySensor() {
-        return new DeviceInfo("IntakeDeploySensor", 1, true, PowerSource.RIO);
-    }
-
-    @Override
-    public boolean isIntakeDeployExtendedSensorReady() { return false; }
-
-    @Override
-    public DeviceInfo getIntakeDeployExtendedSensor() {return new DeviceInfo("IntakeDeployExtendedSensor", 2, true, PowerSource.RIO);}
-
     @Override                                    
     public boolean isShooterFeederReady() { return true; }
 
