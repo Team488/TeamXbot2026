@@ -39,6 +39,7 @@ public class DriveFromNeutralZoneToAllianceCommand extends BaseDriveWithSimpleBe
         var startPose = this.autoLandmarks.getFinishBallPitCollectionPose(currentPose);
         var pathPoses = this.autoLandmarks.getAllianceShootingStartingPath(currentPose);
 
+        super.setSegmentType(SegmentType.Mid);
         this.setMaxSpeed(MaxSpeed.Auto);
         super.logic.setKeyPoints(this.pathPlanning.generateSwervePoints(startPose, pathPoses,
                 false));
