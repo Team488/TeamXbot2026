@@ -3,6 +3,7 @@ package competition.subsystems.drive.commands;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
+import competition.subsystems.pose.TrajectoriesCalculation;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -48,6 +49,9 @@ public class RotateToHubCommand extends BaseCommand {
         drive.setLookAtPointTarget(targetTranslation);
         drive.setLookAtPointInverted(true);
 
+        var headingErrorThresholdRatio = TrajectoriesCalculation.calculateRatioForHeadingErrorThreshold(
+                this.pose.getCurrentPose2d().getTranslation(), targetTranslation);
+        drive.setProportionalHeadingErrorThreshold(headingErrorThresholdRatio);
     }
 
     @Override
@@ -67,5 +71,6 @@ public class RotateToHubCommand extends BaseCommand {
         super.end(interrupted);
         drive.setLookAtPointTargetActive(false);
         drive.setLookAtPointInverted(false);
+        drive.resetHeadingErrorThreshold();
     }
 }
