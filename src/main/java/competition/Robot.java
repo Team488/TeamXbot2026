@@ -1,6 +1,7 @@
 
 package competition;
 
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -64,6 +65,8 @@ public class Robot extends BaseRobot {
         dataFrameRefreshables.add(getInjectorComponent().hopperRollerSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().voltageMonitorSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().climberSubsystem());
+
+        CommandScheduler.getInstance().schedule(getInjectorComponent().whenShooterReadyRumbleCommand());
     }
 
     protected BaseRobotComponent createDaggerComponent() {
