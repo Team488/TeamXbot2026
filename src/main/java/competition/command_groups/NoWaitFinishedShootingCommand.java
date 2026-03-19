@@ -2,21 +2,13 @@ package competition.command_groups;
 
 import javax.inject.Inject;
 
-import static edu.wpi.first.units.Units.RPM;
-
 import competition.Robot;
-import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.collector_intake.commands.CollectorStopCommand;
-import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.HoodSetCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
-import competition.subsystems.shooter.ShooterSubsystem;
-import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.ShooterStopCommand;
-import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import xbot.common.command.BaseParallelCommandGroup;
-import xbot.common.command.NamedInstantCommand;
 
 public class NoWaitFinishedShootingCommand extends BaseParallelCommandGroup {
 
