@@ -109,14 +109,14 @@ public class Contract2026 extends ElectricalContract {
         return new DeviceInfo("CANdle",CANBusId.Canivore, 57);
     }
 
-    public boolean intakeDeploySensorReady() { return true; }
+    public boolean intakeDeploySensorReady() { return false; }
 
     public DeviceInfo getIntakeDeploySensor() {
         return new DeviceInfo("IntakeDeploySensor", 1, true, PowerSource.RIO);
     }
 
     @Override
-    public boolean isIntakeDeployExtendedSensorReady() { return true; }
+    public boolean isIntakeDeployExtendedSensorReady() { return false; }
 
     @Override
     public DeviceInfo getIntakeDeployExtendedSensor() {return new DeviceInfo("IntakeDeployExtendedSensor", 2, true, PowerSource.RIO);}
@@ -167,7 +167,7 @@ public class Contract2026 extends ElectricalContract {
                 23,
                 PDHPort.PDH03,
                 new TalonFxMotorControllerOutputConfig()
-                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Normal)
                         .withStatorCurrentLimit(Amps.of(50))
                         .withSupplyCurrentLimit(
                                 Amps.of(40),
@@ -203,15 +203,16 @@ public class Contract2026 extends ElectricalContract {
                 PDHPort.PDH14,
                 new TalonFxMotorControllerOutputConfig()
                         .withSupplyCurrentLimit(Amps.of(15), Amps.of(30), Seconds.of(1))
-                        .withStatorCurrentLimit(Amps.of(50)));
+                        .withStatorCurrentLimit(Amps.of(50))
+                        .withRemoteCanCoderFeedback(getIntakeDeployAbsoluteEncoder().channel));
     }
 
     @Override
-    public boolean isIntakeDeployAbsoluteEncoderReady() { return false; }
+    public boolean isIntakeDeployAbsoluteEncoderReady() { return true; }
 
     @Override
-    public DeviceInfo getIntakeDeployAbsoluteEncoderMotor() {
-        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady",58);
+    public DeviceInfo getIntakeDeployAbsoluteEncoder() {
+        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady", CANBusId.Canivore, 58);
     }
 
     @Override
