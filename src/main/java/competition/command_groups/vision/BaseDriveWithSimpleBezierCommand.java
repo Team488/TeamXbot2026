@@ -21,6 +21,7 @@ public class BaseDriveWithSimpleBezierCommand extends SwerveSimpleBezierCommand 
     private final DriveSubsystem drive;
     private final BooleanProperty useGlobalKinematics;
     private MaxSpeed maxSpeed = MaxSpeed.Default;
+    private boolean prioritizeRotationIfCloseToGoal = false;
 
     public BaseDriveWithSimpleBezierCommand(DriveSubsystem drive, PoseSubsystem pose,
             PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
@@ -35,9 +36,13 @@ public class BaseDriveWithSimpleBezierCommand extends SwerveSimpleBezierCommand 
         this.maxSpeed = speed;
     }
 
+    protected void setPrioritizeRotationIfCloseToGoal(boolean prioritize) {
+        this.prioritizeRotationIfCloseToGoal = prioritize;
+    }
+
     @Override
     public void initialize() {
-        this.logic.setPrioritizeRotationIfCloseToGoal(true);
+        this.logic.setPrioritizeRotationIfCloseToGoal(this.prioritizeRotationIfCloseToGoal);
         double speed = this.drive.getMaxTargetSpeedMetersPerSecond();
         switch (this.maxSpeed) {
         case Auto:
