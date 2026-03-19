@@ -38,6 +38,8 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
     private boolean staticHeadingActive = false;
     private final DoubleProperty maxAutoTargetSpeedMps;
     private final DoubleProperty maxAutoFuelIntakeTargetSpeedMps;
+    private final DoubleProperty minHeadingErrorThreshold;
+    private final DoubleProperty maxHeadingErrorThreshold;
 
     @Inject
     public DriveSubsystem(PIDManagerFactory pidFactory, PropertyFactory pf,
@@ -51,6 +53,8 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
         pf.setDefaultLevel(Property.PropertyLevel.Important);
         this.maxAutoTargetSpeedMps = pf.createPersistentProperty("MaxAutoTargetSpeedMetersPerSecond", 2.5);
         this.maxAutoFuelIntakeTargetSpeedMps = pf.createPersistentProperty("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.5);
+        this.minHeadingErrorThreshold = pf.createPersistentProperty("MinHeadingErrorThreshold", 2.0);
+        this.maxHeadingErrorThreshold = pf.createPersistentProperty("MaxHeadingErrorThreshold", 8.5);
     }
 
     @Override
@@ -81,6 +85,18 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
                 0.2, // Derivative threshold
                 0.2, // Time threshold
                 10); // IZone
+    }
+
+    public void resetHeadingErrorThreshold() {
+        this.getRotateToHeadingPid().setErrorThreshold(this.getHeadingPIDDefaults().errorThreshold());
+    }
+
+    public void setProportionalHeadingErrorThreshold(double ratio) {
+        var minHeadingErrorThreshold = this.minHeadingErrorThreshold.get();
+        var maxHeadingErrorThreshold = this.maxHeadingErrorThreshold.get();
+        var range = maxHeadingErrorThreshold - minHeadingErrorThreshold;
+        var proportionalErrorThreshold = minHeadingErrorThreshold + (range * ratio);
+        this.getRotateToHeadingPid().setErrorThreshold(proportionalErrorThreshold);
     }
 
     public Translation2d getLookAtPointTarget() {

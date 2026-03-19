@@ -33,6 +33,7 @@ import xbot.common.properties.StringProperty;
 
 @Singleton()
 public class TrajectoriesCalculation {
+    private static final Distance MAX_DISTANCE_SHOOTING_RANGE = Units.Meters.of(7);
     private static final Transform2d HOOD_OFFSET_FROM_CENTER_ROBOT = new Transform2d(Units.Inches.of(-23.5),
             Units.Inches.of(0), Rotation2d.kZero);
     private static Map<PresetShootingDistance, PresetShootingProperties> presetShootingLookup;
@@ -43,6 +44,18 @@ public class TrajectoriesCalculation {
     private final DoubleProperty interpolationFactor;
     private final DoubleProperty v3DistanceOffsetMeters;
     private final StringProperty trajectoryCalcVersion;
+
+    public static double calculateRatioForHeadingErrorThreshold(Translation2d robot, Translation2d target) {
+        var distance = robot.getDistance(target);
+        var maxInMeters = MAX_DISTANCE_SHOOTING_RANGE.in(Units.Meters);
+        // If it's more than the max then set it to the max.
+        var cappedDistance = Math.min(distance, maxInMeters);
+        // Now determine he ratio for the entire range considering the minimum is 0.
+        var ratioOfRange = cappedDistance / maxInMeters;
+
+        // Lastly invert it since the error threshold should decrease the further you move away.
+        return 1 - ratioOfRange;
+    }
 
     private static void getOrCreatePresetLookup(PropertyFactory propManager) {
         if (presetShootingLookup == null) {
