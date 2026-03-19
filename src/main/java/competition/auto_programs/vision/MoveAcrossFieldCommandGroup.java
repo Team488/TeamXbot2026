@@ -3,7 +3,6 @@ package competition.auto_programs.vision;
 import competition.auto_programs.BaseAutonomousSequentialCommandGroup;
 import competition.command_groups.DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory;
 import competition.command_groups.DriveToNeutralZoneAndDeployIntakeCommandGroupFactory;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import xbot.common.subsystems.autonomous.AutonomousCommandSelector;
 
 import javax.inject.Inject;
