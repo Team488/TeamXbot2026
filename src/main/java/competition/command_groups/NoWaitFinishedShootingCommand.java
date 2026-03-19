@@ -22,7 +22,7 @@ public class NoWaitFinishedShootingCommand extends BaseParallelCommandGroup {
             ShooterFeederFire shooterFeederFireCommand,
             CollectorIntakeCommand fuelIntakeCommand) {
         var setHoodCommand = new NamedInstantCommand("Set Hood Min", () -> hoodSubsystem.setTargetValue(0.0));
-        var setShooterGoal = new NamedInstantCommand("Set Shooter Stop", () -> shooterSubsystem.setTargetValue(RPM.of(0.0)));
+        var setShooterGoal = new NamedInstantCommand("Set Shooter Stop", () -> shooterSubsystem.setPower(0.0));
         var setHopperRoller = new NamedInstantCommand("Set Hopper Roller Stop", () -> hopper.stop());
 
         this.addCommands(setHoodCommand, setShooterGoal, setHopperRoller);

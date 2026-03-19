@@ -24,7 +24,7 @@ public class DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory {
 
     public SequentialCommandGroup create() {
         var group = new SequentialCommandGroup();
-        group.setName("DriveToNeutralZoneAndDeployIntakeCommandGroup");
+        group.setName("DriveFromNeutralZoneToAllianceAndShootCommandGroup");
 
         group.addCommands(this.driveFromNeutralZoneToAllianceCommandProvider.get());
         group.addCommands(this.getReadyForFiringCommandGroup.get());
