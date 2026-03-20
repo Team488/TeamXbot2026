@@ -48,7 +48,7 @@ class Main {
     private final JList<String> fileList = new JList<>(fileListModel);
 
     private Main() {
-        frame = new JFrame("WPILog Viewer (Multi-file)");
+        frame = new JFrame("XRAY - Post Match Analysis Tool");
         frame.setSize(1200, 700);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout(8, 8));
