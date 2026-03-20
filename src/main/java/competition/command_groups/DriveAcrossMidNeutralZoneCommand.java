@@ -47,8 +47,8 @@ public class DriveAcrossMidNeutralZoneCommand extends BaseDriveWithSimpleBezierC
 
     @Override
     public void initialize() {
-        this.setPrioritizeRotationIfCloseToGoal(true);
         super.logic.setKeyPoints(this.calcSwervePoints());
+        super.setSegmentType(SegmentType.Mid);
         super.setMaxSpeed(MaxSpeed.Intake);
 
         super.initialize();

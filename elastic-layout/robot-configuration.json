@@ -5,32 +5,140 @@
     {
       "name": "Autonomous",
       "grid_layout": {
-        "layouts": [],
+        "layouts": [
+          {
+            "title": "Trench Shoot Then Collect",
+            "x": 128.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Shoot from trench then collect from netural zone.",
+                "x": 768.0,
+                "y": 256.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Shoot from trench then collect from netural zone.",
+                  "period": 0.06,
+                  "show_type": false
+                }
+              },
+              {
+                "title": "TimeoutSeconds",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/ShootFromTrenchThenMoveToNeutralCommand/TimeoutSeconds",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              }
+            ]
+          },
+          {
+            "title": "Trench Just Shoot ",
+            "x": 640.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Shoot from trench.",
+                "x": 512.0,
+                "y": 256.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Shoot from trench.",
+                  "period": 0.06,
+                  "show_type": false
+                }
+              },
+              {
+                "title": "TimeoutSeconds",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/ShootFromTrenchCommandGroup/TimeoutSeconds",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              }
+            ]
+          },
+          {
+            "title": "Hub Just Shoot",
+            "x": 896.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Shoot from hub.",
+                "x": 256.0,
+                "y": 384.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Shoot from hub.",
+                  "period": 0.06,
+                  "show_type": false
+                }
+              },
+              {
+                "title": "TimeoutSeconds",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/ShootFromHubCommandGroup/TimeoutSeconds",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              }
+            ]
+          }
+        ],
         "containers": [
           {
             "title": "Move midway through field and back.",
-            "x": 512.0,
-            "y": 128.0,
+            "x": 384.0,
+            "y": 256.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Command",
             "properties": {
               "topic": "/SmartDashboard/Move midway through field and back.",
               "period": 0.06,
-              "show_type": true
-            }
-          },
-          {
-            "title": "Shoot from trench.",
-            "x": 512.0,
-            "y": 256.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Shoot from trench.",
-              "period": 0.06,
-              "show_type": true
+              "show_type": false
             }
           },
           {
@@ -46,32 +154,6 @@
               "data_type": "string",
               "show_submit_button": false
             }
-          },
-          {
-            "title": "Shoot from hub.",
-            "x": 512.0,
-            "y": 384.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Shoot from hub.",
-              "period": 0.06,
-              "show_type": true
-            }
-          },
-          {
-            "title": "Shoot from trench then collect from netural zone.",
-            "x": 512.0,
-            "y": 512.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Shoot from trench then collect from netural zone.",
-              "period": 0.06,
-              "show_type": true
-            }
           }
         ]
       }
@@ -85,7 +167,7 @@
             "x": 256.0,
             "y": 128.0,
             "width": 256.0,
-            "height": 384.0,
+            "height": 512.0,
             "type": "List Layout",
             "properties": {
               "label_position": "TOP"
@@ -159,6 +241,20 @@
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
+                }
+              },
+              {
+                "title": "InterstitialSpeedMetersPerSecond",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/DriveSubsystem/InterstitialSpeedMetersPerSecond",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
                 }
               }
             ]
@@ -861,93 +957,214 @@
     {
       "name": "Shooter Goals",
       "grid_layout": {
-        "layouts": [],
-        "containers": [
+        "layouts": [
           {
-            "title": "Min Distance RPM",
+            "title": "Corner",
+            "x": 1152.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "PresetShooting.CORNER RPM",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/TrajectoriesCalculation/PresetShooting.CORNER RPM",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "PresetShooting.CORNER Hood ServoRatio",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/TrajectoriesCalculation/PresetShooting.CORNER Hood ServoRatio",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              }
+            ]
+          },
+          {
+            "title": "Near",
             "x": 128.0,
             "y": 128.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
             "properties": {
-              "topic": "/Preferences/ShooterSubsystem/Min Distance RPM",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "PresetShooting.NEAR RPM",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/TrajectoriesCalculation/PresetShooting.NEAR RPM",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "PresetShooting.NEAR Hood ServoRatio",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/TrajectoriesCalculation/PresetShooting.NEAR Hood ServoRatio",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              }
+            ]
           },
           {
-            "title": "Med Distance RPM",
+            "title": "Tower Close",
             "x": 384.0,
             "y": 128.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
             "properties": {
-              "topic": "/Preferences/ShooterSubsystem/Med Distance RPM",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "PresetShooting.TOWER_CLOSE RPM",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/TrajectoriesCalculation/PresetShooting.TOWER_CLOSE RPM",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "PresetShooting.TOWER_CLOSE Hood ServoRatio",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/TrajectoriesCalculation/PresetShooting.TOWER_CLOSE Hood ServoRatio",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              }
+            ]
           },
           {
-            "title": "Max Distance RPM",
+            "title": "Tower Far",
             "x": 640.0,
             "y": 128.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
             "properties": {
-              "topic": "/Preferences/ShooterSubsystem/Max Distance RPM",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "PresetShooting.TOWER_FAR RPM",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/TrajectoriesCalculation/PresetShooting.TOWER_FAR RPM",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "PresetShooting.TOWER_FAR Hood ServoRatio",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/TrajectoriesCalculation/PresetShooting.TOWER_FAR Hood ServoRatio",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              }
+            ]
           },
           {
-            "title": "Hood Min Distance Goal",
-            "x": 128.0,
-            "y": 256.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
+            "title": "Trench",
+            "x": 896.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
             "properties": {
-              "topic": "/Preferences/HoodSubsystem/Hood Min Distance Goal",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "Hood Med Distance Goal",
-            "x": 384.0,
-            "y": 256.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/Preferences/HoodSubsystem/Hood Med Distance Goal",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "Hood Max Distance Goal",
-            "x": 640.0,
-            "y": 256.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/Preferences/HoodSubsystem/Hood Max Distance Goal",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "PresetShooting.TRENCH RPM",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/TrajectoriesCalculation/PresetShooting.TRENCH RPM",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "PresetShooting.TRENCH Hood ServoRatio",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/TrajectoriesCalculation/PresetShooting.TRENCH Hood ServoRatio",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              }
+            ]
           }
-        ]
+        ],
+        "containers": []
       }
     },
     {
