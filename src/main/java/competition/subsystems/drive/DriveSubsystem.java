@@ -38,6 +38,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
     private boolean staticHeadingActive = false;
     private final DoubleProperty maxAutoTargetSpeedMps;
     private final DoubleProperty maxAutoFuelIntakeTargetSpeedMps;
+    private final DoubleProperty interstitialSpeedMps;
 
     @Inject
     public DriveSubsystem(PIDManagerFactory pidFactory, PropertyFactory pf,
@@ -51,6 +52,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
         pf.setDefaultLevel(Property.PropertyLevel.Important);
         this.maxAutoTargetSpeedMps = pf.createPersistentProperty("MaxAutoTargetSpeedMetersPerSecond", 2.5);
         this.maxAutoFuelIntakeTargetSpeedMps = pf.createPersistentProperty("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.5);
+        this.interstitialSpeedMps = pf.createPersistentProperty("InterstitialSpeedMetersPerSecond", 1);
     }
 
     @Override
@@ -129,6 +131,10 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
     public double getMaxAutoFuelIntakeTargetSpeedMetersPerSecond() {
         return this.maxAutoFuelIntakeTargetSpeedMps.get();
+    }
+
+    public double getInterstitialSpeedMetersPerSecond() {
+        return this.interstitialSpeedMps.get();
     }
 
     public InstantCommand createSetStaticHeadingTargetCommand(Supplier<Rotation2d> staticHeadingTarget) {

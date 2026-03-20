@@ -34,6 +34,7 @@ public class DriveToShootingPositionCommand extends BaseDriveWithSimpleBezierCom
         var endPose = this.autoLandmarks.getClosestShootingPose(startPose);
 
         this.setMaxSpeed(MaxSpeed.Auto);
+        super.setSegmentType(SegmentType.End);
         List<XbotSwervePoint> swervePoints = new ArrayList<>();
         swervePoints.add(new XbotSwervePoint(endPose, 0.001));
         this.setPrioritizeRotationIfCloseToGoal(true);
