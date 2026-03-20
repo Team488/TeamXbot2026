@@ -2,29 +2,32 @@ package competition.command_groups;
 
 import javax.inject.Inject;
 
-import static edu.wpi.first.units.Units.RPM;
-import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
-import competition.subsystems.hood.HoodSubsystem;
+import competition.subsystems.collector_intake.commands.CollectorStopCommand;
+import competition.subsystems.hood.commands.HoodSetCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
-import competition.subsystems.shooter.ShooterSubsystem;
-import competition.subsystems.shooter.commands.ShooterOutputCommand;
-import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
+import competition.subsystems.shooter.commands.ShooterStopCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import xbot.common.command.BaseParallelCommandGroup;
-import xbot.common.command.NamedInstantCommand;
 
 public class NoWaitFinishedShootingCommand extends BaseParallelCommandGroup {
 
     @Inject
     public NoWaitFinishedShootingCommand(HopperRollerSubsystem hopper,
-            ShooterSubsystem shooterSubsystem,
-            HoodSubsystem hoodSubsystem,
-            ShooterOutputCommand shooterOutputCommand,
-            ShooterFeederFire shooterFeederFireCommand,
-            CollectorIntakeCommand fuelIntakeCommand) {
-        var setHoodCommand = new NamedInstantCommand("Set Hood Min", () -> hoodSubsystem.setTargetValue(0.0));
-        var setShooterGoal = new NamedInstantCommand("Set Shooter Stop", () -> shooterSubsystem.setTargetValue(RPM.of(0.0)));
-        var setHopperRoller = new NamedInstantCommand("Set Hopper Roller Stop", () -> hopper.stop());
+             ShooterStopCommand shooterStopCommand,
+             HoodSetCommand setHoodCommand,
+             CollectorStopCommand collectorStopCommand) {
+        setHoodCommand.setTargetRatio(0.0);
 
-        this.addCommands(setHoodCommand, setShooterGoal, setHopperRoller);
+        // Use InstantCommand as a deadline to make sure the other commands are only scheduled for one cycle,
+        // but run in parallel so they can stop the subsystems immediately.
+        var group = new ParallelDeadlineGroup(
+                new InstantCommand(),
+                setHoodCommand,
+                shooterStopCommand,
+                hopper.getStopCommand(),
+                collectorStopCommand);
+
+        addCommands(group);
     }
 }
