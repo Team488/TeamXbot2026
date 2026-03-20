@@ -122,13 +122,13 @@ public class TrajectoriesCalculation {
         CORNER
     }
 
-    public ShootingData calculateAllianceHubShootingData(Pose2d robotPose) {
+    public ShootingData calculateAllianceHubShootingData(Pose2d robotPose, boolean zeroHood) {
         Pose2d hubPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout,
                 DriverStation.getAlliance().orElse(Alliance.Blue));
-        return calculateTrajectory(robotPose, hubPose);
+        return calculateTrajectory(robotPose, hubPose, zeroHood);
     }
 
-    public ShootingData calculateAllianceZoneShootingData(Pose2d robotPose) {
+    public ShootingData calculateAllianceZoneShootingData(Pose2d robotPose, boolean zeroHood) {
         Pose2d closestTrenchNeutralSideIdPose = Landmarks.getClosestTrenchNeutralSideIdPose(
                 aprilTagFieldLayout,
                 DriverStation.getAlliance().orElse(Alliance.Blue),
@@ -141,7 +141,7 @@ public class TrajectoriesCalculation {
 
         Pose2d targetPose = new Pose2d(target, Rotation2d.kZero);
 
-        return calculateTrajectory(robotPose, targetPose);
+        return calculateTrajectory(robotPose, targetPose, zeroHood);
     }
 
     public PresetShootingData getPresetShootingSettings(PresetShootingDistance shootingDistance) {
@@ -152,12 +152,11 @@ public class TrajectoriesCalculation {
                         mapLookup.hoodServoRatio.get());
     }
 
-    private ShootingData calculateTrajectory(Pose2d robotPose, Pose2d targetPose) {
+    private ShootingData calculateTrajectory(Pose2d robotPose, Pose2d targetPose, boolean zeroHood) {
         return switch (trajectoryCalcVersion.get()) {
             case "1" -> this.calculateTrajectoryV1DumbFixedArcToHub(robotPose, targetPose);
             case "2" -> this.calculateTrajectoryV2KnownDistance(robotPose, targetPose);
-            case "4" -> this.calculateTrajectoryV4ZeroServoRatio(robotPose, targetPose);
-            default -> this.calculateTrajectoryV3Dynamic(robotPose, targetPose);
+            default -> this.calculateTrajectoryV3Dynamic(robotPose, targetPose, zeroHood);
         };
     }
 
@@ -187,9 +186,15 @@ public class TrajectoriesCalculation {
 
     // Look up optimal shooting parameters based on current pose and shooting
     // target's pose.
-    private ShootingData calculateTrajectoryV3Dynamic(Pose2d robotPose, Pose2d targetPose) {
-        if (trajectoryMap == null) {
-            trajectoryMap = loadTrajectories("trajectories.json");
+    private ShootingData calculateTrajectoryV3Dynamic(Pose2d robotPose, Pose2d targetPose, boolean zeroHood) {
+        if (zeroHood) {
+            if (trajectoryZeroHoodMap == null) {
+                trajectoryZeroHoodMap = loadTrajectories("trajectories_0_hood.json");
+            }
+        } else {
+            if (trajectoryMap == null) {
+                trajectoryMap = loadTrajectories("trajectories.json");
+            }
         }
         Rotation2d finalRotation = this.rotationToShootFrom(robotPose, targetPose);
         Pose2d finalPose = new Pose2d(robotPose.getX(), robotPose.getY(), finalRotation);
@@ -199,39 +204,20 @@ public class TrajectoriesCalculation {
         var roundedDistance = Math.round(distance * 100.0) / 100.0;
         var offsetDistance = roundedDistance + v3DistanceOffsetMeters.get();
         var key = new TrajectoryKey(offsetDistance);
-        var hoodTrajectory = this.searchForHoodTrajectory(key, false);
+        var hoodTrajectory = this.searchForHoodTrajectory(key, zeroHood);
         if (hoodTrajectory.isEmpty()) {
-            log.warn(
-                    "Trajectory not found, potentially trajectories.json not found or the value doesn't exist in trajectories for distance.");
+            if (zeroHood) {
+                log.warn(
+                        "Trajectory not found, potentially trajectories_0_hood.json not found or the value doesn't exist in trajectories for distance.");
+            } else {
+                log.warn(
+                        "Trajectory not found, potentially trajectories.json not found or the value doesn't exist in trajectories for distance.");
+            }
             return TrajectoriesCalculation.emptyShootingData;
         }
         var matchedTrajectory = hoodTrajectory.get();
 
-        return new ShootingData(finalRotation, Units.RPM.of(matchedTrajectory.RPM), 0);
-    }
-
-    private ShootingData calculateTrajectoryV4ZeroServoRatio(Pose2d robotPose, Pose2d targetPose) {
-        if (trajectoryZeroHoodMap == null) {
-            trajectoryZeroHoodMap = loadTrajectories("trajectories_0_hood.json");
-        }
-
-        Rotation2d finalRotation = this.rotationToShootFrom(robotPose, targetPose);
-        Pose2d finalPose = new Pose2d(robotPose.getX(), robotPose.getY(), finalRotation);
-
-        Pose2d shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
-        double distance = shooterPose.getTranslation().getDistance(targetPose.getTranslation());
-        var roundedDistance = Math.round(distance * 100.0) / 100.0;
-        var offsetDistance = roundedDistance + v3DistanceOffsetMeters.get();
-        var key = new TrajectoryKey(offsetDistance);
-        var hoodTrajectory = this.searchForHoodTrajectory(key, true);
-        if (hoodTrajectory.isEmpty()) {
-            log.warn(
-                    "Trajectory not found, potentially trajectories_0_hood.json not found or the value doesn't exist in trajectories for distance.");
-            return TrajectoriesCalculation.emptyShootingData;
-        }
-        var matchedTrajectory = hoodTrajectory.get();
-
-        return new ShootingData(finalRotation, Units.RPM.of(matchedTrajectory.RPM), 0);
+        return new ShootingData(finalRotation, Units.RPM.of(matchedTrajectory.RPM), zeroHood ? 0.0 : matchedTrajectory.servo);
     }
 
     private Optional<HoodTrajectory> searchForHoodTrajectory(TrajectoryKey key, boolean zeroHood) {
