@@ -12,7 +12,7 @@ public class GetReadyForFiringCommandGroup extends BaseSequentialCommandGroup {
 
     @Inject
     public GetReadyForFiringCommandGroup(TrajectoriesCalculation trajectoriesCalculation,
-                                         FireWhenShooterReady fireWhenShooterReady,
+                                         FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady,
                                          PoseSubsystem pose,
                                          AutoLandmarks autoLandmarks,
                                          PrepareToShootCommandGroup prepareToShootCommandGroup,
@@ -25,6 +25,6 @@ public class GetReadyForFiringCommandGroup extends BaseSequentialCommandGroup {
 
         this.addCommands(getReadyToFire);
 
-        this.addCommands(fireWhenShooterReady);
+        this.addCommands(fireWhenShooterAndHoodReady);
     }
 }

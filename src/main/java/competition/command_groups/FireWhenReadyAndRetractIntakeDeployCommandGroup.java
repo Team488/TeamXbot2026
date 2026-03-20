@@ -9,8 +9,8 @@ import javax.inject.Inject;
 public class FireWhenReadyAndRetractIntakeDeployCommandGroup extends BaseParallelCommandGroup {
 
     @Inject
-    public FireWhenReadyAndRetractIntakeDeployCommandGroup(FireWhenShooterReady fireWhenShooterReady,
+    public FireWhenReadyAndRetractIntakeDeployCommandGroup(FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady,
                                                            IntakeDeployRetractCommand intakeDeployRetractCommand) {
-        this.addCommands(fireWhenShooterReady, intakeDeployRetractCommand);
+        this.addCommands(fireWhenShooterAndHoodReady, intakeDeployRetractCommand);
     }
 }
