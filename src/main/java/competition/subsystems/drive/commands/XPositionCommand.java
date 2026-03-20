@@ -15,7 +15,7 @@ public class XPositionCommand extends BaseCommand {
     }
 
     @Override
-    public void initialize(){
+    public void initialize() {
         //Turns the wheels into an X shape so it is harder to shove our robot
         drive.setWheelsToXMode();
         log.info("Wheels at the X-Position");
