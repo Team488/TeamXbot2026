@@ -12,7 +12,7 @@ import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
 import competition.auto_programs.vision.ShootFromTrenchThenMoveToNeutralCommand;
 import competition.command_groups.vision.DriveThroughAllianceTrenchCommand;
 import competition.command_groups.FireWhenReadyAndRetractIntakeDeployCommandGroup;
-import competition.command_groups.FireWhenReadyShooterCommandGroup;
+import competition.command_groups.FireWhenShooterAndHoodReady;
 import competition.command_groups.HopperAndIntakeCommandGroup;
 import competition.command_groups.HopperAndIntakeEjectCommandGroup;
 import competition.command_groups.PrepareToShootCommandGroup;
@@ -41,12 +41,10 @@ import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
-import xbot.common.command.SmartDashboardCommandPutter;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.autonomous.SetAutonomousCommand;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
-import static edu.wpi.first.units.Units.RPM;
 
 /**
  * Maps operator interface buttons to commands
@@ -101,7 +99,7 @@ public class OperatorCommandMap {
             IntakeDeployRetractCommand intakeDeployRetractCommand,
             HopperAndIntakeCommandGroup intakeCommand,
             HopperAndIntakeEjectCommandGroup ejectCommand,
-            FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup,
+            FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady,
             FireWhenReadyAndRetractIntakeDeployCommandGroup fireWhenReadyAndRetractIntakeDeployCommandGroup,
             Provider<PrepareToShootCommandGroup> prepareToShootCommand) {
         var prepareToShootNear = prepareToShootCommand.get()
@@ -114,7 +112,7 @@ public class OperatorCommandMap {
                 .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.CORNER);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger)
-                .whileTrue(fireWhenReadyShooterCommandGroup);
+                .whileTrue(fireWhenShooterAndHoodReady);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper)
                 .whileTrue(intakeDeployRetractCommand);
