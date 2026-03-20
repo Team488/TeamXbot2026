@@ -187,6 +187,7 @@ public class TrajectoriesCalculation {
     // Look up optimal shooting parameters based on current pose and shooting
     // target's pose.
     private ShootingData calculateTrajectoryV3Dynamic(Pose2d robotPose, Pose2d targetPose, boolean zeroHood) {
+        // This does take a performance hit, so we should consider loading these in when we aren't doing anything.
         if (zeroHood) {
             if (trajectoryZeroHoodMap == null) {
                 trajectoryZeroHoodMap = loadTrajectories("trajectories_0_hood.json");
@@ -217,7 +218,7 @@ public class TrajectoriesCalculation {
         }
         var matchedTrajectory = hoodTrajectory.get();
 
-        return new ShootingData(finalRotation, Units.RPM.of(matchedTrajectory.RPM), zeroHood ? 0.0 : matchedTrajectory.servo);
+        return new ShootingData(finalRotation, Units.RPM.of(matchedTrajectory.RPM), 0); // Use matchedTrajectory.servo instead of 0 if we are using the hood
     }
 
     private Optional<HoodTrajectory> searchForHoodTrajectory(TrajectoryKey key, boolean zeroHood) {
