@@ -1,6 +1,6 @@
 package competition.auto_programs;
 
-import competition.command_groups.FireWhenReadyShooterCommandGroup;
+import competition.command_groups.FireWhenShooterAndHoodReady;
 import competition.command_groups.PrepareToShootCommandGroup;
 import competition.subsystems.pose.TrajectoriesCalculation;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -17,7 +17,7 @@ public class ShootFromTrenchCommandGroup extends BaseAutonomousSequentialCommand
     @Inject
     public ShootFromTrenchCommandGroup(AutonomousCommandSelector autoSelector,
            TrajectoriesCalculation trajectoriesCalculation,
-           FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup,
+           FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady,
            PrepareToShootCommandGroup prepareToShootCommandGroup,
            PropertyFactory pf) {
         super(autoSelector);
@@ -27,7 +27,8 @@ public class ShootFromTrenchCommandGroup extends BaseAutonomousSequentialCommand
 
         getAutoStatusChangeCommand("Starting ShootFromTrenchCommandGroup");
         prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
-        var prepareAndShoot = new ParallelCommandGroup(prepareToShootCommandGroup, fireWhenReadyShooterCommandGroup)
+
+        var prepareAndShoot = new ParallelCommandGroup(prepareToShootCommandGroup, fireWhenShooterAndHoodReady)
                 .withTimeout(timeout.get());
 
         this.addCommands(prepareAndShoot);
