@@ -6,10 +6,10 @@ import xbot.common.command.BaseSequentialCommandGroup;
 
 public class IntakeWhileShootingCommandGroup extends BaseSequentialCommandGroup {
 
-    public IntakeWhileShootingCommandGroup(FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup,
+    public IntakeWhileShootingCommandGroup(FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady,
                                                   IntakeDeploySlowClosing intakeDeploySlowClosing) {
         this.addCommands(
-                (fireWhenReadyShooterCommandGroup)
+                (fireWhenShooterAndHoodReady)
                         .andThen(intakeDeploySlowClosing)
         );
     }
