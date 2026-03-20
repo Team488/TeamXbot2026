@@ -2,6 +2,7 @@ package competition.command_groups;
 
 import javax.inject.Inject;
 
+import competition.command_groups.vision.BaseDriveWithSimpleBezierCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.AutoLandmarks;
 import competition.subsystems.pose.PoseSubsystem;
@@ -10,14 +11,10 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.properties.PropertyFactory;
-import xbot.common.subsystems.drive.SwervePointKinematics;
-import xbot.common.subsystems.drive.SwerveSimpleBezierCommand;
-import xbot.common.subsystems.drive.SwerveSimpleTrajectoryMode;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
 import xbot.common.subsystems.pose.GameField;
 
-public class DriveFromNeutralZoneToAllianceCommand extends SwerveSimpleBezierCommand {
-    private final DriveSubsystem drive;
+public class DriveFromNeutralZoneToAllianceCommand extends BaseDriveWithSimpleBezierCommand {
     private final PoseSubsystem pose;
     private final RefinedSwervePointPathPlanning pathPlanning;
     private final AutoLandmarks autoLandmarks;
@@ -31,7 +28,6 @@ public class DriveFromNeutralZoneToAllianceCommand extends SwerveSimpleBezierCom
             AprilTagFieldLayout aprilTagFieldLayout,
             AutoLandmarks autoLandmarks) {
         super(drive, pose, pf, headingModuleFactory, robotAssertionManager);
-        this.drive = drive;
         this.pose = pose;
         this.pathPlanning = pathPlanning;
         this.autoLandmarks = autoLandmarks;
@@ -43,14 +39,10 @@ public class DriveFromNeutralZoneToAllianceCommand extends SwerveSimpleBezierCom
         var startPose = this.autoLandmarks.getFinishBallPitCollectionPose(currentPose);
         var pathPoses = this.autoLandmarks.getAllianceShootingStartingPath(currentPose);
 
+        super.setSegmentType(SegmentType.Mid);
+        this.setMaxSpeed(MaxSpeed.Auto);
         super.logic.setKeyPoints(this.pathPlanning.generateSwervePoints(startPose, pathPoses,
                 false));
-
-        this.logic.setPrioritizeRotationIfCloseToGoal(true);
-        this.logic.setVelocityMode(SwerveSimpleTrajectoryMode.GlobalKinematicsValue);
-        super.logic.setGlobalKinematicValues(
-                new SwervePointKinematics(this.drive.getMaxAccelerationMetersPerSecondSquared(), 0, 0,
-                        this.drive.getMaxAutoTargetSpeedMetersPerSecond()));
 
         super.initialize();
     }

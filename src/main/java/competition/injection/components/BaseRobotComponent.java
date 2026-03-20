@@ -10,9 +10,9 @@ import competition.subsystems.collector_intake.CollectorSubsystem;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
-import competition.subsystems.intake_deploy.commands.IntakeDeployAutoCalibrateCommandFactory;
 import competition.subsystems.lights.LightsSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
+import competition.subsystems.shooter.commands.WhenShooterReadyRumbleCommand;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
 import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
 import xbot.common.injection.components.BaseComponent;
@@ -54,9 +54,9 @@ public abstract class BaseRobotComponent extends BaseComponent {
 
     public abstract ClimberSubsystem climberSubsystem();
 
-    public abstract IntakeDeployAutoCalibrateCommandFactory intakeDeployCalibrationRoutineFactory();
-
     public abstract ShootFromTrenchCommandGroup shootFromTrenchCommandGroup();
 
     public abstract OperatorInterface operatorInterface();
+
+    public abstract WhenShooterReadyRumbleCommand whenShooterReadyRumbleCommand();
 }

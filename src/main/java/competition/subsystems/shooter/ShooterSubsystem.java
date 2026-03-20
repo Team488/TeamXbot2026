@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
 public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Double> {
@@ -30,7 +33,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
     public final DoubleProperty defaultShootingVelocity;
     public final DoubleProperty trimValue;
+    public final DoubleProperty voltageRampTime;
     public DoubleProperty readinessTimeoutSeconds;
+    boolean isInLowPowerMode = false;
 
     public AngularVelocity currentTargetVelocity = RPM.of(0);
 
@@ -77,9 +82,14 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
                 .withMaxPowerOutput(1.0)
                 .build();
 
+        this.voltageRampTime = propertyFactory.createPersistentProperty("VoltageRampTime", 0.2);
+
         if (electricalContract.isLeftShooterReady()) {
             this.leftShooterMotor = xcanMotorControllerFactory.create(electricalContract.getLeftShooterMotor(),
                     getPrefix(), "leftShooterMotor", leftShooterMotorDefaultPIDProperties);
+            this.leftShooterMotor.setClosedLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get()));
             this.registerDataFrameRefreshable(leftShooterMotor);
         } else {
             this.leftShooterMotor = null;
@@ -88,6 +98,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         if (electricalContract.isMiddleShooterReady()) {
             this.middleShooterMotor = xcanMotorControllerFactory.create(electricalContract.getMiddleShooterMotor(),
                     getPrefix(), "middleShooterMotor", middleShooterMotorDefaultPIDProperties);
+            this.middleShooterMotor.setClosedLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get()));
             this.registerDataFrameRefreshable(middleShooterMotor);
         } else {
             this.middleShooterMotor = null;
@@ -96,6 +109,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         if (electricalContract.isRightShooterReady()) {
             this.rightShooterMotor = xcanMotorControllerFactory.create(electricalContract.getRightShooterMotor(),
                     getPrefix(), "rightShooterMotor", rightShooterMotorDefaultPIDProperties);
+            this.rightShooterMotor.setClosedLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get()));
             this.registerDataFrameRefreshable(rightShooterMotor);
         } else {
             this.rightShooterMotor = null;
@@ -125,7 +141,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     }
 
     public void runMotorsAtVelocity(AngularVelocity velocity) {
-        for (var motor : getShooterMotors()) {
+        for (var motor : getHealthyShooterMotors()) {
             motor.setVelocityTarget(velocity);
         }
     }
@@ -155,18 +171,46 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     }
 
     public List<XCANMotorController> getHealthyShooterMotors() {
-        return getShooterMotors().stream()
-                .filter(motor -> motor.getHealth() == DeviceHealth.Healthy)
-                .toList();
+        // Low power mode, pick one motor, prioritizing the middle motor,
+        // but falling back to one of the others if middle is unhealthy.
+        if (isInLowPowerMode
+                && middleShooterMotor != null
+                && middleShooterMotor.getHealth() == DeviceHealth.Healthy) {
+            return List.of(middleShooterMotor);
+        } else if (isInLowPowerMode
+                && leftShooterMotor != null
+                && leftShooterMotor.getHealth() == DeviceHealth.Healthy) {
+            return List.of(leftShooterMotor);
+        } else if (isInLowPowerMode
+                && rightShooterMotor != null
+                && rightShooterMotor.getHealth() == DeviceHealth.Healthy) {
+            return List.of(rightShooterMotor);
+        } else if (isInLowPowerMode) {
+            return List.of();
+        } else {
+            // Not low power mode, run everything
+            return getShooterMotors().stream()
+                    .filter(motor -> motor.getHealth() == DeviceHealth.Healthy)
+                    .toList();
+        }
     }
 
     public void periodic() {
+        if (voltageRampTime.hasChangedSinceLastCheck()) {
+            for (var motor : getShooterMotors()) {
+                motor.setClosedLoopRampRates(
+                        Seconds.of(voltageRampTime.get()),
+                        Seconds.of(voltageRampTime.get()));
+            }
+        }
+
         for (var motor : getShooterMotors()) {
             motor.periodic();
         }
         aKitLog.record("ShooterCurrentVelocity", getCurrentValue());
         aKitLog.record("ShooterTargetVelocity", getTargetValue());
         aKitLog.record("isCalibrated", isCalibrated());
+        aKitLog.record("LowPowerMode", isInLowPowerMode);
     }
 
     @Override
@@ -220,5 +264,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
     public Command getWaitForAtGoalCommand() {
         return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
+    }
+
+    public void setLowPowerMode(boolean newValue) {
+        this.isInLowPowerMode = newValue;
     }
 }

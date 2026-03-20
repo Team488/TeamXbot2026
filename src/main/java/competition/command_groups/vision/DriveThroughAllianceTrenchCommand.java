@@ -1,32 +1,26 @@
-package competition.command_groups;
-
-import java.util.List;
+package competition.command_groups.vision;
 
 import javax.inject.Inject;
 
-import competition.command_groups.vision.BaseDriveWithSimpleBezierCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.AutoLandmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.pose.RefinedSwervePointPathPlanning;
-import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
 
-public class DriveToNeutralZoneForIntakeCommand extends BaseDriveWithSimpleBezierCommand {
+public class DriveThroughAllianceTrenchCommand extends BaseDriveWithSimpleBezierCommand {
+    private final AutoLandmarks autoLandmarks;
     private final PoseSubsystem pose;
     private final RefinedSwervePointPathPlanning pathPlanning;
-    private final AutoLandmarks autoLandmarks;
 
     @Inject
-    public DriveToNeutralZoneForIntakeCommand(DriveSubsystem drive, PoseSubsystem pose,
+    public DriveThroughAllianceTrenchCommand(DriveSubsystem drive, PoseSubsystem pose,
             PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
-            XSwerveDriveElectricalContract electricalContract,
             RobotAssertionManager robotAssertionManager, RefinedSwervePointPathPlanning pathPlanning,
             AutoLandmarks autoLandmarks) {
         super(drive, pose, pf, headingModuleFactory, robotAssertionManager);
-
         this.pose = pose;
         this.pathPlanning = pathPlanning;
         this.autoLandmarks = autoLandmarks;
@@ -34,11 +28,9 @@ public class DriveToNeutralZoneForIntakeCommand extends BaseDriveWithSimpleBezie
 
     @Override
     public void initialize() {
-        var currentPose = pose.getCurrentPose2d();
-        var pathPoses = this.autoLandmarks.getStartCollectionPath(currentPose);
-        super.setSegmentType(SegmentType.Start);
-        super.logic.setKeyPoints(this.pathPlanning.generateSwervePoints(currentPose, pathPoses,
-                false));
+        var currentPose = this.pose.getCurrentPose2d();
+        var path = this.autoLandmarks.getRelevantAlliancePathThroughTrench(currentPose, true);
+        super.logic.setKeyPoints(this.pathPlanning.generateSwervePoints(currentPose, path, false));
 
         super.initialize();
     }
