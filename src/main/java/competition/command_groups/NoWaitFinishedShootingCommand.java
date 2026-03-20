@@ -2,12 +2,12 @@ package competition.command_groups;
 
 import javax.inject.Inject;
 
-import competition.Robot;
 import competition.subsystems.collector_intake.commands.CollectorStopCommand;
 import competition.subsystems.hood.commands.HoodSetCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.shooter.commands.ShooterStopCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import xbot.common.command.BaseParallelCommandGroup;
 
 public class NoWaitFinishedShootingCommand extends BaseParallelCommandGroup {
@@ -19,9 +19,15 @@ public class NoWaitFinishedShootingCommand extends BaseParallelCommandGroup {
              CollectorStopCommand collectorStopCommand) {
         setHoodCommand.setTargetRatio(0.0);
 
-        var group = new ParallelCommandGroup(setHoodCommand, shooterStopCommand, hopper.getStopCommand(), collectorStopCommand);
+        // Use InstantCommand as a deadline to make sure the other commands are only scheduled for one cycle,
+        // but run in parallel so they can stop the subsystems immediately.
+        var group = new ParallelDeadlineGroup(
+                new InstantCommand(),
+                setHoodCommand,
+                shooterStopCommand,
+                hopper.getStopCommand(),
+                collectorStopCommand);
 
-        // Stop after one cycle as some of these commands won't end
-        addCommands(group.withTimeout(Robot.LOOP_INTERVAL));
+        addCommands(group);
     }
 }
