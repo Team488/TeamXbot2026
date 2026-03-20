@@ -150,6 +150,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
     @Override
     public Double getCurrentValue() {
+        if(hoodServoLeft == null) { return 0.0; }
         return hoodServoLeft.getNormalizedCurrentPosition();
     }
 

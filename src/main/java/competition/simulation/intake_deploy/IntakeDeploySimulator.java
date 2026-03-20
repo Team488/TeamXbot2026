@@ -7,11 +7,11 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.MockDigitalInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import xbot.common.advantage.AKitLogger;
 import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
+import xbot.common.controls.sensors.mock_adapters.MockAbsoluteEncoder;
 import xbot.common.math.PIDManager;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.simulation.MotorInternalPIDHelper;
@@ -32,7 +32,7 @@ public class IntakeDeploySimulator {
 
     final IntakeDeploySubsystem intakeDeploy;
     final MockCANMotorController motor;
-    final MockDigitalInput homedSensor;
+    final MockAbsoluteEncoder encoder;
 
     @Inject
     public IntakeDeploySimulator(IntakeDeploySubsystem intakeDeploy, PIDManager.PIDManagerFactory pidManagerFactory,
@@ -41,7 +41,7 @@ public class IntakeDeploySimulator {
         aKitLog = new AKitLogger(pf.getPrefix());
         this.intakeDeploy = intakeDeploy;
         this.motor = (MockCANMotorController) intakeDeploy.intakeDeployMotor;
-        this.homedSensor = (MockDigitalInput) intakeDeploy.intakeDeploySensor;
+        this.encoder = (MockAbsoluteEncoder) intakeDeploy.intakeDeployEncoder;
         this.pidManager = pidManagerFactory.create(
                 pf.getPrefix() + "IntakeDeploySimulatorPID",
                 0.2,
@@ -71,11 +71,6 @@ public class IntakeDeploySimulator {
                 .isNear(Degrees.of(intakeDeploy.extendedPosition.get()), Degrees.of(5));
     }
 
-    public boolean isHomed() {
-        return getAngularPosition()
-                .isNear(Degrees.of(intakeDeploy.retractedPosition.get()), Degrees.of(5));
-    }
-
     public void update() {
         // Update motor power
         MotorInternalPIDHelper.updateInternalPID(motor, pidManager);
@@ -93,9 +88,7 @@ public class IntakeDeploySimulator {
         double motorRotation = mechanismAngle.in(Degrees) / intakeDeploy.mechanismDegreePerMotorRotation.get();
 
         this.motor.setPosition(Rotations.of(motorRotation));
-        if (homedSensor != null) {
-            homedSensor.setValue(isHomed());
-        }
+        this.encoder.setPosition(Rotations.of(motorRotation));
         aKitLog.record("IntakeDeployed", isDeployed());
     }
 }
