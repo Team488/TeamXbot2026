@@ -6,7 +6,6 @@ import competition.command_groups.NoWaitFinishedShootingCommand;
 import competition.command_groups.PrepareToShootCommandGroup;
 import competition.command_groups.DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory;
 import competition.command_groups.DriveToNeutralZoneAndDeployIntakeCommandGroupFactory;
-import competition.subsystems.intake_deploy.commands.IntakeDeployAutoCalibrateCommandFactory;
 import competition.subsystems.pose.TrajectoriesCalculation;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import xbot.common.properties.DoubleProperty;
@@ -28,7 +27,6 @@ public class ShootFromTrenchThenMoveToNeutralCommand extends BaseAutonomousSeque
            Provider<DriveToNeutralZoneAndDeployIntakeCommandGroupFactory> driveToNeutralZoneAndDeployIntakeCommandProvider,
            Provider<DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory> driveFromNeutralZoneToAllianceAndShootCommandGroupProvider,
                                                    Provider<NoWaitFinishedShootingCommand> finishedShootingCommandProvider,
-           IntakeDeployAutoCalibrateCommandFactory intakeDeployAutoCalibrateCommandFactory,
            PropertyFactory pf) {
         super(autoSelector);
 
@@ -36,9 +34,9 @@ public class ShootFromTrenchThenMoveToNeutralCommand extends BaseAutonomousSeque
         this.timeout = pf.createPersistentProperty("TimeoutSeconds", 5.0);
 
         getAutoStatusChangeCommand("Starting ShootFromTrenchThenMoveToNeutralCommand");
-        var intakeCalibrationCommand = intakeDeployAutoCalibrateCommandFactory.create();
         prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
-        var calibrateAndShoot = new ParallelCommandGroup(intakeCalibrationCommand, prepareToShootCommandGroup, fireWhenShooterReady)
+
+        var calibrateAndShoot = new ParallelCommandGroup(prepareToShootCommandGroup, fireWhenShooterReady)
                 .withTimeout(timeout.get());
 
         this.addCommands(calibrateAndShoot);
