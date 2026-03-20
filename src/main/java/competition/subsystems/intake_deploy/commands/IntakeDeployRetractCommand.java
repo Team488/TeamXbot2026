@@ -22,10 +22,4 @@ public class IntakeDeployRetractCommand extends BaseSetpointCommand {
         intakeDeploy.setTargetValue(Degrees.of(intakeDeploy.retractedPosition.get()));
         log.info("Initialized IntakeDeployRetract");
     }
-
-    public void execute() {
-        if (intakeDeploy != null) {
-            intakeDeploy.getCurrentValue();
-        }
-    }
 }
