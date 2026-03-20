@@ -12,7 +12,7 @@ import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
 import competition.auto_programs.vision.ShootFromTrenchThenMoveToNeutralCommand;
 import competition.command_groups.vision.DriveThroughAllianceTrenchCommand;
 import competition.command_groups.FireWhenReadyAndRetractIntakeDeployCommandGroup;
-import competition.command_groups.FireWhenShooterReady;
+import competition.command_groups.FireWhenShooterAndHoodReady;
 import competition.command_groups.HopperAndIntakeCommandGroup;
 import competition.command_groups.HopperAndIntakeEjectCommandGroup;
 import competition.command_groups.PrepareToShootCommandGroup;
@@ -99,7 +99,7 @@ public class OperatorCommandMap {
             IntakeDeployRetractCommand intakeDeployRetractCommand,
             HopperAndIntakeCommandGroup intakeCommand,
             HopperAndIntakeEjectCommandGroup ejectCommand,
-            FireWhenShooterReady fireWhenShooterReady,
+            FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady,
             FireWhenReadyAndRetractIntakeDeployCommandGroup fireWhenReadyAndRetractIntakeDeployCommandGroup,
             Provider<PrepareToShootCommandGroup> prepareToShootCommand) {
         var prepareToShootNear = prepareToShootCommand.get()
@@ -112,7 +112,7 @@ public class OperatorCommandMap {
                 .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.CORNER);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger)
-                .whileTrue(fireWhenShooterReady);
+                .whileTrue(fireWhenShooterAndHoodReady);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper)
                 .whileTrue(intakeDeployRetractCommand);
