@@ -48,7 +48,7 @@ public class TrajectoriesCalculation {
         if (presetShootingLookup == null) {
             presetShootingLookup = Map.of(PresetShootingDistance.NEAR,
                     new PresetShootingProperties(
-                            propManager.createPersistentProperty("PresetShooting.NEAR RPM", 2600),
+                            propManager.createPersistentProperty("PresetShooting.NEAR RPM", 2400),
                             propManager.createPersistentProperty("PresetShooting.NEAR Hood ServoRatio", 0.0)),
                     PresetShootingDistance.TOWER_CLOSE,
                     new PresetShootingProperties(
@@ -56,12 +56,12 @@ public class TrajectoriesCalculation {
                             propManager.createPersistentProperty("PresetShooting.TOWER_CLOSE Hood ServoRatio", 0.2)),
                     PresetShootingDistance.TOWER_FAR,
                     new PresetShootingProperties(
-                            propManager.createPersistentProperty("PresetShooting.TOWER_FAR RPM", 3600),
-                            propManager.createPersistentProperty("PresetShooting.TOWER_FAR Hood ServoRatio", 0.2)),
+                            propManager.createPersistentProperty("PresetShooting.TOWER_FAR RPM", 3900),
+                            propManager.createPersistentProperty("PresetShooting.TOWER_FAR Hood ServoRatio", 0.0)),
                     PresetShootingDistance.TRENCH,
                     new PresetShootingProperties(
-                            propManager.createPersistentProperty("PresetShooting.TRENCH RPM", 3800),
-                            propManager.createPersistentProperty("PresetShooting.TRENCH Hood ServoRatio", 0.2)),
+                            propManager.createPersistentProperty("PresetShooting.TRENCH RPM", 3550),
+                            propManager.createPersistentProperty("PresetShooting.TRENCH Hood ServoRatio", 0.0)),
                     PresetShootingDistance.CORNER,
                     new PresetShootingProperties(
                             propManager.createPersistentProperty("PresetShooting.CORNER RPM", 3600),
@@ -239,7 +239,7 @@ public class TrajectoriesCalculation {
                 // Note: robot radius corrections below are educated guesses but don't matter
                 // precisely here.
                 new PresetShootingDistanceLookup(Units.Meters.of(0.94 + 0.34), PresetShootingDistance.NEAR),
-                new PresetShootingDistanceLookup(Units.Meters.of(3.34 + 0.34), PresetShootingDistance.TRENCH),
+                new PresetShootingDistanceLookup(Units.Meters.of(2.74 + 0.34), PresetShootingDistance.TRENCH),
                 new PresetShootingDistanceLookup(Units.Meters.of(3.52 - 0.60), PresetShootingDistance.TOWER_CLOSE),
                 new PresetShootingDistanceLookup(Units.Meters.of(2.64 + 0.34), PresetShootingDistance.TOWER_FAR),
                 new PresetShootingDistanceLookup(Units.Meters.of(6.27 - 0.6), PresetShootingDistance.CORNER));
