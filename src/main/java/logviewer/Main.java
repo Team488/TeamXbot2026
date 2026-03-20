@@ -7,9 +7,11 @@ import javax.swing.DefaultListModel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JOptionPane;
+import javax.swing.JSplitPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -19,67 +21,118 @@ import java.awt.FileDialog;
 import java.awt.Dimension;
 import java.io.File;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.TreeSet;
 
-/**
- * Essentially AdvantageScope but that you can search for string literals.
- * Useful for check if command ran in CommandTracer.
- */
 class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Main::new);
     }
 
     private final JFrame frame;
+
     private final JList<String> entryList;
     private final DefaultListModel<String> listModel;
+
     private final JTextArea textArea;
 
     private final JTextField searchField;
     private final JTextField dataSearchField;
 
-    private final WPILogProcessor processor = new WPILogProcessor();
+    // MULTI FILE SUPPORT
+    private final List<WPILogProcessor> processors = new ArrayList<>();
+    private final List<String> fileNames = new ArrayList<>();
+
+    private final DefaultListModel<String> fileListModel = new DefaultListModel<>();
+    private final JList<String> fileList = new JList<>(fileListModel);
 
     private Main() {
-        frame = new JFrame("WPILog Viewer");
-        frame.setSize(1100, 650);
+        frame = new JFrame("WPILog Viewer (Multi-file)");
+        frame.setSize(1200, 700);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout(8, 8));
 
-        JButton openButton = new JButton("Open .wpilog");
-        frame.add(openButton, BorderLayout.NORTH);
-        openButton.addActionListener(e -> openFile());
+        JPanel topBar = new JPanel();
 
-        // LEFT
+        JButton openButton = new JButton("Add .wpilog");
+        JButton removeButton = new JButton("Remove Selected");
+
+        openButton.addActionListener(e -> openFile());
+        removeButton.addActionListener(e -> removeSelectedFile());
+
+        topBar.add(openButton);
+        topBar.add(removeButton);
+
+        frame.add(topBar, BorderLayout.NORTH);
+
+        JPanel filePanel = new JPanel(new BorderLayout());
+        filePanel.setBorder(new EmptyBorder(8, 8, 8, 4));
+        filePanel.add(new JLabel("Files"), BorderLayout.NORTH);
+        filePanel.add(new JScrollPane(fileList), BorderLayout.CENTER);
+
+        filePanel.setMinimumSize(new Dimension(120, 100));
+
         searchField = new JTextField();
+
         listModel = new DefaultListModel<>();
         entryList = new JList<>(listModel);
-        entryList.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
+        entryList.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         entryList.addListSelectionListener(e -> showData());
 
         searchField.getDocument().addDocumentListener(new SimpleListener(this::updateList));
 
-        JPanel left = new JPanel(new BorderLayout());
-        left.setBorder(new EmptyBorder(8, 8, 8, 4));
-        left.setPreferredSize(new Dimension(320, 0));
-        left.add(searchField, BorderLayout.NORTH);
-        left.add(new JScrollPane(entryList), BorderLayout.CENTER);
+        JPanel entryPanel = new JPanel(new BorderLayout());
+        entryPanel.setBorder(new EmptyBorder(8, 4, 8, 4));
+        entryPanel.add(searchField, BorderLayout.NORTH);
+        entryPanel.add(new JScrollPane(entryList), BorderLayout.CENTER);
 
-        // RIGHT
+        entryPanel.setMinimumSize(new Dimension(150, 100));
+
+        /* =========================
+           DATA PANEL
+           ========================= */
         textArea = new JTextArea();
-        textArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
         textArea.setEditable(false);
+        textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 
         dataSearchField = new JTextField();
         dataSearchField.getDocument().addDocumentListener(new SimpleListener(this::showData));
 
-        JPanel right = new JPanel(new BorderLayout());
-        right.setBorder(new EmptyBorder(8, 4, 8, 8));
-        right.add(dataSearchField, BorderLayout.NORTH);
-        right.add(new JScrollPane(textArea), BorderLayout.CENTER);
+        JPanel dataPanel = new JPanel(new BorderLayout());
+        dataPanel.setBorder(new EmptyBorder(8, 4, 8, 8));
+        dataPanel.add(dataSearchField, BorderLayout.NORTH);
+        dataPanel.add(new JScrollPane(textArea), BorderLayout.CENTER);
 
-        frame.add(left, BorderLayout.WEST);
-        frame.add(right, BorderLayout.CENTER);
+        dataPanel.setMinimumSize(new Dimension(250, 100));
+
+        JSplitPane mainSplit = getJSplitPane(filePanel, entryPanel, dataPanel);
+
+        frame.add(mainSplit, BorderLayout.CENTER);
+
         frame.setVisible(true);
+    }
+
+    private static JSplitPane getJSplitPane(JPanel filePanel, JPanel entryPanel, JPanel dataPanel) {
+        JSplitPane leftVertical = new JSplitPane(
+                JSplitPane.VERTICAL_SPLIT,
+                filePanel,
+                entryPanel
+        );
+        leftVertical.setResizeWeight(0.3);
+        leftVertical.setDividerLocation(150);
+        leftVertical.setContinuousLayout(true);
+
+        JSplitPane mainSplit = new JSplitPane(
+                JSplitPane.HORIZONTAL_SPLIT,
+                leftVertical,
+                dataPanel
+        );
+        mainSplit.setResizeWeight(0.3);
+        mainSplit.setDividerLocation(300);
+        mainSplit.setContinuousLayout(true);
+
+        return mainSplit;
     }
 
     private void openFile() {
@@ -87,26 +140,62 @@ class Main {
         dialog.setFile("*.wpilog");
         dialog.setVisible(true);
 
-        String file = dialog.getFile();
-        String directory = dialog.getDirectory();
-
-        if (file == null) {
+        if (dialog.getFile() == null) {
             return;
         }
 
         try {
-            processor.load(new File(directory, file));
+            File file = new File(dialog.getDirectory(), dialog.getFile());
+
+            WPILogProcessor processor = new WPILogProcessor();
+            processor.load(file);
+
+            processors.add(processor);
+            fileNames.add(file.getName());
+            fileListModel.addElement(file.getName());
+
+            // --- NEW LOGIC ---
+            String prev = entryList.getSelectedValue();
+
             updateList();
+
+            if (prev != null && listModel.contains(prev)) {
+                entryList.setSelectedValue(prev, true);
+            } else if (!listModel.isEmpty()) {
+                entryList.setSelectedIndex(0);
+            }
+
+            showData();
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(frame, "Error: " + e.getMessage());
         }
     }
 
-    private void updateList() {
-        List<String> entries = processor.getFilteredEntries(searchField.getText());
+    private void removeSelectedFile() {
+        int index = fileList.getSelectedIndex();
+        if (index == -1) {
+            return;
+        }
 
+        processors.remove(index);
+        fileNames.remove(index);
+        fileListModel.remove(index);
+
+        updateList();
+        textArea.setText("");
+    }
+
+    private void updateList() {
         listModel.clear();
-        for (String e : entries) {
+
+        Set<String> combined = new TreeSet<>();
+
+        for (WPILogProcessor p : processors) {
+            combined.addAll(p.getFilteredEntries(searchField.getText()));
+        }
+
+        for (String e : combined) {
             listModel.addElement(e);
         }
     }
@@ -119,31 +208,36 @@ class Main {
 
         String selected = listModel.get(index);
 
-        List<WPILogProcessor.DataPoint> data =
-                processor.getFilteredData(selected, dataSearchField.getText());
-
-        textArea.setText("");
-
+        StringBuilder sb = new StringBuilder();
         int count = 0;
-        for (var p : data) {
-            textArea.append(String.format("%.2fs: %s\n", p.time(), p.value()));
-            if (++count >= 1000) {
+
+        for (int i = 0; i < processors.size(); i++) {
+            var processor = processors.get(i);
+            var data = processor.getFilteredData(selected, dataSearchField.getText());
+
+            for (var p : data) {
+                sb.append(String.format("[%s] %.2fs: %s%n",
+                        fileNames.get(i),
+                        p.time(),
+                        p.value()
+                ));
+
+                if (++count > 1500) {
+                    break;
+                }
+            }
+
+            if (count > 1500) {
                 break;
             }
         }
+
+        textArea.setText(sb.toString());
     }
 
     private record SimpleListener(Runnable action) implements DocumentListener {
-        public void insertUpdate(DocumentEvent e) {
-            action.run();
-        }
-
-        public void removeUpdate(DocumentEvent e) {
-            action.run();
-        }
-
-        public void changedUpdate(DocumentEvent e) {
-            action.run();
-        }
+        public void insertUpdate(DocumentEvent e) { action.run(); }
+        public void removeUpdate(DocumentEvent e) { action.run(); }
+        public void changedUpdate(DocumentEvent e) { action.run(); }
     }
 }
