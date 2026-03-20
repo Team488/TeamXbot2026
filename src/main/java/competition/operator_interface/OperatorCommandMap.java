@@ -12,7 +12,7 @@ import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
 import competition.auto_programs.vision.ShootFromTrenchThenMoveToNeutralCommand;
 import competition.command_groups.vision.DriveThroughAllianceTrenchCommand;
 import competition.command_groups.FireWhenReadyAndRetractIntakeDeployCommandGroup;
-import competition.command_groups.FireWhenReadyShooterCommandGroup;
+import competition.command_groups.FireWhenShooterAndHoodReady;
 import competition.command_groups.HopperAndIntakeCommandGroup;
 import competition.command_groups.HopperAndIntakeEjectCommandGroup;
 import competition.command_groups.PrepareToShootCommandGroup;
@@ -25,14 +25,12 @@ import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
+import competition.subsystems.drive.commands.XPositionCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.DropHoodForTrenchCommand;
 import competition.subsystems.hood.commands.TrimHoodDownCommand;
 import competition.subsystems.hood.commands.TrimHoodUpCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
-import competition.subsystems.intake_deploy.commands.CalibrateOffsetDown;
-import competition.subsystems.intake_deploy.commands.CalibrateOffsetUp;
-import competition.subsystems.intake_deploy.commands.ForceIntakeDownToEndStopCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import competition.subsystems.pose.Landmarks;
@@ -80,13 +78,16 @@ public class OperatorCommandMap {
                                    DropHoodForTrenchCommand dropHoodForTrenchCommand,
                                    RotateToHubCommand rotateToHubCommand,
                                    LowPowerModeOnCommand lowPowerModeOnCommand,
-                                   LowPowerModeOffCommand lowPowerModeOffCommand) {
+                                   LowPowerModeOffCommand lowPowerModeOffCommand,
+                                   XPositionCommand xPositionCommand
+    ) {
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(lowPowerModeOnCommand);
         operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X)
                 .whileTrue(dropHoodForTrenchCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(xPositionCommand);
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
@@ -100,11 +101,9 @@ public class OperatorCommandMap {
             ShooterSubsystem shooterSubsystem,
             IntakeDeployExtendCommand intakeDeployExtendCommand,
             IntakeDeployRetractCommand intakeDeployRetractCommand,
-            ForceIntakeDownToEndStopCommand forceIntakeDownCommand,
-            CalibrateOffsetUp calibrateIntakeOffsetUp,
             HopperAndIntakeCommandGroup intakeCommand,
             HopperAndIntakeEjectCommandGroup ejectCommand,
-            FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup,
+            FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady,
             FireWhenReadyAndRetractIntakeDeployCommandGroup fireWhenReadyAndRetractIntakeDeployCommandGroup,
             Provider<PrepareToShootCommandGroup> prepareToShootCommand) {
         var prepareToShootNear = prepareToShootCommand.get()
@@ -117,7 +116,7 @@ public class OperatorCommandMap {
                 .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.CORNER);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger)
-                .whileTrue(fireWhenReadyShooterCommandGroup);
+                .whileTrue(fireWhenShooterAndHoodReady);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper)
                 .whileTrue(intakeDeployRetractCommand);
@@ -132,12 +131,6 @@ public class OperatorCommandMap {
                 .whileTrue(prepareToShootTowerClose);
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(prepareToShootCorner);
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(prepareToShootTrench);
-
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Back)
-                .whileTrue(forceIntakeDownCommand);
-
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Start)
-                .onTrue(calibrateIntakeOffsetUp);
 
         operatorInterface.operatorGamepad.getPovIfAvailable(180).whileTrue(ejectCommand);
         operatorInterface.operatorGamepad.getPovIfAvailable(0)
@@ -157,9 +150,7 @@ public class OperatorCommandMap {
             IntakeDeployRetractCommand intakeDeployRetractCommand,
             CollectorEjectCommand collectorEjectCommand,
             ShooterFeederFire shooterFeederFire,
-            HopperRollerSubsystem hopperRollerSubsystem,
-            CalibrateOffsetDown calibrateOffsetDown,
-            CalibrateOffsetUp calibrateOffsetUp
+            HopperRollerSubsystem hopperRollerSubsystem
 
     ) {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger)
@@ -174,8 +165,6 @@ public class OperatorCommandMap {
                 .onTrue(intakeDeployExtendCommand);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.B)
                 .onTrue(intakeDeployRetractCommand);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Back).onTrue(calibrateOffsetDown);
-        operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(calibrateOffsetUp);
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftStick)
                 .whileTrue(hopperRollerSubsystem.getEjectCommand());
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightStick)
