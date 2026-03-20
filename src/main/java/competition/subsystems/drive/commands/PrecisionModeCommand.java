@@ -16,15 +16,15 @@ public class PrecisionModeCommand extends BaseCommand {
     
     @Override
     public void initialize() {
+            drive.setUnlockFullDrivePower(false);
             drive.setPrecisionTranslationActive(true);
             drive.setPrecisionRotationActive(true);
         }
 
-
     @Override
     public void end(boolean isInterrupted){
+        drive.setUnlockFullDrivePower(true);
         drive.setPrecisionTranslationActive(false);
         drive.setPrecisionRotationActive(false);
     }
-
 }

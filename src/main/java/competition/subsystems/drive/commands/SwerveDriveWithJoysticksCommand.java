@@ -57,7 +57,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         this.advisor = advisorFactory.create(hvmDecider);
         this.advisor.setSnappingZoneCount(8);
         pf.setDefaultLevel(Property.PropertyLevel.Important);
-        this.overallDrivingPowerScale = pf.createPersistentProperty("DrivingPowerScale", 0.5);
+        this.overallDrivingPowerScale = pf.createPersistentProperty("DrivingPowerScale", 1);
         this.overallTurningPowerScale = pf.createPersistentProperty("TurningPowerScale", 1.0);
         this.precisionTranslationScale = pf.createPersistentProperty("PrecisionTranslationScale", 0.5);
         this.extremePrecisionTranslationScale = pf.createPersistentProperty(
@@ -76,6 +76,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
     @Override
     public void execute() {
+
         // Get raw human translate and rotation intents
         XYPair translationIntent = getRawHumanTranslationIntent();
         double rawRotationIntent = getRawHumanRotationIntent();
@@ -143,15 +144,8 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
                 joystickInput.getY()
         ).rotateBy(Rotation2d.fromDegrees(-90));
 
-        if (!drive.isUnlockFullDrivePowerActive()) {
-            if (drive.isPrecisionRotationActive()) {
-                triggerRotateIntent *= precisionRotationScale.get();
-            }
-        }
-
         SwerveSuggestedRotation suggested = advisor.getSuggestedRotationValue(processedInput, triggerRotateIntent);
-
-
+        
          return processSuggestedRotationValueIntoPower(suggested);
     }
 
@@ -182,16 +176,16 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     }
 
     private double processSuggestedRotationValueIntoPower(SwerveSuggestedRotation suggested) {
-        return switch (suggested.type) {
-            case DesiredHeading -> {
-                yield headingModule.calculateHeadingPower(suggested.value);
-            }
-            case HumanControlHeadingPower -> {
-                if (drive.isPrecisionRotationActive()) {
-                    yield suggested.value *= 0.25;
-                }
-                yield suggested.value;
-            }
+        double value = switch (suggested.type) {
+            case DesiredHeading -> headingModule.calculateHeadingPower(suggested.value);
+            case HumanControlHeadingPower -> suggested.value;
+            default -> 0;
         };
+
+        // Apply precision scaling to all rotation outputs
+        if (!drive.isUnlockFullDrivePowerActive() && drive.isPrecisionRotationActive()) {
+            value *= precisionRotationScale.get();
+        }
+        return value;
     }
 }
