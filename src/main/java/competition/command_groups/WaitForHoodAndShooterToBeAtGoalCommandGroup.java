@@ -6,17 +6,14 @@ import xbot.common.command.BaseParallelCommandGroup;
 
 import javax.inject.Inject;
 
-public class WaitForHoodShooterGoalCommandGroup extends BaseParallelCommandGroup {
+public class WaitForHoodAndShooterToBeAtGoalCommandGroup extends BaseParallelCommandGroup {
 
     @Inject
-    public WaitForHoodShooterGoalCommandGroup(ShooterSubsystem shooterSubsystem,
-                                            HoodSubsystem hoodSubsystem
-    ) {
+    public WaitForHoodAndShooterToBeAtGoalCommandGroup(ShooterSubsystem shooterSubsystem,
+                                                       HoodSubsystem hoodSubsystem) {
         var waitForShooterCommand = shooterSubsystem.getWaitForAtGoalCommand();
         var waitForHoodCommand = hoodSubsystem.getWaitForAtGoalCommand();
-        this.addCommands(
-                waitForShooterCommand,
-                waitForHoodCommand
-        );
+
+        this.addCommands(waitForShooterCommand, waitForHoodCommand);
     }
 }
