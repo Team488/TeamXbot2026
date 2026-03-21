@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
+import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -14,17 +15,20 @@ public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
     private final Provider<DriveAcrossMidNeutralZoneCommand> driveAcrossMidNeutralZoneCommandProvider;
     private final Provider<IntakeDeployExtendCommand> intakeDeployExtendCommandProvider;
     private final Provider<CollectorIntakeCommand> collectorIntakeCommandProvider;
+    private final IntakeDeploySubsystem intakeDeploy;
 
     @Inject
     public DriveToNeutralZoneAndDeployIntakeCommandGroupFactory(
             Provider<DriveToNeutralZoneForIntakeCommand> driveToNeutralZoneForIntakeCommandProvider,
             Provider<DriveAcrossMidNeutralZoneCommand> driveAcrossMidNeutralZoneCommandProvider,
             Provider<IntakeDeployExtendCommand> intakeDeployExtendCommandProvider,
-            Provider<CollectorIntakeCommand> collectorIntakeCommandProvider) {
+            Provider<CollectorIntakeCommand> collectorIntakeCommandProvider,
+            IntakeDeploySubsystem intakeDeploy) {
         this.driveToNeutralZoneForIntakeCommandProvider = driveToNeutralZoneForIntakeCommandProvider;
         this.driveAcrossMidNeutralZoneCommandProvider = driveAcrossMidNeutralZoneCommandProvider;
         this.intakeDeployExtendCommandProvider = intakeDeployExtendCommandProvider;
         this.collectorIntakeCommandProvider = collectorIntakeCommandProvider;
+        this.intakeDeploy = intakeDeploy;
     }
 
     public SequentialCommandGroup create() {
@@ -34,11 +38,14 @@ public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
         group.addCommands(this.driveToNeutralZoneForIntakeCommandProvider.get());
 
         var intakeDeployThenExtendGroup = new SequentialCommandGroup(intakeDeployExtendCommandProvider.get())
-                .andThen(new DelayViaSupplierCommand(() -> 0.5))
-                .andThen(collectorIntakeCommandProvider.get());
+                .andThen(intakeDeploy.getWaitForAtGoalCommand());
+        intakeDeployThenExtendGroup.setName("Intake Deploy and Wait Command");
+
+        group.addCommands(intakeDeployThenExtendGroup);
 
         var driveAcrossAndIntakeDeployCommandGroup = new ParallelDeadlineGroup(
-                this.driveAcrossMidNeutralZoneCommandProvider.get(), intakeDeployThenExtendGroup);
+                this.driveAcrossMidNeutralZoneCommandProvider.get(), collectorIntakeCommandProvider.get());
+        driveAcrossAndIntakeDeployCommandGroup.setName("Drive and Run Collector Command");
 
         group.addCommands(driveAcrossAndIntakeDeployCommandGroup);
 
