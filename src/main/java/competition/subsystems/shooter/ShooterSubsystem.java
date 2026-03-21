@@ -25,7 +25,6 @@ import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
 public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Double> {
-    public static boolean isReadyToFire;
     public final XCANMotorController leftShooterMotor;
     public final XCANMotorController middleShooterMotor;
     public final XCANMotorController rightShooterMotor;
