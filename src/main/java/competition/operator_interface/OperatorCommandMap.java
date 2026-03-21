@@ -89,6 +89,7 @@ public class OperatorCommandMap {
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(xPositionCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(fireWhenShooterAndHoodReady);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(dropHoodForTrenchCommand);
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
