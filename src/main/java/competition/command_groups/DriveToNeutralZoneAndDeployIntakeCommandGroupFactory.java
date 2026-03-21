@@ -39,10 +39,13 @@ public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
 
         var intakeDeployThenExtendGroup = new SequentialCommandGroup(intakeDeployExtendCommandProvider.get())
                 .andThen(intakeDeploy.getWaitForAtGoalCommand());
+        intakeDeployThenExtendGroup.setName("Intake Deploy and Wait Command");
+
         group.addCommands(intakeDeployThenExtendGroup);
 
         var driveAcrossAndIntakeDeployCommandGroup = new ParallelDeadlineGroup(
                 this.driveAcrossMidNeutralZoneCommandProvider.get(), collectorIntakeCommandProvider.get());
+        driveAcrossAndIntakeDeployCommandGroup.setName("Drive and Run Collector Command");
 
         group.addCommands(driveAcrossAndIntakeDeployCommandGroup);
 
