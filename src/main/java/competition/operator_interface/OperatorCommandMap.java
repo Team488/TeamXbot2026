@@ -90,7 +90,7 @@ public class OperatorCommandMap {
                 .whileTrue(dropHoodForTrenchCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
 
-        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.RightBumper) // do right bumper
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.RightBumper)
                 .whileTrue(precisionModeCommand);
 
         // Commenting out so it's not accidentally pressed during a match

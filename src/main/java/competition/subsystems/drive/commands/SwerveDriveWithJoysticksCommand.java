@@ -145,7 +145,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         ).rotateBy(Rotation2d.fromDegrees(-90));
 
         SwerveSuggestedRotation suggested = advisor.getSuggestedRotationValue(processedInput, triggerRotateIntent);
-        
+
          return processSuggestedRotationValueIntoPower(suggested);
     }
 
