@@ -15,6 +15,7 @@ import competition.command_groups.FireWhenReadyAndRetractIntakeDeployCommandGrou
 import competition.command_groups.FireWhenShooterAndHoodReady;
 import competition.command_groups.HopperAndIntakeCommandGroup;
 import competition.command_groups.HopperAndIntakeEjectCommandGroup;
+import competition.command_groups.IntakeSlowlyAndFireWhenReady;
 import competition.command_groups.PrepareToShootCommandGroup;
 import competition.simulation.commands.ResetSimulatedPoseCommand;
 import competition.subsystems.climber.ClimberSubsystem;
@@ -104,7 +105,7 @@ public class OperatorCommandMap {
             HopperAndIntakeCommandGroup intakeCommand,
             HopperAndIntakeEjectCommandGroup ejectCommand,
             FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady,
-            FireWhenReadyAndRetractIntakeDeployCommandGroup fireWhenReadyAndRetractIntakeDeployCommandGroup,
+            IntakeSlowlyAndFireWhenReady  intakeSlowlyAndFireWhenReady,
             Provider<PrepareToShootCommandGroup> prepareToShootCommand) {
         var prepareToShootNear = prepareToShootCommand.get()
                 .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR);
@@ -134,7 +135,7 @@ public class OperatorCommandMap {
 
         operatorInterface.operatorGamepad.getPovIfAvailable(180).whileTrue(ejectCommand);
         operatorInterface.operatorGamepad.getPovIfAvailable(0)
-                .whileTrue(fireWhenReadyAndRetractIntakeDeployCommandGroup);
+                .whileTrue(intakeSlowlyAndFireWhenReady);
     }
 
     @Inject
