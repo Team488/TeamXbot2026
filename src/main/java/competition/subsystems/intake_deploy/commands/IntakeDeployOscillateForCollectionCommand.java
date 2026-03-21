@@ -17,6 +17,7 @@ public class IntakeDeployOscillateForCollectionCommand extends BaseSetpointComma
     final AngleProperty basePosition;
     final AngleProperty oscillationMagnitude;
     final DoubleProperty oscillationPeriod;
+    final DoubleProperty dwellFraction;
     double startTime;
 
     @Inject
@@ -24,9 +25,10 @@ public class IntakeDeployOscillateForCollectionCommand extends BaseSetpointComma
         super(intakeDeploy);
         this.intakeDeploy = intakeDeploy;
         propertyFactory.setPrefix(this);
-        this.basePosition = propertyFactory.createPersistentProperty("BasePosition", Degrees.of(-134.0));
+        this.basePosition = propertyFactory.createPersistentProperty("BasePosition", Degrees.of(-135.0));
         this.oscillationMagnitude = propertyFactory.createPersistentProperty("OscillationMagnitude", Degrees.of(2.0));
         this.oscillationPeriod = propertyFactory.createPersistentProperty("OscillationPeriodSeconds", 1.0);
+        this.dwellFraction = propertyFactory.createPersistentProperty("DwellFraction", 0.5);
     }
 
     @Override
@@ -44,11 +46,27 @@ public class IntakeDeployOscillateForCollectionCommand extends BaseSetpointComma
         double period = oscillationPeriod.get();
         double elapsed = XTimer.getFPGATimestamp() - startTime;
 
-        // A sine wave completes one full cycle every `period` seconds.
-        // Multiplying by `magnitude` scales the wave so the intake moves that many
-        // degrees above and below the base position.
-        // Example: magnitude=5, period=1 -> intake sweeps from -140 to -130 degrees once per second.
-        double offsetDegrees = magnitude * Math.sin(2 * Math.PI * elapsed / period);
+        // The cycle is split into two phases:
+        //   Dwell phase  (0 to dwellFraction * period): intake stays at basePosition (offset = 0)
+        //   Lift phase   (remainder of period): intake follows a smooth cosine pulse up and back.
+        //
+        // The lift shape is (1 - cos(2π*t)) / 2, which:
+        //   - starts and ends at 0 with zero velocity (no jerk at the dwell boundary)
+        //   - peaks at `magnitude` at the midpoint of the lift phase
+        //
+        // Example: magnitude=5, period=1, dwellFraction=0.5
+        //   -> intake sits at base for 0.5 s, then smoothly lifts 5° and returns over the next 0.5 s.
+        double phase = elapsed % period;
+        double dwellDuration = dwellFraction.get() * period;
+        double liftDuration = period - dwellDuration;
+
+        double offsetDegrees;
+        if (phase < dwellDuration || liftDuration <= 0) {
+            offsetDegrees = 0;
+        } else {
+            double liftPhase = (phase - dwellDuration) / liftDuration; // normalized 0→1
+            offsetDegrees = magnitude * (1 - Math.cos(2 * Math.PI * liftPhase)) / 2.0;
+        }
         intakeDeploy.setTargetValue(Degrees.of(baseDegrees + offsetDegrees));
     }
 
