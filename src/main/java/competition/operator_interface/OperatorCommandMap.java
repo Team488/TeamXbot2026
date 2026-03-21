@@ -27,6 +27,7 @@ import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.drive.commands.PrecisionModeCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
+import competition.subsystems.drive.commands.XPositionCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.DropHoodForTrenchCommand;
 import competition.subsystems.hood.commands.TrimHoodDownCommand;
@@ -83,12 +84,15 @@ public class OperatorCommandMap {
                                    LowPowerModeOffCommand lowPowerModeOffCommand,
                                    DriveSubsystem driveSubsystem,
                                    PrecisionModeCommand precisionModeCommand) {
+                                   XPositionCommand xPositionCommand
+    ) {
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(lowPowerModeOnCommand);
         operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X)
                 .whileTrue(dropHoodForTrenchCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(xPositionCommand);
 
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.RightBumper) // do right bumper
                 .whileTrue(precisionModeCommand);
