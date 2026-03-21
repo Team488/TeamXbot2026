@@ -62,7 +62,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         this.precisionTranslationScale = pf.createPersistentProperty("PrecisionTranslationScale", 0.5);
         this.extremePrecisionTranslationScale = pf.createPersistentProperty(
                 "ExtremePrecisionTranslationScale", 0.15);
-        precisionRotationScale = pf.createPersistentProperty("PrecisionRotationScale", 0.5);
+        precisionRotationScale = pf.createPersistentProperty("PrecisionRotationScale", 0.75);
 
         this.addRequirements(drive);
     }
@@ -176,16 +176,15 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     }
 
     private double processSuggestedRotationValueIntoPower(SwerveSuggestedRotation suggested) {
-        double value = switch (suggested.type) {
+        return switch (suggested.type) {
             case DesiredHeading -> headingModule.calculateHeadingPower(suggested.value);
-            case HumanControlHeadingPower -> suggested.value;
-            default -> 0;
+            case HumanControlHeadingPower -> {
+                if (drive.isPrecisionRotationActive()) {
+                    yield suggested.value *= precisionRotationScale.get();
+                } else {
+                    yield suggested.value;
+                }
+            }
         };
-
-        // Apply precision scaling to all rotation outputs
-        if (!drive.isUnlockFullDrivePowerActive() && drive.isPrecisionRotationActive()) {
-            value *= precisionRotationScale.get();
-        }
-        return value;
-    }
+    };
 }
