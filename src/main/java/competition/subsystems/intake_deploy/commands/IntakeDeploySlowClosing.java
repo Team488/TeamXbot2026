@@ -28,6 +28,7 @@ public class IntakeDeploySlowClosing extends BaseSetpointCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         // Start the running target from the mechanism's current position so the
         // first execute() call doesn't jump the setpoint.
         currentTarget = intakeDeploySubsystem.getCurrentValue();
@@ -47,4 +48,9 @@ public class IntakeDeploySlowClosing extends BaseSetpointCommand {
             intakeDeploySubsystem.setTargetValue(currentTarget);
         }
     }
+
+        @Override
+        public boolean isFinished() {
+            return false;
+        }
 }
