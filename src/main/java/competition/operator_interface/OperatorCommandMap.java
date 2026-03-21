@@ -81,15 +81,16 @@ public class OperatorCommandMap {
                                    LowPowerModeOnCommand lowPowerModeOnCommand,
                                    LowPowerModeOffCommand lowPowerModeOffCommand,
                                    XPositionCommand xPositionCommand,
-                                   DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand
+                                   DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand,
+                                   FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady
     ) {
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(driveThroughAllianceTrenchCommand);
         // operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
-        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X)
-                .whileTrue(dropHoodForTrenchCommand);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(xPositionCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
-        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(xPositionCommand);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(fireWhenShooterAndHoodReady);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(dropHoodForTrenchCommand);
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
