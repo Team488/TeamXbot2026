@@ -23,7 +23,7 @@ public class IntakeDeploySlowClosing extends BaseSetpointCommand {
         super(intakeDeploy);
         propertyFactory.setPrefix(this);
         this.intakeDeploySubsystem = intakeDeploy;
-        this.increasingValue = propertyFactory.createPersistentProperty("IncreasingValuePerSecond", Degrees.of(10));
+        this.increasingValue = propertyFactory.createPersistentProperty("IncreasingValuePerSecond", Degrees.of(70));
     }
 
     @Override
