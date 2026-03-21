@@ -36,6 +36,7 @@ public class BaseDriveWithSimpleBezierCommand extends SwerveSimpleBezierCommand 
     private EndpointSpeed startSpeed = EndpointSpeed.Stop;
     private EndpointSpeed endSpeed = EndpointSpeed.Stop;
     private boolean prioritizeRotationIfCloseToGoal = false;
+    private boolean stopWhenFinished = true;
 
     public BaseDriveWithSimpleBezierCommand(DriveSubsystem drive, PoseSubsystem pose,
             PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
@@ -55,19 +56,23 @@ public class BaseDriveWithSimpleBezierCommand extends SwerveSimpleBezierCommand 
         case Start:
             this.startSpeed = EndpointSpeed.Stop;
             this.endSpeed = EndpointSpeed.Interstitial;
+            this.stopWhenFinished = false;
             break;
         case End:
             this.startSpeed = EndpointSpeed.Interstitial;
             this.endSpeed = EndpointSpeed.Stop;
+            this.stopWhenFinished = true;
             break;
         case Mid:
             this.startSpeed = EndpointSpeed.Interstitial;
             this.endSpeed = EndpointSpeed.Interstitial;
+            this.stopWhenFinished = false;
             break;
         case StartAndEnd:
         default:
             this.startSpeed = EndpointSpeed.Stop;
             this.endSpeed = EndpointSpeed.Stop;
+            this.stopWhenFinished = false;
             break;
         }
     }
@@ -89,6 +94,7 @@ public class BaseDriveWithSimpleBezierCommand extends SwerveSimpleBezierCommand 
     @Override
     public void initialize() {
         this.logic.setPrioritizeRotationIfCloseToGoal(this.prioritizeRotationIfCloseToGoal);
+        this.logic.setStopWhenFinished(this.stopWhenFinished);
         double maxSpeed = this.drive.getMaxTargetSpeedMetersPerSecond();
         switch (this.maxSpeed) {
         case Auto:
