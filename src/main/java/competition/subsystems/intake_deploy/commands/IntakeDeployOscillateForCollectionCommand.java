@@ -56,4 +56,10 @@ public class IntakeDeployOscillateForCollectionCommand extends BaseSetpointComma
     public boolean isFinished() {
         return false;
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        // Stop the oscillation and hold the intake at the extended position.
+        intakeDeploy.setTargetValue(Degrees.of(intakeDeploy.extendedPosition.get()));
+    }
 }
