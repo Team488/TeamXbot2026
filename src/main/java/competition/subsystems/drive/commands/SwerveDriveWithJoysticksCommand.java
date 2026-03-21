@@ -5,7 +5,6 @@ import competition.subsystems.drive.DriveSubsystem;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import org.dyn4j.geometry.Rotation;
 import xbot.common.controls.sensors.XGyro;
 import xbot.common.logic.HumanVsMachineDecider;
 import xbot.common.logic.HumanVsMachineDecider.HumanVsMachineDeciderFactory;
@@ -57,7 +56,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         this.advisor = advisorFactory.create(hvmDecider);
         this.advisor.setSnappingZoneCount(8);
         pf.setDefaultLevel(Property.PropertyLevel.Important);
-        this.overallDrivingPowerScale = pf.createPersistentProperty("DrivingPowerScale", 1);
+        this.overallDrivingPowerScale = pf.createPersistentProperty("DrivingPowerScale", 1.0);
         this.overallTurningPowerScale = pf.createPersistentProperty("TurningPowerScale", 1.0);
         this.precisionTranslationScale = pf.createPersistentProperty("PrecisionTranslationScale", 0.5);
         this.extremePrecisionTranslationScale = pf.createPersistentProperty(
