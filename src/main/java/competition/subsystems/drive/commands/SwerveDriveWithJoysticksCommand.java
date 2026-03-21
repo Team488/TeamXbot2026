@@ -76,7 +76,6 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
     @Override
     public void execute() {
-
         // Get raw human translate and rotation intents
         XYPair translationIntent = getRawHumanTranslationIntent();
         double rawRotationIntent = getRawHumanRotationIntent();
