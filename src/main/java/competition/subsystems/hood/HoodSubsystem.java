@@ -90,7 +90,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.05);
         this.extend = propertyFactory.createPersistentProperty("MaxExtensionGoal", 1.0);
         this.retract = propertyFactory.createPersistentProperty("MinExtensionGoal", 0.0);
-        this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("ReadinessTimeoutSeconds", 2.0);
+        this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("ReadinessTimeoutSeconds", 3.0);
 
         this.minDistanceGoal = propertyFactory.createPersistentProperty("Hood Min Distance Goal", 0.0);
         this.medDistanceGoal = propertyFactory.createPersistentProperty("Hood Med Distance Goal", 0.5); //change this later
@@ -189,6 +189,6 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     }
 
     public Command getWaitForAtGoalCommand() {
-        return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
+        return new SimpleWaitForMaintainerCommand(this, readinessTimeoutSeconds::get);
     }
 }
