@@ -101,7 +101,7 @@ public class OperatorCommandMap {
             ShooterSubsystem shooterSubsystem,
             IntakeDeployExtendCommand intakeDeployExtendCommand,
             IntakeDeployRetractCommand intakeDeployRetractCommand,
-            HopperAndIntakeCommandGroup intakeCommand,
+            HopperAndIntakeCommandGroup hopperAndIntakeCollectCommand,
             HopperAndIntakeEjectCommandGroup ejectCommand,
             FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady,
             FireWhenReadyAndRetractIntakeDeployCommandGroup fireWhenReadyAndRetractIntakeDeployCommandGroup,
@@ -124,7 +124,7 @@ public class OperatorCommandMap {
                 .whileTrue(intakeDeployExtendCommand);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger)
-                .whileTrue(intakeCommand);
+                .whileTrue(hopperAndIntakeCollectCommand);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(prepareToShootNear);
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y)
