@@ -8,6 +8,7 @@ import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.controls.actuators.TimedAndBoundedServo;
 import xbot.common.controls.actuators.XServo;
+import xbot.common.math.MathUtils;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -124,15 +125,17 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
     @Override
     public void periodic() {
-        if (this.hoodServoLeft != null && this.hoodServoRight != null) {
+        if (this.hoodServoLeft != null) {
             aKitLog.record("LeftServoPosition", hoodServoLeft.getNormalizedCurrentPosition());
-            aKitLog.record("RightServoPosition", hoodServoRight.getNormalizedCurrentPosition());
-            aKitLog.record("HoodTargetPosition", getTargetValue());
         }
+
+        if (this.hoodServoRight != null) {
+            aKitLog.record("RightServoPosition", hoodServoRight.getNormalizedCurrentPosition());
+        }
+        aKitLog.record("HoodTargetPosition", getTargetValue());
     }
 
     public Optional<TimedAndBoundedServo> getHoodServoLeft() {
-
         if (hoodServoLeft == null) {
             return Optional.empty();
         } else {
@@ -156,28 +159,22 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
     @Override
     public Double getTargetValue() {
-        return servoTargetNormalized.get() + trimValue.get();
+        double minPosition = retract.get();
+        double maxPosition = extend.get();
+        double targetRatio = servoTargetNormalized.get();
+        return MathUtils.constrainDouble(targetRatio + trimValue.get(), minPosition, maxPosition);
     }
 
     @Override
     public void setTargetValue(Double targetRatio) {
-        // Check bounds
-        var minPosition = retract.get();
-        var maxPosition = extend.get();
-        if (targetRatio < minPosition) {
-            targetRatio = minPosition;
-        } else if (targetRatio > maxPosition) {
-            targetRatio = maxPosition;
-        }
-
+        double minPosition = retract.get();
+        double maxPosition = extend.get();
+        targetRatio = MathUtils.constrainDouble(targetRatio + trimValue.get(), minPosition, maxPosition);
         servoTargetNormalized.set(targetRatio);
     }
 
     @Override
-    public void setPower(Double power) {
-
-    }
-
+    public void setPower(Double power) {}
 
     @Override
     public boolean isCalibrated() {
