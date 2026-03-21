@@ -79,10 +79,11 @@ public class OperatorCommandMap {
                                    RotateToHubCommand rotateToHubCommand,
                                    LowPowerModeOnCommand lowPowerModeOnCommand,
                                    LowPowerModeOffCommand lowPowerModeOffCommand,
-                                   XPositionCommand xPositionCommand
+                                   XPositionCommand xPositionCommand,
+                                   DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand
     ) {
-        operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(lowPowerModeOnCommand);
-        operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
+        operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(driveThroughAllianceTrenchCommand);
+        // operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X)
                 .whileTrue(dropHoodForTrenchCommand);
