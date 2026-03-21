@@ -38,7 +38,7 @@ public class DriveToNeutralZoneForIntakeCommand extends BaseDriveWithSimpleBezie
         var pathPoses = this.autoLandmarks.getStartCollectionPath(currentPose);
         super.setSegmentType(SegmentType.Start);
         super.logic.setKeyPoints(this.pathPlanning.generateSwervePoints(currentPose, pathPoses,
-                false));
+                                                                        false, true));
 
         super.initialize();
     }

@@ -60,7 +60,7 @@ public class TrajectoriesCalculation {
                             propManager.createPersistentProperty("PresetShooting.TOWER_FAR Hood ServoRatio", 0.0)),
                     PresetShootingDistance.TRENCH,
                     new PresetShootingProperties(
-                            propManager.createPersistentProperty("PresetShooting.TRENCH RPM", 3700),
+                            propManager.createPersistentProperty("PresetShooting.TRENCH RPM", 3900),
                             propManager.createPersistentProperty("PresetShooting.TRENCH Hood ServoRatio", 0.0)),
                     PresetShootingDistance.CORNER,
                     new PresetShootingProperties(
