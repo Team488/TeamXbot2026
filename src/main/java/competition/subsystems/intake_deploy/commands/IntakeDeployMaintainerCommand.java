@@ -22,7 +22,7 @@ public class IntakeDeployMaintainerCommand extends BaseMaintainerCommand<Angle, 
     public IntakeDeployMaintainerCommand(IntakeDeploySubsystem subsystemToMaintain, PropertyFactory pf,
                                          OperatorInterface oi,
                                          HumanVsMachineDecider.HumanVsMachineDeciderFactory hvmFactory) {
-        super(subsystemToMaintain, pf, hvmFactory,0.01,0.01);
+        super(subsystemToMaintain, pf, hvmFactory,5.0,0.05);
         pf.setPrefix(this);
         this.subsystem = subsystemToMaintain;
         this.manualControlGamepad = oi.operatorGamepad;
