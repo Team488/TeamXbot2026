@@ -83,9 +83,9 @@ public class OperatorCommandMap {
                                    LowPowerModeOnCommand lowPowerModeOnCommand,
                                    LowPowerModeOffCommand lowPowerModeOffCommand,
                                    DriveSubsystem driveSubsystem,
-                                   PrecisionModeCommand precisionModeCommand) {
-                                   XPositionCommand xPositionCommand
-    ) {
+                                   PrecisionModeCommand precisionModeCommand,
+                                   XPositionCommand xPositionCommand) {
+
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(lowPowerModeOnCommand);
         operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
