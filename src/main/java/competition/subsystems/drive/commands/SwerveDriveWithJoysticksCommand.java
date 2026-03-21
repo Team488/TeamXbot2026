@@ -186,5 +186,5 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
                 }
             }
         };
-    };
+    }
 }
