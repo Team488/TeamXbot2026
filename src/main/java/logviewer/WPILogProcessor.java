@@ -28,26 +28,27 @@ public class WPILogProcessor {
         entryData.clear();
         allEntries.clear();
 
-        for (DataLogRecord record : reader) {
-            if (record.isStart()) {
-                var start = record.getStartData();
-                entryNames.put(start.entry, start.name);
-                entryTypes.put(start.entry, start.type);
-                entryData.put(start.entry, new ArrayList<>());
-
-                allEntries.add(start.name);
-            } else if (!record.isControl()) {
-                int entry = record.getEntry();
-                String type = entryTypes.get(entry);
-                if (type == null) {
-                    continue;
+        try {
+            for (DataLogRecord record : reader) {
+                if (record.isStart()) {
+                    var start = record.getStartData();
+                    entryNames.put(start.entry, start.name);
+                    entryTypes.put(start.entry, start.type);
+                    entryData.put(start.entry, new ArrayList<>());
+                    allEntries.add(start.name);
+                } else if (!record.isControl()) {
+                    int entry = record.getEntry();
+                    String type = entryTypes.get(entry);
+                    if (type == null) {
+                        continue;
+                    }
+                    String value = getString(record, type);
+                    double timeSec = record.getTimestamp() / 1_000_000.0;
+                    entryData.get(entry).add(new DataPoint(timeSec, value));
                 }
-
-                String value = getString(record, type);
-                double timeSec = record.getTimestamp() / 1_000_000.0;
-
-                entryData.get(entry).add(new DataPoint(timeSec, value));
             }
+        } catch (Exception e) {
+            System.out.println("⚠️ Reached corrupted end of log, stopping early.");
         }
     }
 
@@ -107,7 +108,11 @@ public class WPILogProcessor {
                 case "float" -> String.valueOf(record.getFloat());
                 case "string" -> record.getString();
                 case "boolean" -> String.valueOf(record.getBoolean());
-                case "string[]" -> Arrays.toString(record.getStringArray());
+                case "string[]" -> {
+                    String[] arr = record.getStringArray();
+                    Arrays.sort(arr, String.CASE_INSENSITIVE_ORDER);
+                    yield Arrays.toString(arr);
+                }
                 case "double[]" -> Arrays.toString(record.getDoubleArray());
                 case "int64[]" -> Arrays.toString(record.getIntegerArray());
                 case "float[]" -> Arrays.toString(record.getFloatArray());
