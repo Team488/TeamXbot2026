@@ -146,7 +146,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
         SwerveSuggestedRotation suggested = advisor.getSuggestedRotationValue(processedInput, triggerRotateIntent);
 
-         return processSuggestedRotationValueIntoPower(suggested);
+        return processSuggestedRotationValueIntoPower(suggested);
     }
 
     private XYPair getSuggestedTranslationIntent(XYPair intent) {
