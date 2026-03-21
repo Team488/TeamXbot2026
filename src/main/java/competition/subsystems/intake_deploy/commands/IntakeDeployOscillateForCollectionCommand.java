@@ -14,7 +14,6 @@ import static edu.wpi.first.units.Units.Degrees;
 public class IntakeDeployOscillateForCollectionCommand extends BaseSetpointCommand {
 
     final IntakeDeploySubsystem intakeDeploy;
-    final AngleProperty basePosition;
     final AngleProperty oscillationMagnitude;
     final DoubleProperty oscillationPeriod;
     final DoubleProperty dwellFraction;
@@ -25,7 +24,6 @@ public class IntakeDeployOscillateForCollectionCommand extends BaseSetpointComma
         super(intakeDeploy);
         this.intakeDeploy = intakeDeploy;
         propertyFactory.setPrefix(this);
-        this.basePosition = propertyFactory.createPersistentProperty("BasePosition", Degrees.of(-135.0));
         this.oscillationMagnitude = propertyFactory.createPersistentProperty("OscillationMagnitude", Degrees.of(2.0));
         this.oscillationPeriod = propertyFactory.createPersistentProperty("OscillationPeriodSeconds", 1.0);
         this.dwellFraction = propertyFactory.createPersistentProperty("DwellFraction", 0.5);
@@ -41,7 +39,7 @@ public class IntakeDeployOscillateForCollectionCommand extends BaseSetpointComma
     @Override
     public void execute() {
         // The intake oscillates around this command's own base position.
-        double baseDegrees = basePosition.get().in(Degrees);
+        double baseDegrees = intakeDeploy.extendedPosition.get();
         double magnitude = oscillationMagnitude.get().in(Degrees);
         double period = oscillationPeriod.get();
         double elapsed = XTimer.getFPGATimestamp() - startTime;
