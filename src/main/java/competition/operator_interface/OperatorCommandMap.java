@@ -129,9 +129,9 @@ public class OperatorCommandMap {
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(prepareToShootNear);
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(prepareToShootTrench);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B)
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(prepareToShootCorner);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A)
                 .whileTrue(prepareToShootTowerClose);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(prepareToShootCorner);
 
         operatorInterface.operatorGamepad.getPovIfAvailable(180).whileTrue(ejectCommand);
         operatorInterface.operatorGamepad.getPovIfAvailable(0)
