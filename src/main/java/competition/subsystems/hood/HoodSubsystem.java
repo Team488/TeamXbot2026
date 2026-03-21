@@ -42,8 +42,6 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public final ElectricalContract electricalContract;
 
     public final DoubleProperty servoTargetNormalized;
-    public final DoubleProperty trimValue;
-    public final DoubleProperty trimStep;
     public final DoubleProperty extend;
     public final DoubleProperty retract;
     public final DoubleProperty readinessTimeoutSeconds;
@@ -86,8 +84,6 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
         this.servoTargetNormalized = propertyFactory.createPersistentProperty(
                 "ServoTargetPositionNormalized", 0);
-        this.trimValue = propertyFactory.createPersistentProperty("HoodTrimValue", 0);
-        this.trimStep = propertyFactory.createPersistentProperty("HoodTrimStep", 0.05);
         this.extend = propertyFactory.createPersistentProperty("MaxExtensionGoal", 1.0);
         this.retract = propertyFactory.createPersistentProperty("MinExtensionGoal", 0.0);
         this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("ReadinessTimeoutSeconds", 3.0);
@@ -98,10 +94,11 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     }
 
     public void extend() {
-        setTargetValue(getTargetValue() + trimStep.get());
+        setTargetValue(getTargetValue());
     }
+
     public void retract() {
-        setTargetValue(getTargetValue() - trimStep.get());
+        setTargetValue(getTargetValue());
     }
 
     public void runServo() {
@@ -113,14 +110,6 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
     public void servoZero() {
         servoTargetNormalized.set(0);
-    }
-
-    public void trimHoodGoalUp() {
-        trimValue.set(trimValue.get() + trimStep.get());
-    }
-
-    public void trimHoodGoalDown() {
-        trimValue.set(trimValue.get() - trimStep.get());
     }
 
     @Override
@@ -162,14 +151,14 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         double minPosition = retract.get();
         double maxPosition = extend.get();
         double targetRatio = servoTargetNormalized.get();
-        return MathUtils.constrainDouble(targetRatio + trimValue.get(), minPosition, maxPosition);
+        return MathUtils.constrainDouble(targetRatio, minPosition, maxPosition);
     }
 
     @Override
     public void setTargetValue(Double targetRatio) {
         double minPosition = retract.get();
         double maxPosition = extend.get();
-        targetRatio = MathUtils.constrainDouble(targetRatio + trimValue.get(), minPosition, maxPosition);
+        targetRatio = MathUtils.constrainDouble(targetRatio, minPosition, maxPosition);
         servoTargetNormalized.set(targetRatio);
     }
 
