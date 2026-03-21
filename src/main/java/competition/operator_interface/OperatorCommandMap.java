@@ -82,14 +82,14 @@ public class OperatorCommandMap {
                                    LowPowerModeOffCommand lowPowerModeOffCommand,
                                    XPositionCommand xPositionCommand,
                                    DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand,
-                                   FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady
+                                   IntakeSlowlyAndFireWhenReady intakeSlowlyAndFireWhenReady
     ) {
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(driveThroughAllianceTrenchCommand);
         // operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(xPositionCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
-        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(fireWhenShooterAndHoodReady);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(intakeSlowlyAndFireWhenReady);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(dropHoodForTrenchCommand);
 
         // Commenting out so it's not accidentally pressed during a match
@@ -106,7 +106,6 @@ public class OperatorCommandMap {
             IntakeDeployRetractCommand intakeDeployRetractCommand,
             HopperAndIntakeCommandGroup intakeCommand,
             HopperAndIntakeEjectCommandGroup ejectCommand,
-            FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady,
             IntakeSlowlyAndFireWhenReady  intakeSlowlyAndFireWhenReady,
             Provider<PrepareToShootCommandGroup> prepareToShootCommand) {
         var prepareToShootNear = prepareToShootCommand.get()
@@ -119,7 +118,7 @@ public class OperatorCommandMap {
                 .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.CORNER);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger)
-                .whileTrue(fireWhenShooterAndHoodReady);
+                .whileTrue(intakeSlowlyAndFireWhenReady);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper)
                 .whileTrue(intakeDeployRetractCommand);
@@ -136,8 +135,6 @@ public class OperatorCommandMap {
                 .whileTrue(prepareToShootTowerClose);
 
         operatorInterface.operatorGamepad.getPovIfAvailable(180).whileTrue(ejectCommand);
-        operatorInterface.operatorGamepad.getPovIfAvailable(0)
-                .whileTrue(intakeSlowlyAndFireWhenReady);
     }
 
     @Inject
