@@ -44,10 +44,9 @@ public class IntakeDeploySlowClosing extends BaseSetpointCommand {
         currentTarget = currentTarget.plus(increasingValue.get().times(Robot.LOOP_INTERVAL));
 
         if (currentTarget.gt(retractLimit.get())) {
-            intakeDeploySubsystem.setTargetValue(retractLimit.get());
-        } else {
-            intakeDeploySubsystem.setTargetValue(currentTarget);
+            currentTarget = retractLimit.get().copy();
         }
+        intakeDeploySubsystem.setTargetValue(currentTarget);
     }
 
         @Override
