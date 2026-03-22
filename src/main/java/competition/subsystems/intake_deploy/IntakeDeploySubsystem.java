@@ -80,8 +80,8 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             this.intakeDeployEncoder = null;
         }
 
-        this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", 0.0);
-        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -135.0);
+        this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", 10.0);
+        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -145.0);
 
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.2);
 
