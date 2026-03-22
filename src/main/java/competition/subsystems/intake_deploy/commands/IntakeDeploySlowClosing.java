@@ -21,7 +21,7 @@ public class IntakeDeploySlowClosing extends BaseSetpointCommand {
     public final AngleProperty magnitude;
     public final DoubleProperty periodSeconds;
 
-    private Angle currentTarget;
+    private Angle centerTarget;
     private double startTime;
 
     @Inject
@@ -41,8 +41,8 @@ public class IntakeDeploySlowClosing extends BaseSetpointCommand {
         super.initialize();
         // Start the running target from the mechanism's current position so the
         // first execute() call doesn't jump the setpoint.
-        currentTarget = intakeDeploySubsystem.getCurrentValue();
-        startTime = XTimer.getFPGATimestamp()
+        centerTarget = intakeDeploySubsystem.getCurrentValue();
+        startTime = XTimer.getFPGATimestamp();
     }
 
     @Override
@@ -51,16 +51,26 @@ public class IntakeDeploySlowClosing extends BaseSetpointCommand {
         // Increment our internal target each loop rather than reading the encoder,
         // so the setpoint moves smoothly regardless of where the mechanism actually is.
         // Convert degrees/second to degrees/loop using the known loop period.
-        currentTarget = currentTarget.plus(increasingValue.get().times(Robot.LOOP_INTERVAL));
+        centerTarget = centerTarget.plus(increasingValue.get().times(Robot.LOOP_INTERVAL));
 
-        if (currentTarget.gt(retractLimit.get())) {
-            currentTarget = retractLimit.get().copy();
+        // Don't let the center value go past the retract limit
+        if (centerTarget.gt(retractLimit.get())) {
+            centerTarget = retractLimit.get().copy();
         }
 
         Angle offsetDegrees = magnitude.get().times(Math.sin(2 * Math.PI * elapsed / periodSeconds.get()));
 
         // add oscillation on top of the steadily increasing target value
-        intakeDeploySubsystem.setTargetValue(currentTarget.plus(offsetDegrees));
+        var newTarget = centerTarget.plus(offsetDegrees);
+
+        // clip value to valid ranges just in case
+        if (newTarget.gt(Degrees.of(intakeDeploySubsystem.extendedPosition.get()))) {
+            newTarget = Degrees.of(intakeDeploySubsystem.extendedPosition.get());
+        } else if (newTarget.lt(Degrees.of(intakeDeploySubsystem.retractedPosition.get()))) {
+            newTarget = Degrees.of(intakeDeploySubsystem.retractedPosition.get());
+        }
+
+        intakeDeploySubsystem.setTargetValue(newTarget);
     }
 
         @Override
