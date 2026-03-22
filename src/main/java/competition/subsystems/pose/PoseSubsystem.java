@@ -341,6 +341,12 @@ public class PoseSubsystem extends BasePoseSubsystem {
         }
     }
 
+    public Distance distanceToTrench() {
+        var closestAllianceTrench = closestAllianceTrench();
+        var currentPose = getCurrentPose2d();
+        return Meters.of(currentPose.getTranslation().getDistance(closestAllianceTrench.getTranslation()));
+    }
+
     // Start of Closest Landmark Calcs
 
     public Pose2d closestAllianceTrench() {

@@ -67,6 +67,7 @@ public class Robot extends BaseRobot {
         dataFrameRefreshables.add(getInjectorComponent().climberSubsystem());
 
         CommandScheduler.getInstance().schedule(getInjectorComponent().whenShooterReadyRumbleCommand());
+        CommandScheduler.getInstance().schedule(getInjectorComponent().driverRumbleCommand());
     }
 
     protected BaseRobotComponent createDaggerComponent() {

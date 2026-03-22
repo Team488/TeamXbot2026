@@ -1,6 +1,7 @@
 package competition.injection.components;
 
 import competition.auto_programs.ShootFromTrenchCommandGroup;
+import competition.operator_interface.DriverRumbleCommand;
 import competition.operator_interface.OperatorCommandMap;
 import competition.operator_interface.OperatorInterface;
 import competition.simulation.BaseSimulator;
@@ -59,4 +60,6 @@ public abstract class BaseRobotComponent extends BaseComponent {
     public abstract OperatorInterface operatorInterface();
 
     public abstract WhenShooterReadyRumbleCommand whenShooterReadyRumbleCommand();
+
+    public abstract DriverRumbleCommand driverRumbleCommand();
 }
