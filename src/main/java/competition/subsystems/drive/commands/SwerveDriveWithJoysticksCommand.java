@@ -58,10 +58,10 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         pf.setDefaultLevel(Property.PropertyLevel.Important);
         this.overallDrivingPowerScale = pf.createPersistentProperty("DrivingPowerScale", 1.0);
         this.overallTurningPowerScale = pf.createPersistentProperty("TurningPowerScale", 1.0);
-        this.precisionTranslationScale = pf.createPersistentProperty("PrecisionTranslationScale", 0.5);
+        this.precisionTranslationScale = pf.createPersistentProperty("PrecisionTranslationScale", 0.1);
         this.extremePrecisionTranslationScale = pf.createPersistentProperty(
                 "ExtremePrecisionTranslationScale", 0.15);
-        precisionRotationScale = pf.createPersistentProperty("PrecisionRotationScale", 0.75);
+        precisionRotationScale = pf.createPersistentProperty("PrecisionRotationScale", 0.2);
 
         this.addRequirements(drive);
     }
