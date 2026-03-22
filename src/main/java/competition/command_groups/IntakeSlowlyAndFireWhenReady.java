@@ -9,11 +9,12 @@ import javax.inject.Inject;
 public class IntakeSlowlyAndFireWhenReady extends BaseSequentialCommandGroup {
 
     @Inject
-    public IntakeSlowlyAndFireWhenReady(FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady,
-                                        IntakeDeploySlowClosing intakeDeploySlowClosing) {
+    public IntakeSlowlyAndFireWhenReady(WaitForHoodAndShooterToBeAtGoalCommandGroup waitForHoodAndShooterToBeAtGoalCommandGroup,
+                                       RunCollectorHopperFeederCommandGroup runCollectorHopperFeederCommandGroup,
+                                       IntakeDeploySlowClosing intakeDeploySlowClosing
+    ) {
         this.addCommands(
-                fireWhenShooterAndHoodReady
-                        .alongWith(intakeDeploySlowClosing)
-        );
+                waitForHoodAndShooterToBeAtGoalCommandGroup,
+                runCollectorHopperFeederCommandGroup.alongWith(intakeDeploySlowClosing));
     }
 }
