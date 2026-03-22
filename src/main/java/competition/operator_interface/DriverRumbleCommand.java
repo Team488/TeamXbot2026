@@ -1,7 +1,6 @@
 package competition.operator_interface;
 
 import competition.subsystems.hood.HoodSubsystem;
-import competition.subsystems.pose.AutoLandmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import xbot.common.command.BaseCommand;
@@ -35,9 +34,11 @@ public class DriverRumbleCommand extends BaseCommand {
     @Override
     public void execute() {
         super.execute();
+        var distanceToTrench = pose.distanceToNearestTrench();
+        aKitLog.record("DistanceToTrench", distanceToTrench);
         if (DriverStation.isTeleop()
                 && hood.getCurrentValue() > hoodAlertThreshold.get()
-                && pose.distanceToTrench().lt(trenchAlertDistance.get())) {
+                && distanceToTrench.lt(trenchAlertDistance.get())) {
             rumbleManager.rumbleGamepad(0.2, 0.5);
             logIsRumbling(true);
         } else {

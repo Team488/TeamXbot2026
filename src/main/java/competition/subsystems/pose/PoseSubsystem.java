@@ -1,5 +1,6 @@
 package competition.subsystems.pose;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -341,10 +342,14 @@ public class PoseSubsystem extends BasePoseSubsystem {
         }
     }
 
-    public Distance distanceToTrench() {
-        var closestAllianceTrench = closestAllianceTrench();
+    public Distance distanceToNearestTrench() {
+        var poses = new ArrayList<Pose2d>(4);
+        poses.addAll(Landmarks.getAllianceTrenchPoses(this.aprilTagFieldLayout, DriverStation.Alliance.Blue));
+        poses.addAll(Landmarks.getAllianceTrenchPoses(this.aprilTagFieldLayout, DriverStation.Alliance.Red));
         var currentPose = getCurrentPose2d();
-        return Meters.of(currentPose.getTranslation().getDistance(closestAllianceTrench.getTranslation()));
+        var nearestPose = currentPose.nearest(poses);
+
+        return Meters.of(currentPose.getTranslation().getDistance(nearestPose.getTranslation()));
     }
 
     // Start of Closest Landmark Calcs
