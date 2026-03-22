@@ -28,7 +28,7 @@ public class DriverRumbleCommand extends BaseCommand {
 
         pf.setPrefix(this);
         this.hoodAlertThreshold = pf.createPersistentProperty("Hood Alert Threshold", 0.2);
-        this.trenchAlertDistance = pf.createPersistentProperty("Trench Alert Distance", Meters.of(1.5));
+        this.trenchAlertDistance = pf.createPersistentProperty("Trench Alert Distance", Meters.of(2.5));
     }
 
     @Override
@@ -36,10 +36,13 @@ public class DriverRumbleCommand extends BaseCommand {
         super.execute();
         var distanceToTrench = pose.distanceToNearestTrench();
         aKitLog.record("DistanceToTrench", distanceToTrench);
-        if (DriverStation.isTeleop()
-                && hood.getCurrentValue() > hoodAlertThreshold.get()
-                && distanceToTrench.lt(trenchAlertDistance.get())) {
-            rumbleManager.rumbleGamepad(0.2, 0.5);
+        if (DriverStation.isTeleopEnabled()
+                && hood.getCurrentValue() > hoodAlertThreshold.get()) {
+            if (distanceToTrench.lt(trenchAlertDistance.get())) {
+                rumbleManager.rumbleGamepad(1.0, 0.5);
+            } else {
+                rumbleManager.rumbleGamepad(0.1, 0.5);
+            }
             logIsRumbling(true);
         } else {
             rumbleManager.stopGamepadRumble();
