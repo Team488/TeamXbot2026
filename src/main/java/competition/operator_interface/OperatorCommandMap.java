@@ -30,6 +30,7 @@ import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.drive.commands.XPositionCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.DropHoodForTrenchCommand;
+import competition.subsystems.hood.commands.HoodToZeroCommand;
 import competition.subsystems.hood.commands.TrimHoodDownCommand;
 import competition.subsystems.hood.commands.TrimHoodUpCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
@@ -96,14 +97,15 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupOperatorGamepad(OperatorInterface operatorInterface,
-            HoodSubsystem hoodSubsystem,
-            ShooterSubsystem shooterSubsystem,
-            IntakeDeployExtendCommand intakeDeployExtendCommand,
-            IntakeDeployRetractCommand intakeDeployRetractCommand,
-            HopperAndIntakeCommandGroup intakeCommand,
-            HopperAndIntakeEjectCommandGroup ejectCommand,
-            IntakeSlowlyAndFireWhenReady  intakeSlowlyAndFireWhenReady,
-            Provider<PrepareToShootCommandGroup> prepareToShootCommand) {
+             HoodSubsystem hoodSubsystem,
+             ShooterSubsystem shooterSubsystem,
+             IntakeDeployExtendCommand intakeDeployExtendCommand,
+             IntakeDeployRetractCommand intakeDeployRetractCommand,
+             HopperAndIntakeCommandGroup intakeCommand,
+             HopperAndIntakeEjectCommandGroup ejectCommand,
+             IntakeSlowlyAndFireWhenReady  intakeSlowlyAndFireWhenReady,
+             Provider<PrepareToShootCommandGroup> prepareToShootCommand,
+             Provider<HoodToZeroCommand> hoodToZeroCommandProvider) {
         var prepareToShootNear = prepareToShootCommand.get()
                 .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR);
         var prepareToShootTowerClose = prepareToShootCommand.get()
@@ -124,11 +126,18 @@ public class OperatorCommandMap {
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger)
                 .whileTrue(intakeCommand);
 
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(prepareToShootNear);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(prepareToShootTrench);
-        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(prepareToShootCorner);
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X)
+                .whileTrue(prepareToShootNear)
+                .onFalse(hoodToZeroCommandProvider.get());
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y)
+                .whileTrue(prepareToShootTrench)
+                .onFalse(hoodToZeroCommandProvider.get());
+        operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B)
+                .whileTrue(prepareToShootCorner)
+                .onFalse(hoodToZeroCommandProvider.get());
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A)
-                .whileTrue(prepareToShootTowerClose);
+                .whileTrue(prepareToShootTowerClose)
+                .onFalse(hoodToZeroCommandProvider.get());
 
         operatorInterface.operatorGamepad.getPovIfAvailable(180).whileTrue(ejectCommand);
     }
