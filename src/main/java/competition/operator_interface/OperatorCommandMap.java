@@ -24,6 +24,7 @@ import competition.subsystems.collector_intake.commands.CollectorEjectCommand;
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
+import competition.subsystems.drive.commands.PrecisionModeCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.drive.commands.XPositionCommand;
@@ -72,18 +73,12 @@ public class OperatorCommandMap {
     @Inject
     public void setupDriveCommands(OperatorInterface operatorInterface,
                                    SetRobotHeadingCommand resetHeading,
-                                   DebugSwerveModuleCommand debugModule,
-                                   ChangeActiveSwerveModuleCommand changeActiveModule,
-                                   SwerveDriveWithJoysticksCommand typicalSwerveDrive,
-                                   Provider<ClimberSetPointCommand> climberSetPoint,
-                                   ClimberSubsystem climber,
                                    DropHoodForTrenchCommand dropHoodForTrenchCommand,
                                    RotateToHubCommand rotateToHubCommand,
-                                   LowPowerModeOnCommand lowPowerModeOnCommand,
-                                   LowPowerModeOffCommand lowPowerModeOffCommand,
                                    XPositionCommand xPositionCommand,
                                    DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand,
-                                   IntakeSlowlyAndFireWhenReady intakeSlowlyAndFireWhenReady
+                                   IntakeSlowlyAndFireWhenReady intakeSlowlyAndFireWhenReady,
+                                   PrecisionModeCommand precisionModeCommand
     ) {
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(driveThroughAllianceTrenchCommand);
         // operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
@@ -91,7 +86,8 @@ public class OperatorCommandMap {
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(xPositionCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(intakeSlowlyAndFireWhenReady);
-        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(dropHoodForTrenchCommand);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(precisionModeCommand);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(dropHoodForTrenchCommand);
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
