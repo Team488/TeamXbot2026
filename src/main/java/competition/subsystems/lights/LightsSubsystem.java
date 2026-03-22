@@ -43,16 +43,16 @@ public class LightsSubsystem extends BaseSubsystem {
             return;
         }
 
-        if (hoodSubsystem.getCurrentValue() >= 0.02) {
-            lights.larson(8, Hertz.of(25), Color.kDarkRed, LarsonBounceValue.Front);
+        if (intakeDeploy.isCalibrated) {
+            lights.larson(0, Hertz.of(25), Color.kHotPink, LarsonBounceValue.Back);
         } else {
-            lights.larson(8, Hertz.of(25), Color.kLightGreen, LarsonBounceValue.Front);
+            lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
         }
-
-//        if (intakeDeploy.isCalibrated) {
-//            lights.larson(0, Hertz.of(25), Color.kHotPink, LarsonBounceValue.Back);
-//        } else {
-//            lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
-//        }
+        
+        if (hoodSubsystem.getCurrentValue() >= 0.02) {
+            lights.larson(1, Hertz.of(25), Color.kDarkRed, LarsonBounceValue.Front);
+        } else {
+            lights.larson(1, Hertz.of(25), Color.kLightGreen, LarsonBounceValue.Front);
+        }
     }
 }
