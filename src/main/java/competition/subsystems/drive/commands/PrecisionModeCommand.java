@@ -16,6 +16,7 @@ public class PrecisionModeCommand extends BaseCommand {
     
     @Override
     public void initialize() {
+        super.initialize();
             drive.setUnlockFullDrivePower(false);
             drive.setPrecisionTranslationActive(true);
             drive.setPrecisionRotationActive(true);
@@ -23,6 +24,7 @@ public class PrecisionModeCommand extends BaseCommand {
 
     @Override
     public void end(boolean isInterrupted){
+        super.end(isInterrupted);
         drive.setUnlockFullDrivePower(true);
         drive.setPrecisionTranslationActive(false);
         drive.setPrecisionRotationActive(false);

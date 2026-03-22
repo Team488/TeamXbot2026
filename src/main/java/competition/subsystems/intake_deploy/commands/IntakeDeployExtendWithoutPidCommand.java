@@ -11,7 +11,8 @@ import java.util.function.DoubleSupplier;
 /**
  * Extend the intake deploy mechanism without relying on PID. Used for driving the intake down towards the end stop.
  */
-public class IntakeDeployExtendWithoutPidCommand extends BaseCommand {
+public class
+IntakeDeployExtendWithoutPidCommand extends BaseCommand {
     private final IntakeDeploySubsystem subsystem;
 
     private final DoubleProperty powerProperty;
@@ -41,6 +42,7 @@ public class IntakeDeployExtendWithoutPidCommand extends BaseCommand {
 
     @Override
     public void end(boolean isInterrupted) {
+        super.end(isInterrupted);
         this.subsystem.stop();
     }
 }

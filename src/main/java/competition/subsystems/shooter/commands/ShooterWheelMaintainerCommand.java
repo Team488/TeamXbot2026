@@ -73,6 +73,7 @@ public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<Angular
 
     @Override
     public void end(boolean interrupted) {
+        super.end(interrupted);
         if (interrupted) {
             shooterWheel.stop();
         }

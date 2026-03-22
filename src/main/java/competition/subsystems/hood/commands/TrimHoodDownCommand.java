@@ -16,6 +16,7 @@ public class TrimHoodDownCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         hood.trimHoodGoalDown();
         log.info("Decreasing hood trim to " + hood.trimValue.get());
     }

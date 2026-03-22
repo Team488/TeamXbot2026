@@ -16,6 +16,7 @@ public class ShooterFeederStop extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         shooterFeeder.stop();
     }
 }

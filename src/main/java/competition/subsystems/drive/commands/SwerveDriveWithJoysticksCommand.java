@@ -69,6 +69,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         log.info("Initializing");
         advisor.resetDecider();
         drive.setDesiredHeading(pose.getCurrentHeading().getDegrees());

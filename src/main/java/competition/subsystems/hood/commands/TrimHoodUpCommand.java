@@ -20,6 +20,7 @@ public class TrimHoodUpCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         hood.trimHoodGoalUp();
         log.info("Increasing hood trim to " + hood.trimValue.get());
     }
