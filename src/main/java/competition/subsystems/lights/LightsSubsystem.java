@@ -48,7 +48,7 @@ public class LightsSubsystem extends BaseSubsystem {
         } else {
             lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
         }
-        
+
         if (hoodSubsystem.getCurrentValue() >= 0.02) {
             lights.larson(1, Hertz.of(25), Color.kDarkRed, LarsonBounceValue.Front);
         } else {
