@@ -1,6 +1,7 @@
 package competition.subsystems.shooter;
 
 import competition.electrical_contract.ElectricalContract;
+import competition.subsystems.shooter.commands.WaitForShooterAtGoalCommand;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -263,7 +264,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     }
 
     public Command getWaitForAtGoalCommand() {
-        return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
+        return new WaitForShooterAtGoalCommand(this);
     }
 
     public void setLowPowerMode(boolean newValue) {
