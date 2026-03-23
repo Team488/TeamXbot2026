@@ -25,6 +25,11 @@ public class RefinedSwervePointPathPlanning {
 
         this.aKitLog = new AKitLogger("RefinedSwervePointPathPlanning/");
     }
+    public List<XbotSwervePoint> generateSwervePoints(Pose2d startingPose, List<Pose2d> path,
+            boolean allowToughTerrain) {
+
+        return this.generateSwervePoints(startingPose, path, allowToughTerrain, false);
+    }
 
     /**
      * Generates a list of swerve points from starting point while picking the best
@@ -36,13 +41,13 @@ public class RefinedSwervePointPathPlanning {
      * @return a list of swerve points to destination
      */
     public List<XbotSwervePoint> generateSwervePoints(Pose2d startingPose, List<Pose2d> path,
-            boolean allowToughTerrain) {
+                                                      boolean allowToughTerrain, boolean runWholePath) {
         if (path.size() == 0) {
             return new ArrayList<XbotSwervePoint>();
         }
 
         List<XbotSwervePoint> swervePoints = new ArrayList<>();
-        var pathIndexStart = this.getBestPointOnPath(startingPose, path);
+        var pathIndexStart = runWholePath ? 0 : this.getBestPointOnPath(startingPose, path);
         var trajectoryPoses = new ArrayList<Pose2d>();
         var prefix = String.format("/(%.2f,%.2f)->(%.2f,%.2f)", startingPose.getX(), startingPose.getY(),
                 path.get(path.size() - 1).getX(), path.get(path.size() - 1).getY());
@@ -50,9 +55,11 @@ public class RefinedSwervePointPathPlanning {
         for (int i = pathIndexStart; i < path.size(); i++) {
             var pathPoint = path.get(i);
             trajectoryPoses.add(pathPoint);
-            swervePoints.add(new XbotSwervePoint(pathPoint, 2));
+            swervePoints.add(new XbotSwervePoint(pathPoint, 0.001));
         }
         aKitLog.record(prefix + "/trajectory", trajectoryPoses.toArray(new Pose2d[0]));
+        aKitLog.record(prefix + "/pathCount", path.size());
+        aKitLog.record(prefix + "/pathIndexStart", pathIndexStart);
 
         return swervePoints;
     }

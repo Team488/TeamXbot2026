@@ -1,6 +1,7 @@
 package competition.subsystems.shooter;
 
 import competition.electrical_contract.ElectricalContract;
+import competition.subsystems.shooter.commands.WaitForShooterAtGoalCommand;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -55,30 +56,30 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         var leftShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
                 .withP(0.05)
-                .withI(0.01)
-                .withD(0.01)
+                .withI(0.0)
+                .withD(0.0)
                 .withStaticFeedForward(0.02)
-                .withVelocityFeedForward(0.015)
+                .withVelocityFeedForward(0.01)
                 .withMinPowerOutput(-1.0)
                 .withMaxPowerOutput(1.0)
                 .build();
 
         var middleShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
                 .withP(0.05)
-                .withI(0.01)
-                .withD(0.01)
+                .withI(0.0)
+                .withD(0.0)
                 .withStaticFeedForward(0.02)
-                .withVelocityFeedForward(0.016)
+                .withVelocityFeedForward(0.01)
                 .withMinPowerOutput(-1.0)
                 .withMaxPowerOutput(1.0)
                 .build();
 
         var rightShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
                 .withP(0.05)
-                .withI(0.01)
-                .withD(0.01)
+                .withI(0.0)
+                .withD(0.0)
                 .withStaticFeedForward(0.02)
-                .withVelocityFeedForward(0.016)
+                .withVelocityFeedForward(0.01)
                 .withMinPowerOutput(-1.0)
                 .withMaxPowerOutput(1.0)
                 .build();
@@ -279,7 +280,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     }
 
     public Command getWaitForAtGoalCommand() {
-        return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
+        return new WaitForShooterAtGoalCommand(this);
     }
 
     public void setLowPowerMode(boolean newValue) {

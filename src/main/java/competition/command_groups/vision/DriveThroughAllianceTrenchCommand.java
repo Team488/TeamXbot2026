@@ -1,31 +1,24 @@
-package competition.command_groups;
+package competition.command_groups.vision;
 
 import javax.inject.Inject;
 
-import competition.command_groups.vision.BaseDriveWithSimpleBezierCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.AutoLandmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.pose.RefinedSwervePointPathPlanning;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
-import xbot.common.subsystems.pose.GameField;
 
-public class DriveFromNeutralZoneToAllianceCommand extends BaseDriveWithSimpleBezierCommand {
+public class DriveThroughAllianceTrenchCommand extends BaseDriveWithSimpleBezierCommand {
+    private final AutoLandmarks autoLandmarks;
     private final PoseSubsystem pose;
     private final RefinedSwervePointPathPlanning pathPlanning;
-    private final AutoLandmarks autoLandmarks;
 
     @Inject
-    public DriveFromNeutralZoneToAllianceCommand(DriveSubsystem drive, PoseSubsystem pose,
+    public DriveThroughAllianceTrenchCommand(DriveSubsystem drive, PoseSubsystem pose,
             PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
-            XSwerveDriveElectricalContract electricalContract,
             RobotAssertionManager robotAssertionManager, RefinedSwervePointPathPlanning pathPlanning,
-            GameField gamefield,
-            AprilTagFieldLayout aprilTagFieldLayout,
             AutoLandmarks autoLandmarks) {
         super(drive, pose, pf, headingModuleFactory, robotAssertionManager);
         this.pose = pose;
@@ -36,13 +29,8 @@ public class DriveFromNeutralZoneToAllianceCommand extends BaseDriveWithSimpleBe
     @Override
     public void initialize() {
         var currentPose = this.pose.getCurrentPose2d();
-        var startPose = this.autoLandmarks.getFinishBallPitCollectionPose(currentPose);
-        var pathPoses = this.autoLandmarks.getAllianceShootingStartingPath(currentPose);
-
-        super.setSegmentType(SegmentType.Mid);
-        this.setMaxSpeed(MaxSpeed.Auto);
-        super.logic.setKeyPoints(this.pathPlanning.generateSwervePoints(startPose, pathPoses,
-                false));
+        var path = this.autoLandmarks.getRelevantAlliancePathThroughTrench(currentPose, true);
+        super.logic.setKeyPoints(this.pathPlanning.generateSwervePoints(currentPose, path, false));
 
         super.initialize();
     }

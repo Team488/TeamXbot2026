@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xbot.common.advantage.AKitLogger;
 import xbot.common.advantage.DataFrameRefreshable;
+import xbot.common.command.BaseRobot;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.injection.swerve.FrontLeftDrive;
 import xbot.common.injection.swerve.FrontRightDrive;
@@ -37,6 +38,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
     private boolean staticHeadingActive = false;
     private final DoubleProperty maxAutoTargetSpeedMps;
     private final DoubleProperty maxAutoFuelIntakeTargetSpeedMps;
+    private final DoubleProperty interstitialSpeedMps;
 
     @Inject
     public DriveSubsystem(PIDManagerFactory pidFactory, PropertyFactory pf,
@@ -50,6 +52,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
         pf.setDefaultLevel(Property.PropertyLevel.Important);
         this.maxAutoTargetSpeedMps = pf.createPersistentProperty("MaxAutoTargetSpeedMetersPerSecond", 2.5);
         this.maxAutoFuelIntakeTargetSpeedMps = pf.createPersistentProperty("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.5);
+        this.interstitialSpeedMps = pf.createPersistentProperty("InterstitialSpeedMetersPerSecond", 1);
     }
 
     @Override
@@ -68,16 +71,18 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
     @Override
     protected PIDDefaults getHeadingPIDDefaults() {
+        var errorThreshold = BaseRobot.isSimulation() ? 5.0 : 2.0;
         return new PIDDefaults(
-                0.005, // P
-                0.000001, // I
-                0.02, // D
+                0.0045, // P
+                0.0001, // I
+                0.0, // D
                 0.0, // F
                 0.75, // Max output
                 -0.75, // Min output
-                2.0, // Error threshold
+                errorThreshold, // Error threshold
                 0.2, // Derivative threshold
-                0.2); // Time threshold
+                0.2, // Time threshold
+                10); // IZone
     }
 
     public Translation2d getLookAtPointTarget() {
@@ -126,6 +131,10 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
     public double getMaxAutoFuelIntakeTargetSpeedMetersPerSecond() {
         return this.maxAutoFuelIntakeTargetSpeedMps.get();
+    }
+
+    public double getInterstitialSpeedMetersPerSecond() {
+        return this.interstitialSpeedMps.get();
     }
 
     public InstantCommand createSetStaticHeadingTargetCommand(Supplier<Rotation2d> staticHeadingTarget) {
