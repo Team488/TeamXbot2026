@@ -8,6 +8,8 @@ import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import xbot.common.command.BaseParallelDeadlineGroup;
+import xbot.common.command.BaseSequentialCommandGroup;
 import xbot.common.command.DelayViaSupplierCommand;
 
 public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
@@ -31,19 +33,19 @@ public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
         this.intakeDeploy = intakeDeploy;
     }
 
-    public SequentialCommandGroup create() {
-        var group = new SequentialCommandGroup();
+    public BaseSequentialCommandGroup create() {
+        var group = new BaseSequentialCommandGroup();
         group.setName("DriveToNeutralZoneAndDeployIntakeCommandGroup");
 
         group.addCommands(this.driveToNeutralZoneForIntakeCommandProvider.get());
 
-        var intakeDeployThenExtendGroup = new SequentialCommandGroup(intakeDeployExtendCommandProvider.get())
+        var intakeDeployThenExtendGroup = new BaseSequentialCommandGroup(intakeDeployExtendCommandProvider.get())
                 .andThen(intakeDeploy.getWaitForAtGoalCommand());
         intakeDeployThenExtendGroup.setName("Intake Deploy and Wait Command");
 
         group.addCommands(intakeDeployThenExtendGroup);
 
-        var driveAcrossAndIntakeDeployCommandGroup = new ParallelDeadlineGroup(
+        var driveAcrossAndIntakeDeployCommandGroup = new BaseParallelDeadlineGroup(
                 this.driveAcrossMidNeutralZoneCommandProvider.get(), collectorIntakeCommandProvider.get());
         driveAcrossAndIntakeDeployCommandGroup.setName("Drive and Run Collector Command");
 

@@ -10,6 +10,7 @@ import competition.subsystems.shooter_feeder.commands.ShooterFeederStop;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import xbot.common.command.BaseParallelCommandGroup;
+import xbot.common.command.BaseParallelDeadlineGroup;
 
 public class NoWaitFinishedShootingCommand extends BaseParallelCommandGroup {
 
@@ -23,7 +24,7 @@ public class NoWaitFinishedShootingCommand extends BaseParallelCommandGroup {
 
         // Use InstantCommand as a deadline to make sure the other commands are only scheduled for one cycle,
         // but run in parallel so they can stop the subsystems immediately.
-        var group = new ParallelDeadlineGroup(
+        var group = new BaseParallelDeadlineGroup(
                 new InstantCommand(),
                 setHoodCommand,
                 shooterStopCommand,

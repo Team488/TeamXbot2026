@@ -7,6 +7,8 @@ import competition.subsystems.collector_intake.commands.CollectorStopCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import xbot.common.command.BaseParallelDeadlineGroup;
+import xbot.common.command.BaseSequentialCommandGroup;
 
 public class DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory {
     private final Provider<DriveFromNeutralZoneToAllianceCommand> driveFromNeutralZoneToAllianceCommandProvider;
@@ -24,11 +26,11 @@ public class DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory {
         this.collectorStopCommandProvider = collectorStopCommandProvider;
     }
 
-    public SequentialCommandGroup create() {
-        var group = new SequentialCommandGroup();
+    public BaseSequentialCommandGroup create() {
+        var group = new BaseSequentialCommandGroup();
         group.setName("DriveFromNeutralZoneToAllianceAndShootCommandGroup");
 
-        var driveFromNeutralToAlliance = new ParallelDeadlineGroup(
+        var driveFromNeutralToAlliance = new BaseParallelDeadlineGroup(
                 this.driveFromNeutralZoneToAllianceCommandProvider.get(), this.collectorStopCommandProvider.get());
         group.addCommands(driveFromNeutralToAlliance);
         group.addCommands(this.getReadyForFiringCommandGroup.get());

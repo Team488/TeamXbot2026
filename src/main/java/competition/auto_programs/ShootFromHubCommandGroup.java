@@ -4,6 +4,7 @@ import competition.command_groups.FireWhenShooterAndHoodReady;
 import competition.command_groups.PrepareToShootCommandGroup;
 import competition.subsystems.pose.TrajectoriesCalculation;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import xbot.common.command.BaseParallelCommandGroup;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.autonomous.AutonomousCommandSelector;
@@ -28,7 +29,7 @@ public class ShootFromHubCommandGroup extends BaseAutonomousSequentialCommandGro
         getAutoStatusChangeCommand("Starting ShootFromHubCommandGroup");
         prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR);
 
-        var prepareAndShoot = new ParallelCommandGroup(prepareToShootCommandGroup, fireWhenShooterAndHoodReady)
+        var prepareAndShoot = new BaseParallelCommandGroup(prepareToShootCommandGroup, fireWhenShooterAndHoodReady)
                 .withTimeout(timeout.get());
 
         this.addCommands(prepareAndShoot);

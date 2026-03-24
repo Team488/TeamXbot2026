@@ -8,6 +8,7 @@ import competition.command_groups.DriveFromNeutralZoneToAllianceAndShootCommandG
 import competition.command_groups.DriveToNeutralZoneAndDeployIntakeCommandGroupFactory;
 import competition.subsystems.pose.TrajectoriesCalculation;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import xbot.common.command.BaseParallelCommandGroup;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.autonomous.AutonomousCommandSelector;
@@ -36,7 +37,7 @@ public class ShootFromTrenchThenMoveToNeutralCommand extends BaseAutonomousSeque
         getAutoStatusChangeCommand("Starting ShootFromTrenchThenMoveToNeutralCommand");
         prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
 
-        var calibrateAndShoot = new ParallelCommandGroup(prepareToShootCommandGroup, fireWhenShooterAndRetractIntake)
+        var calibrateAndShoot = new BaseParallelCommandGroup(prepareToShootCommandGroup, fireWhenShooterAndRetractIntake)
                 .withTimeout(timeout.get());
 
         this.addCommands(calibrateAndShoot);
