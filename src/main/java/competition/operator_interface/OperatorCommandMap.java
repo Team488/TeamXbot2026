@@ -94,15 +94,15 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupOperatorGamepad(OperatorInterface operatorInterface,
-             HoodSubsystem hoodSubsystem,
-             ShooterSubsystem shooterSubsystem,
-             IntakeDeployExtendCommand intakeDeployExtendCommand,
-             IntakeDeployRetractCommand intakeDeployRetractCommand,
-             HopperAndIntakeCommandGroup intakeCommand,
-             HopperAndIntakeEjectCommandGroup ejectCommand,
-             IntakeSlowlyAndFireWhenReady  intakeSlowlyAndFireWhenReady,
-             Provider<PrepareToShootCommandGroup> prepareToShootCommand,
-             Provider<HoodToZeroCommand> hoodToZeroCommandProvider) {
+                                     HoodSubsystem hoodSubsystem,
+                                     ShooterSubsystem shooterSubsystem,
+                                     IntakeDeployExtendCommand intakeDeployExtendCommand,
+                                     IntakeDeployRetractCommand intakeDeployRetractCommand,
+                                     HopperAndIntakeCommandGroup intakeCommand,
+                                     HopperAndIntakeEjectCommandGroup ejectCommand,
+                                     IntakeSlowlyAndFireWhenReady  intakeSlowlyAndFireWhenReady,
+                                     Provider<PrepareToShootCommandGroup> prepareToShootCommand,
+                                     Provider<HoodToZeroCommand> hoodToZeroCommandProvider) {
         var prepareToShootNear = prepareToShootCommand.get()
                 .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR);
         var prepareToShootTowerClose = prepareToShootCommand.get()
@@ -175,12 +175,12 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupAutoCommands(Provider<SetAutonomousCommand> setAutonomousCommandProvider,
-            DriveToOutpostCommand driveToOutpostCommand,
-            MoveAcrossFieldCommandGroup moveAcrossFieldCommand,
-            ShootFromTrenchThenMoveToNeutralCommand shootFromTrenchThenMoveToNeutralCommand,
-            ShootFromTrenchCommandGroup shootFromTrenchCommandGroup,
-            ShootFromHubCommandGroup shootFromHubCommandGroup,
-            JustDriveNeutralMoveCommand justDriveNeutralMoveCommand) {
+                                  DriveToOutpostCommand driveToOutpostCommand,
+                                  MoveAcrossFieldCommandGroup moveAcrossFieldCommand,
+                                  ShootFromTrenchThenMoveToNeutralCommand shootFromTrenchThenMoveToNeutralCommand,
+                                  ShootFromTrenchCommandGroup shootFromTrenchCommandGroup,
+                                  ShootFromHubCommandGroup shootFromHubCommandGroup,
+                                  JustDriveNeutralMoveCommand justDriveNeutralMoveCommand) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
         var moveAcrossField = setAutonomousCommandProvider.get();
@@ -190,7 +190,7 @@ public class OperatorCommandMap {
         var shootFromTrench = setAutonomousCommandProvider.get();
         shootFromTrench.setAutoCommand(shootFromTrenchCommandGroup, Landmarks.blueStartTrenchToOutpost);
         shootFromTrench.includeOnSmartDashboard("Shoot from trench.");
-      
+
         var shootFromHub = setAutonomousCommandProvider.get();
         shootFromHub.setAutoCommand(shootFromHubCommandGroup, Landmarks.blueStartTrenchToOutpost);
         shootFromHub.includeOnSmartDashboard("Shoot from hub.");

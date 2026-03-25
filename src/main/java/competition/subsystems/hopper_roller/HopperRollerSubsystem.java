@@ -23,6 +23,7 @@ public class HopperRollerSubsystem extends BaseSubsystem {
     public final XCANMotorController hopperRollerMotor;
     final DoubleProperty ejectPower;
     final AngularVelocityProperty intakeVelocity;
+    final DoubleProperty collectPower;
     final DoubleProperty intakePower;
     public final DoubleProperty voltageRampTime;
 
@@ -53,6 +54,7 @@ public class HopperRollerSubsystem extends BaseSubsystem {
 
         intakeVelocity = pf.createPersistentProperty("Intake Velocity", RPM.of(0.8));
         intakePower = pf.createPersistentProperty("Intake Velocity", 0.8);
+        collectPower = pf.createPersistentProperty("Collect Power", 0.8);
         ejectPower = pf.createPersistentProperty("Eject Power", -0.8);
     }
 
@@ -68,6 +70,13 @@ public class HopperRollerSubsystem extends BaseSubsystem {
             return;
         }
         hopperRollerMotor.setVelocityTarget(intakeVelocity.get());
+    }
+
+    public void setCollectPower() {
+        if (hopperRollerMotor == null) {
+            return;
+        }
+        hopperRollerMotor.setPower(collectPower.get());
     }
 
     public void stop() {
@@ -95,4 +104,6 @@ public class HopperRollerSubsystem extends BaseSubsystem {
     public Command getStopCommand() {
         return new NamedRunCommand(getName() + "-stop", this::stop, this);
     }
+
+    public Command getCollectCommand() {return new NamedRunCommand(getName() + "-collect", this::setCollectPower, this);}
 }
