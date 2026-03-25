@@ -142,15 +142,15 @@ public class OperatorCommandMap {
     @Inject
     public void setupDebugGamepad(OperatorInterface operatorInterface,
 
-                                  ShooterOutputCommand shooterOutputCommand,
-                                  TrimShooterVelocityUp trimShooterVelocityUp,
-                                  TrimShooterVelocityDown trimShooterVelocityDown,
-                                  CollectorIntakeCommand collectorIntakeCommand,
-                                  IntakeDeployExtendCommand intakeDeployExtendCommand,
-                                  IntakeDeployRetractCommand intakeDeployRetractCommand,
-                                  CollectorEjectCommand collectorEjectCommand,
-                                  ShooterFeederFire shooterFeederFire,
-                                  HopperRollerSubsystem hopperRollerSubsystem
+            ShooterOutputCommand shooterOutputCommand,
+            TrimShooterVelocityUp trimShooterVelocityUp,
+            TrimShooterVelocityDown trimShooterVelocityDown,
+            CollectorIntakeCommand collectorIntakeCommand,
+            IntakeDeployExtendCommand intakeDeployExtendCommand,
+            IntakeDeployRetractCommand intakeDeployRetractCommand,
+            CollectorEjectCommand collectorEjectCommand,
+            ShooterFeederFire shooterFeederFire,
+            HopperRollerSubsystem hopperRollerSubsystem
 
     ) {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger)
