@@ -52,7 +52,7 @@ public class LightsSubsystem extends BaseSubsystem {
         } else if (intakeDeploy.isCalibrated && DriverStation.isTeleop()) {
             lights.larson(0, Hertz.of(25), Color.kGreen, LarsonBounceValue.Back);
         } else if (DriverStation.isDisabled() || !intakeDeploy.isCalibrated || !voltageMonitor.isAtHealthyVoltage()) {
-            lights.larson(0, Hertz.of(25), Color.kDarkRed, LarsonBounceValue.Back);
+            lights.larson(0, Hertz.of(25), Color.kFirstRed, LarsonBounceValue.Back);
         } else {
             lights.larson(0, Hertz.of(25), Color.kWhite, LarsonBounceValue.Back);
         }
