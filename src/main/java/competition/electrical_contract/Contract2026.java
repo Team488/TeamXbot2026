@@ -405,7 +405,7 @@ public class Contract2026 extends ElectricalContract {
         return new CANLightControllerInfo("Lights",
                 LightControllerType.Candle, CANBusId.Canivore,
                 57, new CANLightControllerOutputConfig(LEDStripType.GRB,
-                0.15, new int[] {8}));
+                0.15, new int[] {8, 30}));
 
     }
 
