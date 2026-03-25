@@ -31,8 +31,6 @@ import competition.subsystems.drive.commands.XPositionCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.DropHoodForTrenchCommand;
 import competition.subsystems.hood.commands.HoodToZeroCommand;
-import competition.subsystems.hood.commands.TrimHoodDownCommand;
-import competition.subsystems.hood.commands.TrimHoodUpCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
@@ -96,24 +94,15 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupOperatorGamepad(OperatorInterface operatorInterface,
-            HoodSubsystem hoodSubsystem,
-            ShooterSubsystem shooterSubsystem,
-            IntakeDeployExtendCommand intakeDeployExtendCommand,
-            IntakeDeployRetractCommand intakeDeployRetractCommand,
-            HopperAndIntakeCommandGroup hopperAndIntakeCollectCommand,
-            HopperAndIntakeEjectCommandGroup ejectCommand,
-            FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady,
-            FireWhenReadyAndRetractIntakeDeployCommandGroup fireWhenReadyAndRetractIntakeDeployCommandGroup,
-            Provider<PrepareToShootCommandGroup> prepareToShootCommand) {
-             HoodSubsystem hoodSubsystem,
-             ShooterSubsystem shooterSubsystem,
-             IntakeDeployExtendCommand intakeDeployExtendCommand,
-             IntakeDeployRetractCommand intakeDeployRetractCommand,
-             HopperAndIntakeCommandGroup intakeCommand,
-             HopperAndIntakeEjectCommandGroup ejectCommand,
-             IntakeSlowlyAndFireWhenReady  intakeSlowlyAndFireWhenReady,
-             Provider<PrepareToShootCommandGroup> prepareToShootCommand,
-             Provider<HoodToZeroCommand> hoodToZeroCommandProvider) {
+                                     HoodSubsystem hoodSubsystem,
+                                     ShooterSubsystem shooterSubsystem,
+                                     IntakeDeployExtendCommand intakeDeployExtendCommand,
+                                     IntakeDeployRetractCommand intakeDeployRetractCommand,
+                                     HopperAndIntakeCommandGroup intakeCommand,
+                                     HopperAndIntakeEjectCommandGroup ejectCommand,
+                                     IntakeSlowlyAndFireWhenReady  intakeSlowlyAndFireWhenReady,
+                                     Provider<PrepareToShootCommandGroup> prepareToShootCommand,
+                                     Provider<HoodToZeroCommand> hoodToZeroCommandProvider) {
         var prepareToShootNear = prepareToShootCommand.get()
                 .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR);
         var prepareToShootTowerClose = prepareToShootCommand.get()
@@ -132,7 +121,7 @@ public class OperatorCommandMap {
                 .whileTrue(intakeDeployExtendCommand);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger)
-                .whileTrue(hopperAndIntakeCollectCommand);
+                .whileTrue(intakeCommand);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X)
                 .whileTrue(prepareToShootNear)
@@ -153,17 +142,15 @@ public class OperatorCommandMap {
     @Inject
     public void setupDebugGamepad(OperatorInterface operatorInterface,
 
-            ShooterOutputCommand shooterOutputCommand,
-            TrimShooterVelocityUp trimShooterVelocityUp,
-            TrimShooterVelocityDown trimShooterVelocityDown,
-            CollectorIntakeCommand collectorIntakeCommand,
-            TrimHoodUpCommand trimHoodUpCommand,
-            TrimHoodDownCommand trimHoodDownCommand,
-            IntakeDeployExtendCommand intakeDeployExtendCommand,
-            IntakeDeployRetractCommand intakeDeployRetractCommand,
-            CollectorEjectCommand collectorEjectCommand,
-            ShooterFeederFire shooterFeederFire,
-            HopperRollerSubsystem hopperRollerSubsystem
+                                  ShooterOutputCommand shooterOutputCommand,
+                                  TrimShooterVelocityUp trimShooterVelocityUp,
+                                  TrimShooterVelocityDown trimShooterVelocityDown,
+                                  CollectorIntakeCommand collectorIntakeCommand,
+                                  IntakeDeployExtendCommand intakeDeployExtendCommand,
+                                  IntakeDeployRetractCommand intakeDeployRetractCommand,
+                                  CollectorEjectCommand collectorEjectCommand,
+                                  ShooterFeederFire shooterFeederFire,
+                                  HopperRollerSubsystem hopperRollerSubsystem
 
     ) {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger)
@@ -183,18 +170,17 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightStick)
                 .whileTrue(hopperRollerSubsystem.getIntakeCommand());
         operatorInterface.setupDebugGamepad.getPovIfAvailable(90).whileTrue(collectorEjectCommand);
-        operatorInterface.setupDebugGamepad.getPovIfAvailable(180).onTrue(trimHoodUpCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(270).whileTrue(shooterFeederFire);
     }
 
     @Inject
     public void setupAutoCommands(Provider<SetAutonomousCommand> setAutonomousCommandProvider,
-            DriveToOutpostCommand driveToOutpostCommand,
-            MoveAcrossFieldCommandGroup moveAcrossFieldCommand,
-            ShootFromTrenchThenMoveToNeutralCommand shootFromTrenchThenMoveToNeutralCommand,
-            ShootFromTrenchCommandGroup shootFromTrenchCommandGroup,
-            ShootFromHubCommandGroup shootFromHubCommandGroup,
-            JustDriveNeutralMoveCommand justDriveNeutralMoveCommand) {
+                                  DriveToOutpostCommand driveToOutpostCommand,
+                                  MoveAcrossFieldCommandGroup moveAcrossFieldCommand,
+                                  ShootFromTrenchThenMoveToNeutralCommand shootFromTrenchThenMoveToNeutralCommand,
+                                  ShootFromTrenchCommandGroup shootFromTrenchCommandGroup,
+                                  ShootFromHubCommandGroup shootFromHubCommandGroup,
+                                  JustDriveNeutralMoveCommand justDriveNeutralMoveCommand) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
         var moveAcrossField = setAutonomousCommandProvider.get();
@@ -204,7 +190,7 @@ public class OperatorCommandMap {
         var shootFromTrench = setAutonomousCommandProvider.get();
         shootFromTrench.setAutoCommand(shootFromTrenchCommandGroup, Landmarks.blueStartTrenchToOutpost);
         shootFromTrench.includeOnSmartDashboard("Shoot from trench.");
-      
+
         var shootFromHub = setAutonomousCommandProvider.get();
         shootFromHub.setAutoCommand(shootFromHubCommandGroup, Landmarks.blueStartTrenchToOutpost);
         shootFromHub.includeOnSmartDashboard("Shoot from hub.");
