@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.NamedRunCommand;
 import xbot.common.controls.actuators.XCANMotorController;
+import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.properties.AngularVelocityProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
@@ -34,11 +35,23 @@ public class HopperRollerSubsystem extends BaseSubsystem {
         pf.setPrefix(this);
         this.electricalContract = electricalContract;
         this.voltageRampTime = pf.createPersistentProperty("VoltageRampTime", 0.1);
+
+        var hopperRollerMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
+                .withP(0.05)
+                .withI(0.0)
+                .withD(0.0)
+                .withStaticFeedForward(0.02)
+                .withVelocityFeedForward(0.01)
+                .withMinPowerOutput(-1.0)
+                .withMaxPowerOutput(1.0)
+                .build();
+
         if (electricalContract.isHopperRollerReady()) {
             this.hopperRollerMotor = motorFactory.create(
                     electricalContract.getHopperRollerMotor(),
                     getPrefix(),
-                    "HopperRollerPID"
+                    "HopperRollerPID",
+                    hopperRollerMotorDefaultPIDProperties
             );
             this.hopperRollerMotor.setOpenLoopRampRates(
                     Seconds.of(voltageRampTime.get()),
@@ -61,6 +74,13 @@ public class HopperRollerSubsystem extends BaseSubsystem {
             return;
         }
         hopperRollerMotor.setPower(ejectPower.get());
+    }
+
+    public void setIntakePower() {
+        if (hopperRollerMotor == null) {
+            return;
+        }
+        hopperRollerMotor.setPower(intakePower.get());
     }
 
     public void setIntakeVelocity() {
