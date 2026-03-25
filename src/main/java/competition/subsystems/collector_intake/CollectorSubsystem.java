@@ -3,17 +3,21 @@ package competition.subsystems.collector_intake;
 import competition.electrical_contract.ElectricalContract;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
+import xbot.common.properties.AngularVelocityProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static edu.wpi.first.units.Units.RPM;
+
 @Singleton
 public class CollectorSubsystem extends BaseSubsystem {
 
     public final ElectricalContract electricalContract;
     public final XCANMotorController collectorMotor;
+    final AngularVelocityProperty intakeVelocity;
     final DoubleProperty intakePower;
     final DoubleProperty ejectPower;
 
@@ -35,6 +39,7 @@ public class CollectorSubsystem extends BaseSubsystem {
             this.collectorMotor = null;
         }
 
+        intakeVelocity = pf.createPersistentProperty("FuelIntakePower", RPM.of(1));
         intakePower = pf.createPersistentProperty("FuelIntakePower", 1);
         ejectPower = pf.createPersistentProperty("FuelEjectPower", -1);
     }
@@ -43,7 +48,7 @@ public class CollectorSubsystem extends BaseSubsystem {
         if (collectorMotor == null) {
             return;
         }
-        collectorMotor.setPower(intakePower.get());
+        collectorMotor.setVelocityTarget(intakeVelocity.get());
     }
 
     public void eject() {
