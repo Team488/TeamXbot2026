@@ -45,7 +45,8 @@ public class CollectorSubsystem extends BaseSubsystem {
 
         intakePower = pf.createPersistentProperty("FuelIntakePower", 1);
         ejectPower = pf.createPersistentProperty("FuelEjectPower", -1);
-        collectorAngle = pf.createPersistentProperty("CollectorAngle", Degrees.of(90));
+        collectorAngle = pf.createPersistentProperty("CollectorAngle", Degrees.of(-90));
+        // collector angle should be tuned to what a safe angle for the collector will be, -90 is just a safe bet.
     }
 
     public void intake() {
@@ -66,7 +67,7 @@ public class CollectorSubsystem extends BaseSubsystem {
         }
 
 
-        if (intakeDeploySubsystem.isCalibrated && intakeDeploySubsystem.getCurrentValue().lt(collectorAngle.get())) {
+        if (intakeDeploySubsystem.isCalibrated && intakeDeploySubsystem.getCurrentValue().gt(collectorAngle.get())) {
             collectorMotor.setPower(0.0);
 
         } else  {
