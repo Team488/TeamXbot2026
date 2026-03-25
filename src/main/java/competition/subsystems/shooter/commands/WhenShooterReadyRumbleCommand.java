@@ -27,16 +27,16 @@ public class WhenShooterReadyRumbleCommand extends BaseCommand {
         if (DriverStation.isTeleop()
                 && shooter.isReadyToFire()
                 && hood.isMaintainerAtGoal()){
-            oi.operatorGamepad.getRumbleManager().rumbleGamepad(150, 3);
+            oi.driverGamepad.getRumbleManager().rumbleGamepad(150, 3);
         } else {
-            oi.operatorGamepad.getRumbleManager().stopGamepadRumble();
+            oi.driverGamepad.getRumbleManager().stopGamepadRumble();
         }
     }
 
     @Override
     public void end(boolean isInterrupted) {
         super.end(isInterrupted);
-        oi.operatorGamepad.getRumbleManager().stopGamepadRumble();
+        oi.driverGamepad.getRumbleManager().stopGamepadRumble();
     }
 
     @Override
