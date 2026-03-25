@@ -27,12 +27,11 @@ public class ChoreoAutoManager {
         this.drive = drive;
         this.pose = pose;
 
-        // Initialize AutoFactory
         this.autoFactory = new AutoFactory(
                 pose::getCurrentPose2d,
                 this::setCurrentPose,
                 this::followTrajectory,
-                true, // enableAllianceFlipping
+                true,
                 drive
         );
 
@@ -44,7 +43,6 @@ public class ChoreoAutoManager {
     }
     
     private void setCurrentPose(Pose2d newPose) {
-        // We have to split this into setCurrentPosition and setCurrentHeading
         pose.setCurrentPosition(
             newPose.getX() * BasePoseSubsystem.INCHES_IN_A_METER,
             newPose.getY() * BasePoseSubsystem.INCHES_IN_A_METER

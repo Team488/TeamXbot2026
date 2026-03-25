@@ -62,7 +62,8 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
         this.maxAutoTargetSpeedMps = pf.createPersistentProperty("MaxAutoTargetSpeedMetersPerSecond", 2.5);
         this.maxAutoFuelIntakeTargetSpeedMps = pf.createPersistentProperty("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.5);
         this.interstitialSpeedMps = pf.createPersistentProperty("InterstitialSpeedMetersPerSecond", 1);
-        
+
+        // Used by Choreo, currently holds placeholder values
         this.xController = pidFactory.create(getPrefix() + "ChoreoX", 10.0, 0.0, 0.0);
         this.yController = pidFactory.create(getPrefix() + "ChoreoY", 10.0, 0.0, 0.0);
         this.headingController = pidFactory.create(getPrefix() + "ChoreoHeading", 7.5, 0.0, 0.0);
