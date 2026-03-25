@@ -31,8 +31,6 @@ import competition.subsystems.drive.commands.XPositionCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.DropHoodForTrenchCommand;
 import competition.subsystems.hood.commands.HoodToZeroCommand;
-import competition.subsystems.hood.commands.TrimHoodDownCommand;
-import competition.subsystems.hood.commands.TrimHoodUpCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
@@ -148,8 +146,6 @@ public class OperatorCommandMap {
             TrimShooterVelocityUp trimShooterVelocityUp,
             TrimShooterVelocityDown trimShooterVelocityDown,
             CollectorIntakeCommand collectorIntakeCommand,
-            TrimHoodUpCommand trimHoodUpCommand,
-            TrimHoodDownCommand trimHoodDownCommand,
             IntakeDeployExtendCommand intakeDeployExtendCommand,
             IntakeDeployRetractCommand intakeDeployRetractCommand,
             CollectorEjectCommand collectorEjectCommand,
@@ -174,7 +170,6 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightStick)
                 .whileTrue(hopperRollerSubsystem.getIntakeCommand());
         operatorInterface.setupDebugGamepad.getPovIfAvailable(90).whileTrue(collectorEjectCommand);
-        operatorInterface.setupDebugGamepad.getPovIfAvailable(180).onTrue(trimHoodUpCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(270).whileTrue(shooterFeederFire);
     }
 
