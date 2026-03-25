@@ -12,26 +12,19 @@ public class GetReadyForFiringCommandGroup extends BaseSequentialCommandGroup {
 
     @Inject
     public GetReadyForFiringCommandGroup(TrajectoriesCalculation trajectoriesCalculation,
-                                         FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup,
+                                         FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady,
                                          PoseSubsystem pose,
                                          AutoLandmarks autoLandmarks,
                                          PrepareToShootCommandGroup prepareToShootCommandGroup,
                                          DriveToShootingPositionCommand driveToShootingPositionCommand
     ) {
-
-        var currentPose = pose.getCurrentPose2d();
-        var startPose = autoLandmarks.getAllianceShootingStartingPose(currentPose);
-        var endPose = autoLandmarks.getClosestShootingPose(startPose);
-        var shootingData = trajectoriesCalculation.calculateAllianceHubShootingData(endPose);
-
-        prepareToShootCommandGroup.setShooterGoal(shootingData.shooterRPM());
-        prepareToShootCommandGroup.setHoodGoal(shootingData.servoRatio());
+        prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
 
         var getReadyToFire = new ParallelCommandGroup(
                 driveToShootingPositionCommand, prepareToShootCommandGroup);
 
         this.addCommands(getReadyToFire);
 
-        this.addCommands(fireWhenReadyShooterCommandGroup);
+        this.addCommands(fireWhenShooterAndHoodReady);
     }
 }

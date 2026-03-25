@@ -10,6 +10,7 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
 public class ShooterFeederSubsystem extends BaseSubsystem {
@@ -18,6 +19,7 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
     public final DoubleProperty shooterFeederMotorPower;
     public final DoubleProperty firePower;
     public final DoubleProperty shooterFeederFireVelocity;
+    public final DoubleProperty voltageRampTime;
 
     @Inject
     public ShooterFeederSubsystem(ElectricalContract electricalContract,
@@ -34,9 +36,17 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
                 .withMaxPowerOutput(1.0)
                 .build();
 
+        this.voltageRampTime = pf.createPersistentProperty("VoltageRampTime", 0.1);
+
         if (electricalContract.isShooterFeederReady()) {
             this.shooterFeederMotor = motorFactory.create(electricalContract.getShooterFeederMotor(),
                     getPrefix(), "ShooterFeederMotorPID", defaultPIDProperties);
+            this.shooterFeederMotor.setOpenLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get()));
+            this.shooterFeederMotor.setClosedLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get()));
             this.registerDataFrameRefreshable(shooterFeederMotor);
         } else {
             this.shooterFeederMotor = null;
