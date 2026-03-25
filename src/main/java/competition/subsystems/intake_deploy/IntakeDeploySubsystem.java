@@ -3,11 +3,13 @@ package competition.subsystems.intake_deploy;
 import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.controls.sensors.XAbsoluteEncoder;
 import xbot.common.properties.AngleProperty;
 import xbot.common.command.BaseSetpointSubsystem;
+import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -36,6 +38,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public final DoubleProperty maxPidAcceleration;
     public final DoubleProperty collectionDownwardPressure;
     public final DoubleProperty voltageRampTime;
+    public DoubleProperty readinessTimeoutSeconds;
 
     @Inject
     public IntakeDeploySubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
@@ -77,8 +80,8 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             this.intakeDeployEncoder = null;
         }
 
-        this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", 0.0);
-        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -135.0);
+        this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", 10.0);
+        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -145.0);
 
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.2);
 
@@ -89,6 +92,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         this.maxPidAcceleration = propertyFactory.createPersistentProperty("PidMaxMotorAcceleration-RotationsPerSecondPerSecond", 200);
 
         this.collectionDownwardPressure = propertyFactory.createPersistentProperty("Collection Downward Pressure Power", -0.1);
+        this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("Readiness Timeout Seconds", 3.0);
 
         if (this.intakeDeployMotor != null) {
             this.intakeDeployMotor.setTrapezoidalProfileMaxVelocity(RotationsPerSecond.of(maxPidVelocity.get()));
@@ -184,5 +188,9 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             return intakeDeployMotor.getCurrent();
         }
         return Amps.zero();
+    }
+
+    public Command getWaitForAtGoalCommand() {
+        return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
     }
 }
