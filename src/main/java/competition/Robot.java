@@ -51,7 +51,8 @@ public class Robot extends BaseRobot {
         }
 
         oi = getInjectorComponent().operatorInterface();
-        autonomousCommandSelector.setCurrentAutonomousCommand(getInjectorComponent().shootFromTrenchCommandGroup());
+        autonomousCommandSelector.setCurrentAutonomousCommand(getInjectorComponent().choreoAutoManager().getAutoChooser().selectedCommandScheduler());
+        // getInjectorComponent().choreoAutoManager(); // Ensure it gets instantiated
 
         dataFrameRefreshables.add((DriveSubsystem)getInjectorComponent().driveSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().poseSubsystem());

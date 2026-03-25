@@ -1,6 +1,7 @@
 package competition.injection.components;
 
 import competition.auto_programs.ShootFromTrenchCommandGroup;
+import competition.auto_programs.choreo.ChoreoAutoManager;
 import competition.operator_interface.OperatorCommandMap;
 import competition.operator_interface.OperatorInterface;
 import competition.simulation.BaseSimulator;
@@ -53,6 +54,8 @@ public abstract class BaseRobotComponent extends BaseComponent {
     public abstract VoltageMonitorSubsystem voltageMonitorSubsystem();
 
     public abstract ClimberSubsystem climberSubsystem();
+
+    public abstract ChoreoAutoManager choreoAutoManager();
 
     public abstract ShootFromTrenchCommandGroup shootFromTrenchCommandGroup();
 

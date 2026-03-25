@@ -3,10 +3,13 @@ package competition.subsystems.drive;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import choreo.trajectory.SwerveSample;
 import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.geometry.Pose2d;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xbot.common.advantage.AKitLogger;
@@ -20,6 +23,8 @@ import xbot.common.injection.swerve.RearRightDrive;
 import xbot.common.injection.swerve.SwerveComponent;
 import xbot.common.math.PIDDefaults;
 import xbot.common.math.PIDManager.PIDManagerFactory;
+import xbot.common.math.PIDManager;
+import xbot.common.math.XYPair;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.Property;
 import xbot.common.properties.PropertyFactory;
@@ -29,7 +34,7 @@ import java.util.function.Supplier;
 
 @Singleton
 public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFrameRefreshable {
-    private static Logger log = LogManager.getLogger(DriveSubsystem.class);
+    private static final Logger log = LogManager.getLogger(DriveSubsystem.class);
 
     private Translation2d lookAtPointTarget = new Translation2d(); // The target point to look at
     private Rotation2d staticHeadingTarget = new Rotation2d(); // The heading you want to constantly be at
@@ -39,6 +44,10 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
     private final DoubleProperty maxAutoTargetSpeedMps;
     private final DoubleProperty maxAutoFuelIntakeTargetSpeedMps;
     private final DoubleProperty interstitialSpeedMps;
+
+    private final PIDManager xController;
+    private final PIDManager yController;
+    private final PIDManager headingController;
 
     @Inject
     public DriveSubsystem(PIDManagerFactory pidFactory, PropertyFactory pf,
@@ -53,6 +62,11 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
         this.maxAutoTargetSpeedMps = pf.createPersistentProperty("MaxAutoTargetSpeedMetersPerSecond", 2.5);
         this.maxAutoFuelIntakeTargetSpeedMps = pf.createPersistentProperty("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.5);
         this.interstitialSpeedMps = pf.createPersistentProperty("InterstitialSpeedMetersPerSecond", 1);
+        
+        this.xController = pidFactory.create(getPrefix() + "ChoreoX", 10.0, 0.0, 0.0);
+        this.yController = pidFactory.create(getPrefix() + "ChoreoY", 10.0, 0.0, 0.0);
+        this.headingController = pidFactory.create(getPrefix() + "ChoreoHeading", 7.5, 0.0, 0.0);
+        this.headingController.setEnableErrorThreshold(false);
     }
 
     @Override
