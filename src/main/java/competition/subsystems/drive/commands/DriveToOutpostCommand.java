@@ -32,6 +32,7 @@ public class DriveToOutpostCommand extends SwerveSimpleTrajectoryCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         outpostPose = PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueOutpostPark);
 
         ArrayList<XbotSwervePoint> swervePoints = new ArrayList<>();
@@ -44,6 +45,7 @@ public class DriveToOutpostCommand extends SwerveSimpleTrajectoryCommand {
 
     @Override
     public void end(boolean interrupted) {
+        super.end(interrupted);
         log.info("end");
     }
 }
