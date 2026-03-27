@@ -1,6 +1,12 @@
 
 package competition;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,6 +42,7 @@ public class Robot extends BaseRobot {
     @Override
     protected void initializeSystems() {
         super.initializeSystems();
+        configurePathPlanner();
         getInjectorComponent().subsystemDefaultCommandMap();
         getInjectorComponent().operatorCommandMap();
         getInjectorComponent().swerveDefaultCommandMap();
@@ -150,6 +157,36 @@ public class Robot extends BaseRobot {
 
         if (this.oi != null) {
             this.oi.periodic();
+        }
+    }
+
+    private void configurePathPlanner() {
+        var pose = (PoseSubsystem) getInjectorComponent().poseSubsystem();
+        var drive = (DriveSubsystem) getInjectorComponent().driveSubsystem();
+
+        try {
+            AutoBuilder.configure(
+                    pose::getCurrentPose2d,
+                    pose::setCurrentPosition,
+                    drive::getRobotRelativeSpeeds,
+                    (speeds, feedforwards) -> drive.driveWithChassisSpeeds(speeds),
+                    new PPHolonomicDriveController(
+                            new PIDConstants(5.0, 0.0, 0.0),
+                            new PIDConstants(5.0, 0.0, 0.0)
+                    ),
+                    RobotConfig.fromGUISettings(),
+                    () -> {
+                        var alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
+                        return alliance == DriverStation.Alliance.Red;
+                    },
+                    drive
+            );
+
+            // Additionally warm up PathPlanner (not sure how necessary it is)
+            CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
+            log.info("PathPlanner AutoBuilder configured and warmup scheduled.");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
