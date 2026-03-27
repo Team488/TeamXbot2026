@@ -20,6 +20,7 @@ public class DropHoodForTrenchCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         hood.servoZero();
         hood.runServo();
         log.info("running servo to " + HoodSubsystem.servoMinBound);
