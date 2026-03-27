@@ -59,9 +59,9 @@ public class LightsSubsystem extends BaseSubsystem {
             lights.larson(0, Hertz.of(25), Color.kFirstRed, LarsonBounceValue.Back);
         }
 
-        if (shooterSubsystem.isReadyToFire() == true) {
-            lights.larson(2, Hertz.of(30), Color.kRed, LarsonBounceValue.Back);
-            lights.larson(3, Hertz.of(30), Color.kBlue, LarsonBounceValue.Back);
+        if (shooterSubsystem.isReadyToFire()) {
+            lights.fire(2, Hertz.of(25), 25, 25, 25);
+            lights.fire(3, Hertz.of(25), 25, 25, 25);
         } else {
             return;
         }
