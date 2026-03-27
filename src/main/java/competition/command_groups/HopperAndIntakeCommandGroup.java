@@ -11,6 +11,6 @@ public class HopperAndIntakeCommandGroup extends BaseParallelCommandGroup {
     @Inject
     public HopperAndIntakeCommandGroup(HopperRollerSubsystem hopperRoller,
                                        CollectorIntakeCommand fuelIntakeCommand) {
-        addCommands(fuelIntakeCommand, hopperRoller.getIntakeCommand());
+        addCommands(fuelIntakeCommand, hopperRoller.getCollectCommand());
     }
 }
