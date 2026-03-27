@@ -4,9 +4,11 @@ import com.ctre.phoenix6.signals.LarsonBounceValue;
 import competition.electrical_contract.ElectricalContract;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANLightController;
+import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -18,15 +20,17 @@ public class LightsSubsystem extends BaseSubsystem {
     public final XCANLightController lights;
     public IntakeDeploySubsystem intakeDeploy;
     public HoodSubsystem hoodSubsystem;
+    public VoltageMonitorSubsystem voltageMonitor;
 
     @Inject
     public LightsSubsystem(XCANLightController.XCANLightControllerFactory lightsFactory,
                            ElectricalContract electricalContract,
                            IntakeDeploySubsystem intakeDeploy,
-                           HoodSubsystem hoodSubsystem
+                           HoodSubsystem hoodSubsystem, VoltageMonitorSubsystem voltageMonitor
     ) {
         this.intakeDeploy = intakeDeploy;
         this.hoodSubsystem = hoodSubsystem;
+        this.voltageMonitor = voltageMonitor;
         if (electricalContract.isLightsReady()) {
             this.lights = lightsFactory.create(
                     electricalContract.getLightControllerInfo()
@@ -43,10 +47,12 @@ public class LightsSubsystem extends BaseSubsystem {
             return;
         }
 
-        if (intakeDeploy.isCalibrated) {
-            lights.larson(0, Hertz.of(25), Color.kHotPink, LarsonBounceValue.Back);
-        } else {
+        if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && voltageMonitor.isAtUnhealthyVoltage()) {
             lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
+        } else if (intakeDeploy.isCalibrated && DriverStation.isTeleop() && voltageMonitor.isAtUnhealthyVoltage()) {
+            lights.larson(0, Hertz.of(25), Color.kGreen, LarsonBounceValue.Back);
+        } else {
+            lights.larson(0, Hertz.of(25), Color.kFirstRed, LarsonBounceValue.Back);
         }
 
         if (hoodSubsystem.getCurrentValue() >= 0.02) {
