@@ -4,6 +4,7 @@ import com.ctre.phoenix6.signals.LarsonBounceValue;
 import competition.electrical_contract.ElectricalContract;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
+import competition.subsystems.shooter.ShooterSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import xbot.common.command.BaseSubsystem;
@@ -21,6 +22,7 @@ public class LightsSubsystem extends BaseSubsystem {
     public IntakeDeploySubsystem intakeDeploy;
     public HoodSubsystem hoodSubsystem;
     public VoltageMonitorSubsystem voltageMonitor;
+    public ShooterSubsystem shooterSubsystem;
 
     @Inject
     public LightsSubsystem(XCANLightController.XCANLightControllerFactory lightsFactory,
@@ -31,6 +33,8 @@ public class LightsSubsystem extends BaseSubsystem {
         this.intakeDeploy = intakeDeploy;
         this.hoodSubsystem = hoodSubsystem;
         this.voltageMonitor = voltageMonitor;
+        this.shooterSubsystem = shooterSubsystem;
+
         if (electricalContract.isLightsReady()) {
             this.lights = lightsFactory.create(
                     electricalContract.getLightControllerInfo()
@@ -54,6 +58,15 @@ public class LightsSubsystem extends BaseSubsystem {
         } else {
             lights.larson(0, Hertz.of(25), Color.kFirstRed, LarsonBounceValue.Back);
         }
+
+        if (shooterSubsystem.isReadyToFire() == true) {
+            lights.larson(2, Hertz.of(30), Color.kRed, LarsonBounceValue.Back);
+            lights.larson(3, Hertz.of(30), Color.kBlue, LarsonBounceValue.Back);
+        } else {
+            return;
+        }
+        // Slot 2 should be hood left
+        //Slot 3 should be hood right
 
         if (hoodSubsystem.getCurrentValue() >= 0.02) {
             lights.larson(1, Hertz.of(25), Color.kDarkRed, LarsonBounceValue.Front);
