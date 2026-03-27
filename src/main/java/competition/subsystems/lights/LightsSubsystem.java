@@ -47,9 +47,9 @@ public class LightsSubsystem extends BaseSubsystem {
             return;
         }
 
-        if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && voltageMonitor.isAtHealthyVoltage()) {
+        if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && voltageMonitor.isAtUnhealthyVoltage()) {
             lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
-        } else if (intakeDeploy.isCalibrated && DriverStation.isTeleop() && voltageMonitor.isAtHealthyVoltage()) {
+        } else if (intakeDeploy.isCalibrated && DriverStation.isTeleop() && voltageMonitor.isAtUnhealthyVoltage()) {
             lights.larson(0, Hertz.of(25), Color.kGreen, LarsonBounceValue.Back);
         } else {
             lights.larson(0, Hertz.of(25), Color.kFirstRed, LarsonBounceValue.Back);

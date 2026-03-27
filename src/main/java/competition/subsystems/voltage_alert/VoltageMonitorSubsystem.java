@@ -22,13 +22,13 @@ public class VoltageMonitorSubsystem extends BaseSubsystem {
 
     @Override
     public void periodic(){
-        if (isAtHealthyVoltage()) {
+        if (isAtUnhealthyVoltage()) {
             voltageAlert.set(true);
         }
         aKitLog.record("Voltage", this.powerDistribution.getVoltage());
     }
 
-    public boolean isAtHealthyVoltage() {
+    public boolean isAtUnhealthyVoltage() {
         return this.powerDistribution.getVoltage() < 8;
     }
 }
