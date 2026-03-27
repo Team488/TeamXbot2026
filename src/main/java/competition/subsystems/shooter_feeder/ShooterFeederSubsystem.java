@@ -10,8 +10,6 @@ import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
-import java.util.Comparator;
-
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Seconds;
@@ -24,8 +22,6 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
     public final DoubleProperty firePower;
     public final DoubleProperty shooterFeederVelocity;
     public final DoubleProperty voltageRampTime;
-
-    public final DoubleProperty currentDuringShootingThreshold;
 
     @Inject
     public ShooterFeederSubsystem(ElectricalContract electricalContract,
@@ -60,8 +56,6 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
         this.shooterFeederMotorPower = pf.createPersistentProperty("ShooterFeederMotorPower", 1);
         this.firePower = pf.createPersistentProperty("firePower", 1);
         this.shooterFeederVelocity = pf.createPersistentProperty("RPMShooterFeederVelocity", 1);
-
-        this.currentDuringShootingThreshold = pf.createPersistentProperty("Current Threshold When Shooting", 10.0);
     }
 
     @Override

@@ -12,7 +12,8 @@ import static edu.wpi.first.units.Units.Amps;
 
 public class WaitForShootingFinished extends BaseCommand {
     private final ShooterFeederSubsystem shooterFeeder;
-    private final DoubleProperty timeToWaitForShootingToFinishSeconds;
+    private final DoubleProperty timeToWaitAfterCurrentSettles;
+    private final DoubleProperty currentThreshold;
     private boolean detectedShot;
     private double timeOfLastShot = Double.MAX_VALUE;
 
@@ -21,8 +22,9 @@ public class WaitForShootingFinished extends BaseCommand {
         this.shooterFeeder = shooterFeeder;
 
         pf.setPrefix(this);
-        this.timeToWaitForShootingToFinishSeconds
-                = pf.createPersistentProperty("Time To Wait For Shooting To Finish Seconds", 0.5);
+        this.timeToWaitAfterCurrentSettles
+                = pf.createPersistentProperty("Time to Wait After Current Threshold Reached Seconds", 0.5);
+        this.currentThreshold = pf.createPersistentProperty("Current Threshold Amps", 10.0);
     }
 
     @Override
@@ -36,8 +38,8 @@ public class WaitForShootingFinished extends BaseCommand {
     public void execute() {
         super.execute();
 
-        var shooterCurrentAboveThreshold = this.shooterFeeder.getMotorCurrent().gt(Amps.of(this.shooterFeeder.currentDuringShootingThreshold.get()));
-        if (shooterCurrentAboveThreshold) {
+        var feederCurrentAboveThreshold = this.shooterFeeder.getMotorCurrent().gt(Amps.of(this.currentThreshold.get()));
+        if (feederCurrentAboveThreshold) {
             this.detectedShot = true;
             this.timeOfLastShot = XTimer.getFPGATimestamp();
         }
@@ -46,6 +48,6 @@ public class WaitForShootingFinished extends BaseCommand {
     @Override
     public boolean isFinished() {
         var timeSinceLastShot = XTimer.getFPGATimestamp() - this.timeOfLastShot;
-        return this.detectedShot && timeSinceLastShot > this.timeToWaitForShootingToFinishSeconds.get();
+        return this.detectedShot && timeSinceLastShot > this.timeToWaitAfterCurrentSettles.get();
     }
 }
