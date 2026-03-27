@@ -19,6 +19,7 @@ public class IntakeDeployRetractCommand extends BaseSetpointCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         intakeDeploy.setTargetValue(Degrees.of(intakeDeploy.retractedPosition.get()));
         log.info("Initialized IntakeDeployRetract");
     }
