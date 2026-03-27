@@ -1,17 +1,16 @@
 package competition.subsystems.shooter_feeder.commands;
 
-import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
 import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
-public class ShooterFeederVelocity extends BaseCommand {
+public class ShooterFeederFireVelocity extends BaseCommand {
 
     public final ShooterFeederSubsystem shooterFeeder;
 
     @Inject
-    public ShooterFeederVelocity (ShooterFeederSubsystem shooterFeeder) {
+    public ShooterFeederFireVelocity (ShooterFeederSubsystem shooterFeeder) {
         this.shooterFeeder = shooterFeeder;
         this.addRequirements(shooterFeeder);
     }
