@@ -1,6 +1,6 @@
 package competition.command_groups;
 
-import competition.subsystems.shooter.commands.WaitForShootingFinished;
+import competition.subsystems.shooter_feeder.commands.WaitForShootingFinished;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import xbot.common.command.BaseParallelCommandGroup;
 

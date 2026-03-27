@@ -1,6 +1,6 @@
-package competition.subsystems.shooter.commands;
+package competition.subsystems.shooter_feeder.commands;
 
-import competition.subsystems.shooter.ShooterSubsystem;
+import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
 import xbot.common.command.BaseCommand;
 import xbot.common.controls.sensors.XTimer;
 import xbot.common.properties.DoubleProperty;
@@ -11,14 +11,14 @@ import javax.inject.Inject;
 import static edu.wpi.first.units.Units.Amps;
 
 public class WaitForShootingFinished extends BaseCommand {
-    private final ShooterSubsystem shooter;
+    private final ShooterFeederSubsystem shooterFeeder;
     private final DoubleProperty timeToWaitForShootingToFinishSeconds;
     private boolean detectedShot;
     private double timeOfLastShot = Double.MAX_VALUE;
 
     @Inject
-    public WaitForShootingFinished(ShooterSubsystem shooterSubsystem, PropertyFactory pf) {
-        this.shooter = shooterSubsystem;
+    public WaitForShootingFinished(ShooterFeederSubsystem shooterFeeder, PropertyFactory pf) {
+        this.shooterFeeder = shooterFeeder;
 
         pf.setPrefix(this);
         this.timeToWaitForShootingToFinishSeconds
@@ -36,7 +36,7 @@ public class WaitForShootingFinished extends BaseCommand {
     public void execute() {
         super.execute();
 
-        var shooterCurrentAboveThreshold = this.shooter.getHighestShooterCurrent().gt(Amps.of(this.shooter.currentDuringShootingThreshold.get()));
+        var shooterCurrentAboveThreshold = this.shooterFeeder.getMotorCurrent().gt(Amps.of(this.shooterFeeder.currentDuringShootingThreshold.get()));
         if (shooterCurrentAboveThreshold) {
             this.detectedShot = true;
             this.timeOfLastShot = XTimer.getFPGATimestamp();
