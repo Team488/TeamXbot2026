@@ -55,9 +55,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         var leftShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
                 .withP(0.05)
-                .withI(0.0)
-                .withD(0.0)
-                .withStaticFeedForward(0.02)
+                .withI(0.01)
+                .withD(0.01)
+                .withStaticFeedForward(0.008)
                 .withVelocityFeedForward(0.01)
                 .withMinPowerOutput(-1.0)
                 .withMaxPowerOutput(1.0)
@@ -65,9 +65,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         var middleShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
                 .withP(0.05)
-                .withI(0.0)
-                .withD(0.0)
-                .withStaticFeedForward(0.02)
+                .withI(0.01)
+                .withD(0.01)
+                .withStaticFeedForward(0.008)
                 .withVelocityFeedForward(0.01)
                 .withMinPowerOutput(-1.0)
                 .withMaxPowerOutput(1.0)
@@ -75,9 +75,9 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         var rightShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
                 .withP(0.05)
-                .withI(0.0)
-                .withD(0.0)
-                .withStaticFeedForward(0.02)
+                .withI(0.01)
+                .withD(0.001)
+                .withStaticFeedForward(0.008)
                 .withVelocityFeedForward(0.01)
                 .withMinPowerOutput(-1.0)
                 .withMaxPowerOutput(1.0)
@@ -119,7 +119,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         }
 
         this.defaultShootingVelocity = this.propertyFactory.createPersistentProperty("Default Shooter Velocity RPM", 3000);
-        this.trimValue = this.propertyFactory.createPersistentProperty("Shooter Trim Value", 0);
+        this.trimValue = this.propertyFactory.createPersistentProperty("Shooter Trim Value", -30);
         this.readinessTimeoutSeconds = this.propertyFactory.createPersistentProperty("Readiness Timeout Seconds", 2.0);
     }
 
