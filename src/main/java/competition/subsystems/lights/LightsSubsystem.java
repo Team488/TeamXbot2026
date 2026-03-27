@@ -2,10 +2,13 @@ package competition.subsystems.lights;
 
 import com.ctre.phoenix6.signals.LarsonBounceValue;
 import competition.electrical_contract.ElectricalContract;
+import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANLightController;
+import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -16,15 +19,22 @@ import static edu.wpi.first.units.Units.Hertz;
 public class LightsSubsystem extends BaseSubsystem {
     public final XCANLightController lights;
     public IntakeDeploySubsystem intakeDeploy;
+    public HoodSubsystem hoodSubsystem;
+    public VoltageMonitorSubsystem voltageMonitor;
 
     @Inject
     public LightsSubsystem(XCANLightController.XCANLightControllerFactory lightsFactory,
                            ElectricalContract electricalContract,
-                           IntakeDeploySubsystem intakeDeploy) {
+                           IntakeDeploySubsystem intakeDeploy,
+                           HoodSubsystem hoodSubsystem, VoltageMonitorSubsystem voltageMonitor
+    ) {
         this.intakeDeploy = intakeDeploy;
+        this.hoodSubsystem = hoodSubsystem;
+        this.voltageMonitor = voltageMonitor;
         if (electricalContract.isLightsReady()) {
             this.lights = lightsFactory.create(
-                    electricalContract.getLightControllerInfo());
+                    electricalContract.getLightControllerInfo()
+            );
         } else {
             this.lights = null;
         }
@@ -33,12 +43,22 @@ public class LightsSubsystem extends BaseSubsystem {
     @Override
     public void periodic() {
         super.periodic();
-        if (lights != null) {
-            if (intakeDeploy.isCalibrated) {
-                lights.larson(0, Hertz.of(25), Color.kHotPink, LarsonBounceValue.Back);
-            } else {
-                lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
-            }
+        if (lights == null) {
+            return;
+        }
+
+        if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && voltageMonitor.isAtUnhealthyVoltage()) {
+            lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
+        } else if (intakeDeploy.isCalibrated && DriverStation.isTeleop() && voltageMonitor.isAtUnhealthyVoltage()) {
+            lights.larson(0, Hertz.of(25), Color.kGreen, LarsonBounceValue.Back);
+        } else {
+            lights.larson(0, Hertz.of(25), Color.kFirstRed, LarsonBounceValue.Back);
+        }
+
+        if (hoodSubsystem.getCurrentValue() >= 0.02) {
+            lights.larson(1, Hertz.of(25), Color.kDarkRed, LarsonBounceValue.Front);
+        } else {
+            lights.larson(1, Hertz.of(25), Color.kLightGreen, LarsonBounceValue.Front);
         }
     }
 }
