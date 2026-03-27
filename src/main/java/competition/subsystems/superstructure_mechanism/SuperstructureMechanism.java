@@ -16,6 +16,7 @@ public class SuperstructureMechanism {
 
     double hoodNormalizedPosition = 0;
     double intakeAngleDegrees = 10;
+    double intakeExtendedPositionDegrees = -135;
 
     // Hood ligament represents the deflector piece at the shooter exit
     final double hoodLigamentLengthMeters = 0.25;
@@ -56,11 +57,15 @@ public class SuperstructureMechanism {
         intakeAngleDegrees = angle.in(Degrees);
     }
 
+    public void setIntakeExtendedPosition(double degrees) {
+        intakeExtendedPositionDegrees = degrees;
+    }
+
     public LoggedMechanism2d getMechanism() {
         double hoodAngle = 180 - hoodNormalizedPosition
                 * (HoodSubsystem.mechanismAngleMax - HoodSubsystem.mechanismAngleMin);
         hoodLigament.setAngle(hoodAngle);
-        intakeLigament.setAngle(-intakeAngleDegrees + 45);
+        intakeLigament.setAngle(180 + intakeExtendedPositionDegrees - intakeAngleDegrees);
         return mech2d;
     }
 }

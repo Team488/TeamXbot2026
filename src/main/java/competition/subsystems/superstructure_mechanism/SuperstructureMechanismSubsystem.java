@@ -29,6 +29,7 @@ public class SuperstructureMechanismSubsystem extends BaseSubsystem {
     public void periodic() {
         mechanism.setHoodNormalizedPosition(hoodSubsystem.getCurrentValue());
         mechanism.setIntakeAngle(intakeDeploySubsystem.getCurrentValue());
+        mechanism.setIntakeExtendedPosition(intakeDeploySubsystem.extendedPosition.get());
         aKitLog.record("SuperstructureMechanism", mechanism.getMechanism());
     }
 }
