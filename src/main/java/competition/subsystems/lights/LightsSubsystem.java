@@ -28,7 +28,8 @@ public class LightsSubsystem extends BaseSubsystem {
     public LightsSubsystem(XCANLightController.XCANLightControllerFactory lightsFactory,
                            ElectricalContract electricalContract,
                            IntakeDeploySubsystem intakeDeploy,
-                           HoodSubsystem hoodSubsystem, VoltageMonitorSubsystem voltageMonitor
+                           HoodSubsystem hoodSubsystem, VoltageMonitorSubsystem voltageMonitor,
+                           ShooterSubsystem shooterSubsystem
     ) {
         this.intakeDeploy = intakeDeploy;
         this.hoodSubsystem = hoodSubsystem;
@@ -50,19 +51,19 @@ public class LightsSubsystem extends BaseSubsystem {
         if (lights == null) {
             return;
         }
-
-        if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && voltageMonitor.isAtUnhealthyVoltage()) {
-            lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
-        } else if (intakeDeploy.isCalibrated && DriverStation.isTeleop() && voltageMonitor.isAtUnhealthyVoltage()) {
-            lights.larson(0, Hertz.of(25), Color.kGreen, LarsonBounceValue.Back);
-        } else {
-            lights.larson(0, Hertz.of(25), Color.kFirstRed, LarsonBounceValue.Back);
+        if (DriverStation.getAlliance()) {
+            if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && voltageMonitor.isAtUnhealthyVoltage()) {
+                lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
+            } else if (intakeDeploy.isCalibrated && DriverStation.isTeleop() && voltageMonitor.isAtUnhealthyVoltage()) {
+                lights.larson(0, Hertz.of(25), Color.kGreen, LarsonBounceValue.Back);
+            } else {
+                lights.larson(0, Hertz.of(25), Color.kFirstRed, LarsonBounceValue.Back);
+            }
         }
 
-        if (shooterSubsystem.isReadyToFire()) {
+        if (shooterSubsystem.isReadyToFire() && DriverStation.getAlliance()) { //red
             lights.fire(2, Hertz.of(25), 25, 25, 25);
-            lights.fire(3, Hertz.of(25), 25, 25, 25);
-        } else {
+        } else if (shooterSubsystem.isReadyToFire() && DriverStation.getAlliance()){
             return;
         }
         // Slot 2 should be hood left
