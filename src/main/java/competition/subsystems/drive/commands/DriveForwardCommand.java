@@ -25,6 +25,7 @@ public class DriveForwardCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         drive.move(new XYPair(power.get(), 0), 0);
     }
 }

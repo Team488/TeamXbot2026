@@ -32,6 +32,7 @@ public class IntakeDeployExtendWithoutPidCommand extends BaseCommand {
     }
 
     public void initialize() {
+        super.initialize();
         if (this.overrideSupplier != null) {
             this.subsystem.setPower(this.overrideSupplier.getAsDouble());
         } else {
@@ -41,6 +42,7 @@ public class IntakeDeployExtendWithoutPidCommand extends BaseCommand {
 
     @Override
     public void end(boolean isInterrupted) {
+        super.end(isInterrupted);
         this.subsystem.stop();
     }
 }
