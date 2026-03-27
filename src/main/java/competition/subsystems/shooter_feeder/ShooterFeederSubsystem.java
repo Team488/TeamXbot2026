@@ -53,7 +53,7 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
         }
         this.shooterFeederMotorPower = pf.createPersistentProperty("ShooterFeederMotorPower", 1);
         this.firePower = pf.createPersistentProperty("firePower", 1);
-        this.shooterFeederFireVelocity = pf.createPersistentProperty("RPMShooterFeederVelocity", 1);
+        this.shooterFeederFireVelocity = pf.createPersistentProperty("RPMShooterFeederVelocity", 200);
     }
 
     @Override
