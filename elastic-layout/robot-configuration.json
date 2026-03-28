@@ -27,7 +27,8 @@
                 "properties": {
                   "topic": "/SmartDashboard/Shoot from trench then collect from netural zone.",
                   "period": 0.06,
-                  "show_type": false
+                  "show_type": false,
+                  "maximize_button_space": false
                 }
               },
               {
@@ -67,7 +68,8 @@
                 "properties": {
                   "topic": "/SmartDashboard/Shoot from trench.",
                   "period": 0.06,
-                  "show_type": false
+                  "show_type": false,
+                  "maximize_button_space": false
                 }
               },
               {
@@ -107,7 +109,8 @@
                 "properties": {
                   "topic": "/SmartDashboard/Shoot from hub.",
                   "period": 0.06,
-                  "show_type": false
+                  "show_type": false,
+                  "maximize_button_space": false
                 }
               },
               {
@@ -138,7 +141,8 @@
             "properties": {
               "topic": "/SmartDashboard/Move midway through field and back.",
               "period": 0.06,
-              "show_type": false
+              "show_type": false,
+              "maximize_button_space": false
             }
           },
           {
@@ -1393,7 +1397,7 @@
           {
             "title": "Eject Velocity-in-Rotation per Minutes",
             "x": 384.0,
-            "y": 256.0,
+            "y": 384.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
@@ -1407,7 +1411,7 @@
           {
             "title": "Use Velocity Control",
             "x": 384.0,
-            "y": 384.0,
+            "y": 512.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Toggle Switch",
@@ -1415,6 +1419,20 @@
               "topic": "/Preferences/HopperRollerSubsystem/Use Velocity Control",
               "period": 0.06,
               "data_type": "boolean"
+            }
+          },
+          {
+            "title": "Collect Velocity-in-Rotation per Minutes",
+            "x": 384.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/HopperRollerSubsystem/Collect Velocity-in-Rotation per Minutes",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
             }
           }
         ]

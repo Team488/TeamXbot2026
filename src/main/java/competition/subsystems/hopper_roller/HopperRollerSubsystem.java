@@ -26,6 +26,7 @@ public class HopperRollerSubsystem extends BaseSubsystem {
     final DoubleProperty collectPower;
     final DoubleProperty intakePower;
     final AngularVelocityProperty intakeVelocity;
+    final AngularVelocityProperty collectVelocity;
     final AngularVelocityProperty ejectVelocity;
     final BooleanProperty useVelocityControl;
     final DoubleProperty voltageRampTime;
@@ -44,8 +45,9 @@ public class HopperRollerSubsystem extends BaseSubsystem {
                     getPrefix(),
                     "HopperRollerPID",
                     new XCANMotorControllerPIDProperties.Builder()
-                            .withP(0.0)
-                            .withVelocityFeedForward(0.01)
+                            .withP(0.001)
+                            .withVelocityFeedForward(0.008)
+                            .withStaticFeedForward(0.05)
                             .build()
             );
             this.hopperRollerMotor.setOpenLoopRampRates(
@@ -63,8 +65,9 @@ public class HopperRollerSubsystem extends BaseSubsystem {
         intakePower = pf.createPersistentProperty("Intake Power", 0.8);
         ejectPower = pf.createPersistentProperty("Eject Power", -0.8);
 
-        useVelocityControl = pf.createPersistentProperty("Use Velocity Control", false);
+        useVelocityControl = pf.createPersistentProperty("Use Velocity Control", true);
         intakeVelocity = pf.createPersistentProperty("Intake Velocity", RPM.of(3000));
+        collectVelocity = pf.createPersistentProperty("Collect Velocity", RPM.of(3000));
         ejectVelocity = pf.createPersistentProperty("Eject Velocity", RPM.of(-3000));
 
         if (hopperRollerMotor != null) {
@@ -101,7 +104,11 @@ public class HopperRollerSubsystem extends BaseSubsystem {
         if (hopperRollerMotor == null) {
             return;
         }
-        hopperRollerMotor.setPower(collectPower.get());
+        if (useVelocityControl.get()) {
+            hopperRollerMotor.setVelocityTarget(collectVelocity.get());
+        } else {
+            hopperRollerMotor.setPower(collectPower.get());
+        }
     }
 
     public void stop() {
