@@ -22,6 +22,7 @@ import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.climber.commands.ClimberSetPointCommand;
 import competition.subsystems.collector_intake.commands.CollectorEjectCommand;
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
+import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.drive.commands.PrecisionModeCommand;
@@ -43,6 +44,7 @@ import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.autonomous.SetAutonomousCommand;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
@@ -76,15 +78,21 @@ public class OperatorCommandMap {
                                    XPositionCommand xPositionCommand,
                                    DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand,
                                    IntakeSlowlyAndFireWhenReady intakeSlowlyAndFireWhenReady,
-                                   PrecisionModeCommand precisionModeCommand
+                                   PrecisionModeCommand precisionModeCommand,
+                                   DriveSubsystem drive
     ) {
-        operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(driveThroughAllianceTrenchCommand);
+        //operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(driveThroughAllianceTrenchCommand);
         // operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(xPositionCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(intakeSlowlyAndFireWhenReady);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(precisionModeCommand);
+
+        operatorInterface.driverGamepad.getPovIfAvailable(0).whileTrue(drive.sysIdQuasistaticDrive(SysIdRoutine.Direction.kForward));
+        operatorInterface.driverGamepad.getPovIfAvailable(90).whileTrue(drive.sysIdDynamicDrive(SysIdRoutine.Direction.kForward));
+        operatorInterface.driverGamepad.getPovIfAvailable(180).whileTrue(drive.sysIdQuasistaticDrive(SysIdRoutine.Direction.kReverse));
+        operatorInterface.driverGamepad.getPovIfAvailable(270).whileTrue(drive.sysIdDynamicDrive(SysIdRoutine.Direction.kReverse));
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
