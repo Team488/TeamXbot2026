@@ -2,9 +2,7 @@ package competition.subsystems.intake_deploy.commands;
 
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import edu.wpi.first.wpilibj.Timer;
-import org.json.Property;
 import xbot.common.command.BaseCommand;
-import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -20,7 +18,6 @@ public class IntakeDeployRetryCommand extends BaseCommand {
     }
 
     public boolean isTimeoutExpired() {
-        //refer to WimpleWaitForMaintainerCommand
         return Timer.getFPGATimestamp() > startTime + timeout.get();
     }
 
