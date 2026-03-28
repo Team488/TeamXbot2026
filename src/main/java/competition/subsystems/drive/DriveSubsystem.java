@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -49,6 +50,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
     private final DoubleProperty interstitialSpeedMps;
 
     private final SysIdRoutine sysIdDrive;
+    public Voltage voltageDriveLevel;
 
     @Inject
     public DriveSubsystem(PIDManagerFactory pidFactory, PropertyFactory pf,
@@ -67,15 +69,17 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
         this.sysIdDrive = new SysIdRoutine(
                 new SysIdRoutine.Config(
-                        Volts.of(getMaxTargetSpeedMetersPerSecond() / 5).per(Second),
-                        Volts.of(getMaxTargetSpeedMetersPerSecond()),
+                        Volts.of(0.5).per(Second),
+                        Volts.of(6),
                         Seconds.of(6),
                         (state) -> org.littletonrobotics.junction.Logger
                                 .recordOutput(this.getPrefix() + "/SysIdState-Drive", state.toString())),
                 new SysIdRoutine.Mechanism(
-                        (Voltage volts) -> move(new XYPair(volts.in(Volts), 0), 0),
+                        (Voltage volts) -> voltageDriveLevel = volts,
                         null,
                         this));
+
+        voltageDriveLevel = Volts.zero();
     }
 
     @Override

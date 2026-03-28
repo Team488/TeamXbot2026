@@ -25,6 +25,7 @@ import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
+import competition.subsystems.drive.commands.DriveWithVoltageForSysIdCommand;
 import competition.subsystems.drive.commands.PrecisionModeCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
@@ -79,7 +80,8 @@ public class OperatorCommandMap {
                                    DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand,
                                    IntakeSlowlyAndFireWhenReady intakeSlowlyAndFireWhenReady,
                                    PrecisionModeCommand precisionModeCommand,
-                                   DriveSubsystem drive
+                                   DriveSubsystem drive,
+                                   Provider<DriveWithVoltageForSysIdCommand> voltageDrive
     ) {
         //operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(driveThroughAllianceTrenchCommand);
         // operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
@@ -89,10 +91,10 @@ public class OperatorCommandMap {
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(intakeSlowlyAndFireWhenReady);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(precisionModeCommand);
 
-        operatorInterface.driverGamepad.getPovIfAvailable(0).whileTrue(drive.sysIdQuasistaticDrive(SysIdRoutine.Direction.kForward));
-        operatorInterface.driverGamepad.getPovIfAvailable(90).whileTrue(drive.sysIdDynamicDrive(SysIdRoutine.Direction.kForward));
-        operatorInterface.driverGamepad.getPovIfAvailable(180).whileTrue(drive.sysIdQuasistaticDrive(SysIdRoutine.Direction.kReverse));
-        operatorInterface.driverGamepad.getPovIfAvailable(270).whileTrue(drive.sysIdDynamicDrive(SysIdRoutine.Direction.kReverse));
+        operatorInterface.driverGamepad.getPovIfAvailable(0).whileTrue(drive.sysIdQuasistaticDrive(SysIdRoutine.Direction.kForward).alongWith(voltageDrive.get()));
+        operatorInterface.driverGamepad.getPovIfAvailable(90).whileTrue(drive.sysIdDynamicDrive(SysIdRoutine.Direction.kForward).alongWith(voltageDrive.get()));
+        operatorInterface.driverGamepad.getPovIfAvailable(180).whileTrue(drive.sysIdQuasistaticDrive(SysIdRoutine.Direction.kReverse).alongWith(voltageDrive.get()));
+        operatorInterface.driverGamepad.getPovIfAvailable(270).whileTrue(drive.sysIdDynamicDrive(SysIdRoutine.Direction.kReverse).alongWith(voltageDrive.get()));
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
