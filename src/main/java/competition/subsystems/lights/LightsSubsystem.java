@@ -60,13 +60,11 @@ public class LightsSubsystem extends BaseSubsystem {
                 lights.larson(0, Hertz.of(25), Color.kFirstRed, LarsonBounceValue.Back);
         }
 
-        if (shooterSubsystem.isReadyToFire()) { //red
+        if (shooterSubsystem.isReadyToFire()) {
             lights.fire(2, Hertz.of(25), 25, 25, 25);
         } else if (shooterSubsystem.isReadyToFire()){
             return;
         }
-        // Slot 2 should be hood left
-        //Slot 3 should be hood right
 
         if (hoodSubsystem.getCurrentValue() >= 0.02) {
             lights.larson(1, Hertz.of(25), Color.kDarkRed, LarsonBounceValue.Front);
