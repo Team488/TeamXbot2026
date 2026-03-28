@@ -60,9 +60,9 @@ public class LightsSubsystem extends BaseSubsystem {
                 lights.larson(0, Hertz.of(25), Color.kFirstRed, LarsonBounceValue.Back);
         }
 
-        if (shooterSubsystem.isReadyToFire() && DriverStation.getAlliance()) { //red
+        if (shooterSubsystem.isReadyToFire()) { //red
             lights.fire(2, Hertz.of(25), 25, 25, 25);
-        } else if (shooterSubsystem.isReadyToFire() && DriverStation.getAlliance()){
+        } else if (shooterSubsystem.isReadyToFire()){
             return;
         }
         // Slot 2 should be hood left
