@@ -253,7 +253,7 @@ public class TrajectoriesCalculation {
 
         try {
             // TODO: Needs to be merged with https://github.com/Team488/TeamXbot2026/pull/309/ which includes the ability to do no hood and hood values.
-            File configFile = new File(Filesystem.getDeployDirectory(), "trajectories_0_hood.json");
+            File configFile = new File(Filesystem.getDeployDirectory(), "trajectories.json");
 
             if (configFile.exists()) {
                 ObjectMapper mapper = new ObjectMapper();
