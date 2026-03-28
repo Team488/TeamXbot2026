@@ -49,6 +49,7 @@ public class RotateToAllianceZoneCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         log.info("Initializing");
         robotPose = pose.getCurrentPose2d();
         Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);

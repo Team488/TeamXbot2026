@@ -31,6 +31,7 @@ public class DebugSwerveModuleCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         log.info("Initializing");
     }
 
