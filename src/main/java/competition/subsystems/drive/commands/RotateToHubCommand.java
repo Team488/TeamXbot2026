@@ -42,6 +42,7 @@ public class RotateToHubCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         log.info("Initializing");
         alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
         Translation2d targetTranslation = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance).getTranslation();
