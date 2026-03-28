@@ -51,10 +51,16 @@ public class LightsSubsystem extends BaseSubsystem {
         if (lights == null) {
             return;
         }
-
-        if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && voltageMonitor.isAtUnhealthyVoltage()) {
+        while (DriverStation.isDisabled()) {
+            if (DriverStation.getAlliance() == DriverStation.Alliance.Red) { //Add Victors Logic When merged
+                lights.larson(1, Hertz.of(25), Color.kRed, LarsonBounceValue.Back);
+            } else {
+                lights.larson(1, Hertz.of(25), Color.kBlue, LarsonBounceValue.Back);
+            }
+        }
+        if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && !voltageMonitor.isAtUnhealthyVoltage()) {
                 lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
-        } else if (intakeDeploy.isCalibrated && DriverStation.isTeleop() && voltageMonitor.isAtUnhealthyVoltage()) {
+        } else if (intakeDeploy.isCalibrated && DriverStation.isTeleop() && !voltageMonitor.isAtUnhealthyVoltage()) {
                 lights.larson(0, Hertz.of(25), Color.kGreen, LarsonBounceValue.Back);
         } else {
                 lights.larson(0, Hertz.of(25), Color.kFirstRed, LarsonBounceValue.Back);
