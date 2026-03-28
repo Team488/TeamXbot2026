@@ -27,7 +27,7 @@ public class IntakeSlowlyAndFireWhenReady extends BaseSequentialCommandGroup {
         this.addCommands(
                 waitForHoodAndShooterToBeAtGoalCommandGroup,
                 runCollectorHopperFeederCommandGroup
-                        .alongWith(waitBeforeRetracting)
+ .alongWith(waitBeforeRetracting.andThen(intakeDeploySlowClosing))
                                 .andThen(intakeDeploySlowClosing)
         );
     }
