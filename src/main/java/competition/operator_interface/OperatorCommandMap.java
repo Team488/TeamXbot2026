@@ -43,6 +43,7 @@ import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.autonomous.SetAutonomousCommand;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
@@ -76,7 +77,8 @@ public class OperatorCommandMap {
                                    XPositionCommand xPositionCommand,
                                    DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand,
                                    IntakeSlowlyAndFireWhenReady intakeSlowlyAndFireWhenReady,
-                                   PrecisionModeCommand precisionModeCommand
+                                   PrecisionModeCommand precisionModeCommand,
+                                   AimAndShootFromHereCommand aimAndShootFromHereCommand
     ) {
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(driveThroughAllianceTrenchCommand);
         // operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
@@ -85,6 +87,7 @@ public class OperatorCommandMap {
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(intakeSlowlyAndFireWhenReady);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(precisionModeCommand);
+        operatorInterface.driverGamepad.getPovIfAvailable(180).whileTrue(aimAndShootFromHereCommand);
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
