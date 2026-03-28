@@ -2,8 +2,13 @@
 package competition;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+import javax.inject.Inject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.pathplanner.lib.auto.NamedCommands;
 
 import competition.injection.components.BaseRobotComponent;
 import competition.injection.components.DaggerRobotComponent;
@@ -13,7 +18,9 @@ import competition.injection.components.DaggerRoboxComponent;
 import competition.injection.components.DaggerSimulationComponent;
 import competition.operator_interface.OperatorInterface;
 import competition.simulation.BaseSimulator;
+import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
@@ -100,6 +107,12 @@ public class Robot extends BaseRobot {
         } else {
             return DaggerSimulationComponent.create();
         }
+    }
+
+    @Inject
+    public void configureNamedCommands(IntakeDeployExtendCommand intakeDeployExtendCommand, CollectorIntakeCommand collectorIntakeCommand) {
+        NamedCommands.registerCommand("IntakeDeployExtend", intakeDeployExtendCommand);
+        NamedCommands.registerCommand("CollectorIntake", collectorIntakeCommand);
     }
 
     public BaseRobotComponent getInjectorComponent() {
