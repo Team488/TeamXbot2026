@@ -169,7 +169,7 @@ public class OperatorCommandMap {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftStick)
                 .whileTrue(hopperRollerSubsystem.getEjectCommand());
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.RightStick)
-                .whileTrue(hopperRollerSubsystem.getIntakeCommand());
+                .whileTrue(hopperRollerSubsystem.getIntakePowerCommand());
         operatorInterface.setupDebugGamepad.getPovIfAvailable(90).whileTrue(collectorEjectCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(270).whileTrue(shooterFeederFire);
     }
