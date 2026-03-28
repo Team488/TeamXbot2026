@@ -22,6 +22,7 @@ import xbot.common.math.FieldPose;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 public class Robot extends BaseRobot {
+    Billy = false;
     Logger log = LogManager.getLogger(Robot.class);
 
     public static final double LOOP_INTERVAL = 0.04;
