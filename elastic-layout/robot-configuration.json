@@ -27,7 +27,8 @@
                 "properties": {
                   "topic": "/SmartDashboard/Shoot from trench then collect from netural zone.",
                   "period": 0.06,
-                  "show_type": false
+                  "show_type": false,
+                  "maximize_button_space": false
                 }
               },
               {
@@ -67,7 +68,8 @@
                 "properties": {
                   "topic": "/SmartDashboard/Shoot from trench.",
                   "period": 0.06,
-                  "show_type": false
+                  "show_type": false,
+                  "maximize_button_space": false
                 }
               },
               {
@@ -107,7 +109,8 @@
                 "properties": {
                   "topic": "/SmartDashboard/Shoot from hub.",
                   "period": 0.06,
-                  "show_type": false
+                  "show_type": false,
+                  "maximize_button_space": false
                 }
               },
               {
@@ -138,7 +141,8 @@
             "properties": {
               "topic": "/SmartDashboard/Move midway through field and back.",
               "period": 0.06,
-              "show_type": false
+              "show_type": false,
+              "maximize_button_space": false
             }
           },
           {
@@ -1288,6 +1292,153 @@
       }
     },
     {
+      "name": "Hopper Roller",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "PID",
+            "x": 128.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 512.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "kP",
+                "x": 128.0,
+                "y": 256.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/HopperRollerSubsystem/HopperRollerPID/0/kP",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "kI",
+                "x": 256.0,
+                "y": 256.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/HopperRollerSubsystem/HopperRollerPID/0/kI",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "kD",
+                "x": 256.0,
+                "y": 256.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/HopperRollerSubsystem/HopperRollerPID/0/kD",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "kVelocityFeedForward",
+                "x": 256.0,
+                "y": 512.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/HopperRollerSubsystem/HopperRollerPID/0/kVelocityFeedForward",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "kStaticFeedForward",
+                "x": 256.0,
+                "y": 512.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/HopperRollerSubsystem/HopperRollerPID/0/kStaticFeedForward",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              }
+            ]
+          }
+        ],
+        "containers": [
+          {
+            "title": "Intake Velocity-in-Rotation per Minutes",
+            "x": 384.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/HopperRollerSubsystem/Intake Velocity-in-Rotation per Minutes",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Eject Velocity-in-Rotation per Minutes",
+            "x": 384.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/HopperRollerSubsystem/Eject Velocity-in-Rotation per Minutes",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Use Velocity Control",
+            "x": 384.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Toggle Switch",
+            "properties": {
+              "topic": "/Preferences/HopperRollerSubsystem/Use Velocity Control",
+              "period": 0.06,
+              "data_type": "boolean"
+            }
+          },
+          {
+            "title": "Collect Velocity-in-Rotation per Minutes",
+            "x": 384.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/HopperRollerSubsystem/Collect Velocity-in-Rotation per Minutes",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "Climber Tuning",
       "grid_layout": {
         "layouts": [
@@ -1520,7 +1671,8 @@
             "properties": {
               "topic": "/SmartDashboard/AimAndShootFromHereCommand",
               "period": 0.06,
-              "show_type": true
+              "show_type": true,
+              "maximize_button_space": false
             }
           },
           {
@@ -1533,7 +1685,8 @@
             "properties": {
               "topic": "/SmartDashboard/DriveThroughAllianceTrenchCommand",
               "period": 0.06,
-              "show_type": true
+              "show_type": true,
+              "maximize_button_space": false
             }
           }
         ]
