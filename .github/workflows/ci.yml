@@ -32,9 +32,10 @@ jobs:
             gradle-${{ runner.os }}-
 
       - name: Build
-        run: ./gradlew :build -Xmx3072m
+        run: ./gradlew :build
         env:
           GRADLE_USER_HOME: ${{ github.workspace }}/build/.gradle
+          GRADLE_OPTS: "-Xmx3072m"
 
       - name: Publish test results
         uses: mikepenz/action-junit-report@v4
