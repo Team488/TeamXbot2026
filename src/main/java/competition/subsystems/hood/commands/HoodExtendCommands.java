@@ -16,6 +16,7 @@ public class HoodExtendCommands extends BaseSetpointCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         hood.extend();
         log.info("Initialized HoodExtend");
     }

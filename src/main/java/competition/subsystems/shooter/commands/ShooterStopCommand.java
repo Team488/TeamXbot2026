@@ -18,6 +18,7 @@ public class ShooterStopCommand extends BaseSetpointCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         this.subsystem.setTargetValue(RPM.of(0));
     }
 

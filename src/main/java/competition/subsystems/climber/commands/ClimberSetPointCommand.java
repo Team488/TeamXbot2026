@@ -23,6 +23,7 @@ public class ClimberSetPointCommand extends BaseSetpointCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         if (goalAngle != null) {
             climber.setTargetValue(goalAngle);
         } else {

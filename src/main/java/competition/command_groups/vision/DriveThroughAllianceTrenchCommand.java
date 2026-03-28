@@ -29,7 +29,7 @@ public class DriveThroughAllianceTrenchCommand extends BaseDriveWithSimpleBezier
     @Override
     public void initialize() {
         var currentPose = this.pose.getCurrentPose2d();
-        var path = this.autoLandmarks.getRelevantAlliancePathThroughTrench(currentPose);
+        var path = this.autoLandmarks.getRelevantAlliancePathThroughTrench(currentPose, true);
         super.logic.setKeyPoints(this.pathPlanning.generateSwervePoints(currentPose, path, false));
 
         super.initialize();
