@@ -2,6 +2,7 @@ package competition.subsystems.lights;
 
 import com.ctre.phoenix6.signals.LarsonBounceValue;
 import competition.electrical_contract.ElectricalContract;
+import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
@@ -59,12 +60,14 @@ public class LightsSubsystem extends BaseSubsystem {
             }
         }
         if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && !voltageMonitor.isAtUnhealthyVoltage()) {
-                lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
+                lights.larson(0, Hertz.of(25), Color.kMediumPurple, LarsonBounceValue.Back);
         } else if (intakeDeploy.isCalibrated && DriverStation.isTeleop() && !voltageMonitor.isAtUnhealthyVoltage()) {
-                lights.larson(0, Hertz.of(25), Color.kGreen, LarsonBounceValue.Back);
+                lights.larson(0, Hertz.of(25), Color.kBlue, LarsonBounceValue.Back);
         } else {
                 lights.larson(0, Hertz.of(25), Color.kFirstRed, LarsonBounceValue.Back);
         }
+
+
 
         if (shooterSubsystem.isReadyToFire()) {
             lights.fire(2, Hertz.of(25), 25, 25, 25);
