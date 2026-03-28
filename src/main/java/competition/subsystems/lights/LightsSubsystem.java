@@ -6,9 +6,11 @@ import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
+import org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANLightController;
 import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -59,6 +61,16 @@ public class LightsSubsystem extends BaseSubsystem {
             lights.larson(1, Hertz.of(25), Color.kDarkRed, LarsonBounceValue.Front);
         } else {
             lights.larson(1, Hertz.of(25), Color.kLightGreen, LarsonBounceValue.Front);
+        }
+
+        var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+
+        if (alliance == Alliance.Blue){
+            lights.larson(2, Hertz.of(25), Color.kBlue, LarsonBounceValue.Front);
+        } else if (alliance == Alliance.Red) {
+            lights.larson(2, Hertz.of(25), Color.kRed, LarsonBounceValue.Front);
+        } else {
+            lights.larson(2, Hertz.of(25), Color.kWhite, LarsonBounceValue.Front);
         }
     }
 }
