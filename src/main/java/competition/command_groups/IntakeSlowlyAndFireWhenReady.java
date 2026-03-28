@@ -21,7 +21,7 @@ public class IntakeSlowlyAndFireWhenReady extends BaseSequentialCommandGroup {
 
     ) {
 
-        this.waitBeforeRetracting = propertyFactory.createPersistentProperty("Wait Time Before Retracting", 2.0);
+        this.waitBeforeRetracting = propertyFactory.createPersistentProperty("Wait Time Before Retracting In Seconds", 2.0);
 
         this.addCommands(
                 waitForHoodAndShooterToBeAtGoalCommandGroup,
