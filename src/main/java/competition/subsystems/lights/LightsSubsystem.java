@@ -70,7 +70,7 @@ public class LightsSubsystem extends BaseSubsystem {
             case Red ->
                     lights.larson(2, Hertz.of(25), Color.kRed, LarsonBounceValue.Front);
             default ->
-            lights.larson(2, Hertz.of(25), Color.kWhite, LarsonBounceValue.Front);
+                    lights.larson(2, Hertz.of(25), Color.kWhite, LarsonBounceValue.Front);
         }
     }
 }
