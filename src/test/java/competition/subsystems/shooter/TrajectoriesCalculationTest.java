@@ -11,6 +11,8 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import org.junit.Test;
 
+import java.util.Random;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -19,58 +21,90 @@ public class TrajectoriesCalculationTest extends BaseCompetitionTest {
     public Pose2d hub = Landmarks.getAllianceHubPose(
             AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded), DriverStation.Alliance.Blue);
 
+    private TrajectoriesCalculation.ShootingData getData(
+            TrajectoriesCalculation calc,
+            Pose2d pose,
+            boolean zeroHood) {
+
+        return calc.calculateAllianceHubShootingData(pose, zeroHood);
+    }
+
     @Test
-    public void testTrajectoriesCalculation() {
+    public void testZeroHoodVsNormal() {
         TrajectoriesCalculation calc = getInjectorComponent().trajectoriesCalculation();
 
-        // Test that we get valid shooting data back at a known distance
-        Pose2d robotPose = new Pose2d(2.0, 0.0, new Rotation2d(0));
-        TrajectoriesCalculation.ShootingData data = calc.calculateAllianceHubShootingData(robotPose);
 
-        // Make sure we got something back and not empty/zero data
-        assertNotNull(data);
-        assertTrue("RPM should be greater than 0", data.shooterRPM().in(Units.RPM) > 0);
+        Pose2d robotPose = new Pose2d(4.0, 2.0, new Rotation2d());
+
+        var normal = calc.calculateAllianceHubShootingData(robotPose, false);
+        var zeroHood = calc.calculateAllianceHubShootingData(robotPose, true);
+
+        // Both should return valid data
+        assertNotNull(normal);
+        assertNotNull(zeroHood);
+
+        // RPM should exist in both
+        assertTrue(normal.shooterRPM().in(Units.RPM) > 0);
+        assertTrue(zeroHood.shooterRPM().in(Units.RPM) > 0);
+
+        assertTrue("Zero hood servo should be <= normal servo",
+                zeroHood.servoRatio() <= normal.servoRatio());
     }
 
     @Test
     public void testInterpolationBetweenTwoPoints() {
         TrajectoriesCalculation calc = getInjectorComponent().trajectoriesCalculation();
 
-        // Use distances in the JSON range (3.797 to 6.105)
-        Pose2d closePose = new Pose2d(hub.getX() + 3.8, hub.getY(), new Rotation2d(0));
-        Pose2d farPose = new Pose2d(hub.getX() + 6.0, hub.getY(), new Rotation2d(0));
-        Pose2d midPose = new Pose2d(hub.getX() + 4.9, hub.getY(), new Rotation2d(0));
+        Pose2d closePose = new Pose2d(hub.getX() + 3.8, hub.getY(), new Rotation2d());
+        Pose2d midPose = new Pose2d(hub.getX() + 4.9, hub.getY(), new Rotation2d());
+        Pose2d farPose = new Pose2d(hub.getX() + 6.0, hub.getY(), new Rotation2d());
 
-        TrajectoriesCalculation.ShootingData closeData = calc.calculateAllianceHubShootingData(closePose);
-        TrajectoriesCalculation.ShootingData farData = calc.calculateAllianceHubShootingData(farPose);
-        TrajectoriesCalculation.ShootingData midData = calc.calculateAllianceHubShootingData(midPose);
+        for (boolean zeroHood : new boolean[]{false, true}) {
 
-        double closeServo = closeData.servoRatio();
-        double farServo = farData.servoRatio();
-        double midServo = midData.servoRatio();
+            var closeShot = getData(calc, closePose, zeroHood);
+            var midShot = getData(calc, midPose, zeroHood);
+            var farShot = getData(calc, farPose, zeroHood);
 
-        // Servo increases with distance so mid should be between close and far
-        assertTrue("Interpolated servo should be between close and far",
-                midServo > closeServo && midServo < farServo);
+            assertNotNull(closeShot);
+            assertNotNull(midShot);
+            assertNotNull(farShot);
+
+            if (!zeroHood) {
+                // Normal mode → servo should interpolate
+                assertTrue(midShot.servoRatio() > closeShot.servoRatio());
+                assertTrue(midShot.servoRatio() < farShot.servoRatio());
+            } else {
+                // Zero hood → servo should NOT change (likely 0)
+                assertTrue(Math.abs(midShot.servoRatio() - closeShot.servoRatio()) < 0.001);
+                assertTrue(Math.abs(midShot.servoRatio() - farShot.servoRatio()) < 0.001);
+            }
+        }
     }
 
     @Test
     public void testTenRandomPointsInAllianceZone() {
         TrajectoriesCalculation calc = getInjectorComponent().trajectoriesCalculation();
 
-        for (int i = 0; i < 10; i++){
+        long seed = System.currentTimeMillis();
+        Random rand = new Random(seed);
 
-            double randomWidth = (Math.random() * 4.03); // 4.03 is the width of the alliance zone
-            double randomHeight = (Math.random() * 8.07); // 8.07 is the height of the alliance zone
-            Pose2d randomPose = new Pose2d(randomWidth, randomHeight, new Rotation2d(0)); // Random spot in alliance zone
+        System.out.println("Seed: " + seed);
 
-            TrajectoriesCalculation.ShootingData data = calc.calculateAllianceHubShootingData(randomPose);
+        for (boolean zeroHood : new boolean[]{false, true}) {
+            for (int i = 0; i < 10; i++) {
+                double randomWidth = rand.nextDouble() * 4.03; // 4.03 is the width of the alliance zone
+                double randomHeight = rand.nextDouble() * 8.07; // 8.07 is the height of the alliance zone
 
-            assertNotNull(data);
+                Pose2d randomPose = new Pose2d(randomWidth, randomHeight, new Rotation2d(0)); // Random spot in alliance zone
 
-            if (data.servoRatio() > 0) {
-                assertTrue("Servo should be between 0.2 and 1.0",
-                        data.servoRatio() >= 0.2 && data.servoRatio() <= 1.0);
+                TrajectoriesCalculation.ShootingData data = calc.calculateAllianceHubShootingData(randomPose,zeroHood);
+
+                assertNotNull(data);
+
+                if (data.servoRatio() > 0) {
+                    assertTrue("Servo should be between 0.2 and 1.0",
+                            data.servoRatio() >= 0.2 && data.servoRatio() <= 1.0);
+                }
             }
         }
     }

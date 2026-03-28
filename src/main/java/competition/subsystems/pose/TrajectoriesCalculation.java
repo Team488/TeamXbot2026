@@ -106,8 +106,8 @@ public class TrajectoriesCalculation {
     }
 
     // hashmaps holding all the values
-    private static InterpolatingTreeMap<TrajectoryKey, HoodTrajectory> trajectoryMap = null;
-    private static InterpolatingTreeMap<TrajectoryKey, HoodTrajectory> trajectoryZeroHoodMap = null;
+    private static InterpolatingTreeMap<Double, HoodTrajectory> trajectoryMap;
+    private static InterpolatingTreeMap<Double, HoodTrajectory> trajectoryZeroHoodMap;
 
     // CHECKSTYLE:OFF
     // essentially holds all the values for the JSON to fill hashmap
@@ -203,38 +203,30 @@ public class TrajectoriesCalculation {
     // Look up optimal shooting parameters based on current pose and shooting
     // target's pose.
     private ShootingData calculateTrajectoryV3Dynamic(Pose2d robotPose, Pose2d targetPose, boolean zeroHood) {
-        // This does take a performance hit, so we should consider loading these in when we aren't doing anything.
-        if (zeroHood) {
-            if (trajectoryZeroHoodMap == null) {
-                trajectoryZeroHoodMap = loadTrajectories("trajectories_0_hood.json");
-            }
-        } else {
-            if (trajectoryMap == null) {
-                trajectoryMap = loadTrajectories("trajectories.json");
-            }
+        if (trajectoryMap == null) {
+            trajectoryMap = loadTrajectories("trajectories.json");
         }
+        if (trajectoryZeroHoodMap == null) {
+            trajectoryZeroHoodMap = loadTrajectories("trajectories_0_hood.json");
+        }
+
+        InterpolatingTreeMap<Double, HoodTrajectory> activeMap = zeroHood ? trajectoryZeroHoodMap : trajectoryMap;
+
         Rotation2d finalRotation = this.rotationToShootFrom(robotPose, targetPose);
         Pose2d finalPose = new Pose2d(robotPose.getX(), robotPose.getY(), finalRotation);
-
         Pose2d shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
         double distance = shooterPose.getTranslation().getDistance(targetPose.getTranslation());
         var offsetDistance = distance + v3DistanceOffsetMeters.get();
-        var key = new TrajectoryKey(offsetDistance);
-        var hoodTrajectory = this.searchForHoodTrajectory(key, zeroHood);
-        HoodTrajectory result = trajectoryMap.get(key);
+
+        HoodTrajectory result = activeMap.get(offsetDistance);
         if (result == null) {
             log.warn("Trajectory not found for distance: {}", offsetDistance);
             return TrajectoriesCalculation.emptyShootingData;
         }
-        var matchedTrajectory = hoodTrajectory.get();
-
-        return new ShootingData(finalRotation, Units.RPM.of(result.RPM), result.servo); // Use matchedTrajectory.servo instead of 0 if we are using the hood
+        return new ShootingData(finalRotation, Units.RPM.of(result.RPM), result.servo);
     }
 
     private Optional<HoodTrajectory> searchForHoodTrajectory(TrajectoryKey key, boolean zeroHood) {
-        var mapToUse = zeroHood ? trajectoryZeroHoodMap : trajectoryMap;
-
-
 
         if (zeroHood) {
             log.error(
@@ -268,30 +260,24 @@ public class TrajectoriesCalculation {
 
     // This method loads the trajectories from the JSON file and populates the
     // HashMap.
-    private InterpolatingTreeMap<TrajectoryKey, HoodTrajectory> loadTrajectories(String filename) {
-
-
+    private InterpolatingTreeMap<Double, HoodTrajectory> loadTrajectories(String filename) {
+        InterpolatingTreeMap<Double, HoodTrajectory> map =
+                new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), Interpolatable::interpolate);
         try {
             File configFile = new File(Filesystem.getDeployDirectory(), filename);
-
             if (configFile.exists()) {
                 ObjectMapper mapper = new ObjectMapper();
-
                 HoodTrajectory[] rawArray = mapper.readValue(configFile, HoodTrajectory[].class);
-
                 for (HoodTrajectory point : rawArray) {
-                    TrajectoryKey key = new TrajectoryKey(point.distance);
-                    trajectoryMap.put(key, point);
+                    map.put(point.distance, point);
                 }
-
-                log.info("Loaded {} trajectories from {} into the TreeMap.", filename);
+                log.info("Loaded trajectories from {}", filename);
             } else {
                 log.warn("{} not found in the deploy directory!", filename);
             }
         } catch (Exception e) {
             log.error("Failed to load JSON from {}: {}", filename, e.getMessage());
         }
-
-        return trajectoryMap;
+        return map; // always returns map, even if empty
     }
 }
