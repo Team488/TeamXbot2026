@@ -72,12 +72,6 @@ public class TrajectoriesCalculationTest extends BaseCompetitionTest {
                 assertTrue("Servo should be between 0.2 and 1.0",
                         data.servoRatio() >= 0.2 && data.servoRatio() <= 1.0);
             }
-
         }
-
     }
-
-
 }
-
-
