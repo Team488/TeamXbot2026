@@ -6,7 +6,6 @@ import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
-import org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANLightController;
 import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
