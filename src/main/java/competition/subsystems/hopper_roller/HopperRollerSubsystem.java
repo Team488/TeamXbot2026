@@ -27,7 +27,6 @@ public class HopperRollerSubsystem extends BaseSubsystem {
     final AngularVelocityProperty intakeVelocity;
     final DoubleProperty collectPower;
     final DoubleProperty intakePower;
-    final AngularVelocityProperty intakeVelocity;
     final AngularVelocityProperty collectVelocity;
     final AngularVelocityProperty ejectVelocity;
     final BooleanProperty useVelocityControl;
@@ -58,11 +57,6 @@ public class HopperRollerSubsystem extends BaseSubsystem {
                     getPrefix(),
                     "HopperRollerPID",
                     hopperRollerMotorDefaultPIDProperties
-                    new XCANMotorControllerPIDProperties.Builder()
-                            .withP(0.001)
-                            .withVelocityFeedForward(0.008)
-                            .withStaticFeedForward(0.05)
-                            .build()
             );
             this.hopperRollerMotor.setOpenLoopRampRates(
                     Seconds.of(voltageRampTime.get()),
@@ -81,7 +75,6 @@ public class HopperRollerSubsystem extends BaseSubsystem {
         ejectPower = pf.createPersistentProperty("Eject Power", -0.8);
 
         useVelocityControl = pf.createPersistentProperty("Use Velocity Control", true);
-        intakeVelocity = pf.createPersistentProperty("Intake Velocity", RPM.of(3000));
         collectVelocity = pf.createPersistentProperty("Collect Velocity", RPM.of(3000));
         ejectVelocity = pf.createPersistentProperty("Eject Velocity", RPM.of(-3000));
 
