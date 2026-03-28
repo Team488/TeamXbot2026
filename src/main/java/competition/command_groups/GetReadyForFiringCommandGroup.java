@@ -12,19 +12,19 @@ public class GetReadyForFiringCommandGroup extends BaseSequentialCommandGroup {
 
     @Inject
     public GetReadyForFiringCommandGroup(TrajectoriesCalculation trajectoriesCalculation,
-                                         FireWhenReadyShooterCommandGroup fireWhenReadyShooterCommandGroup,
+                                         FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady,
                                          PoseSubsystem pose,
                                          AutoLandmarks autoLandmarks,
                                          PrepareToShootCommandGroup prepareToShootCommandGroup,
                                          DriveToShootingPositionCommand driveToShootingPositionCommand
     ) {
-        prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TOWER_FAR);
+        prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
 
         var getReadyToFire = new ParallelCommandGroup(
                 driveToShootingPositionCommand, prepareToShootCommandGroup);
 
         this.addCommands(getReadyToFire);
 
-        this.addCommands(fireWhenReadyShooterCommandGroup);
+        this.addCommands(fireWhenShooterAndHoodReady);
     }
 }

@@ -32,6 +32,7 @@ public class DriveForwardToClimbCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         timer.start();
     }
 
@@ -52,6 +53,7 @@ public class DriveForwardToClimbCommand extends BaseCommand {
 
     @Override
     public void end(boolean interrupted) {
+        super.end(interrupted);
         drive.stop();
     }
 }

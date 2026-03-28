@@ -23,6 +23,7 @@ public class HopperRollerSubsystem extends BaseSubsystem {
     public final ElectricalContract electricalContract;
     public final XCANMotorController hopperRollerMotor;
     final DoubleProperty ejectPower;
+    final DoubleProperty collectPower;
     final DoubleProperty intakePower;
     final AngularVelocityProperty intakeVelocity;
     final AngularVelocityProperty ejectVelocity;
@@ -36,6 +37,7 @@ public class HopperRollerSubsystem extends BaseSubsystem {
 
         pf.setPrefix(this);
         this.electricalContract = electricalContract;
+        this.voltageRampTime = pf.createPersistentProperty("VoltageRampTime", 0.1);
         if (electricalContract.isHopperRollerReady()) {
             this.hopperRollerMotor = motorFactory.create(
                     electricalContract.getHopperRollerMotor(),
@@ -46,19 +48,24 @@ public class HopperRollerSubsystem extends BaseSubsystem {
                             .withVelocityFeedForward(0.01)
                             .build()
             );
+            this.hopperRollerMotor.setOpenLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get()));
+            this.hopperRollerMotor.setClosedLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get()));
             this.registerDataFrameRefreshable(hopperRollerMotor);
         } else {
             this.hopperRollerMotor = null;
         }
 
+        collectPower = pf.createPersistentProperty("Collect Power", 0.8);
         intakePower = pf.createPersistentProperty("Intake Power", 0.8);
         ejectPower = pf.createPersistentProperty("Eject Power", -0.8);
 
         useVelocityControl = pf.createPersistentProperty("Use Velocity Control", false);
         intakeVelocity = pf.createPersistentProperty("Intake Velocity", RPM.of(3000));
         ejectVelocity = pf.createPersistentProperty("Eject Velocity", RPM.of(-3000));
-
-        voltageRampTime = pf.createPersistentProperty("Voltage Ramp Time Seconds", 0.2);
 
         if (hopperRollerMotor != null) {
             hopperRollerMotor.setClosedLoopRampRates(
@@ -90,6 +97,13 @@ public class HopperRollerSubsystem extends BaseSubsystem {
         }
     }
 
+    public void setCollectPower() {
+        if (hopperRollerMotor == null) {
+            return;
+        }
+        hopperRollerMotor.setPower(collectPower.get());
+    }
+
     public void stop() {
         if (hopperRollerMotor == null) {
             return;
@@ -103,6 +117,10 @@ public class HopperRollerSubsystem extends BaseSubsystem {
             hopperRollerMotor.periodic();
 
             if (voltageRampTime.hasChangedSinceLastCheck()) {
+                hopperRollerMotor.setOpenLoopRampRates(
+                        Seconds.of(voltageRampTime.get()),
+                        Seconds.of(voltageRampTime.get())
+                );
                 hopperRollerMotor.setClosedLoopRampRates(
                         Seconds.of(voltageRampTime.get()),
                         Seconds.of(voltageRampTime.get())
@@ -122,4 +140,6 @@ public class HopperRollerSubsystem extends BaseSubsystem {
     public Command getStopCommand() {
         return new NamedRunCommand(getName() + "-stop", this::stop, this);
     }
+
+    public Command getCollectCommand() {return new NamedRunCommand(getName() + "-collect", this::setCollectPower, this);}
 }
