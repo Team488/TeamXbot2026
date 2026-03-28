@@ -6,10 +6,13 @@ on:
   pull_request:
     branches: [main]
 
-jobs:
-  build:
-    runs-on: windows-latest
+env:
+  GRADLE_USER_HOME: ${{ github.workspace }}/build/.gradle
+  GRADLE_OPTS: "-Xmx3072m"
 
+jobs:
+  compile:
+    runs-on: windows-latest
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
@@ -31,23 +34,70 @@ jobs:
           restore-keys: |
             gradle-${{ runner.os }}-
 
-      - name: Build
+      - name: Compile
         run: ./gradlew :classes :testClasses
-        env:
-          GRADLE_USER_HOME: ${{ github.workspace }}/build/.gradle
-          GRADLE_OPTS: "-Xmx3072m"
+
+      - name: Stop Gradle daemon
+        run: ./gradlew --stop
+        if: always()
+
+  checkstyle:
+    runs-on: windows-latest
+    needs: compile
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          clean: true
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: build/.gradle
+          key: gradle-${{ runner.os }}-${{ hashFiles('build.gradle', 'settings.gradle', 'gradle/wrapper/gradle-wrapper.properties', 'vendordeps/**') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
 
       - name: Checkstyle
         run: ./gradlew :checkstyleMain :checkstyleTest
-        env:
-          GRADLE_USER_HOME: ${{ github.workspace }}/build/.gradle
-          GRADLE_OPTS: "-Xmx3072m"
+
+      - name: Stop Gradle daemon
+        run: ./gradlew --stop
+        if: always()
+
+  test:
+    runs-on: windows-latest
+    needs: compile
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          clean: true
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: build/.gradle
+          key: gradle-${{ runner.os }}-${{ hashFiles('build.gradle', 'settings.gradle', 'gradle/wrapper/gradle-wrapper.properties', 'vendordeps/**') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
 
       - name: Test
         run: ./gradlew :test
-        env:
-          GRADLE_USER_HOME: ${{ github.workspace }}/build/.gradle
-          GRADLE_OPTS: "-Xmx3072m"
 
       - name: Publish test results
         uses: mikepenz/action-junit-report@v4
@@ -63,6 +113,4 @@ jobs:
 
       - name: Stop Gradle daemon
         run: ./gradlew --stop
-        env:
-          GRADLE_USER_HOME: ${{ github.workspace }}/build/.gradle
         if: always()
