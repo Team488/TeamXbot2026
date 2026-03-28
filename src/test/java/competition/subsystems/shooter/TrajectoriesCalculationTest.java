@@ -60,16 +60,16 @@ public class TrajectoriesCalculationTest extends BaseCompetitionTest {
 
         for (int i = 0; i < 10; i++){
 
-            double randomWidth = (Math.random() * 4.03); //
-            double randomHeight = (Math.random() * 8.07);
-            Pose2d randomPose = new Pose2d(randomWidth, randomHeight, new Rotation2d(0));
+            double randomWidth = (Math.random() * 4.03); // 4.03 is the width of the alliance zone
+            double randomHeight = (Math.random() * 8.07); // 8.07 is the height of the alliance zone
+            Pose2d randomPose = new Pose2d(randomWidth, randomHeight, new Rotation2d(0)); // Random spot in alliance zone
 
             TrajectoriesCalculation.ShootingData data = calc.calculateAllianceHubShootingData(randomPose);
 
             assertNotNull(data);
 
             if (data.servoRatio() > 0) {
-                assertTrue("Servo should be between 0.2 and 1.0 to see if it goes ni",
+                assertTrue("Servo should be between 0.2 and 1.0",
                         data.servoRatio() >= 0.2 && data.servoRatio() <= 1.0);
             }
 
