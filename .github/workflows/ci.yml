@@ -37,6 +37,12 @@ jobs:
           GRADLE_USER_HOME: ${{ github.workspace }}/build/.gradle
           GRADLE_OPTS: "-Xmx3072m"
 
+      - name: Checkstyle
+        run: ./gradlew :checkstyleMain :checkstyleTest
+        env:
+          GRADLE_USER_HOME: ${{ github.workspace }}/build/.gradle
+          GRADLE_OPTS: "-Xmx3072m"
+
       - name: Test
         run: ./gradlew :test
         env:
