@@ -17,6 +17,7 @@ public class ClimberStopCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         climber.stop();
     }
 }

@@ -70,6 +70,7 @@ public class ClimberMaintainerCommand extends BaseMaintainerCommand<Angle, Doubl
 
     @Override
     public void end(boolean interrupted) {
+        super.end(interrupted);
         if (interrupted) {
             climber.stop();
         }
