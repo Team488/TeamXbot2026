@@ -52,7 +52,7 @@ public class CollectorSubsystem extends BaseSubsystem {
             this.collectorMotor = null;
         }
 
-        intakeVelocity = pf.createPersistentProperty("FuelIntakePower", RPM.of(1));
+        intakeVelocity = pf.createPersistentProperty("FuelIntakePower", RPM.of(3000));
         intakePower = pf.createPersistentProperty("FuelIntakePower", 1);
         ejectPower = pf.createPersistentProperty("FuelEjectPower", -1);
     }

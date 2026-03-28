@@ -65,7 +65,7 @@ public class HopperRollerSubsystem extends BaseSubsystem {
             this.hopperRollerMotor = null;
         }
 
-        intakeVelocity = pf.createPersistentProperty("Intake Velocity", RPM.of());
+        intakeVelocity = pf.createPersistentProperty("Intake Velocity", RPM.of(3000));
         intakePower = pf.createPersistentProperty("Intake Velocity", 0.8);
         collectPower = pf.createPersistentProperty("Collect Power", 0.8);
         ejectPower = pf.createPersistentProperty("Eject Power", -0.8);
