@@ -32,20 +32,25 @@ jobs:
             gradle-${{ runner.os }}-
 
       - name: Build
-        run: ./gradlew :build
+        run: ./gradlew :classes :testClasses
+        env:
+          GRADLE_USER_HOME: ${{ github.workspace }}/build/.gradle
+          GRADLE_OPTS: "-Xmx3072m"
+
+      - name: Test
+        run: ./gradlew :test
         env:
           GRADLE_USER_HOME: ${{ github.workspace }}/build/.gradle
           GRADLE_OPTS: "-Xmx3072m"
 
       - name: Publish test results
         uses: mikepenz/action-junit-report@v4
-        if: always()
+        if: success() || failure()
         with:
           report_paths: '**/TEST-*.xml'
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: jacoco-report
           path: build/reports/jacoco/test/html/
