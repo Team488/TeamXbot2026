@@ -166,8 +166,14 @@ public class HopperRollerSubsystem extends BaseSubsystem {
     public Command getIntakePulseCommand() {
         var commandGroup = new SequentialCommandGroup();
         commandGroup.setName(getName() + "-intake-pulse");
-        commandGroup.addCommands(new NamedRunCommand(getName() + "-intake-pulse-low", () -> setVelocityTarget(intakeVelocity.get()), this).withTimeout(intakePulseDuration.get()));
-        commandGroup.addCommands(new NamedRunCommand(getName() + "-intake-pulse-high", () -> setVelocityTarget(intakePulseVelocity.get()), this).withTimeout(intakePulseDuration.get()));
+        commandGroup.addCommands(
+                new NamedRunCommand(
+                        getName() + "-intake-pulse-low",
+                        () -> setVelocityTarget(intakeVelocity.get()), this).withTimeout(intakePulseDuration.get()));
+        commandGroup.addCommands(
+                new NamedRunCommand(
+                        getName() + "-intake-pulse-high",
+                        () -> setVelocityTarget(intakePulseVelocity.get()), this).withTimeout(intakePulseDuration.get()));
         return commandGroup.repeatedly();
     }
 }
