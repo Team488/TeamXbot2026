@@ -119,7 +119,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         }
 
         this.defaultShootingVelocity = this.propertyFactory.createPersistentProperty("Default Shooter Velocity RPM", 3000);
-        this.trimValue = this.propertyFactory.createPersistentProperty("Shooter Trim Value", -30);
+        this.trimValue = this.propertyFactory.createPersistentProperty("Shooter Trim Value", 0);
         this.readinessTimeoutSeconds = this.propertyFactory.createPersistentProperty("Readiness Timeout Seconds", 2.0);
     }
 
