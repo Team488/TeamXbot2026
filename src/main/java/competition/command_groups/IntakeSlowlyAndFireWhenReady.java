@@ -1,17 +1,14 @@
 package competition.command_groups;
 
 
+import competition.general_commands.WaitForDurationCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeploySlowClosing;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import xbot.common.command.BaseSequentialCommandGroup;
-import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 
 public class IntakeSlowlyAndFireWhenReady extends BaseSequentialCommandGroup {
-
-    public DoubleProperty waitBeforeRetracting;
 
     @Inject
     public IntakeSlowlyAndFireWhenReady(WaitForHoodAndShooterToBeAtGoalCommandGroup waitForHoodAndShooterToBeAtGoalCommandGroup,
@@ -21,13 +18,17 @@ public class IntakeSlowlyAndFireWhenReady extends BaseSequentialCommandGroup {
 
     ) {
         propertyFactory.setPrefix(this);
-        this.waitBeforeRetracting = propertyFactory.createPersistentProperty("Wait Time Before Retracting In Seconds", 2.0);
+
+        var waitBeforeRetracting = new WaitForDurationCommand(
+                propertyFactory.createPersistentProperty
+                        ("waitBeforeRetractingSeconds", 2.0)::get
+        );
 
         this.addCommands(
                 waitForHoodAndShooterToBeAtGoalCommandGroup,
                 runCollectorHopperFeederCommandGroup
-                        .alongWith(new WaitCommand(waitBeforeRetracting.get())
-                                .andThen(intakeDeploySlowClosing))
+                        .alongWith(waitBeforeRetracting)
+                                .andThen(intakeDeploySlowClosing)
         );
     }
 }
