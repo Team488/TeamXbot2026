@@ -13,8 +13,9 @@ import static edu.wpi.first.units.Units.Degrees;
 
 public class IntakeDeploySlowClosing extends BaseSetpointCommand {
 
-    public IntakeDeploySubsystem intakeDeploySubsystem;
-    public AngleProperty increasingValue;
+    public final IntakeDeploySubsystem intakeDeploySubsystem;
+    public final AngleProperty increasingValue;
+    public final AngleProperty retractLimit;
     private Angle currentTarget;
 
     @Inject
@@ -23,6 +24,7 @@ public class IntakeDeploySlowClosing extends BaseSetpointCommand {
         super(intakeDeploy);
         propertyFactory.setPrefix(this);
         this.intakeDeploySubsystem = intakeDeploy;
+        this.retractLimit = propertyFactory.createPersistentProperty("RetractLimit", Degrees.of(-30));
         this.increasingValue = propertyFactory.createPersistentProperty("IncreasingValuePerSecond", Degrees.of(70));
     }
 
@@ -36,14 +38,13 @@ public class IntakeDeploySlowClosing extends BaseSetpointCommand {
 
     @Override
     public void execute() {
-        Angle retractLimit = Degrees.of(intakeDeploySubsystem.retractedPosition.get());
         // Increment our internal target each loop rather than reading the encoder,
         // so the setpoint moves smoothly regardless of where the mechanism actually is.
         // Convert degrees/second to degrees/loop using the known loop period.
         currentTarget = currentTarget.plus(increasingValue.get().times(Robot.LOOP_INTERVAL));
 
-        if (currentTarget.gt(retractLimit)) {
-            intakeDeploySubsystem.setTargetValue(retractLimit);
+        if (currentTarget.gt(retractLimit.get())) {
+            intakeDeploySubsystem.setTargetValue(retractLimit.get());
         } else {
             intakeDeploySubsystem.setTargetValue(currentTarget);
         }

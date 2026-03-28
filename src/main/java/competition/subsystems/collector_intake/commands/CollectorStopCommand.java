@@ -16,6 +16,7 @@ public class CollectorStopCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         collectorSubsystem.stop();
     }
 }

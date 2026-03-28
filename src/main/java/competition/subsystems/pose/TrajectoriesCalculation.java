@@ -48,7 +48,7 @@ public class TrajectoriesCalculation {
         if (presetShootingLookup == null) {
             presetShootingLookup = Map.of(PresetShootingDistance.NEAR,
                     new PresetShootingProperties(
-                            propManager.createPersistentProperty("PresetShooting.NEAR RPM", 2600),
+                            propManager.createPersistentProperty("PresetShooting.NEAR RPM", 2725),
                             propManager.createPersistentProperty("PresetShooting.NEAR Hood ServoRatio", 0.0)),
                     PresetShootingDistance.TOWER_CLOSE,
                     new PresetShootingProperties(
@@ -60,11 +60,11 @@ public class TrajectoriesCalculation {
                             propManager.createPersistentProperty("PresetShooting.TOWER_FAR Hood ServoRatio", 0.0)),
                     PresetShootingDistance.TRENCH,
                     new PresetShootingProperties(
-                            propManager.createPersistentProperty("PresetShooting.TRENCH RPM", 3900),
+                            propManager.createPersistentProperty("PresetShooting.TRENCH RPM", 4100),
                             propManager.createPersistentProperty("PresetShooting.TRENCH Hood ServoRatio", 0.0)),
                     PresetShootingDistance.CORNER,
                     new PresetShootingProperties(
-                            propManager.createPersistentProperty("PresetShooting.CORNER RPM", 3600),
+                            propManager.createPersistentProperty("PresetShooting.CORNER RPM", 3750),
                             propManager.createPersistentProperty("PresetShooting.CORNER Hood ServoRatio", 1)));
 
         }
@@ -256,7 +256,8 @@ public class TrajectoriesCalculation {
         trajectoryMap = new HashMap<>();
 
         try {
-            File configFile = new File(Filesystem.getDeployDirectory(), "trajectories.json");
+            // TODO: Needs to be merged with https://github.com/Team488/TeamXbot2026/pull/309/ which includes the ability to do no hood and hood values.
+            File configFile = new File(Filesystem.getDeployDirectory(), "trajectories_0_hood.json");
 
             if (configFile.exists()) {
                 ObjectMapper mapper = new ObjectMapper();

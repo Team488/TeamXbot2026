@@ -31,6 +31,7 @@ public class ShooterOutputCommand extends BaseSetpointCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         var targetVelocity = targetVelocitySupplier.get();
 
         log.info("Shooting at {} RPM", targetVelocity.in(RPM));
