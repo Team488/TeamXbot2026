@@ -34,6 +34,7 @@ public class HopperRollerSubsystem extends BaseSubsystem {
     final BooleanProperty useVelocityControl;
     final DoubleProperty voltageRampTime;
     final DoubleProperty intakePulseDuration;
+    final DoubleProperty intakePulseHighDuration;
 
     @Inject
     public HopperRollerSubsystem(ElectricalContract electricalContract,
@@ -75,6 +76,7 @@ public class HopperRollerSubsystem extends BaseSubsystem {
         collectVelocity = pf.createPersistentProperty("Collect Velocity", RPM.of(3000));
         ejectVelocity = pf.createPersistentProperty("Eject Velocity", RPM.of(-3000));
         intakePulseDuration = pf.createPersistentProperty("Intake Pulse Duration Seconds", 0.5);
+        intakePulseHighDuration = pf.createPersistentProperty("Intake Pulse High Duration Seconds", 0.5);
 
         if (hopperRollerMotor != null) {
             hopperRollerMotor.setClosedLoopRampRates(
@@ -173,7 +175,7 @@ public class HopperRollerSubsystem extends BaseSubsystem {
         commandGroup.addCommands(
                 new NamedRunCommand(
                         getName() + "-intake-pulse-high",
-                        () -> setVelocityTarget(intakePulseVelocity.get()), this).withTimeout(intakePulseDuration.get()));
+                        () -> setVelocityTarget(intakePulseVelocity.get()), this).withTimeout(intakePulseHighDuration.get()));
         return commandGroup.repeatedly();
     }
 }
