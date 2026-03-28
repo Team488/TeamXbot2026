@@ -10,6 +10,7 @@ import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANLightController;
 import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import xbot.common.logging.RobotAssertionManager;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -27,7 +28,9 @@ public class LightsSubsystem extends BaseSubsystem {
     public LightsSubsystem(XCANLightController.XCANLightControllerFactory lightsFactory,
                            ElectricalContract electricalContract,
                            IntakeDeploySubsystem intakeDeploy,
-                           HoodSubsystem hoodSubsystem, VoltageMonitorSubsystem voltageMonitor
+                           HoodSubsystem hoodSubsystem,
+                           VoltageMonitorSubsystem voltageMonitor,
+                           RobotAssertionManager assertionManager
     ) {
         this.intakeDeploy = intakeDeploy;
         this.hoodSubsystem = hoodSubsystem;
@@ -69,6 +72,8 @@ public class LightsSubsystem extends BaseSubsystem {
                     lights.larson(2, Hertz.of(25), Color.kBlue, LarsonBounceValue.Front);
             case Red ->
                     lights.larson(2, Hertz.of(25), Color.kRed, LarsonBounceValue.Front);
+            default ->
+                throw new NullPointerException("Current Alliance Selected:" + alliance);
         }
     }
 }
