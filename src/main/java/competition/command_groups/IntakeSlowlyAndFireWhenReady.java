@@ -1,7 +1,9 @@
 package competition.command_groups;
 
 
+import competition.general_commands.WaitForDurationCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeploySlowClosing;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import xbot.common.command.BaseSequentialCommandGroup;
 import xbot.common.properties.DoubleProperty;
@@ -15,19 +17,27 @@ public class IntakeSlowlyAndFireWhenReady extends BaseSequentialCommandGroup {
 
     @Inject
     public IntakeSlowlyAndFireWhenReady(WaitForHoodAndShooterToBeAtGoalCommandGroup waitForHoodAndShooterToBeAtGoalCommandGroup,
-                                       RunCollectorHopperFeederCommandGroup runCollectorHopperFeederCommandGroup,
-                                       IntakeDeploySlowClosing intakeDeploySlowClosing,
-                                       PropertyFactory propertyFactory
+                                        RunCollectorHopperFeederCommandGroup runCollectorHopperFeederCommandGroup,
+                                        IntakeDeploySlowClosing intakeDeploySlowClosing,
+                                        PropertyFactory propertyFactory
 
     ) {
         propertyFactory.setPrefix(this);
-        this.waitBeforeRetracting = propertyFactory.createPersistentProperty("Wait Time Before Retracting In Seconds", 2.0);
+
+        var waitBeforeRetracting = new WaitForDurationCommand(
+                propertyFactory.createPersistentProperty
+                        ("waitBeforeRetractingSeconds", 2.0)::get
+        );
 
         this.addCommands(
                 waitForHoodAndShooterToBeAtGoalCommandGroup,
-                runCollectorHopperFeederCommandGroup
-                        .alongWith(new WaitCommand(waitBeforeRetracting.get())
-                                .andThen(intakeDeploySlowClosing))
+                Commands.parallel(
+                        runCollectorHopperFeederCommandGroup,
+                        Commands.sequence(
+                                waitBeforeRetracting,
+                                intakeDeploySlowClosing
+                        )
+                )
         );
     }
 }
