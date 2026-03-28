@@ -73,6 +73,8 @@ public class Robot extends BaseRobot {
         dataFrameRefreshables.add(getInjectorComponent().voltageMonitorSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().climberSubsystem());
 
+        getInjectorComponent().superstructureMechanismSubsystem();
+
         CommandScheduler.getInstance().schedule(getInjectorComponent().whenShooterReadyRumbleCommand());
     }
 

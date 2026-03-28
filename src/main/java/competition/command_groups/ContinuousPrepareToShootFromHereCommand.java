@@ -21,6 +21,7 @@ public class ContinuousPrepareToShootFromHereCommand extends BaseSetpointCommand
     }
 
     private ShootingTarget target = ShootingTarget.HUB;
+    private boolean zeroHood = false;
 
     @Inject
     public ContinuousPrepareToShootFromHereCommand(HoodSubsystem hood,
@@ -32,6 +33,10 @@ public class ContinuousPrepareToShootFromHereCommand extends BaseSetpointCommand
         this.shooter = shooter;
         this.poseSubsystem = poseSubsystem;
         this.trajectoriesCalculation = trajectoriesCalculation;
+    }
+
+    public void setZeroHood(boolean zeroHood) {
+        this.zeroHood = zeroHood;
     }
 
     @Override
@@ -57,11 +62,11 @@ public class ContinuousPrepareToShootFromHereCommand extends BaseSetpointCommand
         TrajectoriesCalculation.ShootingData data;
         switch (this.target) {
             case ALLIANCE_ZONE:
-                data = this.trajectoriesCalculation.calculateAllianceZoneShootingData(pose);
+                data = this.trajectoriesCalculation.calculateAllianceZoneShootingData(pose, this.zeroHood);
                 break;
             case HUB:
             default:
-                data = this.trajectoriesCalculation.calculateAllianceHubShootingData(pose);
+                data = this.trajectoriesCalculation.calculateAllianceHubShootingData(pose, this.zeroHood);
                 break;
         }
 

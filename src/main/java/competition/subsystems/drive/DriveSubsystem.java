@@ -52,9 +52,9 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
         pf.setPrefix(this.getPrefix());
         pf.setDefaultLevel(Property.PropertyLevel.Important);
-        this.maxAutoTargetSpeedMps = pf.createPersistentProperty("MaxAutoTargetSpeedMetersPerSecond", 2.5);
-        this.maxAutoFuelIntakeTargetSpeedMps = pf.createPersistentProperty("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.5);
-        this.interstitialSpeedMps = pf.createPersistentProperty("InterstitialSpeedMetersPerSecond", 1);
+        this.maxAutoTargetSpeedMps = pf.createPersistentProperty("MaxAutoTargetSpeedMetersPerSecond", 2.0);
+        this.maxAutoFuelIntakeTargetSpeedMps = pf.createPersistentProperty("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.0);
+        this.interstitialSpeedMps = pf.createPersistentProperty("InterstitialSpeedMetersPerSecond", 0.4);
     }
 
     @Override
