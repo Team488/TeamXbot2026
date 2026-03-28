@@ -64,11 +64,12 @@ public class LightsSubsystem extends BaseSubsystem {
 
         var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
-        if (alliance == Alliance.Blue){
-            lights.larson(2, Hertz.of(25), Color.kBlue, LarsonBounceValue.Front);
-        } else if (alliance == Alliance.Red) {
-            lights.larson(2, Hertz.of(25), Color.kRed, LarsonBounceValue.Front);
-        } else {
+        switch (alliance) {
+            case Blue ->
+                    lights.larson(2, Hertz.of(25), Color.kBlue, LarsonBounceValue.Front);
+            case Red ->
+                    lights.larson(2, Hertz.of(25), Color.kRed, LarsonBounceValue.Front);
+            default ->
             lights.larson(2, Hertz.of(25), Color.kWhite, LarsonBounceValue.Front);
         }
     }
