@@ -38,6 +38,8 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public final DoubleProperty maxPidAcceleration;
     public final DoubleProperty collectionDownwardPressure;
     public final DoubleProperty voltageRampTime;
+    public AngleProperty offset;
+    public DoubleProperty tolerance;
     public DoubleProperty readinessTimeoutSeconds;
 
     @Inject
@@ -82,6 +84,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
         this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", 10.0);
         this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -145.0);
+        this.offset = propertyFactory.createPersistentProperty("Offset from target", Degrees.of(3)); //TODO change to correct value
 
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.2);
 
@@ -193,5 +196,12 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     public Command getWaitForAtGoalCommand() {
         return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
+    }
+
+    public boolean intakeDeployIsExtended() {
+        var current = getCurrentValue();
+        return current.isNear
+                (Degrees.of(extendedPosition.get()),
+                (Degrees.of(tolerance.get())));
     }
 }
