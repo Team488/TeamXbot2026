@@ -14,7 +14,7 @@ public class RunCollectorHopperFeederCommandGroup extends BaseParallelCommandGro
                                             CollectorIntakeCommand collectorIntakeCommand,
                                             ShooterFeederFire shooterFeederFireCommand
     ) {
-        var hopperIntakeCommand = hopper.getIntakeCommand();
+        var hopperIntakeCommand = hopper.getIntakePulseCommand();
         this.addCommands(
                 hopperIntakeCommand.alongWith(collectorIntakeCommand).alongWith(shooterFeederFireCommand)
         );
