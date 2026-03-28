@@ -17,8 +17,7 @@ public class CollectorIntakeCommand extends BaseCommand {
     @Override
     public void initialize() {
         super.initialize();
-        collectorSubsystem.intake();
-        collectorSubsystem.intakeVelocity();
+        collectorSubsystem.intakePower();
         log.info("Initialized FuelIntake");
     }
 }
