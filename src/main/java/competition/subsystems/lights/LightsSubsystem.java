@@ -23,6 +23,7 @@ public class LightsSubsystem extends BaseSubsystem {
     public IntakeDeploySubsystem intakeDeploy;
     public HoodSubsystem hoodSubsystem;
     public VoltageMonitorSubsystem voltageMonitor;
+    public RobotAssertionManager assertionManager;
 
     @Inject
     public LightsSubsystem(XCANLightController.XCANLightControllerFactory lightsFactory,
@@ -35,6 +36,7 @@ public class LightsSubsystem extends BaseSubsystem {
         this.intakeDeploy = intakeDeploy;
         this.hoodSubsystem = hoodSubsystem;
         this.voltageMonitor = voltageMonitor;
+        this.assertionManager = assertionManager;
         if (electricalContract.isLightsReady()) {
             this.lights = lightsFactory.create(
                     electricalContract.getLightControllerInfo()
@@ -68,12 +70,9 @@ public class LightsSubsystem extends BaseSubsystem {
         var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
         switch (alliance) {
-            case Blue ->
-                    lights.larson(2, Hertz.of(25), Color.kBlue, LarsonBounceValue.Front);
-            case Red ->
-                    lights.larson(2, Hertz.of(25), Color.kRed, LarsonBounceValue.Front);
-            default ->
-                throw new NullPointerException("Current Alliance Selected:" + alliance);
+            case Blue -> lights.larson(2, Hertz.of(25), Color.kBlue, LarsonBounceValue.Front);
+            case Red -> lights.larson(2, Hertz.of(25), Color.kRed, LarsonBounceValue.Front);
+            default -> assertionManager.throwException("No Alliance Selected!", new Exception());
         }
     }
 }
