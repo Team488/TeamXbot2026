@@ -16,6 +16,7 @@ public class CollectorEjectCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         collectorSubsystem.eject();
         log.info("Initialized FuelEject");
     }

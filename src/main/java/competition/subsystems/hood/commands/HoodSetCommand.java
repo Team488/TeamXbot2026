@@ -32,6 +32,7 @@ public class HoodSetCommand extends BaseSetpointCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         if (!this.usingCustomGoal) {
             this.ratio = hood.servoTargetNormalized.get();
         } else if (this.ratioSupplier != null) {

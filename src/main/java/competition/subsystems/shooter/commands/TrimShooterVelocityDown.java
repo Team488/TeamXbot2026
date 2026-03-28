@@ -19,6 +19,7 @@ public class TrimShooterVelocityDown extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         shooter.decreaseShooterOffset();
         log.info("Decreasing shooter trim to " + shooter.trimValue.get());
     }

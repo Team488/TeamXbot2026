@@ -19,6 +19,7 @@ public class HoodToGoalCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         hood.runServo();
     }
 
