@@ -1,6 +1,7 @@
 package competition.command_groups;
 
 
+import competition.general_commands.WaitForDurationCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeploySlowClosing;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -22,14 +23,18 @@ public class IntakeSlowlyAndFireWhenReady extends BaseSequentialCommandGroup {
 
     ) {
         propertyFactory.setPrefix(this);
-        this.waitBeforeRetracting = propertyFactory.createPersistentProperty("Wait Time Before Retracting In Seconds", 2.0);
+
+        var waitBeforeRetracting = new WaitForDurationCommand(
+                propertyFactory.createPersistentProperty
+                        ("waitBeforeRetractingSeconds", 2.0)::get
+        );
 
         this.addCommands(
                 waitForHoodAndShooterToBeAtGoalCommandGroup,
                 Commands.parallel(
                         runCollectorHopperFeederCommandGroup,
                         Commands.sequence(
-                                new WaitCommand(waitBeforeRetracting.get()),
+                                waitBeforeRetracting,
                                 intakeDeploySlowClosing
                         )
                 )
