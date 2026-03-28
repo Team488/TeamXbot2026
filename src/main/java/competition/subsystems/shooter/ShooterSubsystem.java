@@ -57,7 +57,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
                 .withP(0.05)
                 .withI(0.0)
                 .withD(0.0)
-                .withStaticFeedForward(0.02)
+                .withStaticFeedForward(0.008)
                 .withVelocityFeedForward(0.01)
                 .withMinPowerOutput(-1.0)
                 .withMaxPowerOutput(1.0)
