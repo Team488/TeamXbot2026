@@ -5,12 +5,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.NamedRunCommand;
 import xbot.common.controls.actuators.XCANMotorController;
+import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
+import xbot.common.properties.AngularVelocityProperty;
+import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
@@ -21,7 +25,11 @@ public class HopperRollerSubsystem extends BaseSubsystem {
     final DoubleProperty ejectPower;
     final DoubleProperty collectPower;
     final DoubleProperty intakePower;
-    public final DoubleProperty voltageRampTime;
+    final AngularVelocityProperty intakeVelocity;
+    final AngularVelocityProperty collectVelocity;
+    final AngularVelocityProperty ejectVelocity;
+    final BooleanProperty useVelocityControl;
+    final DoubleProperty voltageRampTime;
 
     @Inject
     public HopperRollerSubsystem(ElectricalContract electricalContract,
@@ -35,7 +43,12 @@ public class HopperRollerSubsystem extends BaseSubsystem {
             this.hopperRollerMotor = motorFactory.create(
                     electricalContract.getHopperRollerMotor(),
                     getPrefix(),
-                    "HopperRollerPID"
+                    "HopperRollerPID",
+                    new XCANMotorControllerPIDProperties.Builder()
+                            .withP(0.001)
+                            .withVelocityFeedForward(0.008)
+                            .withStaticFeedForward(0.05)
+                            .build()
             );
             this.hopperRollerMotor.setOpenLoopRampRates(
                     Seconds.of(voltageRampTime.get()),
@@ -51,27 +64,51 @@ public class HopperRollerSubsystem extends BaseSubsystem {
         collectPower = pf.createPersistentProperty("Collect Power", 0.8);
         intakePower = pf.createPersistentProperty("Intake Power", 0.8);
         ejectPower = pf.createPersistentProperty("Eject Power", -0.8);
+
+        useVelocityControl = pf.createPersistentProperty("Use Velocity Control", true);
+        intakeVelocity = pf.createPersistentProperty("Intake Velocity", RPM.of(3000));
+        collectVelocity = pf.createPersistentProperty("Collect Velocity", RPM.of(3000));
+        ejectVelocity = pf.createPersistentProperty("Eject Velocity", RPM.of(-3000));
+
+        if (hopperRollerMotor != null) {
+            hopperRollerMotor.setClosedLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get())
+            );
+        }
     }
 
     public void setEjectPower() {
         if (hopperRollerMotor == null) {
             return;
         }
-        hopperRollerMotor.setPower(ejectPower.get());
+        if (useVelocityControl.get()) {
+            hopperRollerMotor.setVelocityTarget(ejectVelocity.get());
+        } else {
+            hopperRollerMotor.setPower(ejectPower.get());
+        }
     }
 
     public void setIntakePower() {
         if (hopperRollerMotor == null) {
             return;
         }
-        hopperRollerMotor.setPower(intakePower.get());
+        if (useVelocityControl.get()) {
+            hopperRollerMotor.setVelocityTarget(intakeVelocity.get());
+        } else {
+            hopperRollerMotor.setPower(intakePower.get());
+        }
     }
 
     public void setCollectPower() {
         if (hopperRollerMotor == null) {
             return;
         }
-        hopperRollerMotor.setPower(collectPower.get());
+        if (useVelocityControl.get()) {
+            hopperRollerMotor.setVelocityTarget(collectVelocity.get());
+        } else {
+            hopperRollerMotor.setPower(collectPower.get());
+        }
     }
 
     public void stop() {
@@ -85,6 +122,17 @@ public class HopperRollerSubsystem extends BaseSubsystem {
     public void periodic() {
         if (hopperRollerMotor != null) {
             hopperRollerMotor.periodic();
+
+            if (voltageRampTime.hasChangedSinceLastCheck()) {
+                hopperRollerMotor.setOpenLoopRampRates(
+                        Seconds.of(voltageRampTime.get()),
+                        Seconds.of(voltageRampTime.get())
+                );
+                hopperRollerMotor.setClosedLoopRampRates(
+                        Seconds.of(voltageRampTime.get()),
+                        Seconds.of(voltageRampTime.get())
+                );
+            }
         }
     }
 
