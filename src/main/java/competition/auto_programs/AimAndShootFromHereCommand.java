@@ -15,6 +15,7 @@ public class AimAndShootFromHereCommand extends BaseParallelCommandGroup {
             RotateToHubCommand rotateToHub) {
 
         continuousPrepareToShootFromHereCommand.setTarget(ContinuousPrepareToShootFromHereCommand.ShootingTarget.HUB);
+        continuousPrepareToShootFromHereCommand.setZeroHood(true);
 
         this.addCommands(continuousPrepareToShootFromHereCommand, rotateToHub, fireWhenShooterAndHoodReady);
     }
