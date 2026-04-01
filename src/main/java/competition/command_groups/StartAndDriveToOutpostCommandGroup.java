@@ -12,9 +12,6 @@ public class StartAndDriveToOutpostCommandGroup extends BaseParallelCommandGroup
         addCommands(
                 pose.createSetPositionCommand(PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueStartTrenchToOutpost)),
                 driveToOutpostCommand
-
         );
-
     }
-
 }

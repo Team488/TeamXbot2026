@@ -10,6 +10,7 @@ import competition.auto_programs.ShootFromTrenchCommandGroup;
 import competition.auto_programs.vision.JustDriveNeutralMoveCommand;
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
 import competition.auto_programs.vision.ShootFromTrenchThenMoveToNeutralCommand;
+import competition.command_groups.AutoOutpostAndShootCommandGroup;
 import competition.command_groups.vision.DriveThroughAllianceTrenchCommand;
 import competition.command_groups.FireWhenReadyAndRetractIntakeDeployCommandGroup;
 import competition.command_groups.FireWhenShooterAndHoodReady;
@@ -48,6 +49,7 @@ import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.autonomous.SetAutonomousCommand;
 import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
+
 
 /**
  * Maps operator interface buttons to commands
@@ -209,13 +211,16 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupSimulatorCommands(
-            ResetSimulatedPoseCommand resetPose) {
+            ResetSimulatedPoseCommand resetPose,
+            AutoOutpostAndShootCommandGroup autoOutpostAndShootCommandGroup) {
         resetPose.includeOnSmartDashboard();
     }
 
     @Inject
     public void setupTestingCommands(AimAndShootFromHereCommand aimAndShootFromHereCommand,
-                                     DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand) {
+                                     DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand,
+                                     AutoOutpostAndShootCommandGroup autoOutpostAndShootCommandGroup) {
+        autoOutpostAndShootCommandGroup.includeOnSmartDashboard();
         aimAndShootFromHereCommand.includeOnSmartDashboard();
         driveThroughAllianceTrenchCommand.includeOnSmartDashboard();
     }
