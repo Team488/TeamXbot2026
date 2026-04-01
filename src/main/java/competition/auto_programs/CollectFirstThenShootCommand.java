@@ -38,8 +38,10 @@ public class CollectFirstThenShootCommand extends BaseAutonomousSequentialComman
 
         this.addCommands(driveToNeutralZone);
 
-        var driveToAllianceZoneAndShoot = driveFromNeutralZoneToAllianceAndShootCommandGroupProvider.get().create()
-                .alongWith(getAutoStatusChangeCommand("Driving to alliance and shoot"));
+        var firstShotTimeoutProperty = pf.createPersistentProperty("First shot timeout seconds", 3.0);
+        var driveToAllianceZoneAndShoot = driveFromNeutralZoneToAllianceAndShootCommandGroupProvider.get()
+                        .create(firstShotTimeoutProperty::get)
+                        .alongWith(getAutoStatusChangeCommand("Driving to alliance and shoot"));
         this.addCommands(driveToAllianceZoneAndShoot);
 
         var driveToNeutralZone2 = driveToNeutralZoneAndDeployIntakeCommandProvider.get().create()
