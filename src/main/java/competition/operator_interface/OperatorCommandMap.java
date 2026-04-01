@@ -134,7 +134,6 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupDebugGamepad(OperatorInterface operatorInterface,
-
                                   ShooterOutputCommand shooterOutputCommand,
                                   TrimShooterVelocityUp trimShooterVelocityUp,
                                   TrimShooterVelocityDown trimShooterVelocityDown,
@@ -144,7 +143,6 @@ public class OperatorCommandMap {
                                   CollectorEjectCommand collectorEjectCommand,
                                   ShooterFeederFire shooterFeederFire,
                                   HopperRollerSubsystem hopperRollerSubsystem
-
     ) {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger)
                 .onTrue(trimShooterVelocityDown);
