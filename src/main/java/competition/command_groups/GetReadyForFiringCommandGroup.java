@@ -1,30 +1,27 @@
 package competition.command_groups;
 
-import competition.subsystems.pose.AutoLandmarks;
-import competition.subsystems.pose.PoseSubsystem;
-import competition.subsystems.pose.TrajectoriesCalculation;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import competition.general_commands.WaitForDurationCommand;
 import xbot.common.command.BaseSequentialCommandGroup;
+import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 
 public class GetReadyForFiringCommandGroup extends BaseSequentialCommandGroup {
 
     @Inject
-    public GetReadyForFiringCommandGroup(TrajectoriesCalculation trajectoriesCalculation,
-                                         FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady,
-                                         PoseSubsystem pose,
-                                         AutoLandmarks autoLandmarks,
-                                         PrepareToShootCommandGroup prepareToShootCommandGroup,
-                                         DriveToShootingPositionCommand driveToShootingPositionCommand
+    public GetReadyForFiringCommandGroup(DriveToShootingPositionCommand driveToShootingPositionCommand,
+        WaitForHoodAndShooterToBeAtGoalCommandGroup waitForHoodAndShooterToBeAtGoalCommandGroup,
+                                       RunCollectorHopperFeederCommandGroup runCollectorHopperFeederCommandGroup,
+                                       PropertyFactory pf
     ) {
-        prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
+        pf.setPrefix(this);
+        var shootingTimeoutSeconds = pf.createPersistentProperty("Shooting timeout seconds", 3.0);
+        
+        this.addCommands(driveToShootingPositionCommand);
 
-        var getReadyToFire = new ParallelCommandGroup(
-                driveToShootingPositionCommand, prepareToShootCommandGroup);
-
-        this.addCommands(getReadyToFire);
-
+        var fireWhenShooterAndHoodReady = waitForHoodAndShooterToBeAtGoalCommandGroup
+                .andThen(new WaitForDurationCommand(shootingTimeoutSeconds::get).deadlineFor(runCollectorHopperFeederCommandGroup));
+        
         this.addCommands(fireWhenShooterAndHoodReady);
     }
 }
