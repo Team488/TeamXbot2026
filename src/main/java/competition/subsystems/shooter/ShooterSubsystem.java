@@ -6,7 +6,6 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import xbot.common.command.BaseSetpointSubsystem;
-import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.properties.DoubleProperty;
@@ -20,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
@@ -53,27 +50,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
         this.propertyFactory.setPrefix(this);
         this.electricalContract = electricalContract;
 
-        var leftShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
-                .withP(0.05)
-                .withI(0.01)
-                .withD(0.01)
-                .withStaticFeedForward(0.008)
-                .withVelocityFeedForward(0.01)
-                .withMinPowerOutput(-1.0)
-                .withMaxPowerOutput(1.0)
-                .build();
-
-        var middleShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
-                .withP(0.05)
-                .withI(0.01)
-                .withD(0.01)
-                .withStaticFeedForward(0.008)
-                .withVelocityFeedForward(0.01)
-                .withMinPowerOutput(-1.0)
-                .withMaxPowerOutput(1.0)
-                .build();
-
-        var rightShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
+        var shooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
                 .withP(0.05)
                 .withI(0.01)
                 .withD(0.001)
@@ -87,7 +64,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         if (electricalContract.isLeftShooterReady()) {
             this.leftShooterMotor = xcanMotorControllerFactory.create(electricalContract.getLeftShooterMotor(),
-                    getPrefix(), "leftShooterMotor", leftShooterMotorDefaultPIDProperties);
+                    getPrefix(), "leftShooterMotor", shooterMotorDefaultPIDProperties);
             this.leftShooterMotor.setClosedLoopRampRates(
                     Seconds.of(voltageRampTime.get()),
                     Seconds.of(voltageRampTime.get()));
@@ -98,7 +75,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         if (electricalContract.isMiddleShooterReady()) {
             this.middleShooterMotor = xcanMotorControllerFactory.create(electricalContract.getMiddleShooterMotor(),
-                    getPrefix(), "middleShooterMotor", middleShooterMotorDefaultPIDProperties);
+                    getPrefix(), "middleShooterMotor", shooterMotorDefaultPIDProperties);
             this.middleShooterMotor.setClosedLoopRampRates(
                     Seconds.of(voltageRampTime.get()),
                     Seconds.of(voltageRampTime.get()));
@@ -109,7 +86,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         if (electricalContract.isRightShooterReady()) {
             this.rightShooterMotor = xcanMotorControllerFactory.create(electricalContract.getRightShooterMotor(),
-                    getPrefix(), "rightShooterMotor", rightShooterMotorDefaultPIDProperties);
+                    getPrefix(), "rightShooterMotor", shooterMotorDefaultPIDProperties);
             this.rightShooterMotor.setClosedLoopRampRates(
                     Seconds.of(voltageRampTime.get()),
                     Seconds.of(voltageRampTime.get()));

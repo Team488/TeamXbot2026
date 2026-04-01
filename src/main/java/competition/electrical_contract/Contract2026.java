@@ -394,7 +394,7 @@ public class Contract2026 extends ElectricalContract {
                 PDHPort.PDH12,
                 new TalonFxMotorControllerOutputConfig()
                         .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                        .withStatorCurrentLimit(Amps.of(80)));
+                        .withStatorCurrentLimit(Amps.of(70)));
     }
 
     @Override
