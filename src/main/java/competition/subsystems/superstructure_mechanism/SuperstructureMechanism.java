@@ -28,7 +28,7 @@ public class SuperstructureMechanism {
         this.mech2d = new LoggedMechanism2d(2, 2);
 
         // Hood: shooter-side of the robot (left side)
-        var hoodRoot = mech2d.getRoot("HoodRoot", 0.6, 0.55);
+        var hoodRoot = mech2d.getRoot("HoodRoot", 0.8, 0.55);
         this.hoodLigament = new LoggedMechanismLigament2d(
                 "hood",
                 hoodLigamentLengthMeters,
