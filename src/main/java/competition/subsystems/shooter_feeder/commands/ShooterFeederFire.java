@@ -16,6 +16,7 @@ public class ShooterFeederFire extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         shooterFeeder.fire();
         log.info("Initialized ShooterFeederFire");
     }

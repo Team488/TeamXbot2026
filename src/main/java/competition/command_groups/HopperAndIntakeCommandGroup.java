@@ -9,7 +9,8 @@ import javax.inject.Inject;
 public class HopperAndIntakeCommandGroup extends BaseParallelCommandGroup {
 
     @Inject
-    public HopperAndIntakeCommandGroup(HopperRollerSubsystem hopperRoller, CollectorIntakeCommand fuelIntakeCommand) {
-        addCommands(fuelIntakeCommand, hopperRoller.getIntakeCommand());
+    public HopperAndIntakeCommandGroup(HopperRollerSubsystem hopperRoller,
+                                       CollectorIntakeCommand fuelIntakeCommand) {
+        addCommands(fuelIntakeCommand, hopperRoller.getCollectCommand());
     }
 }

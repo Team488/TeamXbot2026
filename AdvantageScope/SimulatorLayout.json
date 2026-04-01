@@ -9,11 +9,8 @@
         "sidebar": {
           "width": 300,
           "expanded": [
-            "/AdvantageKit/RealOutputs",
             "/AdvantageKit/RealOutputs/Simulator/FieldSimulation",
-            "/AdvantageKit/RealOutputs/DriveSubsystem/CurrentSwerveState",
             "/Preferences/SwerveSteeringSubsystem",
-            "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState",
             "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/0",
             "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/1",
             "/AdvantageKit/RealOutputs/DriveSubsystem/DesiredSwerveState/2",
@@ -34,7 +31,6 @@
             "/AdvantageKit/RealOutputs/PoseSubsystem/VisionEnhancedPose",
             "/AdvantageKit/PowerDistribution/ChannelCurrent",
             "/Preferences/ShooterSubsystem",
-            "/AdvantageKit/RealOutputs/ShooterWheelMaintainerCommand",
             "/Preferences/ShooterFeederSubsystem",
             "/Preferences/IntakeDeploySubsystem",
             "/AdvantageKit/IntakeDeployMotor/CANMotorController",
@@ -43,10 +39,23 @@
             "/AdvantageKit/RealOutputs/IntakeDeployMaintainerCommand",
             "/AdvantageKit/DriverStation/Joystick2",
             "/AdvantageKit/DriverStation/Joystick2/AxisValues",
-            "/AdvantageKit",
             "/AdvantageKit/RealOutputs/Commands",
             "/AdvantageKit/RealOutputs/Performance/Subsystems",
-            "/AdvantageKit/RealOutputs/RunningCommands"
+            "/AdvantageKit/IntakeDeploySubsystem",
+            "/AdvantageKit/IntakeDeploySubsystem/IntakeDeployExtendedSensorDigitalInput",
+            "/AdvantageKit/IntakeDeploySubsystem/IntakeDeploySensorDigitalInput",
+            "/AdvantageKit/IntakeDeployMotor",
+            "/Preferences/HopperRollerSubsystem",
+            "/AdvantageKit/RealOutputs/IntakeDeploySubsystem",
+            "/Preferences/PoseSubsystem",
+            "/AdvantageKit/RealOutputs/PoseSubsystem/CameraPose",
+            "/AdvantageKit/RealOutputs/PoseSubsystem/CameraPose/0",
+            "/AdvantageKit",
+            "/AdvantageKit/RealOutputs/SwerveDriveRotationAdvisor",
+            "/AdvantageKit/RealOutputs/SwerveSteeringMaintainerCommand",
+            "/AdvantageKit/RealOutputs/DriveSubsystem",
+            "/AdvantageKit/RealOutputs/DriveSubsystem/HeadingPID",
+            "/AdvantageKit/SystemStats"
           ]
         },
         "tabs": {
@@ -144,6 +153,42 @@
                       "model": "Xbot 2026",
                       "color": "#ff8c00"
                     }
+                  },
+                  {
+                    "type": "robot",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/PoseSubsystem/CameraPose/0",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {
+                      "model": "Camera"
+                    }
+                  },
+                  {
+                    "type": "robot",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/PoseSubsystem/CameraPose/1",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {
+                      "model": "Camera"
+                    }
+                  },
+                  {
+                    "type": "robot",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/PoseSubsystem/CameraPose/2",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {
+                      "model": "Camera"
+                    }
+                  },
+                  {
+                    "type": "robot",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/PoseSubsystem/CameraPose/3",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {
+                      "model": "Camera"
+                    }
                   }
                 ],
                 "game": "FRC:2026 Field"
@@ -153,14 +198,14 @@
                 "cameraIndex": -1,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  -0.6547130166187103,
-                  5.835649761227683,
-                  -6.111545785305621
+                  1.4695761589768238e-15,
+                  5.999999999999999,
+                  -12
                 ],
                 "cameraTarget": [
-                  -0.4750224254835664,
-                  -1.9141772758047795,
-                  0.8981926656629698
+                  0,
+                  0.5,
+                  0
                 ]
               },
               "controlsHeight": 200
@@ -178,6 +223,15 @@
                     "logType": "Alerts",
                     "visible": true,
                     "options": {}
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/AdvantageKit/DriverStation/Enabled",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2"
+                    }
                   }
                 ],
                 "leftLockedRange": null,
@@ -194,6 +248,110 @@
                 "rightFilter": 0
               },
               "controllerUUID": "a1ta77mn94tzrbdfvawd7rup45s7t2h6",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 1,
+              "title": "Alerts",
+              "controller": {
+                "leftSources": [],
+                "rightSources": [],
+                "discreteSources": [
+                  {
+                    "type": "alerts",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Alerts",
+                    "logType": "Alerts",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "alerts",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/DeviceHealth",
+                    "logType": "Alerts",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/AdvantageKit/DriverStation/Enabled",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2"
+                    }
+                  }
+                ],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "rightUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "83ci2raxuqvw1f3j3zhjexdd8p3xag38",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 1,
+              "title": "Power",
+              "controller": {
+                "leftSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/PowerDistribution/Voltage",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/PowerDistribution/TotalCurrent",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#e5b31b",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "discreteSources": [
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/AdvantageKit/DriverStation/Enabled",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2"
+                    }
+                  }
+                ],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "rightUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "66ebkf1wcsxlu3o8m52t03b74oav29zs",
               "renderer": null,
               "controlsHeight": 200
             },
@@ -292,6 +450,15 @@
                     "options": {
                       "color": "#d993aa"
                     }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/AdvantageKit/DriverStation/Enabled",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2"
+                    }
                   }
                 ],
                 "leftLockedRange": null,
@@ -333,241 +500,11 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/0",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#80588e",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/1",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#e48b32",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/2",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/IntakeDeploySubsystem/CurrentPosition",
                     "logType": "Number",
                     "visible": true,
                     "options": {
                       "color": "#c0b487",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/3",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#858584",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/4",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#3b875a",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/5",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#d993aa",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/6",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#5f4528",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/7",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#2b66a2",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/8",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#e5b31b",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/9",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#af2437",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/10",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#80588e",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/11",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#e48b32",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/12",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#c0b487",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/13",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#858584",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/14",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#3b875a",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/15",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#d993aa",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/16",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#5f4528",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/17",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#2b66a2",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/18",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#e5b31b",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/19",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#af2437",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/20",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#80588e",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/21",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#e48b32",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/22",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#c0b487",
-                      "size": "normal"
-                    }
-                  },
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/PowerDistribution/ChannelCurrent/23",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#858584",
                       "size": "normal"
                     }
                   }
@@ -592,6 +529,16 @@
                       "color": "#af2437",
                       "size": "normal"
                     }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/IntakeDeployMotor/CANMotorController/Current",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#e48b32",
+                      "size": "normal"
+                    }
                   }
                 ],
                 "discreteSources": [
@@ -602,6 +549,33 @@
                     "visible": true,
                     "options": {
                       "color": "#3b875a"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/AdvantageKit/IntakeDeploySubsystem/IntakeDeployExtendedSensorDigitalInput/Signal",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#e5b31b"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/AdvantageKit/IntakeDeploySubsystem/IntakeDeploySensorDigitalInput/Signal",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#80588e"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/AdvantageKit/DriverStation/Enabled",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2"
                     }
                   }
                 ],
@@ -619,6 +593,76 @@
                 "rightFilter": 0
               },
               "controllerUUID": "qw3a8yigv5s785dg7dpivnx7xeviyklk",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 1,
+              "title": "Rotation Debugging",
+              "controller": {
+                "leftSources": [],
+                "rightSources": [],
+                "discreteSources": [
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/SwerveDriveRotationAdvisor/ActiveRotationAdvisorMode",
+                    "logType": "String",
+                    "visible": true,
+                    "options": {
+                      "color": "#3b875a"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/SwerveDriveRotationAdvisor/HvmRecommendedMode",
+                    "logType": "String",
+                    "visible": true,
+                    "options": {
+                      "color": "#e5b31b"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/SwerveSteeringMaintainerCommand/CurrentMode",
+                    "logType": "String",
+                    "visible": true,
+                    "options": {
+                      "color": "#af2437"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/DriveSubsystem/HeadingPID/OffTargetReason",
+                    "logType": "String",
+                    "visible": true,
+                    "options": {
+                      "color": "#80588e"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/AdvantageKit/DriverStation/Enabled",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2"
+                    }
+                  }
+                ],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "rightUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "g4cfjqmvadn79fy6lmhhl3ch5dc7i52z",
               "renderer": null,
               "controlsHeight": 200
             },

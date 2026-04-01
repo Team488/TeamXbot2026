@@ -5,7 +5,6 @@ import xbot.common.command.BaseSetpointCommand;
 
 import javax.inject.Inject;
 
-import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 
 public class IntakeDeployExtendCommand extends BaseSetpointCommand {
@@ -19,6 +18,7 @@ public class IntakeDeployExtendCommand extends BaseSetpointCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         intakeDeploy.setTargetValue(Degrees.of(intakeDeploy.extendedPosition.get()));
         log.info("Initialized IntakeDeployExtend");
     }

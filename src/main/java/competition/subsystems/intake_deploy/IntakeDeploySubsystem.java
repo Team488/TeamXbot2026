@@ -2,33 +2,32 @@ package competition.subsystems.intake_deploy;
 
 import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
+import xbot.common.controls.sensors.XAbsoluteEncoder;
 import xbot.common.properties.AngleProperty;
 import xbot.common.command.BaseSetpointSubsystem;
+import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
-
-import xbot.common.controls.sensors.XDigitalInput;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Seconds;
 
 
 @Singleton
 public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  {
-    ElectricalContract electricalContract;
     public final XCANMotorController intakeDeployMotor;
+    public final XAbsoluteEncoder intakeDeployEncoder;
     public final DoubleProperty manualControlPower;
-    public Angle motorOffset = Rotations.zero();
-    public final XDigitalInput intakeDeploySensor;
-    public final XDigitalInput intakeDeployExtendedSensor;
 
     public boolean isCalibrated = false;
     public final DoubleProperty extendedPosition;
@@ -37,63 +36,63 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     public final DoubleProperty mechanismDegreePerMotorRotation;
     public final DoubleProperty maxPidVelocity;
     public final DoubleProperty maxPidAcceleration;
-
-    // Limb range is the rotations between the Deploy's position and the stowed position, used for calibration.
-    public final AngleProperty limbRange;
+    public final DoubleProperty collectionDownwardPressure;
+    public final DoubleProperty voltageRampTime;
+    public DoubleProperty readinessTimeoutSeconds;
 
     @Inject
     public IntakeDeploySubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
-                                 ElectricalContract electricalContract, PropertyFactory propertyFactory,
-                                 XDigitalInput.XDigitalInputFactory xDigitalInputFactory) {
+                                 XAbsoluteEncoder.XAbsoluteEncoderFactory xAbsoluteEncoderFactory,
+                                 ElectricalContract electricalContract, PropertyFactory propertyFactory) {
         propertyFactory.setPrefix(this);
 
         var defaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
-                .withP(5.0)
+                .withP(40.0)
                 .withI(0.0)
                 .withD(0.0)
-                .withMinPowerOutput(-0.2)
-                .withMaxPowerOutput(0.2)
+                .withMinPowerOutput(-0.4)
+                .withMaxPowerOutput(0.4)
                 .build();
+
+        this.voltageRampTime = propertyFactory.createPersistentProperty("VoltageRampTime", 0.1);
 
         if (electricalContract.isIntakeDeployReady()) {
             this.intakeDeployMotor = xcanMotorControllerFactory.create(electricalContract.getIntakeDeployMotor(),
                     getPrefix(), "IntakeDeployPID", defaultPIDProperties);
-
+            this.intakeDeployMotor.setOpenLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get()));
+            this.intakeDeployMotor.setClosedLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get()));
             this.registerDataFrameRefreshable(this.intakeDeployMotor);
         } else {
             this.intakeDeployMotor = null;
         }
 
-        if (electricalContract.intakeDeploySensorReady()){
-            this.intakeDeploySensor = xDigitalInputFactory.create(
-                    electricalContract.getIntakeDeploySensor(),
-                    getPrefix()
+        if (electricalContract.isIntakeDeployAbsoluteEncoderReady()) {
+            this.intakeDeployEncoder = xAbsoluteEncoderFactory.create(
+                    electricalContract.getIntakeDeployAbsoluteEncoder(),
+                    this.getPrefix()
             );
-            this.registerDataFrameRefreshable(this.intakeDeploySensor);
+            registerDataFrameRefreshable(this.intakeDeployEncoder);
         } else {
-            this.intakeDeploySensor = null;
-        }
-        if (electricalContract.isIntakeDeployExtendedSensorReady()) {
-            this.intakeDeployExtendedSensor = xDigitalInputFactory.create(
-                    electricalContract.getIntakeDeployExtendedSensor(),
-                    getPrefix()
-            );
-            this.registerDataFrameRefreshable(this.intakeDeployExtendedSensor);
-        } else {
-            this.intakeDeployExtendedSensor = null;
+            this.intakeDeployEncoder = null;
         }
 
-        this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", 0.0);
+        this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", -10.0);
         this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -145.0);
 
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.2);
-        this.limbRange = propertyFactory.createPersistentProperty("limbRange", Rotations.of(9.5));
 
-        this.mechanismDegreePerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreePerMotorRotation", 15);
-        this.mechanismTargetRotation = propertyFactory.createPersistentProperty("MechanismTargetRotation", Degrees.of(0));
+        this.mechanismDegreePerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreePerMotorRotation", 360);
+        this.mechanismTargetRotation = propertyFactory.createPersistentProperty("MechanismTargetRotation", Degrees.of(-10));
 
-        this.maxPidVelocity = propertyFactory.createPersistentProperty("PidMaxMotorVelocity-RotationsPerSecond", 100);
-        this.maxPidAcceleration = propertyFactory.createPersistentProperty("PidMaxMotorAcceleration-RotationsPerSecondPerSecond", 300);
+        this.maxPidVelocity = propertyFactory.createPersistentProperty("PidMaxMotorVelocity-RotationsPerSecond", 200);
+        this.maxPidAcceleration = propertyFactory.createPersistentProperty("PidMaxMotorAcceleration-RotationsPerSecondPerSecond", 200);
+
+        this.collectionDownwardPressure = propertyFactory.createPersistentProperty("Collection Downward Pressure Power", -0.1);
+        this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("Readiness Timeout Seconds", 3.0);
 
         if (this.intakeDeployMotor != null) {
             this.intakeDeployMotor.setTrapezoidalProfileMaxVelocity(RotationsPerSecond.of(maxPidVelocity.get()));
@@ -103,9 +102,11 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
     @Override
     public Angle getCurrentValue() {
-        return Degrees.of(
-                intakeDeployMotor.getPosition().minus(motorOffset).in(Rotations) * mechanismDegreePerMotorRotation.get()
-        );
+        if (intakeDeployEncoder != null) {
+            return intakeDeployEncoder.getAbsolutePosition();
+        }
+
+        return Degrees.zero();
     }
 
     @Override
@@ -132,35 +133,20 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
                 return;
             }
 
-            intakeDeployMotor.setPositionTarget(
-                    Rotations.of(goal.in(Degrees) / mechanismDegreePerMotorRotation.get()).plus(motorOffset),
-                    XCANMotorController.MotorPidMode.TrapezoidalVoltage
-            );
+            // With CANCoder as a remote sensor, we can directly set the position target in degrees without needing
+            // to convert to motor rotations
+            intakeDeployMotor.setPositionTarget(goal, XCANMotorController.MotorPidMode.TrapezoidalVoltage);
         }
     }
 
     @Override
     public boolean isCalibrated() {
-        return this.isCalibrated;
+        return this.intakeDeployEncoder != null;
     }
 
     @Override
     protected boolean areTwoTargetsEquivalent(Angle target1, Angle target2) {
         return Math.abs(target1.in(Degrees) - target2.in(Degrees)) < 0.001;
-    }
-
-    public boolean isTouchingIntakeDeploy() {
-        if (intakeDeploySensor != null) {
-            return this.intakeDeploySensor.get();
-        }
-        return false;
-    }
-
-    public boolean isTouchingIntakeDeployExtendedSensor() {
-        if (intakeDeployExtendedSensor != null) {
-            return this.intakeDeployExtendedSensor.get();
-        }
-        return false;
     }
 
     public void stop() {
@@ -181,29 +167,9 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
                 this.intakeDeployMotor.setTrapezoidalProfileAcceleration(RotationsPerSecond.per(Second).of(maxPidAcceleration.get()));
             }
         }
-        // Sensor reading seems bad - don't trust it for now
-        //if (isTouchingIntakeDeploy() && !isCalibrated) {
-        //    calibrateOffsetUp();
-        //}
 
-        aKitLog.record("IsCalibrated", isCalibrated);
         aKitLog.record("CurrentPosition", getCurrentValue().in(Degrees));
-    }
-
-    public void calibrateOffsetDown() {
-        if (intakeDeployMotor != null) {
-            motorOffset = intakeDeployMotor.getPosition().minus(limbRange.get());
-            setTargetValue(getCurrentValue());
-            isCalibrated = true;
-        }
-    }
-
-    public void calibrateOffsetUp() {
-        if (intakeDeployMotor != null) {
-            motorOffset = intakeDeployMotor.getPosition();
-            setTargetValue(getCurrentValue());
-            isCalibrated = true;
-        }
+        aKitLog.record("TargetPosition", getTargetValue().in(Degrees));
     }
 
     public void intakeDeployGoDown() {
@@ -216,5 +182,16 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         if (intakeDeployMotor != null) {
             setTargetValue(getCurrentValue().plus(Degrees.of(3.0)));
         }
+    }
+
+    public Current getMotorCurrent() {
+        if (intakeDeployMotor != null) {
+            return intakeDeployMotor.getCurrent();
+        }
+        return Amps.zero();
+    }
+
+    public Command getWaitForAtGoalCommand() {
+        return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
     }
 }

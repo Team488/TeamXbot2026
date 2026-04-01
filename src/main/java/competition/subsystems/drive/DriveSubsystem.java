@@ -11,17 +11,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xbot.common.advantage.AKitLogger;
 import xbot.common.advantage.DataFrameRefreshable;
+import xbot.common.command.BaseRobot;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.injection.swerve.FrontLeftDrive;
 import xbot.common.injection.swerve.FrontRightDrive;
 import xbot.common.injection.swerve.RearLeftDrive;
 import xbot.common.injection.swerve.RearRightDrive;
 import xbot.common.injection.swerve.SwerveComponent;
+import xbot.common.math.PIDDefaults;
 import xbot.common.math.PIDManager.PIDManagerFactory;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.Property;
 import xbot.common.properties.PropertyFactory;
-import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
 
 import java.util.function.Supplier;
@@ -37,6 +38,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
     private boolean staticHeadingActive = false;
     private final DoubleProperty maxAutoTargetSpeedMps;
     private final DoubleProperty maxAutoFuelIntakeTargetSpeedMps;
+    private final DoubleProperty interstitialSpeedMps;
 
     @Inject
     public DriveSubsystem(PIDManagerFactory pidFactory, PropertyFactory pf,
@@ -48,8 +50,39 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
         pf.setPrefix(this.getPrefix());
         pf.setDefaultLevel(Property.PropertyLevel.Important);
-        this.maxAutoTargetSpeedMps = pf.createPersistentProperty("MaxAutoTargetSpeedMetersPerSecond", 2.5);
-        this.maxAutoFuelIntakeTargetSpeedMps = pf.createPersistentProperty("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.5);
+        this.maxAutoTargetSpeedMps = pf.createPersistentProperty("MaxAutoTargetSpeedMetersPerSecond", 2.0);
+        this.maxAutoFuelIntakeTargetSpeedMps = pf.createPersistentProperty("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.0);
+        this.interstitialSpeedMps = pf.createPersistentProperty("InterstitialSpeedMetersPerSecond", 0.4);
+    }
+
+    @Override
+    protected PIDDefaults getPositionalPIDDefaults() {
+        return new PIDDefaults(
+                1.08, // P
+                0, // I
+                4.0, // D
+                0.0, // F
+                0.6, // Max output
+                -0.6, // Min output
+                0.05, // Error threshold
+                0.005, // Derivative threshold
+                0.2); // Time threshold
+    }
+
+    @Override
+    protected PIDDefaults getHeadingPIDDefaults() {
+        var errorThreshold = BaseRobot.isSimulation() ? 5.0 : 2.0;
+        return new PIDDefaults(
+                0.008, // P
+                0.0005, // I
+                0.01, // D
+                0.0, // F
+                0.75, // Max output
+                -0.75, // Min output
+                errorThreshold, // Error threshold
+                0.2, // Derivative threshold
+                0.2, // Time threshold
+                10); // IZone
     }
 
     public Translation2d getLookAtPointTarget() {
@@ -98,6 +131,10 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
     public double getMaxAutoFuelIntakeTargetSpeedMetersPerSecond() {
         return this.maxAutoFuelIntakeTargetSpeedMps.get();
+    }
+
+    public double getInterstitialSpeedMetersPerSecond() {
+        return this.interstitialSpeedMps.get();
     }
 
     public InstantCommand createSetStaticHeadingTargetCommand(Supplier<Rotation2d> staticHeadingTarget) {

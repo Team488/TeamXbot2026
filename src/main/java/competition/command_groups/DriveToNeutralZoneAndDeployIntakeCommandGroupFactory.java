@@ -1,25 +1,21 @@
 package competition.command_groups;
 
-import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
-import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import java.util.Set;
+import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
+import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
+import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import xbot.common.command.DelayViaSupplierCommand;
 
 public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
     private final Provider<DriveToNeutralZoneForIntakeCommand> driveToNeutralZoneForIntakeCommandProvider;
     private final Provider<DriveAcrossMidNeutralZoneCommand> driveAcrossMidNeutralZoneCommandProvider;
     private final Provider<IntakeDeployExtendCommand> intakeDeployExtendCommandProvider;
     private final Provider<CollectorIntakeCommand> collectorIntakeCommandProvider;
-
-    private final DriveSubsystem drive;
+    private final IntakeDeploySubsystem intakeDeploy;
 
     @Inject
     public DriveToNeutralZoneAndDeployIntakeCommandGroupFactory(
@@ -27,31 +23,31 @@ public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
             Provider<DriveAcrossMidNeutralZoneCommand> driveAcrossMidNeutralZoneCommandProvider,
             Provider<IntakeDeployExtendCommand> intakeDeployExtendCommandProvider,
             Provider<CollectorIntakeCommand> collectorIntakeCommandProvider,
-            DriveSubsystem drive) {
+            IntakeDeploySubsystem intakeDeploy) {
         this.driveToNeutralZoneForIntakeCommandProvider = driveToNeutralZoneForIntakeCommandProvider;
         this.driveAcrossMidNeutralZoneCommandProvider = driveAcrossMidNeutralZoneCommandProvider;
         this.intakeDeployExtendCommandProvider = intakeDeployExtendCommandProvider;
         this.collectorIntakeCommandProvider = collectorIntakeCommandProvider;
-
-        this.drive = drive;
+        this.intakeDeploy = intakeDeploy;
     }
 
     public SequentialCommandGroup create() {
         var group = new SequentialCommandGroup();
         group.setName("DriveToNeutralZoneAndDeployIntakeCommandGroup");
 
-        var driveToNeutral = new DeferredCommand(
-                this.driveToNeutralZoneForIntakeCommandProvider::get, Set.of(drive));
+        group.addCommands(this.driveToNeutralZoneForIntakeCommandProvider.get());
 
-        group.addCommands(driveToNeutral);
+        var intakeDeployThenExtendGroup = new SequentialCommandGroup(intakeDeployExtendCommandProvider.get())
+                .andThen(intakeDeploy.getWaitForAtGoalCommand());
+        intakeDeployThenExtendGroup.setName("Intake Deploy and Wait Command");
 
-        var driveAcrossAndIntakeDeployCommandGroup = new ParallelCommandGroup(
-                this.driveAcrossMidNeutralZoneCommandProvider.get(), intakeDeployExtendCommandProvider.get());
+        group.addCommands(intakeDeployThenExtendGroup);
 
-        var driveAcrossIntakeDeployWithFuelIntakeCommand = new ParallelDeadlineGroup(
-                driveAcrossAndIntakeDeployCommandGroup, collectorIntakeCommandProvider.get());
+        var driveAcrossAndIntakeDeployCommandGroup = new ParallelDeadlineGroup(
+                this.driveAcrossMidNeutralZoneCommandProvider.get(), collectorIntakeCommandProvider.get());
+        driveAcrossAndIntakeDeployCommandGroup.setName("Drive and Run Collector Command");
 
-        group.addCommands(driveAcrossIntakeDeployWithFuelIntakeCommand);
+        group.addCommands(driveAcrossAndIntakeDeployCommandGroup);
 
         return group;
     }

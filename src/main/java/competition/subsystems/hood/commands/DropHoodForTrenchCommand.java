@@ -20,6 +20,7 @@ public class DropHoodForTrenchCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         hood.servoZero();
         hood.runServo();
         log.info("running servo to " + HoodSubsystem.servoMinBound);
@@ -30,6 +31,12 @@ public class DropHoodForTrenchCommand extends BaseCommand {
         if (Math.abs(HoodSubsystem.servoMinBound - hood.getCurrentValue()) <= .1) {
             oi.driverGamepad.getRumbleManager().rumbleGamepad(100,100);
         }
+    }
+
+    @Override
+    public void end(boolean isInterrupted) {
+        super.end(isInterrupted);
+        oi.driverGamepad.getRumbleManager().stopGamepadRumble();
     }
 
     @Override

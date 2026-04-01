@@ -22,6 +22,7 @@ public class TankDriveWithJoysticksCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         log.info("Initializing");
     }
 
