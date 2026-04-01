@@ -21,7 +21,6 @@ public class CollectFirstThenShootCommand extends BaseAutonomousSequentialComman
     public CollectFirstThenShootCommand(AutonomousCommandSelector autoSelector,
            TrajectoriesCalculation trajectoriesCalculation,
            FireWhenReadyAndRetractIntakeDeployCommandGroup fireWhenShooterAndRetractIntake,
-           PrepareToShootCommandGroup prepareToShootCommandGroup,
            Provider<DriveToNeutralZoneAndDeployIntakeCommandGroupFactory> driveToNeutralZoneAndDeployIntakeCommandProvider,
            Provider<DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory> driveFromNeutralZoneToAllianceAndShootCommandGroupProvider,
                                                    Provider<NoWaitFinishedShootingCommand> finishedShootingCommandProvider,
@@ -31,7 +30,6 @@ public class CollectFirstThenShootCommand extends BaseAutonomousSequentialComman
         pf.setPrefix(this.getName());
 
         getAutoStatusChangeCommand("Starting CollectFirstThenShootCommand");
-        prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
 
         var driveToNeutralZone = driveToNeutralZoneAndDeployIntakeCommandProvider.get().create()
                 .alongWith(getAutoStatusChangeCommand("Driving to neutral zone and back"));
