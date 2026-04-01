@@ -184,6 +184,10 @@ public class TrajectoriesCalculation {
                 shootingData.hoodServoRatio);
     }
 
+    private double roundingDistance(double distance) {
+        return Math.round(distance * 100.0) / 100.0;
+    }
+
     // Look up optimal shooting parameters based on current pose and shooting
     // target's pose.
     private ShootingData calculateTrajectoryV3Dynamic(Pose2d robotPose, Pose2d targetPose, boolean zeroHood) {
@@ -202,9 +206,9 @@ public class TrajectoriesCalculation {
 
         Pose2d shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
         double distance = shooterPose.getTranslation().getDistance(targetPose.getTranslation());
-        var roundedDistance = Math.round(distance * 100.0) / 100.0;
+        var roundedDistance = roundingDistance(distance);
         var offsetDistance = roundedDistance + v3DistanceOffsetMeters.get();
-        var key = new TrajectoryKey(offsetDistance);
+        var key = new TrajectoryKey(roundingDistance(offsetDistance));
         var hoodTrajectory = this.searchForHoodTrajectory(key, zeroHood);
         if (hoodTrajectory.isEmpty()) {
             if (zeroHood) {
@@ -218,7 +222,9 @@ public class TrajectoriesCalculation {
         }
         var matchedTrajectory = hoodTrajectory.get();
 
-        return new ShootingData(finalRotation, Units.RPM.of(matchedTrajectory.RPM), 0); // Use matchedTrajectory.servo instead of 0 if we are using the hood
+        log.info("Returning shooting speed: {}, servo: {}", matchedTrajectory.RPM, matchedTrajectory.servo);
+
+        return new ShootingData(finalRotation, Units.RPM.of(matchedTrajectory.RPM), matchedTrajectory.servo);
     }
 
     private Optional<HoodTrajectory> searchForHoodTrajectory(TrajectoryKey key, boolean zeroHood) {
@@ -228,13 +234,14 @@ public class TrajectoriesCalculation {
             return Optional.of(mapToUse.get(key));
         }
 
-        var adjustedDistanceCheck = key.distance + 0.01;
+        var adjustedDistanceCheck = roundingDistance(key.distance + 0.01);
         while (adjustedDistanceCheck < 10.0) {
             var check = new TrajectoryKey(adjustedDistanceCheck);
             if (mapToUse.containsKey(check)) {
                 return Optional.of(mapToUse.get(check));
             }
-            adjustedDistanceCheck = key.distance + 0.01;
+            adjustedDistanceCheck = roundingDistance(adjustedDistanceCheck + 0.01);
+            log.info("adjustedDistanceCheck: {}", adjustedDistanceCheck);
         }
 
         if (zeroHood) {
