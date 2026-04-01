@@ -6,15 +6,16 @@ import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 
-public class GetReadyForFiringCommandGroup extends BaseSequentialCommandGroup {
+public class DriveToNearestShootingPositionAndShootWhenReady extends BaseSequentialCommandGroup {
 
     @Inject
-    public GetReadyForFiringCommandGroup(DriveToShootingPositionCommand driveToShootingPositionCommand,
+    public DriveToNearestShootingPositionAndShootWhenReady(DriveToShootingPositionCommand driveToShootingPositionCommand,
         WaitForHoodAndShooterToBeAtGoalCommandGroup waitForHoodAndShooterToBeAtGoalCommandGroup,
                                        RunCollectorHopperFeederCommandGroup runCollectorHopperFeederCommandGroup,
                                        PropertyFactory pf
     ) {
         pf.setPrefix(this);
+        // TODO: we need a way to override this some of the time
         var shootingTimeoutSeconds = pf.createPersistentProperty("Shooting timeout seconds", 3.0);
         
         this.addCommands(driveToShootingPositionCommand);

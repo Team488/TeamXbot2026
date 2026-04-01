@@ -11,14 +11,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory {
     private final Provider<DriveFromNeutralZoneToAllianceCommand> driveFromNeutralZoneToAllianceCommandProvider;
-    private final Provider<GetReadyForFiringCommandGroup> getReadyForFiringCommandGroup;
+    private final Provider<DriveToNearestShootingPositionAndShootWhenReady> getReadyForFiringCommandGroup;
     private final Provider<CollectorStopCommand> collectorStopCommandProvider;
     private final Provider<PrepareToShootCommandGroup> prepareToShootCommandGroupProvider;
 
     @Inject
     public DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory(
             Provider<DriveFromNeutralZoneToAllianceCommand> driveFromNeutralZoneToAllianceCommandProvider,
-            Provider<GetReadyForFiringCommandGroup> getReadyForFiringCommandGroup,
+            Provider<DriveToNearestShootingPositionAndShootWhenReady> getReadyForFiringCommandGroup,
             Provider<CollectorStopCommand> collectorStopCommandProvider,
             DriveSubsystem drive,
             Provider<PrepareToShootCommandGroup> prepareToShootCommandGroupProvider) {
