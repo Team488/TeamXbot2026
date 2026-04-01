@@ -27,23 +27,23 @@ public class SuperstructureMechanism {
     public SuperstructureMechanism() {
         this.mech2d = new LoggedMechanism2d(2, 2);
 
-        // Hood: shooter-side of the robot (right side)
-        var hoodRoot = mech2d.getRoot("HoodRoot", 1.4, 0.55);
+        // Hood: shooter-side of the robot (left side)
+        var hoodRoot = mech2d.getRoot("HoodRoot", 0.6, 0.55);
         this.hoodLigament = new LoggedMechanismLigament2d(
                 "hood",
                 hoodLigamentLengthMeters,
-                180,
+                0,
                 5,
                 new Color8Bit(Color.kOrange));
         hoodRoot.append(hoodLigament);
 
-        // Intake deploy: pivot is the right end of the arm; at encoder -135 the arm is horizontal-left (180 deg)
-        // visual angle = encoder angle + 315 (so -135 -> 180)
-        var intakeRoot = mech2d.getRoot("IntakeRoot", 0.65, 0.25);
+        // Intake deploy: pivot is the left end of the arm; at encoder -135 the arm is horizontal-right (0 deg)
+        // visual angle = intakeAngle - extendedPositionDegrees (so -135 - (-135) -> 0)
+        var intakeRoot = mech2d.getRoot("IntakeRoot", 1.35, 0.25);
         this.intakeLigament = new LoggedMechanismLigament2d(
                 "intake",
                 intakeLigamentLengthMeters,
-                35,
+                145,
                 5,
                 new Color8Bit(Color.kGreen));
         intakeRoot.append(intakeLigament);
@@ -62,10 +62,10 @@ public class SuperstructureMechanism {
     }
 
     public LoggedMechanism2d getMechanism() {
-        double hoodAngle = 180 - hoodNormalizedPosition
+        double hoodAngle = hoodNormalizedPosition
                 * (HoodSubsystem.mechanismAngleMax - HoodSubsystem.mechanismAngleMin);
         hoodLigament.setAngle(hoodAngle);
-        intakeLigament.setAngle(180 + intakeExtendedPositionDegrees - intakeAngleDegrees);
+        intakeLigament.setAngle(intakeAngleDegrees - intakeExtendedPositionDegrees);
         return mech2d;
     }
 }
