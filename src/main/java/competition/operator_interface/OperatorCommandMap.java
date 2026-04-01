@@ -39,7 +39,6 @@ import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.autonomous.SetAutonomousCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
-
 /**
  * Maps operator interface buttons to commands
  */
