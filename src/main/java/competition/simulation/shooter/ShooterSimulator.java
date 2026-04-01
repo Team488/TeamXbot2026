@@ -37,7 +37,10 @@ public class ShooterSimulator {
     final ShooterSubsystem shooter;
     final ShooterFeederSubsystem shooterFeeder;
 
-    final MockCANMotorController shooterMotor;
+    final MockCANMotorController leftShooterMotor;
+    final MockCANMotorController middleShooterMotor;
+    final MockCANMotorController rightShooterMotor;
+
     final MockCANMotorController shooterFeederMotor;
 
     final CollectorSimulator intakeSimulator;
@@ -58,20 +61,22 @@ public class ShooterSimulator {
         this.shooter = shooter;
         this.shooterFeeder = shooterFeeder;
 
-        this.shooterMotor = (MockCANMotorController) shooter.middleShooterMotor;
+        this.leftShooterMotor = (MockCANMotorController) shooter.leftShooterMotor;
+        this.middleShooterMotor = (MockCANMotorController) shooter.middleShooterMotor;
+        this.rightShooterMotor = (MockCANMotorController) shooter.rightShooterMotor;
         this.shooterFeederMotor = (MockCANMotorController) shooterFeeder.shooterFeederMotor;
 
         this.intakeSimulator = intakeSimulator;
 
         this.pidManager = pidManagerFactory.create(
                 pf.getPrefix() + "ShooterSimulationPID",
-                0.2,
+                0.000005,
                 0.001,
                 0.0,
                 0.0,
                 1.0,
                 -1.0
-        ); // TODO: Adjust
+        );
 
         this.ballsPerSecond = pf.createPersistentProperty("ballsPerSecond", 10);
         this.random = new Random();
@@ -88,7 +93,7 @@ public class ShooterSimulator {
 
     public boolean isShooting() {
         // TODO: Change to shooter feeder once integrated
-        return shooterMotor.getPower() > 0;
+        return middleShooterMotor.getPower() > 0;
     }
 
     public AngularVelocity getShooterVelocity() {
@@ -103,18 +108,20 @@ public class ShooterSimulator {
     public void updateShooterSimAndMotor() {
         // Update the power of the motor based on our current velocity and goal
         MotorInternalPIDHelper.updateInternalPIDWithVelocity(
-                this.shooterMotor, pidManager, shooter.getTrimmedTargetValue());
+                this.middleShooterMotor, pidManager, shooter.getTrimmedTargetValue());
 
         // Update the sim with our new power
         if (DriverStation.isEnabled()) {
-            this.shooterSim.setInputVoltage(this.shooterMotor.getPower() * RobotController.getBatteryVoltage());
+            this.shooterSim.setInputVoltage(this.middleShooterMotor.getPower() * RobotController.getBatteryVoltage());
         } else {
             this.shooterSim.setInputVoltage(0);
         }
         this.shooterSim.update(Robot.LOOP_INTERVAL);
 
         // Reflect our new velocity in the sim to our motor
-        this.shooterMotor.setVelocity(getShooterVelocity());
+        this.leftShooterMotor.setVelocity(getShooterVelocity());
+        this.middleShooterMotor.setVelocity(getShooterVelocity());
+        this.rightShooterMotor.setVelocity(getShooterVelocity());
     }
 
     public void updateShootingProjectile(Arena2026Rebuilt arena) {

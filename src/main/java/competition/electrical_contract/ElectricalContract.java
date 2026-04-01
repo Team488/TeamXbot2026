@@ -11,7 +11,6 @@ import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.injection.swerve.SwerveInstance;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +56,7 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract boolean isIntakeDeployAbsoluteEncoderReady();
 
-    public abstract DeviceInfo getIntakeDeployAbsoluteEncoderMotor();
+    public abstract DeviceInfo getIntakeDeployAbsoluteEncoder();
 
     public abstract boolean isClimberLeftReady();
 
@@ -90,14 +89,6 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public abstract boolean isHopperRollerReady();
 
     public abstract CANMotorControllerInfo getHopperRollerMotor();
-
-    public abstract boolean intakeDeploySensorReady();
-
-    public abstract DeviceInfo getIntakeDeploySensor();
-
-    public abstract boolean isIntakeDeployExtendedSensorReady();
-
-    public abstract DeviceInfo getIntakeDeployExtendedSensor();
 
     /**
      * Returns additional PDH connections for non-motor devices (e.g., VRMs, PCMs, buck converters, etc.)

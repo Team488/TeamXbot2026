@@ -1,6 +1,7 @@
 package competition.subsystems.shooter;
 
 import competition.electrical_contract.ElectricalContract;
+import competition.subsystems.shooter.commands.WaitForShooterAtGoalCommand;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -19,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
 public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Double> {
@@ -26,13 +30,13 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public final XCANMotorController middleShooterMotor;
     public final XCANMotorController rightShooterMotor;
     public ElectricalContract electricalContract;
+    public PropertyFactory propertyFactory;
 
-    public final DoubleProperty shootingTargetVelocity;
+    public final DoubleProperty defaultShootingVelocity;
     public final DoubleProperty trimValue;
+    public final DoubleProperty voltageRampTime;
     public DoubleProperty readinessTimeoutSeconds;
-    public DoubleProperty minDistanceRPM;
-    public DoubleProperty medDistanceRPM;
-    public DoubleProperty maxDistanceRPM;
+    boolean isInLowPowerMode = false;
 
     public AngularVelocity currentTargetVelocity = RPM.of(0);
 
@@ -44,42 +48,29 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     public ShooterSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
                             ElectricalContract electricalContract, PropertyFactory propertyFactory) {
 
-        propertyFactory.setPrefix(this);
+        this.propertyFactory = propertyFactory;
+
+        this.propertyFactory.setPrefix(this);
         this.electricalContract = electricalContract;
 
-        var leftShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
+        var shooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
                 .withP(0.05)
                 .withI(0.01)
-                .withD(0.01)
-                .withStaticFeedForward(0.02)
-                .withVelocityFeedForward(0.015)
+                .withD(0.001)
+                .withStaticFeedForward(0.008)
+                .withVelocityFeedForward(0.01)
                 .withMinPowerOutput(-1.0)
                 .withMaxPowerOutput(1.0)
                 .build();
 
-        var middleShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
-                .withP(0.05)
-                .withI(0.01)
-                .withD(0.01)
-                .withStaticFeedForward(0.02)
-                .withVelocityFeedForward(0.016)
-                .withMinPowerOutput(-1.0)
-                .withMaxPowerOutput(1.0)
-                .build();
-
-        var rightShooterMotorDefaultPIDProperties = new XCANMotorControllerPIDProperties.Builder()
-                .withP(0.05)
-                .withI(0.01)
-                .withD(0.01)
-                .withStaticFeedForward(0.02)
-                .withVelocityFeedForward(0.016)
-                .withMinPowerOutput(-1.0)
-                .withMaxPowerOutput(1.0)
-                .build();
+        this.voltageRampTime = propertyFactory.createPersistentProperty("VoltageRampTime", 0.2);
 
         if (electricalContract.isLeftShooterReady()) {
             this.leftShooterMotor = xcanMotorControllerFactory.create(electricalContract.getLeftShooterMotor(),
-                    getPrefix(), "leftShooterMotor", leftShooterMotorDefaultPIDProperties);
+                    getPrefix(), "leftShooterMotor", shooterMotorDefaultPIDProperties);
+            this.leftShooterMotor.setClosedLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get()));
             this.registerDataFrameRefreshable(leftShooterMotor);
         } else {
             this.leftShooterMotor = null;
@@ -87,7 +78,10 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         if (electricalContract.isMiddleShooterReady()) {
             this.middleShooterMotor = xcanMotorControllerFactory.create(electricalContract.getMiddleShooterMotor(),
-                    getPrefix(), "middleShooterMotor", middleShooterMotorDefaultPIDProperties);
+                    getPrefix(), "middleShooterMotor", shooterMotorDefaultPIDProperties);
+            this.middleShooterMotor.setClosedLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get()));
             this.registerDataFrameRefreshable(middleShooterMotor);
         } else {
             this.middleShooterMotor = null;
@@ -95,19 +89,18 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         if (electricalContract.isRightShooterReady()) {
             this.rightShooterMotor = xcanMotorControllerFactory.create(electricalContract.getRightShooterMotor(),
-                    getPrefix(), "rightShooterMotor", rightShooterMotorDefaultPIDProperties);
+                    getPrefix(), "rightShooterMotor", shooterMotorDefaultPIDProperties);
+            this.rightShooterMotor.setClosedLoopRampRates(
+                    Seconds.of(voltageRampTime.get()),
+                    Seconds.of(voltageRampTime.get()));
             this.registerDataFrameRefreshable(rightShooterMotor);
         } else {
             this.rightShooterMotor = null;
         }
 
-        this.shootingTargetVelocity = propertyFactory.createPersistentProperty("Shooting Target Velocity", 3000);
-        this.trimValue = propertyFactory.createPersistentProperty("Shooter Trim Value", 0);
-        this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("Readiness Timeout Seconds", 2.0);
-
-        this.minDistanceRPM = propertyFactory.createPersistentProperty("Min Distance RPM", 2800);
-        this.medDistanceRPM = propertyFactory.createPersistentProperty("Med Distance RPM", 3200);
-        this.maxDistanceRPM = propertyFactory.createPersistentProperty("Max Distance RPM", 3600); //to change
+        this.defaultShootingVelocity = this.propertyFactory.createPersistentProperty("Default Shooter Velocity RPM", 3000);
+        this.trimValue = this.propertyFactory.createPersistentProperty("Shooter Trim Value", 0);
+        this.readinessTimeoutSeconds = this.propertyFactory.createPersistentProperty("Readiness Timeout Seconds", 2.0);
     }
 
     public void stop() {
@@ -129,7 +122,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     }
 
     public void runMotorsAtVelocity(AngularVelocity velocity) {
-        for (var motor : getShooterMotors()) {
+        for (var motor : getHealthyShooterMotors()) {
             motor.setVelocityTarget(velocity);
         }
     }
@@ -159,17 +152,46 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     }
 
     public List<XCANMotorController> getHealthyShooterMotors() {
-        return getShooterMotors().stream()
-                .filter(motor -> motor.getHealth() == DeviceHealth.Healthy)
-                .toList();
+        // Low power mode, pick one motor, prioritizing the middle motor,
+        // but falling back to one of the others if middle is unhealthy.
+        if (isInLowPowerMode
+                && middleShooterMotor != null
+                && middleShooterMotor.getHealth() == DeviceHealth.Healthy) {
+            return List.of(middleShooterMotor);
+        } else if (isInLowPowerMode
+                && leftShooterMotor != null
+                && leftShooterMotor.getHealth() == DeviceHealth.Healthy) {
+            return List.of(leftShooterMotor);
+        } else if (isInLowPowerMode
+                && rightShooterMotor != null
+                && rightShooterMotor.getHealth() == DeviceHealth.Healthy) {
+            return List.of(rightShooterMotor);
+        } else if (isInLowPowerMode) {
+            return List.of();
+        } else {
+            // Not low power mode, run everything
+            return getShooterMotors().stream()
+                    .filter(motor -> motor.getHealth() == DeviceHealth.Healthy)
+                    .toList();
+        }
     }
 
     public void periodic() {
+        if (voltageRampTime.hasChangedSinceLastCheck()) {
+            for (var motor : getShooterMotors()) {
+                motor.setClosedLoopRampRates(
+                        Seconds.of(voltageRampTime.get()),
+                        Seconds.of(voltageRampTime.get()));
+            }
+        }
+
         for (var motor : getShooterMotors()) {
             motor.periodic();
         }
         aKitLog.record("ShooterCurrentVelocity", getCurrentValue());
+        aKitLog.record("ShooterTargetVelocity", getTargetValue());
         aKitLog.record("isCalibrated", isCalibrated());
+        aKitLog.record("LowPowerMode", isInLowPowerMode);
     }
 
     @Override
@@ -222,19 +244,10 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
     }
 
     public Command getWaitForAtGoalCommand() {
-        return new SimpleWaitForMaintainerCommand(this, () -> readinessTimeoutSeconds.get());
-    }
-    public enum FieldScoringLocation {
-        Min_Distance,
-        Med_Distance,
-        Max_Distance
+        return new WaitForShooterAtGoalCommand(this);
     }
 
-    public double getRPMForScoringLocation(FieldScoringLocation location) {
-        return switch (location) {
-            case Min_Distance -> minDistanceRPM.get();
-            case Med_Distance -> medDistanceRPM.get();
-            case Max_Distance -> maxDistanceRPM.get();
-        };
+    public void setLowPowerMode(boolean newValue) {
+        this.isInLowPowerMode = newValue;
     }
 }

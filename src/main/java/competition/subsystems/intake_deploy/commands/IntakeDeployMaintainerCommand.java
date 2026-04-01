@@ -9,8 +9,6 @@ import xbot.common.advantage.AKitLogger;
 import xbot.common.command.BaseMaintainerCommand;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.logic.HumanVsMachineDecider;
-import xbot.common.math.MathUtils;
-import xbot.common.math.PIDManager;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
@@ -24,7 +22,7 @@ public class IntakeDeployMaintainerCommand extends BaseMaintainerCommand<Angle, 
     public IntakeDeployMaintainerCommand(IntakeDeploySubsystem subsystemToMaintain, PropertyFactory pf,
                                          OperatorInterface oi,
                                          HumanVsMachineDecider.HumanVsMachineDeciderFactory hvmFactory) {
-        super(subsystemToMaintain, pf, hvmFactory,0.01,0.01);
+        super(subsystemToMaintain, pf, hvmFactory,5.0,0.05);
         pf.setPrefix(this);
         this.subsystem = subsystemToMaintain;
         this.manualControlGamepad = oi.operatorGamepad;
@@ -49,9 +47,9 @@ public class IntakeDeployMaintainerCommand extends BaseMaintainerCommand<Angle, 
     @Override
     protected Double getHumanInput() {
         var humanInput = MathUtil.applyDeadband(manualControlGamepad.getLeftStickY(), manualControlDeadband);
-        aKitLog.setLogLevel(AKitLogger.LogLevel.DEBUG);
-        aKitLog.record("ManualControlInput", humanInput);
-        aKitLog.setLogLevel(AKitLogger.LogLevel.INFO);
+        aKitLog.withLogLevel(AKitLogger.LogLevel.DEBUG, () -> {
+            aKitLog.record("ManualControlInput", humanInput);
+        });
         return humanInput;
     }
 
