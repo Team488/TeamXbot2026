@@ -34,7 +34,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public static final double mechanismAngleMin = 41.6;
     // Constants
     public static final double servoMinBound = 0.2;
-    public static final double servoMaxBound = 0.8;
+    public static final double servoMaxBound = 0.65;
     public static final Time servoMinToMaxTime = Seconds.of(3);
 
     public final TimedAndBoundedServo hoodServoLeft;
