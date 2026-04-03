@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import xbot.common.controls.sensors.XGyro;
-import xbot.common.controls.sensors.XGyroFactoryImpl;
 import xbot.common.logic.HumanVsMachineDecider;
 import xbot.common.logic.HumanVsMachineDecider.HumanVsMachineDeciderFactory;
 import xbot.common.subsystems.drive.swerve.SwerveSuggestedRotation;
@@ -32,8 +31,11 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
     XGyro xGyro;
 
-    DoubleProperty overallDrivingPowerScale;
-    DoubleProperty overallTurningPowerScale;
+    final DoubleProperty overallDrivingPowerScale;
+    final DoubleProperty overallTurningPowerScale;
+    final DoubleProperty precisionTranslationScale;
+    final DoubleProperty extremePrecisionTranslationScale;
+    final DoubleProperty precisionRotationScale;
 
     SwerveDriveRotationAdvisor advisor;
     HumanVsMachineDecider hvmDecider;
@@ -56,11 +58,17 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         pf.setDefaultLevel(Property.PropertyLevel.Important);
         this.overallDrivingPowerScale = pf.createPersistentProperty("DrivingPowerScale", 1.0);
         this.overallTurningPowerScale = pf.createPersistentProperty("TurningPowerScale", 1.0);
+        this.precisionTranslationScale = pf.createPersistentProperty("PrecisionTranslationScale", 0.1);
+        this.extremePrecisionTranslationScale = pf.createPersistentProperty(
+                "ExtremePrecisionTranslationScale", 0.15);
+        precisionRotationScale = pf.createPersistentProperty("PrecisionRotationScale", 0.2);
+
         this.addRequirements(drive);
     }
 
     @Override
     public void initialize() {
+        super.initialize();
         log.info("Initializing");
         advisor.resetDecider();
         drive.setDesiredHeading(pose.getCurrentHeading().getDegrees());
@@ -157,9 +165,9 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         if (!drive.isUnlockFullDrivePowerActive()) {
             // Scale translationIntent if precision modes active, values from XBot2024 repository
             if (drive.isExtremePrecisionTranslationActive()) {
-                intent = intent.scale(0.15);
+                intent = intent.scale(extremePrecisionTranslationScale.get());
             } else if (drive.isPrecisionTranslationActive()) {
-                intent = intent.scale(0.50);
+                intent = intent.scale(precisionTranslationScale.get());
             }
         }
         return intent;
@@ -167,14 +175,13 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
     private double processSuggestedRotationValueIntoPower(SwerveSuggestedRotation suggested) {
         return switch (suggested.type) {
-            case DesiredHeading -> {
-                yield headingModule.calculateHeadingPower(suggested.value);
-            }
+            case DesiredHeading -> headingModule.calculateHeadingPower(suggested.value);
             case HumanControlHeadingPower -> {
                 if (drive.isPrecisionRotationActive()) {
-                    yield suggested.value *= 0.25;
+                    yield suggested.value *= precisionRotationScale.get();
+                } else {
+                    yield suggested.value;
                 }
-                yield suggested.value;
             }
         };
     }

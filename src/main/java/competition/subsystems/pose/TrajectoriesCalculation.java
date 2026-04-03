@@ -48,7 +48,7 @@ public class TrajectoriesCalculation {
         if (presetShootingLookup == null) {
             presetShootingLookup = Map.of(PresetShootingDistance.NEAR,
                     new PresetShootingProperties(
-                            propManager.createPersistentProperty("PresetShooting.NEAR RPM", 2600),
+                            propManager.createPersistentProperty("PresetShooting.NEAR RPM", 2725),
                             propManager.createPersistentProperty("PresetShooting.NEAR Hood ServoRatio", 0.0)),
                     PresetShootingDistance.TOWER_CLOSE,
                     new PresetShootingProperties(
@@ -60,11 +60,11 @@ public class TrajectoriesCalculation {
                             propManager.createPersistentProperty("PresetShooting.TOWER_FAR Hood ServoRatio", 0.0)),
                     PresetShootingDistance.TRENCH,
                     new PresetShootingProperties(
-                            propManager.createPersistentProperty("PresetShooting.TRENCH RPM", 3900),
+                            propManager.createPersistentProperty("PresetShooting.TRENCH RPM", 4100),
                             propManager.createPersistentProperty("PresetShooting.TRENCH Hood ServoRatio", 0.0)),
                     PresetShootingDistance.CORNER,
                     new PresetShootingProperties(
-                            propManager.createPersistentProperty("PresetShooting.CORNER RPM", 3600),
+                            propManager.createPersistentProperty("PresetShooting.CORNER RPM", 3750),
                             propManager.createPersistentProperty("PresetShooting.CORNER Hood ServoRatio", 1)));
 
         }
@@ -99,8 +99,9 @@ public class TrajectoriesCalculation {
     private record TrajectoryKey(double distance) {
     }
 
-    // hashmap holding all the values
+    // hashmaps holding all the values
     private static HashMap<TrajectoryKey, HoodTrajectory> trajectoryMap = null;
+    private static HashMap<TrajectoryKey, HoodTrajectory> trajectoryZeroHoodMap = null;
 
     // CHECKSTYLE:OFF
     // essentially holds all the values for the JSON to fill hashmap
@@ -121,13 +122,13 @@ public class TrajectoriesCalculation {
         CORNER
     }
 
-    public ShootingData calculateAllianceHubShootingData(Pose2d robotPose) {
+    public ShootingData calculateAllianceHubShootingData(Pose2d robotPose, boolean zeroHood) {
         Pose2d hubPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout,
                 DriverStation.getAlliance().orElse(Alliance.Blue));
-        return calculateTrajectory(robotPose, hubPose);
+        return calculateTrajectory(robotPose, hubPose, zeroHood);
     }
 
-    public ShootingData calculateAllianceZoneShootingData(Pose2d robotPose) {
+    public ShootingData calculateAllianceZoneShootingData(Pose2d robotPose, boolean zeroHood) {
         Pose2d closestTrenchNeutralSideIdPose = Landmarks.getClosestTrenchNeutralSideIdPose(
                 aprilTagFieldLayout,
                 DriverStation.getAlliance().orElse(Alliance.Blue),
@@ -140,7 +141,7 @@ public class TrajectoriesCalculation {
 
         Pose2d targetPose = new Pose2d(target, Rotation2d.kZero);
 
-        return calculateTrajectory(robotPose, targetPose);
+        return calculateTrajectory(robotPose, targetPose, zeroHood);
     }
 
     public PresetShootingData getPresetShootingSettings(PresetShootingDistance shootingDistance) {
@@ -151,16 +152,12 @@ public class TrajectoriesCalculation {
                         mapLookup.hoodServoRatio.get());
     }
 
-    private ShootingData calculateTrajectory(Pose2d robotPose, Pose2d targetPose) {
-        switch (trajectoryCalcVersion.get()) {
-            case "1":
-                return this.calculateTrajectoryV1DumbFixedArcToHub(robotPose, targetPose);
-            case "2":
-                return this.calculateTrajectoryV2KnownDistance(robotPose, targetPose);
-            case "3":
-            default:
-                return this.calculateTrajectoryV3Dynamic(robotPose, targetPose);
-        }
+    private ShootingData calculateTrajectory(Pose2d robotPose, Pose2d targetPose, boolean zeroHood) {
+        return switch (trajectoryCalcVersion.get()) {
+            case "1" -> this.calculateTrajectoryV1DumbFixedArcToHub(robotPose, targetPose);
+            case "2" -> this.calculateTrajectoryV2KnownDistance(robotPose, targetPose);
+            default -> this.calculateTrajectoryV3Dynamic(robotPose, targetPose, zeroHood);
+        };
     }
 
     private Rotation2d rotationToShootFrom(Pose2d robotPose, Pose2d targetPose) {
@@ -187,46 +184,73 @@ public class TrajectoriesCalculation {
                 shootingData.hoodServoRatio);
     }
 
+    private double roundingDistance(double distance) {
+        return Math.round(distance * 100.0) / 100.0;
+    }
+
     // Look up optimal shooting parameters based on current pose and shooting
     // target's pose.
-    private ShootingData calculateTrajectoryV3Dynamic(Pose2d robotPose, Pose2d targetPose) {
-        if (trajectoryMap == null) {
-            loadTrajectories();
+    private ShootingData calculateTrajectoryV3Dynamic(Pose2d robotPose, Pose2d targetPose, boolean zeroHood) {
+        // This does take a performance hit, so we should consider loading these in when we aren't doing anything.
+        if (zeroHood) {
+            if (trajectoryZeroHoodMap == null) {
+                trajectoryZeroHoodMap = loadTrajectories("trajectories_0_hood.json");
+            }
+        } else {
+            if (trajectoryMap == null) {
+                trajectoryMap = loadTrajectories("trajectories.json");
+            }
         }
         Rotation2d finalRotation = this.rotationToShootFrom(robotPose, targetPose);
         Pose2d finalPose = new Pose2d(robotPose.getX(), robotPose.getY(), finalRotation);
 
         Pose2d shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
         double distance = shooterPose.getTranslation().getDistance(targetPose.getTranslation());
-        var roundedDistance = Math.round(distance * 100.0) / 100.0;
+        var roundedDistance = roundingDistance(distance);
         var offsetDistance = roundedDistance + v3DistanceOffsetMeters.get();
-        var key = new TrajectoryKey(offsetDistance);
-        var hoodTrajectory = this.searchForHoodTrajectory(key);
+        var key = new TrajectoryKey(roundingDistance(offsetDistance));
+        var hoodTrajectory = this.searchForHoodTrajectory(key, zeroHood);
         if (hoodTrajectory.isEmpty()) {
-            log.warn(
-                    "Trajectory not found, potentially trajectories.json not found or the value doesn't exist in trajectories for distance.");
+            if (zeroHood) {
+                log.warn(
+                        "Trajectory not found, potentially trajectories_0_hood.json not found or the value doesn't exist in trajectories for distance.");
+            } else {
+                log.warn(
+                        "Trajectory not found, potentially trajectories.json not found or the value doesn't exist in trajectories for distance.");
+            }
             return TrajectoriesCalculation.emptyShootingData;
         }
         var matchedTrajectory = hoodTrajectory.get();
 
-        return new ShootingData(finalRotation, Units.RPM.of(matchedTrajectory.RPM), 0);
+        log.info("Returning shooting speed: {}, servo: {}", matchedTrajectory.RPM, matchedTrajectory.servo);
+
+        return new ShootingData(finalRotation, Units.RPM.of(matchedTrajectory.RPM), matchedTrajectory.servo);
     }
 
-    private Optional<HoodTrajectory> searchForHoodTrajectory(TrajectoryKey key) {
-        if (trajectoryMap.containsKey(key)) {
-            return Optional.of(trajectoryMap.get(key));
+    private Optional<HoodTrajectory> searchForHoodTrajectory(TrajectoryKey key, boolean zeroHood) {
+        var mapToUse = zeroHood ? trajectoryZeroHoodMap : trajectoryMap;
+
+        if (mapToUse.containsKey(key)) {
+            return Optional.of(mapToUse.get(key));
         }
 
-        var adjustedDistanceCheck = key.distance + 0.01;
+        var adjustedDistanceCheck = roundingDistance(key.distance + 0.01);
         while (adjustedDistanceCheck < 10.0) {
             var check = new TrajectoryKey(adjustedDistanceCheck);
-            if (trajectoryMap.containsKey(check)) {
-                return Optional.of(trajectoryMap.get(key));
+            if (mapToUse.containsKey(check)) {
+                return Optional.of(mapToUse.get(check));
             }
+            adjustedDistanceCheck = roundingDistance(adjustedDistanceCheck + 0.01);
+            log.info("adjustedDistanceCheck: {}", adjustedDistanceCheck);
         }
 
-        log.error(
+        if (zeroHood) {
+            log.error(
+                    "Trajectory not found, potentially trajectories_0_hood.json not found or the value doesn't exist in trajectories!");
+        } else {
+            log.error(
                     "Trajectory not found, potentially trajectories.json not found or the value doesn't exist in trajectories!");
+        }
         return Optional.empty();
     }
 
@@ -252,11 +276,11 @@ public class TrajectoriesCalculation {
 
     // This method loads the trajectories from the JSON file and populates the
     // HashMap.
-    private void loadTrajectories() {
-        trajectoryMap = new HashMap<>();
+    private HashMap<TrajectoryKey, HoodTrajectory> loadTrajectories(String filename) {
+        var loadedMap = new HashMap<TrajectoryKey, HoodTrajectory>();
 
         try {
-            File configFile = new File(Filesystem.getDeployDirectory(), "trajectories.json");
+            File configFile = new File(Filesystem.getDeployDirectory(), filename);
 
             if (configFile.exists()) {
                 ObjectMapper mapper = new ObjectMapper();
@@ -266,17 +290,19 @@ public class TrajectoriesCalculation {
                 for (HoodTrajectory point : rawArray) {
                     var roundedDistance = Math.round(point.distance * 100.0) / 100.0;
                     var key = new TrajectoryKey(roundedDistance);
-                    if (!trajectoryMap.containsKey(key)) {
-                        trajectoryMap.put(key, point);
+                    if (!loadedMap.containsKey(key)) {
+                        loadedMap.put(key, point);
                     }
                 }
 
-                log.info("Loaded {} trajectories into HashMap.", trajectoryMap.size());
+                log.info("Loaded {} trajectories from {} into HashMap.", loadedMap.size(), filename);
             } else {
-                log.warn("Trajectories.json not found in the deploy directory!");
+                log.warn("{} not found in the deploy directory!", filename);
             }
         } catch (Exception e) {
-            log.error("Failed to load JSON: {}", e.getMessage());
+            log.error("Failed to load JSON from {}: {}", filename, e.getMessage());
         }
+
+        return loadedMap;
     }
 }

@@ -44,9 +44,9 @@ public class IntakeDeploySimulator {
         this.encoder = (MockAbsoluteEncoder) intakeDeploy.intakeDeployEncoder;
         this.pidManager = pidManagerFactory.create(
                 pf.getPrefix() + "IntakeDeploySimulatorPID",
-                0.2,
-                0.001,
+                0.6,
                 0.0,
+                0.001,
                 0.0,
                 1.0,
                 -1.0

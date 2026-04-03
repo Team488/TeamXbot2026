@@ -16,6 +16,7 @@ public class HoodRetractCommands extends BaseSetpointCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         hood.retract();
         log.info("Initialized HoodRetract");
     }
