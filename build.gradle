@@ -181,6 +181,12 @@ task('copyResources') {
     }
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 checkstyle {
     toolVersion = '10.6.0'
     configFile = file('config/checkstyle/checkstyle.xml')
