@@ -86,7 +86,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.2);
 
         this.mechanismDegreePerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreePerMotorRotation", 360);
-        this.mechanismTargetRotation = propertyFactory.createPersistentProperty("MechanismTargetRotation", Degrees.of(0));
+        this.mechanismTargetRotation = propertyFactory.createPersistentProperty("MechanismTargetRotation", Degrees.of(10));
 
         this.maxPidVelocity = propertyFactory.createPersistentProperty("PidMaxMotorVelocity-RotationsPerSecond", 200);
         this.maxPidAcceleration = propertyFactory.createPersistentProperty("PidMaxMotorAcceleration-RotationsPerSecondPerSecond", 200);
@@ -103,7 +103,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     @Override
     public Angle getCurrentValue() {
         if (intakeDeployEncoder != null) {
-            return Degrees.of(-intakeDeployEncoder.getAbsolutePosition().in(Degrees));
+            return intakeDeployEncoder.getAbsolutePosition().times(-1);
         }
 
         return Degrees.zero();
