@@ -24,7 +24,5 @@ public class GetReadyForFiringCommandGroup extends BaseSequentialCommandGroup {
                 driveToShootingPositionCommand, prepareToShootCommandGroup);
 
         this.addCommands(getReadyToFire);
-
-        this.addCommands(fireWhenShooterAndHoodReady);
     }
 }
