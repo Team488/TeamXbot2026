@@ -1,7 +1,7 @@
 package competition.auto_programs.vision;
 
 import competition.auto_programs.BaseAutonomousSequentialCommandGroup;
-import competition.command_groups.FireWhenReadyAndRetractIntakeDeployCommandGroup;
+import competition.command_groups.FireWhenReadyAndRetractIntakeDeployUntilDone;
 import competition.command_groups.NoWaitFinishedShootingCommand;
 import competition.command_groups.PrepareToShootCommandGroup;
 import competition.command_groups.DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory;
@@ -22,7 +22,7 @@ public class ShootFromTrenchThenMoveToNeutralCommand extends BaseAutonomousSeque
     @Inject
     public ShootFromTrenchThenMoveToNeutralCommand(AutonomousCommandSelector autoSelector,
            TrajectoriesCalculation trajectoriesCalculation,
-           FireWhenReadyAndRetractIntakeDeployCommandGroup fireWhenShooterAndRetractIntake,
+           FireWhenReadyAndRetractIntakeDeployUntilDone fireWhenShooterAndRetractIntake,
            PrepareToShootCommandGroup prepareToShootCommandGroup,
            Provider<DriveToNeutralZoneAndDeployIntakeCommandGroupFactory> driveToNeutralZoneAndDeployIntakeCommandProvider,
            Provider<DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory> driveFromNeutralZoneToAllianceAndShootCommandGroupProvider,
