@@ -19,23 +19,24 @@ import static edu.wpi.first.units.Units.Seconds;
 public class IntakeDeployOscillating extends BaseSetpointCommand {
 
     public final IntakeDeploySubsystem intakeDeploySubsystem;
+    public IntakeDeploySlowClosing intakeDeploySlowClosing;
     public final AngleProperty amplitude;
     public final AngleProperty increasingValue;
     public final AngleProperty retractLimit;
     private Angle slowCloseTarget;
-
+    public Angle currentTarget;
     public DoubleProperty period;
     public Time startTime;
     public double runOscillating;
 
 
     @Inject
-    public IntakeDeployOscillating(IntakeDeploySubsystem intakeDeploySubsystem, PropertyFactory propertyFactory) {
+    public IntakeDeployOscillating(IntakeDeploySubsystem intakeDeploySubsystem, PropertyFactory propertyFactory, IntakeDeploySlowClosing intakeDeploySlowClosing) {
         super(intakeDeploySubsystem);
         propertyFactory.setPrefix(this);
         this.intakeDeploySubsystem = intakeDeploySubsystem;
         this.amplitude = propertyFactory.createPersistentProperty("aptitude", Degrees.of(30));
-        this.period = propertyFactory.createPersistentProperty("period is time per cycle", (50));
+        this.period = propertyFactory.createPersistentProperty("time per cycle", (50));
         this.retractLimit = propertyFactory.createPersistentProperty("RetractLimit", Degrees.of(-60));
         this.increasingValue = propertyFactory.createPersistentProperty("IncreasingValuePerSecond", Degrees.of(70));
     }
@@ -53,23 +54,26 @@ public class IntakeDeployOscillating extends BaseSetpointCommand {
         runOscillating = amplitude.get().in(Degrees) * Math.sin(2 * Math.PI * commandDuration.in(Seconds) / period.get());
         return Degrees.of(runOscillating);
     }
+    @Inject
     public Angle closePosition() {
-        slowCloseTarget = slowCloseTarget.plus(increasingValue.get().times(Robot.LOOP_INTERVAL));
+        slowCloseTarget = slowCloseTarget.plus(intakeDeploySlowClosing.increasingValue.get().times(Robot.LOOP_INTERVAL));
 
-        if (slowCloseTarget.gt(retractLimit.get())) {
-            slowCloseTarget = retractLimit.get();
+        if (slowCloseTarget.gt(intakeDeploySlowClosing.retractLimit.get())) {
+            slowCloseTarget = intakeDeploySlowClosing.retractLimit.get();
         }
         return slowCloseTarget;
     }
     @Override
     public void execute() {
-        var currentTarget = closePosition().plus(oscillating());
+        currentTarget = closePosition().plus(oscillating());
         intakeDeploySubsystem.setTargetValue(currentTarget);
     }
 
     @Override
     public void end(boolean isInterrupted) {
         super.end(isInterrupted);
+        this.intakeDeploySubsystem.setTargetValue(currentTarget);
+
     }
 
     @Override
