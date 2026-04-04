@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.535473437748465,
-        "y": 3.257119760990694
+        "x": 7.473091512327074,
+        "y": 3.493558512565391
       },
       "isLocked": false,
       "linkedName": "BlueNeutralLeftFinished"
@@ -20,12 +20,12 @@
         "y": 2.5787270667904703
       },
       "prevControl": {
-        "x": 6.475265403459014,
-        "y": 2.3859323519303532
+        "x": 6.052179160706482,
+        "y": 2.696499944743882
       },
       "nextControl": {
-        "x": 5.4707506227408675,
-        "y": 2.686838093946117
+        "x": 5.611136989395979,
+        "y": 2.4609541888370585
       },
       "isLocked": false,
       "linkedName": null
@@ -36,12 +36,12 @@
         "y": 2.5787270667904703
       },
       "prevControl": {
-        "x": 2.81235650522941,
-        "y": 2.507549510853685
+        "x": 2.8037213331468944,
+        "y": 2.5495246447772892
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ShootingPosition"
     }
   ],
   "rotationTargets": [],
