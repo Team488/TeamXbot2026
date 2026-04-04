@@ -5,6 +5,7 @@ import competition.simulation.intake_deploy.IntakeDeploySimulator;
 import competition.subsystems.collector_intake.CollectorSubsystem;
 import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.drivesims.AbstractDriveTrainSimulation;
+import xbot.common.advantage.AKitLogger;
 import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
 
 import javax.inject.Inject;
@@ -19,6 +20,7 @@ public class CollectorSimulator {
     final MockCANMotorController collectorMotor;
 
     private int heldPieces = 0;
+    final AKitLogger aKitLog = new AKitLogger("Simulator/Collector/");
 
     @Inject
     public CollectorSimulator(CollectorSubsystem collect, IntakeDeploySimulator intakeDeploySim) {
@@ -33,13 +35,15 @@ public class CollectorSimulator {
                 driveTrainSimulation,
                 SimulatorConstants.collectorWidth,
                 SimulatorConstants.collectorLengthExtended,
-                IntakeSimulation.IntakeSide.BACK,
+                IntakeSimulation.IntakeSide.FRONT,
                 SimulatorConstants.fuelCapacity
         );
     }
 
     public boolean isIntaking() {
-        return intakeDeploySim.isDeployed() && collectorMotor.getPower() > 0;
+        boolean motorActive = collectorMotor.getPower() > 0
+                || collectorMotor.getRawTargetVelocity().magnitude() > 0;
+        return intakeDeploySim.isDeployed() && motorActive;
     }
 
     public boolean getPieceFromCollector() {
@@ -51,6 +55,11 @@ public class CollectorSimulator {
     }
 
     public void update() {
+        aKitLog.record("IntakeDeployDeployed", intakeDeploySim.isDeployed());
+        aKitLog.record("CollectorMotorPower", collectorMotor.getPower());
+        aKitLog.record("IsIntaking", isIntaking());
+        aKitLog.record("HeldPieces", heldPieces);
+
         if (isIntaking()) {
             this.simulation.startIntake();
             if (this.simulation.obtainGamePieceFromIntake()) {

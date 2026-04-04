@@ -6,6 +6,7 @@ import competition.simulation.intake.CollectorSimulator;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -131,10 +132,11 @@ public class ShooterSimulator {
 
             double speed = getShooterVelocity().in(RadiansPerSecond) * SimulatorConstants.flywheelRadius.in(Meters);
             Translation2d robotPose = pose.getCurrentPose2d().getTranslation();
-            Translation2d shooterOffset = new Translation2d(0.25, 0);
+            Translation2d shooterOffset = new Translation2d(-0.25, 0);
+            var shooterHeading = pose.getCurrentHeading().rotateBy(Rotation2d.fromDegrees(180));
             arena.addPieceWithVariance(
                     robotPose.plus(shooterOffset.rotateBy(pose.getCurrentHeading())),
-                    pose.getCurrentHeading(),
+                    shooterHeading,
                     SimulatorConstants.shooterHeight,
                     MetersPerSecond.of(speed),
                     Degrees.of(80), // TODO: Read from hood sim
