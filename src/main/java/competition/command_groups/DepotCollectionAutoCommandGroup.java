@@ -69,12 +69,12 @@ public class DepotCollectionAutoCommandGroup extends BaseSequentialCommandGroup 
 
         var depotCollectDeep  = trajectoryProvider.get();
 
-        Pose2d DepotPointDeep =  PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueDepotCollectPointDeep);
+        Pose2d depotPointDeep =  PoseSubsystem.convertBlueToRedIfNeeded(Landmarks.blueDepotCollectPointDeep);
 
         ArrayList<XbotSwervePoint> deepCollectPoint = new ArrayList<>();
 
         deepCollectPoint.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(
-                DepotPointDeep, 1)
+                depotPointDeep, 1)
         );
 
         depotCollectDeep.logic.setKeyPoints(deepCollectPoint);
