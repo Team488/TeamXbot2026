@@ -106,6 +106,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             return intakeDeployEncoder.getAbsolutePosition();
         }
 
+
         return Degrees.zero();
     }
 
