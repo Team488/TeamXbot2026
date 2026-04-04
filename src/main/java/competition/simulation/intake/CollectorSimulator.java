@@ -18,6 +18,8 @@ public class CollectorSimulator {
 
     final MockCANMotorController collectorMotor;
 
+    private int heldPieces = 0;
+
     @Inject
     public CollectorSimulator(CollectorSubsystem collect, IntakeDeploySimulator intakeDeploySim) {
         this.collector = collect;
@@ -41,12 +43,19 @@ public class CollectorSimulator {
     }
 
     public boolean getPieceFromCollector() {
-        return simulation.obtainGamePieceFromIntake();
+        if (heldPieces > 0) {
+            heldPieces--;
+            return true;
+        }
+        return false;
     }
 
     public void update() {
         if (isIntaking()) {
             this.simulation.startIntake();
+            if (this.simulation.obtainGamePieceFromIntake()) {
+                heldPieces++;
+            }
         } else {
             this.simulation.stopIntake();
         }

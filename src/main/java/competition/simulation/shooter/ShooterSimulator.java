@@ -92,8 +92,7 @@ public class ShooterSimulator {
     }
 
     public boolean isShooting() {
-        // TODO: Change to shooter feeder once integrated
-        return middleShooterMotor.getPower() > 0;
+        return shooterFeederMotor.getPower() > 0;
     }
 
     public AngularVelocity getShooterVelocity() {
