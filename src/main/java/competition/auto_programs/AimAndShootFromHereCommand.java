@@ -3,7 +3,6 @@ package competition.auto_programs;
 import javax.inject.Inject;
 
 import competition.command_groups.ContinuousPrepareToShootFromHereCommand;
-import competition.command_groups.FireWhenShooterAndHoodReady;
 import competition.command_groups.IntakeSlowlyAndFireWhenReady;
 import competition.subsystems.drive.commands.RotateToHubCommand;
 import xbot.common.command.BaseParallelCommandGroup;
