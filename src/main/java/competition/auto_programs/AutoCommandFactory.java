@@ -13,9 +13,11 @@ import competition.general_commands.WaitForDurationCommand;
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.collector_intake.commands.CollectorStopCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
+import competition.subsystems.shooter.commands.ShooterStopCommand;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -40,6 +42,7 @@ public class AutoCommandFactory {
     private final Provider<RotateToHubCommand> rotateToHubProvider;
     private final Provider<WaitForHoodAndShooterToBeAtGoalCommandGroup> waitForGoalProvider;
     private final Provider<RunCollectorHopperFeederCommandGroup> runFeederProvider;
+    private final Provider<ShooterStopCommand> shooterStopProvider;
     private final AutonomousCommandSelector autoSelector;
 
     @Inject
@@ -57,6 +60,7 @@ public class AutoCommandFactory {
             Provider<RotateToHubCommand> rotateToHubProvider,
             Provider<WaitForHoodAndShooterToBeAtGoalCommandGroup> waitForGoalProvider,
             Provider<RunCollectorHopperFeederCommandGroup> runFeederProvider,
+            Provider<ShooterStopCommand> shooterStopProvider,
             AutonomousCommandSelector autoSelector) {
         this.driveToNeutralZoneProvider = driveToNeutralZoneProvider;
         this.driveAcrossMidNeutralZoneProvider = driveAcrossMidNeutralZoneProvider;
@@ -71,7 +75,12 @@ public class AutoCommandFactory {
         this.rotateToHubProvider = rotateToHubProvider;
         this.waitForGoalProvider = waitForGoalProvider;
         this.runFeederProvider = runFeederProvider;
+        this.shooterStopProvider = shooterStopProvider;
         this.autoSelector = autoSelector;
+    }
+
+    public Command stopShooter() {
+        return new InstantCommand().deadlineFor(shooterStopProvider.get());
     }
 
     public Command statusMessage(String message) {
