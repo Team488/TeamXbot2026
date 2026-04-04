@@ -24,6 +24,8 @@ public class IntakeDeployRetryCommand extends BaseSetpointCommand {
     public void initialize() {
         super.initialize();
         preTime = XTimer.getFPGATimestamp();
+        intakeDeploy.setTargetValue(Degrees.of(intakeDeploy.extendedPosition.get()));
+        log.info("Initialized IntakeDeployExtend");
     }
 
     @Override
