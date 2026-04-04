@@ -11,6 +11,7 @@ import competition.auto_programs.CollectAndShootTwiceCommand;
 import competition.auto_programs.vision.JustDriveNeutralMoveCommand;
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
 import competition.auto_programs.vision.ShootFromTrenchThenMoveToNeutralCommand;
+import competition.command_groups.AutoOutpostAndShootCommandGroup;
 import competition.command_groups.vision.DriveThroughAllianceTrenchCommand;
 import competition.command_groups.HopperAndIntakeCommandGroup;
 import competition.command_groups.HopperAndIntakeEjectCommandGroup;
@@ -203,9 +204,10 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupSimulatorCommands(
+    public void setupSimulatorCommands(AutoOutpostAndShootCommandGroup autoOutpostAndShootCommandGroup,
             ResetSimulatedPoseCommand resetPose) {
         resetPose.includeOnSmartDashboard();
+        autoOutpostAndShootCommandGroup.includeOnSmartDashboard();
     }
 
     @Inject
@@ -215,4 +217,5 @@ public class OperatorCommandMap {
         driveThroughAllianceTrenchCommand.includeOnSmartDashboard();
         intakeDeployOscillating.includeOnSmartDashboard();
     }
+
 }
