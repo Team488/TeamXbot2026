@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import competition.auto_programs.AimAndShootFromHereCommand;
 import competition.auto_programs.ShootFromHubCommandGroup;
 import competition.auto_programs.ShootFromTrenchCommandGroup;
+import competition.auto_programs.CollectAndShootTwiceCommand;
 import competition.auto_programs.vision.JustDriveNeutralMoveCommand;
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
 import competition.auto_programs.vision.ShootFromTrenchThenMoveToNeutralCommand;
@@ -183,7 +184,8 @@ public class OperatorCommandMap {
                                   ShootFromTrenchThenMoveToNeutralCommand shootFromTrenchThenMoveToNeutralCommand,
                                   ShootFromTrenchCommandGroup shootFromTrenchCommandGroup,
                                   ShootFromHubCommandGroup shootFromHubCommandGroup,
-                                  JustDriveNeutralMoveCommand justDriveNeutralMoveCommand) {
+                                  JustDriveNeutralMoveCommand justDriveNeutralMoveCommand,
+                                  CollectAndShootTwiceCommand collectAndShootTwiceCommand) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
         var moveAcrossField = setAutonomousCommandProvider.get();
@@ -205,6 +207,10 @@ public class OperatorCommandMap {
         var justDrivePortionOfAuto = setAutonomousCommandProvider.get();
         justDrivePortionOfAuto.setAutoCommand(justDriveNeutralMoveCommand, Landmarks.blueStartTrenchToOutpost);
         justDrivePortionOfAuto.includeOnSmartDashboard("Just drive Portion of Auto.");
+
+        var collectAndShootTwice = setAutonomousCommandProvider.get();
+        collectAndShootTwice.setAutoCommand(collectAndShootTwiceCommand, Landmarks.blueStartTrenchToOutpost);
+        collectAndShootTwice.includeOnSmartDashboard("Collect and shoot twice.");
     }
 
     @Inject

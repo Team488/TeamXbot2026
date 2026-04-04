@@ -36,6 +36,10 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
     private boolean lookAtPointActive = false;
     private boolean lookAtPointInverted = false;
     private boolean staticHeadingActive = false;
+    private final DoubleProperty autoInterstitialDistanceErrorThresholdInMeters;
+    private final DoubleProperty autoInterstitialRotationErrorThresholdInDegrees;
+    private final DoubleProperty autoEndDistanceErrorThresholdInMeters;
+    private final DoubleProperty autoEndRotationErrorThresholdInDegrees;
     private final DoubleProperty maxAutoTargetSpeedMps;
     private final DoubleProperty maxAutoFuelIntakeTargetSpeedMps;
     private final DoubleProperty interstitialSpeedMps;
@@ -53,6 +57,10 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
         this.maxAutoTargetSpeedMps = pf.createPersistentProperty("MaxAutoTargetSpeedMetersPerSecond", 2.0);
         this.maxAutoFuelIntakeTargetSpeedMps = pf.createPersistentProperty("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.0);
         this.interstitialSpeedMps = pf.createPersistentProperty("InterstitialSpeedMetersPerSecond", 0.4);
+        this.autoInterstitialDistanceErrorThresholdInMeters = pf.createPersistentProperty("autoInterstitialDistanceErrorThresholdInMeters", 0.4);
+        this.autoInterstitialRotationErrorThresholdInDegrees = pf.createPersistentProperty("autoInterstitialRotationErrorThresholdInDegrees", 10.0);
+        this.autoEndDistanceErrorThresholdInMeters = pf.createPersistentProperty("autoEndDistanceErrorThresholdInMeters", 0.25);
+        this.autoEndRotationErrorThresholdInDegrees = pf.createPersistentProperty("autoEndRotationErrorThresholdInDegrees", 5.0);
     }
 
     @Override
@@ -135,6 +143,22 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
     public double getInterstitialSpeedMetersPerSecond() {
         return this.interstitialSpeedMps.get();
+    }
+
+    public double getAutoInterstitialDistanceErrorThresholdInMeters() {
+        return this.autoInterstitialDistanceErrorThresholdInMeters.get();
+    }
+
+    public double getAutoInterstitialRotationErrorThresholdInDegrees() {
+        return this.autoInterstitialRotationErrorThresholdInDegrees.get();
+    }
+
+    public double getAutoEndDistanceErrorThresholdInMeters() {
+        return this.autoEndDistanceErrorThresholdInMeters.get();
+    }
+
+    public double getAutoEndRotationErrorThresholdInDegrees() {
+        return this.autoEndRotationErrorThresholdInDegrees.get();
     }
 
     public InstantCommand createSetStaticHeadingTargetCommand(Supplier<Rotation2d> staticHeadingTarget) {
