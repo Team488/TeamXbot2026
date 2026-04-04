@@ -41,10 +41,12 @@ public class Landmarks {
 
     // Blue Depot
     public static Pose2d blueDepotCollectCenter = new Pose2d(1.180, 5.940, Rotation2d.fromDegrees(180));
-    public static Pose2d blueDepotWallSide = new Pose2d(0.46, 7.390, Rotation2d.fromDegrees(90));
-    public static Pose2d blueDepotTowerSide = new Pose2d(0.46, 4.950, Rotation2d.fromDegrees(90));
+    public static Pose2d blueDepotCollectPointShallow = new Pose2d(.65, 5.940, Rotation2d.fromDegrees(180));
+    public static Pose2d blueDepotCollectPointDeep = new Pose2d(.5, 5.940, Rotation2d.fromDegrees(180));
+    public static Pose2d blueDepotWallSide = new Pose2d(0.46, 7.390, Rotation2d.fromDegrees(270));
+    public static Pose2d blueDepotTowerSide = new Pose2d(0.46, 4.950, Rotation2d.fromDegrees(270));
 
-    public static Pose2d blueDepotCenter = new Pose2d(0.270,5.940, Rotation2d.fromDegrees(0));
+    public static Pose2d blueDepotCenter = new Pose2d(0.270,5.940, Rotation2d.fromDegrees(180));
 
     // Blue Outpost
     public static Pose2d blueOutpost = new Pose2d(0, 0.650, Rotation2d.fromDegrees(0));
