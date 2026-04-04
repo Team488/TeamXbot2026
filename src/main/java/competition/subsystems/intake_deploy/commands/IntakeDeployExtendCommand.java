@@ -2,6 +2,8 @@ package competition.subsystems.intake_deploy.commands;
 
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import xbot.common.command.BaseSetpointCommand;
+import xbot.common.controls.actuators.XCANMotorController;
+import xbot.common.controls.sensors.XTimer;
 
 import javax.inject.Inject;
 
