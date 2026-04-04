@@ -172,8 +172,9 @@ public class Robot extends BaseRobot {
         var pose = (PoseSubsystem) getInjectorComponent().poseSubsystem();
         var drive = (DriveSubsystem) getInjectorComponent().driveSubsystem();
 
-//        NamedCommands.registerCommand("IntakeDeployExtend", intakeDeployExtendCommand);
-//        NamedCommands.registerCommand("CollectorIntake", collectorIntakeCommand);
+        NamedCommands.registerCommand("IntakeDeployExtend", getInjectorComponent().intakeDeployExtendCommand());
+        NamedCommands.registerCommand("CollectorIntake", getInjectorComponent().collectorIntakeCommand());
+
 
         try {
             AutoBuilder.configure(
