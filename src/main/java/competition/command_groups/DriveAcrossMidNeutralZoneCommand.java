@@ -36,11 +36,9 @@ public class DriveAcrossMidNeutralZoneCommand extends BaseDriveWithSimpleBezierC
         var currentPose = this.pose.getCurrentPose2d();
         var startPose = this.autoLandmarks.getStartCollectionPose(currentPose);
         var midPose = this.autoLandmarks.getMidBallPitCollectionPose(currentPose);
-        var endPose = this.autoLandmarks.getFinishBallPitCollectionPose(currentPose);
 
         List<XbotSwervePoint> points = new ArrayList<>();
         points.addAll(this.pathPlanning.generateSwervePoints(startPose, midPose, false));
-        points.addAll(this.pathPlanning.generateSwervePoints(midPose, endPose, false));
 
         return points;
     }

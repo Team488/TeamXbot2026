@@ -11,19 +11,19 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory {
     private final Provider<DriveFromNeutralZoneToAllianceCommand> driveFromNeutralZoneToAllianceCommandProvider;
-    private final Provider<GetReadyForFiringCommandGroup> getReadyForFiringCommandGroup;
+    private final Provider<PrepareToShootCommandGroup> prepareToShootCommandProvider;
     private final Provider<CollectorStopCommand> collectorStopCommandProvider;
     private final Provider<AimAndShootFromHereCommand> aimAndShootFromHereCommandProvider;
 
     @Inject
     public DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory(
             Provider<DriveFromNeutralZoneToAllianceCommand> driveFromNeutralZoneToAllianceCommandProvider,
-            Provider<GetReadyForFiringCommandGroup> getReadyForFiringCommandGroup,
+            Provider<PrepareToShootCommandGroup> prepareToShootCommandProvider,
             Provider<CollectorStopCommand> collectorStopCommandProvider,
             Provider<AimAndShootFromHereCommand> aimAndShootFromHereCommandProvider,
             DriveSubsystem drive) {
         this.driveFromNeutralZoneToAllianceCommandProvider = driveFromNeutralZoneToAllianceCommandProvider;
-        this.getReadyForFiringCommandGroup = getReadyForFiringCommandGroup;
+        this.prepareToShootCommandProvider = prepareToShootCommandProvider;
         this.collectorStopCommandProvider = collectorStopCommandProvider;
         this.aimAndShootFromHereCommandProvider = aimAndShootFromHereCommandProvider;
     }
@@ -33,9 +33,10 @@ public class DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory {
         group.setName("DriveFromNeutralZoneToAllianceAndShootCommandGroup");
 
         var driveFromNeutralToAlliance = new ParallelDeadlineGroup(
-                this.driveFromNeutralZoneToAllianceCommandProvider.get(), this.collectorStopCommandProvider.get());
+                this.driveFromNeutralZoneToAllianceCommandProvider.get(),
+                this.collectorStopCommandProvider.get(),
+                this.prepareToShootCommandProvider.get());
         group.addCommands(driveFromNeutralToAlliance);
-        group.addCommands(this.getReadyForFiringCommandGroup.get());
         group.addCommands(this.aimAndShootFromHereCommandProvider.get());
 
         return group;
