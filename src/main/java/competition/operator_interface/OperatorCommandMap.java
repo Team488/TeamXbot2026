@@ -5,6 +5,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import competition.auto_programs.AimAndShootFromHereCommand;
+import competition.auto_programs.RiskyBumpAutoCommand;
 import competition.auto_programs.ShootFromHubCommandGroup;
 import competition.auto_programs.ShootFromTrenchCommandGroup;
 import competition.auto_programs.CollectAndShootTwiceCommand;
@@ -174,7 +175,8 @@ public class OperatorCommandMap {
                                   ShootFromTrenchCommandGroup shootFromTrenchCommandGroup,
                                   ShootFromHubCommandGroup shootFromHubCommandGroup,
                                   JustDriveNeutralMoveCommand justDriveNeutralMoveCommand,
-                                  CollectAndShootTwiceCommand collectAndShootTwiceCommand) {
+                                  CollectAndShootTwiceCommand collectAndShootTwiceCommand,
+                                  RiskyBumpAutoCommand riskyBumpAutoCommand) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
         var moveAcrossField = setAutonomousCommandProvider.get();
@@ -189,9 +191,13 @@ public class OperatorCommandMap {
         shootFromHub.setAutoCommand(shootFromHubCommandGroup, Landmarks.blueStartTrenchToOutpost);
         shootFromHub.includeOnSmartDashboard("Shoot from hub.");
 
+        var moveAcrossField2 = setAutonomousCommandProvider.get();
+        moveAcrossField2.setAutoCommand(riskyBumpAutoCommand, Landmarks.blueStartTrenchToOutpost);
+        moveAcrossField2.includeOnSmartDashboard("Risky version of move across field that goes through the bump.");
+
         var shootFromTrenchThenMove = setAutonomousCommandProvider.get();
         shootFromTrenchThenMove.setAutoCommand(shootFromTrenchThenMoveToNeutralCommand, Landmarks.blueStartTrenchToOutpost);
-        shootFromTrenchThenMove.includeOnSmartDashboard("Shoot from trench then collect from netural zone.");
+        shootFromTrenchThenMove.includeOnSmartDashboard("Shoot from trench then collect from neutral zone.");
 
         var justDrivePortionOfAuto = setAutonomousCommandProvider.get();
         justDrivePortionOfAuto.setAutoCommand(justDriveNeutralMoveCommand, Landmarks.blueStartTrenchToOutpost);
