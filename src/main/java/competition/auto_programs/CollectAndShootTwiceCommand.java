@@ -16,6 +16,7 @@ public class CollectAndShootTwiceCommand extends BaseAutonomousSequentialCommand
 
         pf.setPrefix(this.getName());
         var firstShotTimeout = pf.createPersistentProperty("First shot timeout seconds", 3.0);
+        var secondShotTimeout = pf.createPersistentProperty("Second shot timeout seconds", 10.0);
 
         addCommands(
             auto.extendIntake(),
@@ -26,7 +27,7 @@ public class CollectAndShootTwiceCommand extends BaseAutonomousSequentialCommand
             auto.stopShooter(),
             auto.collectFromNeutralZone()
                 .alongWith(auto.statusMessage("Driving to neutral zone and back")),
-            auto.driveToAllianceAndShoot()
+            auto.driveToAllianceAndShoot(secondShotTimeout::get)
                 .alongWith(auto.statusMessage("Driving to alliance and shoot"))
         );
     }
