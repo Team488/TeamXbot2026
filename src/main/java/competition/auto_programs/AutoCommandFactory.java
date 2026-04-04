@@ -79,6 +79,10 @@ public class AutoCommandFactory {
         this.autoSelector = autoSelector;
     }
 
+    public Command extendIntake() {
+        return intakeDeployExtendProvider.get();
+    }
+
     public Command stopShooter() {
         return new InstantCommand().deadlineFor(shooterStopProvider.get());
     }
