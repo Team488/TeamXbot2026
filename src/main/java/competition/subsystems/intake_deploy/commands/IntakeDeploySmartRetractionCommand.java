@@ -16,21 +16,20 @@ public class IntakeDeploySmartRetractionCommand extends BaseSetpointCommand {
     private final DoubleProperty currentUpperThreshold;
     private final DoubleProperty currentLowerThreshold;
 
-    double stopTime;
+    private double stopTime = 0;
 
     @Inject
     public IntakeDeploySmartRetractionCommand(IntakeDeploySubsystem intakeDeploy, PropertyFactory propertyFactory) {
         super(intakeDeploy);
         this.intakeDeploy = intakeDeploy;
         propertyFactory.setPrefix(this);
-        this.currentUpperThreshold = propertyFactory.createPersistentProperty("Current Upper Threshold", 4);
-        this.currentLowerThreshold = propertyFactory.createPersistentProperty("Current Lower Threshold", 6);
+        this.currentUpperThreshold = propertyFactory.createPersistentProperty("Current Upper Threshold", 6);
+        this.currentLowerThreshold = propertyFactory.createPersistentProperty("Current Lower Threshold", 4);
     }
 
     @Override
     public void initialize() {
         log.info("Initialized IntakeDeploySmartRetraction");
-        stopTime = 0;
     }
 
     @Override
