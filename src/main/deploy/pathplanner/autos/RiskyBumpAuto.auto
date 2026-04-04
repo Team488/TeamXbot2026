@@ -47,6 +47,12 @@
           "data": {
             "pathName": "GoBackToAllianceZone"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimAndShootFromHere"
+          }
         }
       ]
     }

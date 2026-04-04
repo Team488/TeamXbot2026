@@ -1,5 +1,6 @@
 package competition.injection.components;
 
+import competition.auto_programs.AimAndShootFromHereCommand;
 import competition.auto_programs.ShootFromTrenchCommandGroup;
 import competition.operator_interface.OperatorCommandMap;
 import competition.operator_interface.OperatorInterface;
@@ -68,4 +69,6 @@ public abstract class BaseRobotComponent extends BaseComponent {
     public abstract IntakeDeployExtendCommand intakeDeployExtendCommand();
 
     public abstract CollectorIntakeCommand collectorIntakeCommand();
+
+    public abstract AimAndShootFromHereCommand aimAndShootFromHereCommand();
 }

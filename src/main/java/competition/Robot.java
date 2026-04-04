@@ -174,6 +174,7 @@ public class Robot extends BaseRobot {
 
         NamedCommands.registerCommand("IntakeDeployExtend", getInjectorComponent().intakeDeployExtendCommand());
         NamedCommands.registerCommand("CollectorIntake", getInjectorComponent().collectorIntakeCommand());
+        NamedCommands.registerCommand("AimAndShootFromHere", getInjectorComponent().aimAndShootFromHereCommand());
 
 
         try {
