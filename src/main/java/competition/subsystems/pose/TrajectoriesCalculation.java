@@ -27,6 +27,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
+import xbot.common.advantage.AKitLogger;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.properties.StringProperty;
@@ -43,6 +44,7 @@ public class TrajectoriesCalculation {
     private final DoubleProperty interpolationFactor;
     private final DoubleProperty v3DistanceOffsetMeters;
     private final StringProperty trajectoryCalcVersion;
+    private AKitLogger aKitLog;
 
     private static void getOrCreatePresetLookup(PropertyFactory propManager) {
         if (presetShootingLookup == null) {
@@ -72,6 +74,7 @@ public class TrajectoriesCalculation {
 
     @Inject
     public TrajectoriesCalculation(AprilTagFieldLayout aprilTagFieldLayout, PropertyFactory propManager) {
+        this.aKitLog = new AKitLogger("TrajectoriesCalculation");
         this.aprilTagFieldLayout = aprilTagFieldLayout;
         this.log = LogManager.getLogger(getClass().getName());
         propManager.setPrefix("TrajectoriesCalculation");
@@ -184,6 +187,10 @@ public class TrajectoriesCalculation {
                 shootingData.hoodServoRatio);
     }
 
+    private double roundingDistance(double distance) {
+        return Math.round(distance * 100.0) / 100.0;
+    }
+
     // Look up optimal shooting parameters based on current pose and shooting
     // target's pose.
     private ShootingData calculateTrajectoryV3Dynamic(Pose2d robotPose, Pose2d targetPose, boolean zeroHood) {
@@ -202,9 +209,11 @@ public class TrajectoriesCalculation {
 
         Pose2d shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
         double distance = shooterPose.getTranslation().getDistance(targetPose.getTranslation());
-        var roundedDistance = Math.round(distance * 100.0) / 100.0;
+        var roundedDistance = roundingDistance(distance);
+        this.aKitLog.record("V3DynamicOriginalDistanceInMeters", roundedDistance);
         var offsetDistance = roundedDistance + v3DistanceOffsetMeters.get();
-        var key = new TrajectoryKey(offsetDistance);
+        this.aKitLog.record("V3DynamicWithOffsetDistanceInMeters", offsetDistance);
+        var key = new TrajectoryKey(roundingDistance(offsetDistance));
         var hoodTrajectory = this.searchForHoodTrajectory(key, zeroHood);
         if (hoodTrajectory.isEmpty()) {
             if (zeroHood) {
@@ -218,23 +227,28 @@ public class TrajectoriesCalculation {
         }
         var matchedTrajectory = hoodTrajectory.get();
 
-        return new ShootingData(finalRotation, Units.RPM.of(matchedTrajectory.RPM), 0); // Use matchedTrajectory.servo instead of 0 if we are using the hood
+        log.info("Returning shooting speed: {}, servo: {}", matchedTrajectory.RPM, matchedTrajectory.servo);
+
+        return new ShootingData(finalRotation, Units.RPM.of(matchedTrajectory.RPM), matchedTrajectory.servo);
     }
 
     private Optional<HoodTrajectory> searchForHoodTrajectory(TrajectoryKey key, boolean zeroHood) {
         var mapToUse = zeroHood ? trajectoryZeroHoodMap : trajectoryMap;
 
         if (mapToUse.containsKey(key)) {
+            this.aKitLog.record("V3DynamicDeterminedDistanceInMeters", key.distance);
             return Optional.of(mapToUse.get(key));
         }
 
-        var adjustedDistanceCheck = key.distance + 0.01;
+        var adjustedDistanceCheck = roundingDistance(key.distance + 0.01);
         while (adjustedDistanceCheck < 10.0) {
             var check = new TrajectoryKey(adjustedDistanceCheck);
             if (mapToUse.containsKey(check)) {
+                this.aKitLog.record("V3DynamicDeterminedDistanceInMeters", check.distance);
                 return Optional.of(mapToUse.get(check));
             }
-            adjustedDistanceCheck = key.distance + 0.01;
+            adjustedDistanceCheck = roundingDistance(adjustedDistanceCheck + 0.01);
+            log.info("adjustedDistanceCheck: {}", adjustedDistanceCheck);
         }
 
         if (zeroHood) {
