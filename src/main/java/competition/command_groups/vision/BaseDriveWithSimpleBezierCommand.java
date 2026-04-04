@@ -5,6 +5,7 @@ import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.command.BaseRobot;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.properties.BooleanProperty;
+import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.drive.SwervePointKinematics;
 import xbot.common.subsystems.drive.SwerveSimpleBezierCommand;
@@ -36,7 +37,6 @@ public class BaseDriveWithSimpleBezierCommand extends SwerveSimpleBezierCommand 
     private EndpointSpeed startSpeed = EndpointSpeed.Stop;
     private EndpointSpeed endSpeed = EndpointSpeed.Stop;
     private boolean prioritizeRotationIfCloseToGoal = false;
-    private boolean stopWhenFinished = true;
 
     public BaseDriveWithSimpleBezierCommand(DriveSubsystem drive, PoseSubsystem pose,
             PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
@@ -56,23 +56,19 @@ public class BaseDriveWithSimpleBezierCommand extends SwerveSimpleBezierCommand 
         case Start:
             this.startSpeed = EndpointSpeed.Stop;
             this.endSpeed = EndpointSpeed.Interstitial;
-            this.stopWhenFinished = false;
             break;
         case End:
             this.startSpeed = EndpointSpeed.Interstitial;
             this.endSpeed = EndpointSpeed.Stop;
-            this.stopWhenFinished = true;
             break;
         case Mid:
             this.startSpeed = EndpointSpeed.Interstitial;
             this.endSpeed = EndpointSpeed.Interstitial;
-            this.stopWhenFinished = false;
             break;
         case StartAndEnd:
         default:
             this.startSpeed = EndpointSpeed.Stop;
             this.endSpeed = EndpointSpeed.Stop;
-            this.stopWhenFinished = false;
             break;
         }
     }
@@ -91,10 +87,29 @@ public class BaseDriveWithSimpleBezierCommand extends SwerveSimpleBezierCommand 
         }
     }
 
+    private double getEndDistanceErrorThreshold(EndpointSpeed speed) {
+        switch (speed) {
+        case Interstitial:
+            return this.drive.getAutoInterstitialDistanceErrorThresholdInMeters();
+        case Stop:
+        default:
+            return this.drive.getAutoEndDistanceErrorThresholdInMeters();
+        }
+    }
+
+    private double getEndRotationErrorThreshold(EndpointSpeed speed) {
+        switch (speed) {
+        case Interstitial:
+            return this.drive.getAutoInterstitialRotationErrorThresholdInDegrees();
+        case Stop:
+        default:
+            return this.drive.getAutoEndRotationErrorThresholdInDegrees();
+        }
+    }
+
     @Override
     public void initialize() {
         this.logic.setPrioritizeRotationIfCloseToGoal(this.prioritizeRotationIfCloseToGoal);
-        this.logic.setStopWhenFinished(this.stopWhenFinished);
         double maxSpeed = this.drive.getMaxTargetSpeedMetersPerSecond();
         switch (this.maxSpeed) {
         case Auto:
@@ -111,6 +126,10 @@ public class BaseDriveWithSimpleBezierCommand extends SwerveSimpleBezierCommand 
 
         double startSpeed = this.getEndpointSpeed(this.startSpeed);
         double endSpeed = this.getEndpointSpeed(this.endSpeed);
+        double distanceErrorThreshold = this.getEndDistanceErrorThreshold(this.endSpeed);
+        double rotationErrorThreshold = this.getEndRotationErrorThreshold(this.endSpeed);
+
+        this.logic.setFinishModeLoosePositionAndRotation(distanceErrorThreshold, rotationErrorThreshold);
 
         // Bug in simulation for global kinematic values.
         if (this.useGlobalKinematics.get() && !BaseRobot.isSimulation()) {

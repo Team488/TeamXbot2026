@@ -2,6 +2,7 @@ package competition.command_groups;
 
 
 import competition.general_commands.WaitForDurationCommand;
+import competition.subsystems.intake_deploy.commands.IntakeDeployOscillating;
 import competition.subsystems.intake_deploy.commands.IntakeDeploySlowClosing;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -18,7 +19,7 @@ public class IntakeSlowlyAndFireWhenReady extends BaseSequentialCommandGroup {
     @Inject
     public IntakeSlowlyAndFireWhenReady(WaitForHoodAndShooterToBeAtGoalCommandGroup waitForHoodAndShooterToBeAtGoalCommandGroup,
                                         RunCollectorHopperFeederCommandGroup runCollectorHopperFeederCommandGroup,
-                                        IntakeDeploySlowClosing intakeDeploySlowClosing,
+                                        IntakeDeployOscillating intakeDeployOscillating,
                                         PropertyFactory propertyFactory
 
     ) {
@@ -35,7 +36,7 @@ public class IntakeSlowlyAndFireWhenReady extends BaseSequentialCommandGroup {
                         runCollectorHopperFeederCommandGroup,
                         Commands.sequence(
                                 waitBeforeRetracting,
-                                intakeDeploySlowClosing
+                                intakeDeployOscillating
                         )
                 )
         );

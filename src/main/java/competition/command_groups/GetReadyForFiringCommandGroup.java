@@ -3,7 +3,7 @@ package competition.command_groups;
 import competition.subsystems.pose.AutoLandmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.pose.TrajectoriesCalculation;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import xbot.common.command.BaseSequentialCommandGroup;
 
 import javax.inject.Inject;
@@ -20,11 +20,9 @@ public class GetReadyForFiringCommandGroup extends BaseSequentialCommandGroup {
     ) {
         prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
 
-        var getReadyToFire = new ParallelCommandGroup(
+        var getReadyToFire = new ParallelDeadlineGroup(
                 driveToShootingPositionCommand, prepareToShootCommandGroup);
 
         this.addCommands(getReadyToFire);
-
-        this.addCommands(fireWhenShooterAndHoodReady);
     }
 }

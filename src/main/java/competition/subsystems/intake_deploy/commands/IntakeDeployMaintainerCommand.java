@@ -5,6 +5,7 @@ import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DriverStation;
 import xbot.common.advantage.AKitLogger;
 import xbot.common.command.BaseMaintainerCommand;
 import xbot.common.controls.sensors.XXboxController;
@@ -61,6 +62,15 @@ public class IntakeDeployMaintainerCommand extends BaseMaintainerCommand<Angle, 
     @Override
     public void initialize() {
         super.initialize();
+    }
+
+    @Override
+    protected void initializeMachineControlAction() {
+        // The base implementation here will reset the target (probably incorrectly). Fixing it here
+        // to avoid side-effects while we reason through a better implementation of the base class.
+        if (this.subsystem.getSetpointLock().getCurrentCommand() != null && !DriverStation.isAutonomous()) {
+            this.subsystem.getSetpointLock().getCurrentCommand().cancel();
+        }
     }
 
     @Override
