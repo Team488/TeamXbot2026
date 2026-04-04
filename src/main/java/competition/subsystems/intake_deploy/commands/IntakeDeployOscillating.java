@@ -19,7 +19,6 @@ import static edu.wpi.first.units.Units.Seconds;
 public class IntakeDeployOscillating extends BaseSetpointCommand {
 
     public final IntakeDeploySubsystem intakeDeploySubsystem;
-    public IntakeDeploySlowClosing intakeDeploySlowClosing;
     public final AngleProperty amplitude;
     public final AngleProperty increasingValue;
     public final AngleProperty retractLimit;
@@ -31,12 +30,12 @@ public class IntakeDeployOscillating extends BaseSetpointCommand {
 
 
     @Inject
-    public IntakeDeployOscillating(IntakeDeploySubsystem intakeDeploySubsystem, PropertyFactory propertyFactory, IntakeDeploySlowClosing intakeDeploySlowClosing) {
+    public IntakeDeployOscillating(IntakeDeploySubsystem intakeDeploySubsystem, PropertyFactory propertyFactory) {
         super(intakeDeploySubsystem);
         propertyFactory.setPrefix(this);
         this.intakeDeploySubsystem = intakeDeploySubsystem;
-        this.amplitude = propertyFactory.createPersistentProperty("aptitude", Degrees.of(30));
-        this.period = propertyFactory.createPersistentProperty("time per cycle", (50));
+        this.amplitude = propertyFactory.createPersistentProperty("aptitude", Degrees.of(2));
+        this.period = propertyFactory.createPersistentProperty("time per cycle", (1));
         this.retractLimit = propertyFactory.createPersistentProperty("RetractLimit", Degrees.of(-60));
         this.increasingValue = propertyFactory.createPersistentProperty("IncreasingValuePerSecond", Degrees.of(70));
     }
@@ -46,20 +45,18 @@ public class IntakeDeployOscillating extends BaseSetpointCommand {
         super.initialize();
         startTime = XTimer.getFPGATimestampTime();
         slowCloseTarget = intakeDeploySubsystem.getCurrentValue();
-
     }
-
     public Angle oscillating() {
         Time commandDuration = Seconds.of(XTimer.getFPGATimestamp()).minus(startTime);
         runOscillating = amplitude.get().in(Degrees) * Math.sin(2 * Math.PI * commandDuration.in(Seconds) / period.get());
         return Degrees.of(runOscillating);
     }
-    @Inject
-    public Angle closePosition() {
-        slowCloseTarget = slowCloseTarget.plus(intakeDeploySlowClosing.increasingValue.get().times(Robot.LOOP_INTERVAL));
 
-        if (slowCloseTarget.gt(intakeDeploySlowClosing.retractLimit.get())) {
-            slowCloseTarget = intakeDeploySlowClosing.retractLimit.get();
+    public Angle closePosition() {
+        slowCloseTarget = slowCloseTarget.plus(increasingValue.get().times(Robot.LOOP_INTERVAL));
+
+        if (slowCloseTarget.gt(retractLimit.get())) {
+            slowCloseTarget = retractLimit.get();
         }
         return slowCloseTarget;
     }
@@ -72,10 +69,9 @@ public class IntakeDeployOscillating extends BaseSetpointCommand {
     @Override
     public void end(boolean isInterrupted) {
         super.end(isInterrupted);
-        this.intakeDeploySubsystem.setTargetValue(currentTarget);
+            this.intakeDeploySubsystem.setTargetValue(currentTarget);
 
     }
-
     @Override
     public boolean isFinished() {
         return false;

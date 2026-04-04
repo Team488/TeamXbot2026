@@ -34,7 +34,6 @@ import competition.subsystems.hood.commands.HoodToZeroCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployOscillating;
-import competition.subsystems.intake_deploy.commands.IntakeDeployOscillating;
 import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.TrajectoriesCalculation;
