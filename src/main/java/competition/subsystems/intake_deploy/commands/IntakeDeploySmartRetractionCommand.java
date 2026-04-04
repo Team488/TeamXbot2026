@@ -15,6 +15,7 @@ public class IntakeDeploySmartRetractionCommand extends BaseSetpointCommand {
     private final IntakeDeploySubsystem intakeDeploy;
     private final DoubleProperty currentUpperThreshold;
     private final DoubleProperty currentLowerThreshold;
+    private final DoubleProperty timeWaited;
 
     private double stopTime = 0;
 
@@ -25,6 +26,7 @@ public class IntakeDeploySmartRetractionCommand extends BaseSetpointCommand {
         propertyFactory.setPrefix(this);
         this.currentUpperThreshold = propertyFactory.createPersistentProperty("Current Upper Threshold", 6);
         this.currentLowerThreshold = propertyFactory.createPersistentProperty("Current Lower Threshold", 4);
+        this.timeWaited = propertyFactory.createPersistentProperty("Time Before Reattempt", 0.5);
     }
 
     @Override
@@ -43,7 +45,7 @@ public class IntakeDeploySmartRetractionCommand extends BaseSetpointCommand {
             stopTime = XTimer.getFPGATimestamp();
         }
 
-        if (elapsedTimeFromStop >= .5) { // have 500 milliseconds passed since stopping intake
+        if (elapsedTimeFromStop >= timeWaited.get()) { // have 500 milliseconds passed since stopping intake
             stopTime = 0;
             intakeDeploy.setTargetValue(Degrees.of(intakeDeploy.retractedPosition.get()));
         }
