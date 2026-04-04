@@ -57,17 +57,21 @@ public class AutoLandmarks {
         var alliance = this.getAlliance();
         var results = new ArrayList<Pose2d>();
 
-        results.addAll(this.getNearestAllianceToNeutralTrenchPath(pose));
+        var paths = this.getNearestAllianceToNeutralTrenchPath(pose);
+        results.addAll(paths);
         var ballPitEdge = Landmarks.getClosestAutoBallPitEdge(this.gamefield, pose, alliance);
 
         // If the edge is above the center then we move along 180 deg otherwise move
         // along 0 deg.
         var multiplierY = ballPitEdge.getY() > this.gamefield.getFieldCenter().getY() ? 1 : -1;
         var multiplierX = this.gamefield.getFieldCenter().getX() > ballPitEdge.getX() ? 1 : -1;
-        var adjustedForRobot = new Translation2d(Units.Meters.of(0.5).times(multiplierX),
+        var adjustedForRobot = new Translation2d(Units.Meters.of(0).times(multiplierX),
                 this.robotRadius.plus(this.pathPlanning.getAdditionalClearance()).times(multiplierY));
 
-        results.add(new Pose2d(ballPitEdge.getTranslation().plus(adjustedForRobot), ballPitEdge.getRotation()));
+        var endPosition = new Pose2d(ballPitEdge.getTranslation().plus(adjustedForRobot), ballPitEdge.getRotation());
+        results.add(new Pose2d(paths.get(paths.size() - 1).getTranslation().interpolate(endPosition.getTranslation(), 0.2) , ballPitEdge.getRotation()));
+
+        results.add(endPosition);
 
         return results;
     }
@@ -86,7 +90,7 @@ public class AutoLandmarks {
         var adjustedForRobot = new Translation2d(Units.Meters.of(0.5).times(multiplierX),
                 this.robotRadius.plus(this.pathPlanning.getAdditionalClearance()).times(multiplierY));
 
-        var adjustedTranslation = new Translation2d(ballPitEdge.getX(), this.gamefield.getFieldCenter().getY())
+        var adjustedTranslation = new Translation2d(this.gamefield.getFieldCenter().getX(), this.gamefield.getFieldCenter().getY())
                 .plus(adjustedForRobot);
         return new Pose2d(adjustedTranslation, ballPitEdge.getRotation());
     }
