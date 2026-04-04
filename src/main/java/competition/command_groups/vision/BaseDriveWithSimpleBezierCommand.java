@@ -33,10 +33,6 @@ public class BaseDriveWithSimpleBezierCommand extends SwerveSimpleBezierCommand 
 
     private final DriveSubsystem drive;
     private final BooleanProperty useGlobalKinematics;
-    private final DoubleProperty autoInterstitialDistanceErrorThresholdInMeters;
-    private final DoubleProperty autoInterstitialRotationErrorThresholdInDegrees;
-    private final DoubleProperty autoEndDistanceErrorThresholdInMeters;
-    private final DoubleProperty autoEndRotationErrorThresholdInDegrees;
     private MaxSpeed maxSpeed = MaxSpeed.Default;
     private EndpointSpeed startSpeed = EndpointSpeed.Stop;
     private EndpointSpeed endSpeed = EndpointSpeed.Stop;
@@ -49,10 +45,6 @@ public class BaseDriveWithSimpleBezierCommand extends SwerveSimpleBezierCommand 
 
         this.drive = drive;
         this.useGlobalKinematics = pf.createPersistentProperty("useGlobalKinematics", true);
-        this.autoInterstitialDistanceErrorThresholdInMeters = pf.createPersistentProperty("autoInterstitialDistanceErrorThresholdInMeters", 0.6);
-        this.autoInterstitialRotationErrorThresholdInDegrees = pf.createPersistentProperty("autoInterstitialRotationErrorThresholdInDegrees", 15.0);
-        this.autoEndDistanceErrorThresholdInMeters = pf.createPersistentProperty("autoEndDistanceErrorThresholdInMeters", 0.3);
-        this.autoEndRotationErrorThresholdInDegrees = pf.createPersistentProperty("autoEndRotationErrorThresholdInDegrees", 10.0);
     }
 
     protected void setMaxSpeed(MaxSpeed speed) {
@@ -98,20 +90,20 @@ public class BaseDriveWithSimpleBezierCommand extends SwerveSimpleBezierCommand 
     private double getEndDistanceErrorThreshold(EndpointSpeed speed) {
         switch (speed) {
         case Interstitial:
-            return this.autoInterstitialDistanceErrorThresholdInMeters.get();
+            return this.drive.getAutoInterstitialDistanceErrorThresholdInMeters();
         case Stop:
         default:
-            return this.autoEndDistanceErrorThresholdInMeters.get();
+            return this.drive.getAutoEndDistanceErrorThresholdInMeters();
         }
     }
 
     private double getEndRotationErrorThreshold(EndpointSpeed speed) {
         switch (speed) {
         case Interstitial:
-            return this.autoInterstitialRotationErrorThresholdInDegrees.get();
+            return this.drive.getAutoInterstitialRotationErrorThresholdInDegrees();
         case Stop:
         default:
-            return this.autoEndRotationErrorThresholdInDegrees.get();
+            return this.drive.getAutoEndRotationErrorThresholdInDegrees();
         }
     }
 
