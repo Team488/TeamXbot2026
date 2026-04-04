@@ -49,7 +49,7 @@ public class BaseDriveWithSimpleBezierCommand extends SwerveSimpleBezierCommand 
 
         this.drive = drive;
         this.useGlobalKinematics = pf.createPersistentProperty("useGlobalKinematics", true);
-        this.autoInterstitialDistanceErrorThresholdInMeters = pf.createPersistentProperty("autoInterstitialDistanceErrorThresholdInMeters", 0.6);
+        this.autoInterstitialDistanceErrorThresholdInMeters = pf.createPersistentProperty("autoInterstitialDistanceErrorThresholdInMeters", 0.4);
         this.autoInterstitialRotationErrorThresholdInDegrees = pf.createPersistentProperty("autoInterstitialRotationErrorThresholdInDegrees", 15.0);
         this.autoEndDistanceErrorThresholdInMeters = pf.createPersistentProperty("autoEndDistanceErrorThresholdInMeters", 0.3);
         this.autoEndRotationErrorThresholdInDegrees = pf.createPersistentProperty("autoEndRotationErrorThresholdInDegrees", 10.0);

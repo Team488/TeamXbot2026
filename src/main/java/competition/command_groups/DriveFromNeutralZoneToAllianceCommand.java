@@ -42,7 +42,7 @@ public class DriveFromNeutralZoneToAllianceCommand extends BaseDriveWithSimpleBe
         super.setSegmentType(SegmentType.Mid);
         this.setMaxSpeed(MaxSpeed.Auto);
         super.logic.setKeyPoints(this.pathPlanning.generateSwervePoints(startPose, pathPoses,
-                false));
+                true));
 
         super.initialize();
     }

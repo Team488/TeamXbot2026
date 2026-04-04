@@ -113,12 +113,22 @@ public class AutoLandmarks {
                 .nearest(Landmarks.getAllianceTrenchPoses(this.aprilTagFieldLayout, alliance));
         results.addAll(this.getNearestNeutralToAllianceTrenchPath(pose));
 
-        var multiplier = nearestAllianceTrenchPose.getX() > this.gamefield.getFieldCenter().getX() ? 1 : -1;
-        var adjustedForOffset = new Translation2d(Units.Meters.of(2).times(multiplier),
-                Units.Meters.of(0));
+        var multiplier = nearestAllianceTrenchPose.getX() > this.gamefield.getFieldCenter().getX() ? -1 : 1;
+        var multiplierY = this.gamefield.getFieldCenter().getY() > nearestAllianceTrenchPose.getY() ? 1 : -1;
+        var adjustedBeforeTrenchForOffset = new Translation2d(Units.Meters.of(2).times(multiplier),
+                                                              Units.Meters.of(0.25).times(multiplierY));
+        results.add(new Pose2d(nearestAllianceTrenchPose.getTranslation().plus(adjustedBeforeTrenchForOffset),
+                                           pose.getRotation()));
 
-        results.add(new Pose2d(nearestAllianceTrenchPose.getTranslation().plus(adjustedForOffset),
-                adjustedForOffset.getAngle()));
+        var adjustedAfterTrenchForOffset = new Translation2d(Units.Meters.of(-2).times(multiplier),
+                Units.Meters.of(0));
+        results.add(new Pose2d(nearestAllianceTrenchPose.getTranslation().plus(adjustedAfterTrenchForOffset),
+                pose.getRotation()));
+
+        var endTranslation = adjustedAfterTrenchForOffset.plus(new Translation2d(Units.Meters.of(0.05),
+                                                                              Units.Meters.of(1).times(multiplierY)));
+        results.add(new Pose2d(nearestAllianceTrenchPose.getTranslation().plus(endTranslation),
+                pose.getRotation()));
 
         return results;
     }
