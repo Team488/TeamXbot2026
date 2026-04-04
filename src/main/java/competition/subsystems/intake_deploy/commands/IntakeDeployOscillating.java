@@ -34,10 +34,10 @@ public class IntakeDeployOscillating extends BaseSetpointCommand {
         super(intakeDeploySubsystem);
         propertyFactory.setPrefix(this);
         this.intakeDeploySubsystem = intakeDeploySubsystem;
-        this.amplitude = propertyFactory.createPersistentProperty("aptitude", Degrees.of(2));
+        this.amplitude = propertyFactory.createPersistentProperty("aptitude", Degrees.of(15));
         this.period = propertyFactory.createPersistentProperty("time per cycle", (1));
-        this.retractLimit = propertyFactory.createPersistentProperty("RetractLimit", Degrees.of(-60));
-        this.increasingValue = propertyFactory.createPersistentProperty("IncreasingValuePerSecond", Degrees.of(70));
+        this.retractLimit = propertyFactory.createPersistentProperty("RetractLimit", Degrees.of(-90));
+        this.increasingValue = propertyFactory.createPersistentProperty("IncreasingValuePerSecond", Degrees.of(25));
     }
 
     @Override
