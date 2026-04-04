@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.util.Color;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANLightController;
 import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import xbot.common.logging.RobotAssertionManager;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,16 +23,20 @@ public class LightsSubsystem extends BaseSubsystem {
     public IntakeDeploySubsystem intakeDeploy;
     public HoodSubsystem hoodSubsystem;
     public VoltageMonitorSubsystem voltageMonitor;
+    public RobotAssertionManager assertionManager;
 
     @Inject
     public LightsSubsystem(XCANLightController.XCANLightControllerFactory lightsFactory,
                            ElectricalContract electricalContract,
                            IntakeDeploySubsystem intakeDeploy,
-                           HoodSubsystem hoodSubsystem, VoltageMonitorSubsystem voltageMonitor
+                           HoodSubsystem hoodSubsystem,
+                           VoltageMonitorSubsystem voltageMonitor,
+                           RobotAssertionManager assertionManager
     ) {
         this.intakeDeploy = intakeDeploy;
         this.hoodSubsystem = hoodSubsystem;
         this.voltageMonitor = voltageMonitor;
+        this.assertionManager = assertionManager;
         if (electricalContract.isLightsReady()) {
             this.lights = lightsFactory.create(
                     electricalContract.getLightControllerInfo()
@@ -59,6 +65,14 @@ public class LightsSubsystem extends BaseSubsystem {
             lights.larson(1, Hertz.of(25), Color.kDarkRed, LarsonBounceValue.Front);
         } else {
             lights.larson(1, Hertz.of(25), Color.kLightGreen, LarsonBounceValue.Front);
+        }
+
+        var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+
+        switch (alliance) {
+            case Blue -> lights.larson(2, Hertz.of(25), Color.kBlue, LarsonBounceValue.Front);
+            case Red -> lights.larson(2, Hertz.of(25), Color.kRed, LarsonBounceValue.Front);
+            default -> assertionManager.throwException("No Alliance Selected!", new Exception());
         }
     }
 }
