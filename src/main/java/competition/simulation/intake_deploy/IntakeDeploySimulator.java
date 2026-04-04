@@ -90,5 +90,8 @@ public class IntakeDeploySimulator {
         this.motor.setPosition(Rotations.of(motorRotation));
         this.encoder.setPosition(Rotations.of(motorRotation));
         aKitLog.record("IntakeDeployed", isDeployed());
+        aKitLog.record("MotorSimAngleDegrees", mechanismAngle.in(Degrees));
+        aKitLog.record("ExtendedPositionDegrees", intakeDeploy.extendedPosition.get());
+        aKitLog.record("MotorPower", motor.getPower());
     }
 }

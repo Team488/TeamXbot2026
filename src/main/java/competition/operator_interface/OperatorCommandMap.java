@@ -7,26 +7,21 @@ import javax.inject.Singleton;
 import competition.auto_programs.AimAndShootFromHereCommand;
 import competition.auto_programs.ShootFromHubCommandGroup;
 import competition.auto_programs.ShootFromTrenchCommandGroup;
+import competition.auto_programs.CollectAndShootTwiceCommand;
 import competition.auto_programs.vision.JustDriveNeutralMoveCommand;
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
 import competition.auto_programs.vision.ShootFromTrenchThenMoveToNeutralCommand;
 import competition.command_groups.vision.DriveThroughAllianceTrenchCommand;
-import competition.command_groups.FireWhenReadyAndRetractIntakeDeployCommandGroup;
-import competition.command_groups.FireWhenShooterAndHoodReady;
 import competition.command_groups.HopperAndIntakeCommandGroup;
 import competition.command_groups.HopperAndIntakeEjectCommandGroup;
 import competition.command_groups.IntakeSlowlyAndFireWhenReady;
 import competition.command_groups.PrepareToShootCommandGroup;
 import competition.simulation.commands.ResetSimulatedPoseCommand;
-import competition.subsystems.climber.ClimberSubsystem;
-import competition.subsystems.climber.commands.ClimberSetPointCommand;
 import competition.subsystems.collector_intake.commands.CollectorEjectCommand;
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
-import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.drive.commands.PrecisionModeCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
-import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.drive.commands.XPositionCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.DropHoodForTrenchCommand;
@@ -38,16 +33,12 @@ import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.TrajectoriesCalculation;
 import competition.subsystems.shooter.ShooterSubsystem;
-import competition.subsystems.shooter.commands.LowPowerModeOffCommand;
-import competition.subsystems.shooter.commands.LowPowerModeOnCommand;
 import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.autonomous.SetAutonomousCommand;
-import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
 /**
@@ -145,17 +136,15 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupDebugGamepad(OperatorInterface operatorInterface,
-
-            ShooterOutputCommand shooterOutputCommand,
-            TrimShooterVelocityUp trimShooterVelocityUp,
-            TrimShooterVelocityDown trimShooterVelocityDown,
-            CollectorIntakeCommand collectorIntakeCommand,
-            IntakeDeployExtendCommand intakeDeployExtendCommand,
-            IntakeDeployRetractCommand intakeDeployRetractCommand,
-            CollectorEjectCommand collectorEjectCommand,
-            ShooterFeederFire shooterFeederFire,
-            HopperRollerSubsystem hopperRollerSubsystem
-
+                                  ShooterOutputCommand shooterOutputCommand,
+                                  TrimShooterVelocityUp trimShooterVelocityUp,
+                                  TrimShooterVelocityDown trimShooterVelocityDown,
+                                  CollectorIntakeCommand collectorIntakeCommand,
+                                  IntakeDeployExtendCommand intakeDeployExtendCommand,
+                                  IntakeDeployRetractCommand intakeDeployRetractCommand,
+                                  CollectorEjectCommand collectorEjectCommand,
+                                  ShooterFeederFire shooterFeederFire,
+                                  HopperRollerSubsystem hopperRollerSubsystem
     ) {
         operatorInterface.setupDebugGamepad.getifAvailable(XXboxController.XboxButton.LeftTrigger)
                 .onTrue(trimShooterVelocityDown);
@@ -184,7 +173,8 @@ public class OperatorCommandMap {
                                   ShootFromTrenchThenMoveToNeutralCommand shootFromTrenchThenMoveToNeutralCommand,
                                   ShootFromTrenchCommandGroup shootFromTrenchCommandGroup,
                                   ShootFromHubCommandGroup shootFromHubCommandGroup,
-                                  JustDriveNeutralMoveCommand justDriveNeutralMoveCommand) {
+                                  JustDriveNeutralMoveCommand justDriveNeutralMoveCommand,
+                                  CollectAndShootTwiceCommand collectAndShootTwiceCommand) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
         var moveAcrossField = setAutonomousCommandProvider.get();
@@ -206,6 +196,10 @@ public class OperatorCommandMap {
         var justDrivePortionOfAuto = setAutonomousCommandProvider.get();
         justDrivePortionOfAuto.setAutoCommand(justDriveNeutralMoveCommand, Landmarks.blueStartTrenchToOutpost);
         justDrivePortionOfAuto.includeOnSmartDashboard("Just drive Portion of Auto.");
+
+        var collectAndShootTwice = setAutonomousCommandProvider.get();
+        collectAndShootTwice.setAutoCommand(collectAndShootTwiceCommand, Landmarks.blueStartTrenchToOutpost);
+        collectAndShootTwice.includeOnSmartDashboard("Collect and shoot twice.");
     }
 
     @Inject
