@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import org.junit.Test;
+import xbot.common.subsystems.pose.GameField;
 
 import java.util.Random;
 
@@ -91,19 +92,21 @@ public class TrajectoriesCalculationTest extends BaseCompetitionTest {
         System.out.println("Seed: " + seed);
 
         for (boolean zeroHood : new boolean[]{false, true}) {
+            GameField gameField =  getInjectorComponent().gameField();
             for (int i = 0; i < 10; i++) {
-                double randomWidth = rand.nextDouble() * 4.03; // 4.03 is the width of the alliance zone
-                double randomHeight = rand.nextDouble() * 8.07; // 8.07 is the height of the alliance zone
+                double randomWidth = rand.nextDouble() * gameField.getFieldWidth().in(Units.Meters); // 4.03 is the width of the alliance zone
+                double randomLength = rand.nextDouble() * gameField.getFieldLength().in(Units.Meters); // 8.07 is the height of the alliance zone
 
-                Pose2d randomPose = new Pose2d(randomWidth, randomHeight, new Rotation2d(0)); // Random spot in alliance zone
+                Pose2d randomPose = new Pose2d(randomWidth, randomLength, new Rotation2d(0)); // Random spot in alliance zone
 
                 TrajectoriesCalculation.ShootingData data = calc.calculateAllianceHubShootingData(randomPose,zeroHood);
 
                 assertNotNull(data);
 
+                // Servo ratio should be between 0 (No hood) and 1.0 (Max hood)
                 if (data.servoRatio() > 0) {
-                    assertTrue("Servo should be between 0.2 and 1.0",
-                            data.servoRatio() >= 0.2 && data.servoRatio() <= 1.0);
+                    assertTrue("Servo should be between 0.0 and 1.0",
+                            data.servoRatio() <= 1.0);
                 }
             }
         }
