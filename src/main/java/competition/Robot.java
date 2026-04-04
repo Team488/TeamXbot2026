@@ -1,7 +1,6 @@
 
 package competition;
 
-import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,7 +45,6 @@ public class Robot extends BaseRobot {
         getInjectorComponent().intakeDeploySubsystem();
         getInjectorComponent().voltageMonitorSubsystem();
         getInjectorComponent().climberSubsystem();
-        getInjectorComponent().poseSubsystem();
 
         if (BaseRobot.isSimulation()) {
             simulator = getInjectorComponent().simulator();
@@ -113,7 +111,7 @@ public class Robot extends BaseRobot {
         super.autonomousInit();
         var pose = (PoseSubsystem) getInjectorComponent().poseSubsystem();
         pose.getResetTranslationToVisionEstimateCommand();
-        CommandScheduler.getInstance().schedule(getInjectorComponent().whenShooterReadyRumbleCommand());
+        CommandScheduler.getInstance().schedule(pose.getResetTranslationToVisionEstimateCommand());
     }
 
     @Override
