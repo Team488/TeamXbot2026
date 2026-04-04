@@ -1,6 +1,7 @@
 package competition.subsystems.shooter_feeder;
 
 import competition.electrical_contract.ElectricalContract;
+import edu.wpi.first.units.measure.Current;
 import xbot.common.command.BaseSubsystem;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -9,6 +10,7 @@ import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Seconds;
 
@@ -80,4 +82,12 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
             shooterFeederMotor.setVelocityTarget(RPM.of(shooterFeederFireVelocity.get()));
         }
     }
+
+    public Current getMotorCurrent() {
+        if (this.shooterFeederMotor != null) {
+            return this.shooterFeederMotor.getCurrent();
+        }
+        return Amps.zero();
+    }
+
 }

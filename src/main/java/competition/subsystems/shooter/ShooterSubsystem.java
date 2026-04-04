@@ -6,7 +6,6 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import xbot.common.command.BaseSetpointSubsystem;
-import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.properties.DoubleProperty;
@@ -20,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
