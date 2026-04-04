@@ -1,6 +1,7 @@
 
 package competition;
 
+import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,6 +46,7 @@ public class Robot extends BaseRobot {
         getInjectorComponent().intakeDeploySubsystem();
         getInjectorComponent().voltageMonitorSubsystem();
         getInjectorComponent().climberSubsystem();
+        getInjectorComponent().poseSubsystem();
 
         if (BaseRobot.isSimulation()) {
             simulator = getInjectorComponent().simulator();
@@ -109,6 +111,9 @@ public class Robot extends BaseRobot {
     @Override
     public void autonomousInit() {
         super.autonomousInit();
+        var pose = (PoseSubsystem) getInjectorComponent().poseSubsystem();
+        pose.getResetTranslationToVisionEstimateCommand();
+        CommandScheduler.getInstance().schedule(getInjectorComponent().whenShooterReadyRumbleCommand());
     }
 
     @Override
@@ -131,10 +136,10 @@ public class Robot extends BaseRobot {
         // From a birds-eye view where your alliance station is at the bottom, this is the bottom-left corner
         // of the field.
         return new FieldPose(
-            -2.33*PoseSubsystem.INCHES_IN_A_METER, 
-            -4.58*PoseSubsystem.INCHES_IN_A_METER, 
-            BasePoseSubsystem.FACING_TOWARDS_DRIVERS
-            );
+                -2.33*PoseSubsystem.INCHES_IN_A_METER,
+                -4.58*PoseSubsystem.INCHES_IN_A_METER,
+                BasePoseSubsystem.FACING_TOWARDS_DRIVERS
+        );
     }
 
     @Override
