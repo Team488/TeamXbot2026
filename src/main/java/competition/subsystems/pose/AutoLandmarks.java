@@ -115,7 +115,7 @@ public class AutoLandmarks {
 
         var multiplier = nearestAllianceTrenchPose.getX() > this.gamefield.getFieldCenter().getX() ? 1 : -1;
         var adjustedForOffset = new Translation2d(Units.Meters.of(2).times(multiplier),
-                Units.Meters.of(0));
+                Units.Meters.of(0.5));
 
         results.add(new Pose2d(nearestAllianceTrenchPose.getTranslation().plus(adjustedForOffset),
                 adjustedForOffset.getAngle()));
