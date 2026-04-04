@@ -2,10 +2,13 @@
 package competition;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
+import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.apache.logging.log4j.LogManager;
@@ -26,6 +29,8 @@ import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import xbot.common.command.BaseRobot;
 import xbot.common.math.FieldPose;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
+
+import javax.inject.Inject;
 
 public class Robot extends BaseRobot {
     Logger log = LogManager.getLogger(Robot.class);
@@ -162,9 +167,13 @@ public class Robot extends BaseRobot {
         }
     }
 
-    private void configurePathPlanner() {
+    @Inject
+    public void configurePathPlanner() {
         var pose = (PoseSubsystem) getInjectorComponent().poseSubsystem();
         var drive = (DriveSubsystem) getInjectorComponent().driveSubsystem();
+
+//        NamedCommands.registerCommand("IntakeDeployExtend", intakeDeployExtendCommand);
+//        NamedCommands.registerCommand("CollectorIntake", collectorIntakeCommand);
 
         try {
             AutoBuilder.configure(
