@@ -32,6 +32,9 @@ public class Landmarks {
     public static Pose2d blueStartTrenchToDepot = new Pose2d(3.57,7.390, Rotation2d.fromDegrees(0));
     public static Pose2d blueStartBumpToDepot = new Pose2d(3.57,5.980, Rotation2d.fromDegrees(0));
 
+    // Starting from the hub center
+    public static Pose2d blueStartHub = new Pose2d(3.57,4, Rotation2d.fromDegrees(180));
+
     // Starting on blue alliance towards neutral area
     public static Pose2d blueStartBumpToNeutralAreaOutpostSide = new Pose2d(4.480,.65, Rotation2d.fromDegrees(180));
     public static Pose2d blueStartTrenchToNeutralAreaOutpostSide = new Pose2d(4.480,2.6, Rotation2d.fromDegrees(180));
