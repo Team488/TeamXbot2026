@@ -19,6 +19,7 @@ public class CollectorSubsystem extends BaseSubsystem {
     public final ElectricalContract electricalContract;
     public final XCANMotorController collectorMotor;
     final AngularVelocityProperty intakeVelocity;
+    final AngularVelocityProperty intakeVelocityWhileShooting;
     final DoubleProperty intakePower;
     final DoubleProperty ejectPower;
 
@@ -53,6 +54,7 @@ public class CollectorSubsystem extends BaseSubsystem {
         }
 
         intakeVelocity = pf.createPersistentProperty("FuelIntakeVelocity", RPM.of(5000));
+        intakeVelocityWhileShooting = pf.createPersistentProperty("FuelIntakeVelocityWhileShooting", RPM.of(1000));
         intakePower = pf.createPersistentProperty("FuelIntakePower", 1);
         ejectPower = pf.createPersistentProperty("FuelEjectPower", -1);
     }
@@ -62,6 +64,14 @@ public class CollectorSubsystem extends BaseSubsystem {
             return;
         }
         collectorMotor.setVelocityTarget(intakeVelocity.get());
+    }
+
+    public void intakeVelocityWhileShooting() {
+        if (collectorMotor == null
+        ) {
+            return;
+        }
+        collectorMotor.setVelocityTarget(intakeVelocityWhileShooting.get());
     }
 
     public void intakePower() {
