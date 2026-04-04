@@ -1,15 +1,6 @@
 
 package competition;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathfindingCommand;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
-import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,8 +21,6 @@ import xbot.common.command.BaseRobot;
 import xbot.common.math.FieldPose;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 
-import javax.inject.Inject;
-
 public class Robot extends BaseRobot {
     Logger log = LogManager.getLogger(Robot.class);
 
@@ -47,7 +36,7 @@ public class Robot extends BaseRobot {
     @Override
     protected void initializeSystems() {
         super.initializeSystems();
-        configurePathPlanner();
+        getInjectorComponent().configurePathPlannerLib();
         getInjectorComponent().subsystemDefaultCommandMap();
         getInjectorComponent().operatorCommandMap();
         getInjectorComponent().swerveDefaultCommandMap();
@@ -164,42 +153,6 @@ public class Robot extends BaseRobot {
 
         if (this.oi != null) {
             this.oi.periodic();
-        }
-    }
-
-    @Inject
-    public void configurePathPlanner() {
-        var pose = (PoseSubsystem) getInjectorComponent().poseSubsystem();
-        var drive = (DriveSubsystem) getInjectorComponent().driveSubsystem();
-
-        NamedCommands.registerCommand("IntakeDeployExtend", getInjectorComponent().intakeDeployExtendCommand());
-        NamedCommands.registerCommand("CollectorIntake", getInjectorComponent().collectorIntakeCommand());
-        NamedCommands.registerCommand("AimAndShootFromHere", getInjectorComponent().aimAndShootFromHereCommand());
-
-
-        try {
-            AutoBuilder.configure(
-                    pose::getCurrentPose2d,
-                    pose::setCurrentPosition,
-                    drive::getRobotRelativeSpeeds,
-                    (speeds, feedforwards) -> drive.driveWithChassisSpeeds(speeds),
-                    new PPHolonomicDriveController(
-                            new PIDConstants(5.0, 0.0, 0.0),
-                            new PIDConstants(5.0, 0.0, 0.0)
-                    ),
-                    RobotConfig.fromGUISettings(),
-                    () -> {
-                        var alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
-                        return alliance == DriverStation.Alliance.Red;
-                    },
-                    drive
-            );
-
-            // Additionally warm up PathPlanner (not sure how necessary it is)
-            CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
-            log.info("PathPlanner AutoBuilder configured and warmup scheduled.");
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
