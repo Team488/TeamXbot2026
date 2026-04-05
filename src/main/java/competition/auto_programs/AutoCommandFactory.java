@@ -14,7 +14,9 @@ import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.collector_intake.commands.CollectorStopCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
+import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.shooter.commands.ShooterStopCommand;
+import competition.subsystems.shooter_feeder.commands.ShooterFeederStop;
 import competition.subsystems.shooter_feeder.commands.WaitForShootingFinished;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
@@ -45,6 +47,8 @@ public class AutoCommandFactory {
     private final Provider<WaitForHoodAndShooterToBeAtGoalCommandGroup> waitForGoalProvider;
     private final Provider<RunCollectorHopperFeederCommandGroup> runFeederProvider;
     private final Provider<ShooterStopCommand> shooterStopProvider;
+    private final Provider<ShooterFeederStop> feederStopProvider;
+    private final HopperRollerSubsystem hopperRoller;
     private final Provider <WaitForShootingFinished> waitForShootingProvider;
     private final Provider<SwerveDriveWithJoysticksCommand> swerveDriveWithJoysticksProvider;
     private final AutonomousCommandSelector autoSelector;
@@ -65,6 +69,8 @@ public class AutoCommandFactory {
             Provider<WaitForHoodAndShooterToBeAtGoalCommandGroup> waitForGoalProvider,
             Provider<RunCollectorHopperFeederCommandGroup> runFeederProvider,
             Provider<ShooterStopCommand> shooterStopProvider,
+            Provider<ShooterFeederStop> feederStopProvider,
+            HopperRollerSubsystem hopperRoller,
             Provider <WaitForShootingFinished> waitForShootingProvider,
             Provider<SwerveDriveWithJoysticksCommand> swerveDriveWithJoysticksProvider,
             AutonomousCommandSelector autoSelector) {
@@ -82,6 +88,8 @@ public class AutoCommandFactory {
         this.waitForGoalProvider = waitForGoalProvider;
         this.runFeederProvider = runFeederProvider;
         this.shooterStopProvider = shooterStopProvider;
+        this.feederStopProvider = feederStopProvider;
+        this.hopperRoller = hopperRoller;
         this.autoSelector = autoSelector;
         this.waitForShootingProvider = waitForShootingProvider;
         this.swerveDriveWithJoysticksProvider = swerveDriveWithJoysticksProvider;
@@ -91,8 +99,12 @@ public class AutoCommandFactory {
         return intakeDeployExtendProvider.get();
     }
 
-    public Command stopShooter() {
-        return new InstantCommand().deadlineFor(shooterStopProvider.get());
+    public Command stopShooting() {
+        return new InstantCommand().deadlineFor(new ParallelCommandGroup(
+                shooterStopProvider.get(),
+                feederStopProvider.get(),
+                hopperRoller.getStopCommand(),
+                collectorStopProvider.get()));
     }
 
     public Command statusMessage(String message) {
