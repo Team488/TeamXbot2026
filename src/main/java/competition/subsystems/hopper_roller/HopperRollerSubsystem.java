@@ -1,7 +1,9 @@
 package competition.subsystems.hopper_roller;
 
 import competition.electrical_contract.ElectricalContract;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.NamedRunCommand;
 import xbot.common.controls.actuators.XCANMotorController;
@@ -26,10 +28,13 @@ public class HopperRollerSubsystem extends BaseSubsystem {
     final DoubleProperty collectPower;
     final DoubleProperty intakePower;
     final AngularVelocityProperty intakeVelocity;
+    final AngularVelocityProperty intakePulseVelocity;
     final AngularVelocityProperty collectVelocity;
     final AngularVelocityProperty ejectVelocity;
     final BooleanProperty useVelocityControl;
     final DoubleProperty voltageRampTime;
+    final DoubleProperty intakePulseDuration;
+    final DoubleProperty intakePulseHighDuration;
 
     @Inject
     public HopperRollerSubsystem(ElectricalContract electricalContract,
@@ -67,8 +72,11 @@ public class HopperRollerSubsystem extends BaseSubsystem {
 
         useVelocityControl = pf.createPersistentProperty("Use Velocity Control", true);
         intakeVelocity = pf.createPersistentProperty("Intake Velocity", RPM.of(3000));
+        intakePulseVelocity = pf.createPersistentProperty("Intake Pulse Velocity", RPM.of(3200));
         collectVelocity = pf.createPersistentProperty("Collect Velocity", RPM.of(3000));
         ejectVelocity = pf.createPersistentProperty("Eject Velocity", RPM.of(-3000));
+        intakePulseDuration = pf.createPersistentProperty("Intake Pulse Duration Seconds", 0.5);
+        intakePulseHighDuration = pf.createPersistentProperty("Intake Pulse High Duration Seconds", 0.5);
 
         if (hopperRollerMotor != null) {
             hopperRollerMotor.setClosedLoopRampRates(
@@ -76,6 +84,13 @@ public class HopperRollerSubsystem extends BaseSubsystem {
                     Seconds.of(voltageRampTime.get())
             );
         }
+    }
+
+    public void setVelocityTarget(AngularVelocity velocity) {
+        if (hopperRollerMotor == null) {
+            return;
+        }
+        hopperRollerMotor.setVelocityTarget(velocity);
     }
 
     public void setEjectPower() {
@@ -149,4 +164,18 @@ public class HopperRollerSubsystem extends BaseSubsystem {
     }
 
     public Command getCollectCommand() {return new NamedRunCommand(getName() + "-collect", this::setCollectPower, this);}
+
+    public Command getIntakePulseCommand() {
+        var commandGroup = new SequentialCommandGroup();
+        commandGroup.setName(getName() + "-intake-pulse");
+        commandGroup.addCommands(
+                new NamedRunCommand(
+                        getName() + "-intake-pulse-low",
+                        () -> setVelocityTarget(intakeVelocity.get()), this).withTimeout(intakePulseDuration.get()));
+        commandGroup.addCommands(
+                new NamedRunCommand(
+                        getName() + "-intake-pulse-high",
+                        () -> setVelocityTarget(intakePulseVelocity.get()), this).withTimeout(intakePulseHighDuration.get()));
+        return commandGroup.repeatedly();
+    }
 }
