@@ -71,6 +71,13 @@ public class IntakeDeployMaintainerCommand extends BaseMaintainerCommand<Angle, 
         if (this.subsystem.getSetpointLock().getCurrentCommand() != null && !DriverStation.isAutonomous()) {
             this.subsystem.getSetpointLock().getCurrentCommand().cancel();
         }
+
+        // only do this if we're not in autonomous, otherwise it can replace a goal set by auto right at the start
+        if(!DriverStation.isAutonomous()) {
+            // Typically set the goal to the current position, to avoid sudden extreme
+            // changes as soon as Coast is complete.
+            this.subsystem.setTargetValue(this.subsystem.getCurrentValue());
+        }
     }
 
     @Override
