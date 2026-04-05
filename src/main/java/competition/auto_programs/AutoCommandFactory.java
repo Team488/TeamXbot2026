@@ -13,7 +13,9 @@ import competition.general_commands.WaitForDurationCommand;
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.collector_intake.commands.CollectorStopCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
+import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 import competition.subsystems.shooter.commands.ShooterStopCommand;
+import competition.subsystems.shooter_feeder.commands.WaitForShootingFinished;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -43,6 +45,8 @@ public class AutoCommandFactory {
     private final Provider<WaitForHoodAndShooterToBeAtGoalCommandGroup> waitForGoalProvider;
     private final Provider<RunCollectorHopperFeederCommandGroup> runFeederProvider;
     private final Provider<ShooterStopCommand> shooterStopProvider;
+    private final Provider <WaitForShootingFinished> waitForShootingProvider;
+    private final Provider<SwerveDriveWithJoysticksCommand> swerveDriveWithJoysticksProvider;
     private final AutonomousCommandSelector autoSelector;
 
     @Inject
@@ -61,6 +65,8 @@ public class AutoCommandFactory {
             Provider<WaitForHoodAndShooterToBeAtGoalCommandGroup> waitForGoalProvider,
             Provider<RunCollectorHopperFeederCommandGroup> runFeederProvider,
             Provider<ShooterStopCommand> shooterStopProvider,
+            Provider <WaitForShootingFinished> waitForShootingProvider,
+            Provider<SwerveDriveWithJoysticksCommand> swerveDriveWithJoysticksProvider,
             AutonomousCommandSelector autoSelector) {
         this.driveToNeutralZoneProvider = driveToNeutralZoneProvider;
         this.driveAcrossMidNeutralZoneProvider = driveAcrossMidNeutralZoneProvider;
@@ -77,6 +83,8 @@ public class AutoCommandFactory {
         this.runFeederProvider = runFeederProvider;
         this.shooterStopProvider = shooterStopProvider;
         this.autoSelector = autoSelector;
+        this.waitForShootingProvider = waitForShootingProvider;
+        this.swerveDriveWithJoysticksProvider = swerveDriveWithJoysticksProvider;
     }
 
     public Command extendIntake() {
@@ -115,18 +123,15 @@ public class AutoCommandFactory {
      * and shoots. The timeout only begins once the shooter and hood are at goal (i.e. it
      * measures how long balls are actively being fed, not the full aim time).
      */
-    public Command driveToAllianceAndShoot(Supplier<Double> shootingTimeoutSeconds) {
+    public Command driveToAllianceAndShoot(Command firstShootingDeadline) {
         var group = new SequentialCommandGroup();
         group.setName("DriveToAllianceAndShoot");
-
-        group.addCommands(new ParallelDeadlineGroup(
-                driveFromNeutralZoneToAllianceProvider.get(),
-                collectorStopProvider.get()));
 
         var prepareToShoot = prepareToShootProvider.get();
         prepareToShoot.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
         group.addCommands(new ParallelDeadlineGroup(
-                driveToShootingPositionProvider.get(),
+                driveFromNeutralZoneToAllianceProvider.get(),
+                collectorStopProvider.get(),
                 prepareToShoot));
 
         var continuousPrepare = continuousPrepareToShootProvider.get();
@@ -134,12 +139,13 @@ public class AutoCommandFactory {
         continuousPrepare.setZeroHood(true);
 
         var fireWithTimeout = waitForGoalProvider.get()
-                .andThen(new WaitForDurationCommand(shootingTimeoutSeconds)
+                .andThen(firstShootingDeadline
                         .deadlineFor(runFeederProvider.get()));
 
         group.addCommands(new ParallelDeadlineGroup(
                 fireWithTimeout, // when firing is done, move on
                 continuousPrepare,
+                swerveDriveWithJoysticksProvider.get(),
                 rotateToHubProvider.get()));
 
         return group;
@@ -148,7 +154,11 @@ public class AutoCommandFactory {
     /**
      * Drives from the neutral zone back to the alliance zone and shoots with no timeout.
      */
-    public Command driveToAllianceAndShoot() {
-        return driveToAllianceAndShoot(() -> Double.MAX_VALUE);
+    public Command driveToAllianceAndShootForever() {
+        return driveToAllianceAndShoot(new WaitForDurationCommand(() -> Double.MAX_VALUE));
+    }
+
+    public Command waitForShootingDone() {
+        return waitForShootingProvider.get();
     }
 }

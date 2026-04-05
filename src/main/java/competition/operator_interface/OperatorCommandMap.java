@@ -28,6 +28,7 @@ import competition.subsystems.hood.commands.DropHoodForTrenchCommand;
 import competition.subsystems.hood.commands.HoodToZeroCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
+import competition.subsystems.intake_deploy.commands.IntakeDeployOscillating;
 import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.TrajectoriesCalculation;
@@ -77,8 +78,8 @@ public class OperatorCommandMap {
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.X).whileTrue(xPositionCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.A).whileTrue(rotateToHubCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(intakeSlowlyAndFireWhenReady);
-        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper).whileTrue(precisionModeCommand);
-        operatorInterface.driverGamepad.getPovIfAvailable(180).whileTrue(aimAndShootFromHereCommand);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(precisionModeCommand);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(aimAndShootFromHereCommand);
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
@@ -209,8 +210,9 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupTestingCommands(AimAndShootFromHereCommand aimAndShootFromHereCommand,
-                                     DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand) {
+                                     DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand, IntakeDeployOscillating intakeDeployOscillating) {
         aimAndShootFromHereCommand.includeOnSmartDashboard();
         driveThroughAllianceTrenchCommand.includeOnSmartDashboard();
+        intakeDeployOscillating.includeOnSmartDashboard();
     }
 }
