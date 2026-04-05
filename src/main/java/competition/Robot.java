@@ -110,6 +110,8 @@ public class Robot extends BaseRobot {
     @Override
     public void autonomousInit() {
         super.autonomousInit();
+        var pose = (PoseSubsystem) getInjectorComponent().poseSubsystem();
+        CommandScheduler.getInstance().schedule(pose.getResetTranslationToVisionEstimateCommand());
     }
 
     @Override
@@ -132,10 +134,10 @@ public class Robot extends BaseRobot {
         // From a birds-eye view where your alliance station is at the bottom, this is the bottom-left corner
         // of the field.
         return new FieldPose(
-            -2.33*PoseSubsystem.INCHES_IN_A_METER, 
-            -4.58*PoseSubsystem.INCHES_IN_A_METER, 
-            BasePoseSubsystem.FACING_TOWARDS_DRIVERS
-            );
+                -2.33*PoseSubsystem.INCHES_IN_A_METER,
+                -4.58*PoseSubsystem.INCHES_IN_A_METER,
+                BasePoseSubsystem.FACING_TOWARDS_DRIVERS
+        );
     }
 
     @Override
