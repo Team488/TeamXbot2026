@@ -108,8 +108,8 @@ public class AutoCommandFactory {
 
         group.addCommands(driveToNeutralZoneProvider.get());
 
-        group.addCommands(new SequentialCommandGroup(intakeDeployExtendProvider.get())
-                .andThen(intakeDeploy.getWaitForAtGoalCommand()));
+        // group.addCommands(new SequentialCommandGroup(intakeDeployExtendProvider.get())
+        //         .andThen(intakeDeploy.getWaitForAtGoalCommand()));
 
         group.addCommands(new ParallelDeadlineGroup(
                 driveAcrossMidNeutralZoneProvider.get(),
