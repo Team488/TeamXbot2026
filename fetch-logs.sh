@@ -3,12 +3,11 @@ set -ex
 
 SCRIPT_DIR=$(dirname ${BASH_SOURCE[0]})
 
-:: --- GET CURRENT DATE ---
-:: This extracts YYYY, MM, and DD regardless of local format
+# This makes strings of 26-03-24 and 26-03-23 for example.
 TODAY_DATE_STR=$(date +%y-%m-%d)
 YESTERDAY_DATE_STR=$(date -d "yesterday" +%y-%m-%d)
 
-:: --- RUN RSYNC ---
+# --- RUN RSYNC ---
 rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
       --info=progress2 \
       --include="akit_$TODAY_DATE_STR_*.wpilog" \
@@ -16,4 +15,4 @@ rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
       --exclude="*" \
       -avz admin@10.4.88.2:/media/sda1/logs "SCRIPT_DIR/robot-logs"
 
-echo [SUCCESS] Logs for %LOG_DATE% synced successfully.
+echo "[SUCCESS] Logs for synced successfully."
