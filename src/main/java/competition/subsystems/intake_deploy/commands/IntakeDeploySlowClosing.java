@@ -55,3 +55,4 @@ public class IntakeDeploySlowClosing extends BaseSetpointCommand {
             return false;
         }
 }
+
