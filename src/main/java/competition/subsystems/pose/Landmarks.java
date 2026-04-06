@@ -32,6 +32,9 @@ public class Landmarks {
     public static Pose2d blueStartTrenchToDepot = new Pose2d(3.57,7.390, Rotation2d.fromDegrees(0));
     public static Pose2d blueStartBumpToDepot = new Pose2d(3.57,5.980, Rotation2d.fromDegrees(0));
 
+    // Starting from the hub center
+    public static Pose2d blueStartHub = new Pose2d(3.57,4, Rotation2d.fromDegrees(180));
+
     // Starting on blue alliance towards neutral area
     public static Pose2d blueStartBumpToNeutralAreaOutpostSide = new Pose2d(4.480,.65, Rotation2d.fromDegrees(180));
     public static Pose2d blueStartTrenchToNeutralAreaOutpostSide = new Pose2d(4.480,2.6, Rotation2d.fromDegrees(180));
@@ -41,10 +44,12 @@ public class Landmarks {
 
     // Blue Depot
     public static Pose2d blueDepotCollectCenter = new Pose2d(1.180, 5.940, Rotation2d.fromDegrees(180));
-    public static Pose2d blueDepotWallSide = new Pose2d(0.460, 6.980, Rotation2d.fromDegrees(270));
-    public static Pose2d blueDepotTowerSide = new Pose2d(0.460, 4.950, Rotation2d.fromDegrees(90));
+    public static Pose2d blueDepotCollectPointShallow = new Pose2d(.65, 5.940, Rotation2d.fromDegrees(180));
+    public static Pose2d blueDepotCollectPointDeep = new Pose2d(.5, 5.940, Rotation2d.fromDegrees(180));
+    public static Pose2d blueDepotWallSide = new Pose2d(0.46, 7.390, Rotation2d.fromDegrees(270));
+    public static Pose2d blueDepotTowerSide = new Pose2d(0.46, 4.950, Rotation2d.fromDegrees(270));
 
-    public static Pose2d blueDepotCenter = new Pose2d(0.270,5.940, Rotation2d.fromDegrees(0));
+    public static Pose2d blueDepotCenter = new Pose2d(0.270,5.940, Rotation2d.fromDegrees(180));
 
     // Blue Outpost
     public static Pose2d blueOutpost = new Pose2d(0, 0.650, Rotation2d.fromDegrees(0));
