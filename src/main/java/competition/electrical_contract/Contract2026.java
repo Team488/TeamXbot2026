@@ -288,6 +288,9 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public CANMotorControllerInfo getDriveMotor(SwerveInstance swerveInstance) {
+        var motorConfig = new TalonFxMotorControllerOutputConfig()
+                .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake)
+                .withStatorCurrentLimit(Amps.of(45));
         return switch (swerveInstance.label()) {
             case "FrontLeftDrive" ->
                     new CANMotorControllerInfo(
@@ -296,9 +299,7 @@ public class Contract2026 extends ElectricalContract {
                             CANBusId.Canivore,
                             30,
                             PDHPort.PDH10,
-                            new TalonFxMotorControllerOutputConfig()
-                                    .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake)
-                                    .withStatorCurrentLimit(Amps.of(45)));
+                            motorConfig);
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -306,9 +307,7 @@ public class Contract2026 extends ElectricalContract {
                             CANBusId.Canivore,
                             38,
                             PDHPort.PDH18,
-                            new TalonFxMotorControllerOutputConfig()
-                                    .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake)
-                                    .withStatorCurrentLimit(Amps.of(45)));
+                            motorConfig);
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -316,9 +315,7 @@ public class Contract2026 extends ElectricalContract {
                             CANBusId.Canivore,
                             28,
                             PDHPort.PDH08,
-                            new TalonFxMotorControllerOutputConfig()
-                                    .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake)
-                                    .withStatorCurrentLimit(Amps.of(45)));
+                            motorConfig);
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
@@ -326,9 +323,7 @@ public class Contract2026 extends ElectricalContract {
                             CANBusId.Canivore,
                             20,
                             PDHPort.PDH00,
-                            new TalonFxMotorControllerOutputConfig()
-                                    .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake)
-                                    .withStatorCurrentLimit(Amps.of(45)));
+                            motorConfig);
             default -> null;
         };
     }
@@ -336,6 +331,9 @@ public class Contract2026 extends ElectricalContract {
     @Override
     public CANMotorControllerInfo getSteeringMotor(SwerveInstance swerveInstance) {
         double simulationScalingValue = 1.0;
+        var motorConfig = new TalonFxMotorControllerOutputConfig()
+                .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                .withStatorCurrentLimit(Amps.of(40));
 
         return switch (swerveInstance.label()) {
             case "FrontLeftDrive" ->
@@ -345,9 +343,7 @@ public class Contract2026 extends ElectricalContract {
                             CANBusId.Canivore,
                             31,
                             PDHPort.PDH11,
-                            new TalonFxMotorControllerOutputConfig()
-                                    .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                    .withStatorCurrentLimit(Amps.of(40)));
+                            motorConfig);
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getSteeringControllerName(swerveInstance),
@@ -355,9 +351,7 @@ public class Contract2026 extends ElectricalContract {
                             CANBusId.Canivore,
                             39,
                             PDHPort.PDH19,
-                            new TalonFxMotorControllerOutputConfig()
-                                    .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                    .withStatorCurrentLimit(Amps.of(40)));
+                            motorConfig);
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getSteeringControllerName(swerveInstance),
@@ -365,9 +359,7 @@ public class Contract2026 extends ElectricalContract {
                             CANBusId.Canivore,
                             29,
                             PDHPort.PDH09,
-                            new TalonFxMotorControllerOutputConfig()
-                                    .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                    .withStatorCurrentLimit(Amps.of(40)));
+                            motorConfig);
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getSteeringControllerName(swerveInstance),
@@ -375,9 +367,7 @@ public class Contract2026 extends ElectricalContract {
                             CANBusId.Canivore,
                             21,
                             PDHPort.PDH01,
-                            new TalonFxMotorControllerOutputConfig()
-                                    .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                                    .withStatorCurrentLimit(Amps.of(40)));
+                            motorConfig);
             default -> null;
         };
     }
