@@ -1,10 +1,10 @@
 {
   "hubs": [
     {
-      "x": 14,
-      "y": 51,
-      "width": 1100,
-      "height": 650,
+      "x": 2183,
+      "y": 122,
+      "width": 1944,
+      "height": 1056,
       "state": {
         "sidebar": {
           "width": 300,
@@ -55,7 +55,10 @@
             "/AdvantageKit/RealOutputs/SwerveSteeringMaintainerCommand",
             "/AdvantageKit/RealOutputs/DriveSubsystem",
             "/AdvantageKit/RealOutputs/DriveSubsystem/HeadingPID",
-            "/AdvantageKit/SystemStats"
+            "/AdvantageKit/SystemStats",
+            "/AdvantageKit/RealOutputs",
+            "/AdvantageKit/RealOutputs/SuperstructureMechanismSubsystem",
+            "/AdvantageKit/RealOutputs/SuperstructureMechanismSubsystem/SuperstructureMechanism"
           ]
         },
         "tabs": {
@@ -114,6 +117,15 @@
                     "options": {
                       "model": "Xbot 2026",
                       "color": "#00ff00"
+                    }
+                  },
+                  {
+                    "type": "mechanism",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/SuperstructureMechanismSubsystem/SuperstructureMechanism",
+                    "logType": "Mechanism2d",
+                    "visible": true,
+                    "options": {
+                      "plane": "xz"
                     }
                   },
                   {
@@ -198,14 +210,14 @@
                 "cameraIndex": -1,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  1.4695761589768238e-15,
-                  5.999999999999999,
-                  -12
+                  2.602166717235337,
+                  5.940543519876772,
+                  -7.125901194691504
                 ],
                 "cameraTarget": [
-                  0,
-                  0.5,
-                  0
+                  3.5817151956697444,
+                  -0.06633254874853858,
+                  -1.7806781435466934
                 ]
               },
               "controlsHeight": 200
@@ -710,6 +722,22 @@
                 "highlight": false
               },
               "controlsHeight": 0
+            },
+            {
+              "type": 10,
+              "title": "Superstructure",
+              "controller": [
+                {
+                  "type": "mechanism",
+                  "logKey": "NT:/AdvantageKit/RealOutputs/SuperstructureMechanismSubsystem/SuperstructureMechanism",
+                  "logType": "Mechanism2d",
+                  "visible": true,
+                  "options": {}
+                }
+              ],
+              "controllerUUID": "ksermqoo4ecx974nndgnp1l22vs737or",
+              "renderer": null,
+              "controlsHeight": 200
             }
           ]
         }

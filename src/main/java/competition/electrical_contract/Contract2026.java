@@ -340,7 +340,7 @@ public class Contract2026 extends ElectricalContract {
         return switch (swerveInstance.label()) {
             case "FrontLeftDrive" ->
                     new CANMotorControllerInfo(
-                            getDriveControllerName(swerveInstance),
+                            getSteeringControllerName(swerveInstance),
                             MotorControllerType.TalonFx,
                             CANBusId.Canivore,
                             31,
@@ -350,7 +350,7 @@ public class Contract2026 extends ElectricalContract {
                                     .withStatorCurrentLimit(Amps.of(40)));
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
-                            getDriveControllerName(swerveInstance),
+                            getSteeringControllerName(swerveInstance),
                             MotorControllerType.TalonFx,
                             CANBusId.Canivore,
                             39,
@@ -360,7 +360,7 @@ public class Contract2026 extends ElectricalContract {
                                     .withStatorCurrentLimit(Amps.of(40)));
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
-                            getDriveControllerName(swerveInstance),
+                            getSteeringControllerName(swerveInstance),
                             MotorControllerType.TalonFx,
                             CANBusId.Canivore,
                             29,
@@ -370,7 +370,7 @@ public class Contract2026 extends ElectricalContract {
                                     .withStatorCurrentLimit(Amps.of(40)));
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
-                            getDriveControllerName(swerveInstance),
+                            getSteeringControllerName(swerveInstance),
                             MotorControllerType.TalonFx,
                             CANBusId.Canivore,
                             21,
