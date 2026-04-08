@@ -20,6 +20,7 @@ import competition.subsystems.shooter_feeder.commands.ShooterFeederStop;
 import competition.subsystems.shooter_feeder.commands.WaitForShootingFinished;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
+import competition.subsystems.intake_deploy.commands.IntakeDeployOscillating;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -36,6 +37,7 @@ public class AutoCommandFactory {
     private final Provider<DriveToNeutralZoneForIntakeCommand> driveToNeutralZoneProvider;
     private final Provider<DriveAcrossMidNeutralZoneCommand> driveAcrossMidNeutralZoneProvider;
     private final Provider<IntakeDeployExtendCommand> intakeDeployExtendProvider;
+    private final Provider<IntakeDeployOscillating> intakeOscillatingProvider;
     private final Provider<CollectorIntakeCommand> collectorIntakeProvider;
     private final IntakeDeploySubsystem intakeDeploy;
     private final Provider<DriveFromNeutralZoneToAllianceCommand> driveFromNeutralZoneToAllianceProvider;
@@ -58,6 +60,7 @@ public class AutoCommandFactory {
             Provider<DriveToNeutralZoneForIntakeCommand> driveToNeutralZoneProvider,
             Provider<DriveAcrossMidNeutralZoneCommand> driveAcrossMidNeutralZoneProvider,
             Provider<IntakeDeployExtendCommand> intakeDeployExtendProvider,
+            Provider<IntakeDeployOscillating> intakeOscillatingProvider,
             Provider<CollectorIntakeCommand> collectorIntakeProvider,
             IntakeDeploySubsystem intakeDeploy,
             Provider<DriveFromNeutralZoneToAllianceCommand> driveFromNeutralZoneToAllianceProvider,
@@ -77,6 +80,7 @@ public class AutoCommandFactory {
         this.driveToNeutralZoneProvider = driveToNeutralZoneProvider;
         this.driveAcrossMidNeutralZoneProvider = driveAcrossMidNeutralZoneProvider;
         this.intakeDeployExtendProvider = intakeDeployExtendProvider;
+        this.intakeOscillatingProvider = intakeOscillatingProvider;
         this.collectorIntakeProvider = collectorIntakeProvider;
         this.intakeDeploy = intakeDeploy;
         this.driveFromNeutralZoneToAllianceProvider = driveFromNeutralZoneToAllianceProvider;
@@ -135,7 +139,7 @@ public class AutoCommandFactory {
      * and shoots. The timeout only begins once the shooter and hood are at goal (i.e. it
      * measures how long balls are actively being fed, not the full aim time).
      */
-    public Command driveToAllianceAndShoot(Command firstShootingDeadline) {
+    public Command driveToAllianceAndShoot(Command shootingDeadline) {
         var group = new SequentialCommandGroup();
         group.setName("DriveToAllianceAndShoot");
 
@@ -150,9 +154,11 @@ public class AutoCommandFactory {
         continuousPrepare.setTarget(ContinuousPrepareToShootFromHereCommand.ShootingTarget.HUB);
         continuousPrepare.setZeroHood(true);
 
+        var fireAndCloseIntake = runFeederProvider.get().alongWith(intakeOscillatingProvider.get()));
+
         var fireWithTimeout = waitForGoalProvider.get()
-                .andThen(firstShootingDeadline
-                        .deadlineFor(runFeederProvider.get()));
+                .andThen(shootingDeadline
+                        .deadlineFor(fireAndCloseIntake));
 
         group.addCommands(new ParallelDeadlineGroup(
                 fireWithTimeout, // when firing is done, move on
