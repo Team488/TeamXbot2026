@@ -27,7 +27,7 @@ public class CollectAndShootTwiceCommand extends BaseAutonomousSequentialCommand
                 auto.driveToAllianceAndShoot(
                         auto.waitForShootingDone().raceWith(new WaitForDurationCommand(firstShotTimeout::get)))
                         .alongWith(auto.statusMessage("Driving to alliance and shoot")),
-                auto.stopShooting(),
+                auto.stopShooting().alongWith(auto.extendIntake()),
                 auto.collectFromNeutralZone()
                         .alongWith(auto.statusMessage("Driving to neutral zone and back")),
                 auto.driveToAllianceAndShoot(new WaitForDurationCommand(secondShotTimeout::get))
