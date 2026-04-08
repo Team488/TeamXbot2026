@@ -155,4 +155,9 @@ public class MapleSimulator implements BaseSimulator {
     public Pose2d getGroundTruthPose() {
         return this.swerveDriveSimulation.getActualPoseInSimulationWorld();
     }
+
+    @Override
+    public void resetForAuto() {
+        arena.resetFieldForAuto();
+    }
 }
