@@ -1,6 +1,10 @@
 
 package competition;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,10 +25,13 @@ import xbot.common.command.BaseRobot;
 import xbot.common.math.FieldPose;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 
+import java.sql.Driver;
+
 public class Robot extends BaseRobot {
     Logger log = LogManager.getLogger(Robot.class);
 
     public static final double LOOP_INTERVAL = 0.04;
+    private final Field2d field = new Field2d();
 
     BaseSimulator simulator;
     OperatorInterface oi;
@@ -45,6 +52,7 @@ public class Robot extends BaseRobot {
         getInjectorComponent().intakeDeploySubsystem();
         getInjectorComponent().voltageMonitorSubsystem();
         getInjectorComponent().climberSubsystem();
+
 
         if (BaseRobot.isSimulation()) {
             simulator = getInjectorComponent().simulator();
@@ -69,6 +77,9 @@ public class Robot extends BaseRobot {
         getInjectorComponent().superstructureMechanismSubsystem();
 
         CommandScheduler.getInstance().schedule(getInjectorComponent().whenShooterReadyRumbleCommand());
+
+        SmartDashboard.putData("Field", field);
+
     }
 
     protected BaseRobotComponent createDaggerComponent() {
@@ -155,5 +166,43 @@ public class Robot extends BaseRobot {
         if (this.oi != null) {
             this.oi.periodic();
         }
+
+        String mode;
+        String matchShift;
+
+        if (DriverStation.isAutonomous()) {
+            mode = "Autonomous";
+        } else if (DriverStation.isTeleop()) {
+            mode = "Teleoperated";
+        } else if (DriverStation.isTeleop() && DriverStation.getMatchTime() <= 30) {
+            mode = "Endgame";
+        } else if (DriverStation.isDisabled()) {
+            mode = "Disabled";
+        } else {
+            mode = "Unknown";
+        }
+
+        if (DriverStation.getMatchTime() <= 140 && DriverStation.getMatchTime() >= 130) {
+            matchShift = "Transition Shift";
+        } else if (DriverStation.getMatchTime() <= 130 && DriverStation.getMatchTime() >= 105) {
+            matchShift = "Shift 1";
+        } else if (DriverStation.getMatchTime() <= 105 && DriverStation.getMatchTime() >= 80) {
+            matchShift = "Shift 2";
+        } else if (DriverStation.getMatchTime() <= 80 && DriverStation.getMatchTime() >= 55) {
+            matchShift = "Shift 3";
+        } else if (DriverStation.getMatchTime() <= 55 && DriverStation.getMatchTime() >= 30) {
+            matchShift = "Shift 4";
+        } else if (DriverStation.getMatchTime() <= 30 && DriverStation.getMatchTime() >= 0) {
+            matchShift = "Endgame";
+        } else {
+            matchShift = "Unknown";
+        }
+
+        PoseSubsystem pose = (PoseSubsystem) getInjectorComponent().poseSubsystem();
+        field.setRobotPose(pose.getCurrentPose2d());
+
+        SmartDashboard.putString("Current Mode", mode);
+        SmartDashboard.putNumber("Current Match Time", DriverStation.getMatchTime());
+        SmartDashboard.putString("Match Shift", matchShift);
     }
 }
