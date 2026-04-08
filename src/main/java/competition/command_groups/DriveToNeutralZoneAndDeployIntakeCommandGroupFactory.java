@@ -3,47 +3,46 @@ package competition.command_groups;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import competition.auto_programs.ppl.PathPlanner;
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
-import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import xbot.common.command.DelayViaSupplierCommand;
 
 public class DriveToNeutralZoneAndDeployIntakeCommandGroupFactory {
+    private final Provider<DriveToNeutralZoneForIntakeCommand> driveToNeutralZoneForIntakeCommandProvider;
+    private final Provider<DriveAcrossMidNeutralZoneCommand> driveAcrossMidNeutralZoneCommandProvider;
     private final Provider<IntakeDeployExtendCommand> intakeDeployExtendCommandProvider;
     private final Provider<CollectorIntakeCommand> collectorIntakeCommandProvider;
-    private final IntakeDeploySubsystem intakeDeploy;
-    private final PathPlanner pathPlanner;
 
     @Inject
     public DriveToNeutralZoneAndDeployIntakeCommandGroupFactory(
+            Provider<DriveToNeutralZoneForIntakeCommand> driveToNeutralZoneForIntakeCommandProvider,
+            Provider<DriveAcrossMidNeutralZoneCommand> driveAcrossMidNeutralZoneCommandProvider,
             Provider<IntakeDeployExtendCommand> intakeDeployExtendCommandProvider,
-            Provider<CollectorIntakeCommand> collectorIntakeCommandProvider,
-            IntakeDeploySubsystem intakeDeploy,
-            PathPlanner pathPlanner) {
+            Provider<CollectorIntakeCommand> collectorIntakeCommandProvider) {
+        this.driveToNeutralZoneForIntakeCommandProvider = driveToNeutralZoneForIntakeCommandProvider;
+        this.driveAcrossMidNeutralZoneCommandProvider = driveAcrossMidNeutralZoneCommandProvider;
         this.intakeDeployExtendCommandProvider = intakeDeployExtendCommandProvider;
         this.collectorIntakeCommandProvider = collectorIntakeCommandProvider;
-        this.intakeDeploy = intakeDeploy;
-        this.pathPlanner = pathPlanner;
     }
 
-    public Command create() {
-        var intakeDeployAndWait = Commands.sequence(
-                intakeDeployExtendCommandProvider.get(),
-                intakeDeploy.getWaitForAtGoalCommand()
-        ).withName("IntakeDeployAndWaitCommand");
+    public SequentialCommandGroup create() {
+        var group = new SequentialCommandGroup();
+        group.setName("DriveToNeutralZoneAndDeployIntakeCommandGroup");
 
-        var driveAcrossNeutralWhileIntaking = Commands.deadline(
-                pathPlanner.driveAcrossMidNeutralZone(),
-                collectorIntakeCommandProvider.get()
-        ).withName("DriveAcrossNeutralWhileIntaking");
+        group.addCommands(this.driveToNeutralZoneForIntakeCommandProvider.get());
 
-        return Commands.sequence(
-                pathPlanner.driveToNeutralZoneForIntake(),
-                intakeDeployAndWait,
-                driveAcrossNeutralWhileIntaking
-        ).withName("DriveToNeutralAndCollect");
+        var intakeDeployThenExtendGroup = new SequentialCommandGroup(intakeDeployExtendCommandProvider.get())
+                .andThen(new DelayViaSupplierCommand(() -> 0.5))
+                .andThen(collectorIntakeCommandProvider.get());
+
+        var driveAcrossAndIntakeDeployCommandGroup = new ParallelDeadlineGroup(
+                this.driveAcrossMidNeutralZoneCommandProvider.get(), intakeDeployThenExtendGroup);
+
+        group.addCommands(driveAcrossAndIntakeDeployCommandGroup);
+
+        return group;
     }
 
 }
