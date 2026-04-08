@@ -167,8 +167,7 @@ public class AutoCommandFactory {
      * time limit, without worrying about whether the shooter is up to speed or the
      * hood is in position.
      * 
-     * @param shootingDeadline
-     * @return
+     * @param shootingDeadline when this command ends we stop shooting
      */
     public Command fireWhenReadyUntilDone(Command shootingDeadline) {
         var fireAndCloseIntake = runFeederProvider.get().alongWith(intakeOscillatingProvider.get());
