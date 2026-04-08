@@ -154,7 +154,7 @@ public class AutoCommandFactory {
         continuousPrepare.setTarget(ContinuousPrepareToShootFromHereCommand.ShootingTarget.HUB);
         continuousPrepare.setZeroHood(true);
 
-        var fireAndCloseIntake = runFeederProvider.get().alongWith(intakeOscillatingProvider.get()));
+        var fireAndCloseIntake = runFeederProvider.get().alongWith(intakeOscillatingProvider.get());
 
         var fireWithTimeout = waitForGoalProvider.get()
                 .andThen(shootingDeadline
