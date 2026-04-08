@@ -174,5 +174,8 @@ ctre_sim
 #Claude
 .claude
 
+# Robot log files fetched by fetch-logs.ps1
+robot-logs/
+
 # Prevent accidentally committing the entire repo back in
 SeriouslyCommonLib/
