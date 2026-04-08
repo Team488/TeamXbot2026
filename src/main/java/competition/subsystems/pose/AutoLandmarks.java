@@ -50,7 +50,7 @@ public class AutoLandmarks {
         this.gamefield = gamefield;
 
         pf.setPrefix("AutoLandmarks");
-        this.trenchPlanningOffsetMeters = pf.createPersistentProperty("trenchPlanningOffsetMeters", 1);
+        this.trenchPlanningOffsetMeters = pf.createPersistentProperty("trenchPlanningOffsetMeters", 1.5);
     }
 
     public List<Pose2d> getStartCollectionPath(Pose2d pose) {
