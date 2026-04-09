@@ -31,15 +31,15 @@ public class GamepadRumbleCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        if (drive.getLookAtPointActive() && !vision.areAllCamerasConnected()) {
-            // Rumble when looking at a point but vision cameras aren't connected
-            oi.driverGamepad.getRumbleManager().rumbleGamepad(1, 0.5);
-        } else if (DriverStation.isTeleop()
+        if (DriverStation.isTeleop()
                 && shooter.isReadyToFire()
                 && hood.isMaintainerAtGoal()){
             // Rumble when we're ready to fire
             oi.driverGamepad.getRumbleManager().rumbleGamepad(0.5, 1.0);
             oi.operatorGamepad.getRumbleManager().rumbleGamepad(0.5,1.0);
+        } else if (drive.getLookAtPointActive() && !vision.areAllCamerasConnected()) {
+            // Rumble when looking at a point but vision cameras aren't connected
+            oi.driverGamepad.getRumbleManager().rumbleGamepad(1, 0.5);
         } else {
             oi.driverGamepad.getRumbleManager().stopGamepadRumble();
             oi.operatorGamepad.getRumbleManager().stopGamepadRumble();
