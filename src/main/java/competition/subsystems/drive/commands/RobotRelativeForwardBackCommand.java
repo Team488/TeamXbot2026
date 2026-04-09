@@ -22,7 +22,7 @@ public class RobotRelativeForwardBackCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        double y = MathUtils.deadband(oi.driverGamepad.getLeftVector().getY(), 0.15);
+        double y = MathUtils.deadband(oi.driverGamepad.getLeftVector().getY(), 0.15) * 0.5;
         drive.move(new XYPair(y, 0), 0);
     }
 }
