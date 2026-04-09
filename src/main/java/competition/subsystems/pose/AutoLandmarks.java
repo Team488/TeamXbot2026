@@ -50,7 +50,7 @@ public class AutoLandmarks {
         this.gamefield = gamefield;
 
         pf.setPrefix("AutoLandmarks");
-        this.trenchPlanningOffsetMeters = pf.createPersistentProperty("trenchPlanningOffsetMeters", 1);
+        this.trenchPlanningOffsetMeters = pf.createPersistentProperty("trenchPlanningOffsetMeters", 1.5);
     }
 
     public List<Pose2d> getStartCollectionPath(Pose2d pose) {
@@ -115,14 +115,15 @@ public class AutoLandmarks {
 
         var nearestAllianceTrenchPose = pose
                 .nearest(Landmarks.getAllianceTrenchPoses(this.aprilTagFieldLayout, alliance));
-        results.addAll(this.getNearestNeutralToAllianceTrenchPath(pose));
+        var path = this.getNearestNeutralToAllianceTrenchPath(pose);
+        results.addAll(path);
 
         var multiplier = nearestAllianceTrenchPose.getX() > this.gamefield.getFieldCenter().getX() ? 1 : -1;
-        var adjustedForOffset = new Translation2d(Units.Meters.of(2).times(multiplier),
-                Units.Meters.of(0));
+        var multiplierY = this.gamefield.getFieldCenter().getY() > nearestAllianceTrenchPose.getY() ? 1 : -1;
 
-        results.add(new Pose2d(nearestAllianceTrenchPose.getTranslation().plus(adjustedForOffset),
-                adjustedForOffset.getAngle()));
+        var endTranslation = new Translation2d(Units.Meters.of(0.05).times(multiplier), Units.Meters.of(1).times(multiplierY));
+        results.add(new Pose2d(path.get(path.size() - 1).getTranslation().plus(endTranslation),
+                pose.getRotation()));
 
         return results;
     }
