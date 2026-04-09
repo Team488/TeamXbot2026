@@ -450,7 +450,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public double getDriveGearRatio() {
-        return 6.48; // Documented value for WCP x2i with X3 10t gears.
+        return 5.40; // Documented value for WCP x2i with X3 12t gears.
     }
 
     // --- CAN Bus Connection Order (used only by the electrical report tool) ---
