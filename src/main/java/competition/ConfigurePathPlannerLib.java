@@ -55,6 +55,7 @@ public class ConfigurePathPlannerLib {
             CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
             System.out.println("PathPlanner AutoBuilder configured and warmup scheduled.");
         } catch (Exception e) {
+            System.out.println("PathPlannerLib failed to configure!");
             e.printStackTrace();
         }
     }
