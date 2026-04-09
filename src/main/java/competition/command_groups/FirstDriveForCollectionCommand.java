@@ -37,7 +37,7 @@ public class FirstDriveForCollectionCommand extends BaseDriveWithSimpleBezierCom
         var currentPose = this.pose.getCurrentPose2d();
         var startPose = this.autoLandmarks.getStartCollectionPose(currentPose);
         var fullEndCollectionLocation = this.autoLandmarks.getMidBallPitCollectionPose(currentPose);
-        var endPose = new Pose2d(startPose.getTranslation().interpolate(fullEndCollectionLocation.getTranslation(), 0.75),
+        var endPose = new Pose2d(startPose.getTranslation().interpolate(fullEndCollectionLocation.getTranslation(), 0.90),
                                  fullEndCollectionLocation.getRotation());
 
         List<XbotSwervePoint> points = new ArrayList<>();
