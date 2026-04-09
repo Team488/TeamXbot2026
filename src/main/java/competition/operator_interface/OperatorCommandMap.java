@@ -5,9 +5,11 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import competition.auto_programs.AimAndShootFromHereCommand;
+import competition.auto_programs.ppl.LeftBumpAutoCommand;
 import competition.auto_programs.ShootFromHubCommandGroup;
 import competition.auto_programs.ShootFromTrenchCommandGroup;
 import competition.auto_programs.CollectAndShootTwiceCommand;
+import competition.auto_programs.ppl.RightBumpAutoCommand;
 import competition.auto_programs.vision.JustDriveNeutralMoveCommand;
 import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
 import competition.auto_programs.vision.ShootFromTrenchThenMoveToNeutralCommand;
@@ -174,7 +176,10 @@ public class OperatorCommandMap {
                                   ShootFromTrenchCommandGroup shootFromTrenchCommandGroup,
                                   ShootFromHubCommandGroup shootFromHubCommandGroup,
                                   JustDriveNeutralMoveCommand justDriveNeutralMoveCommand,
-                                  CollectAndShootTwiceCommand collectAndShootTwiceCommand) {
+                                  CollectAndShootTwiceCommand collectAndShootTwiceCommand,
+                                  LeftBumpAutoCommand leftBumpAutoCommand,
+                                  RightBumpAutoCommand rightBumpAutoCommand
+        ) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
         var moveAcrossField = setAutonomousCommandProvider.get();
@@ -189,9 +194,17 @@ public class OperatorCommandMap {
         shootFromHub.setAutoCommand(shootFromHubCommandGroup, Landmarks.blueStartTrenchToOutpost);
         shootFromHub.includeOnSmartDashboard("Shoot from hub.");
 
+        var moveAcrossField2Right = setAutonomousCommandProvider.get();
+        moveAcrossField2Right.setAutoCommand(rightBumpAutoCommand, Landmarks.blueStartTrenchToOutpost);
+        moveAcrossField2Right.includeOnSmartDashboard("Right bump double cycle.");
+
+        var moveAcrossField2Left = setAutonomousCommandProvider.get();
+        moveAcrossField2Left.setAutoCommand(leftBumpAutoCommand, Landmarks.blueStartTrenchToOutpost);
+        moveAcrossField2Left.includeOnSmartDashboard("Left bump double cycle.");
+
         var shootFromTrenchThenMove = setAutonomousCommandProvider.get();
         shootFromTrenchThenMove.setAutoCommand(shootFromTrenchThenMoveToNeutralCommand, Landmarks.blueStartTrenchToOutpost);
-        shootFromTrenchThenMove.includeOnSmartDashboard("Shoot from trench then collect from netural zone.");
+        shootFromTrenchThenMove.includeOnSmartDashboard("Shoot from trench then collect from neutral zone.");
 
         var justDrivePortionOfAuto = setAutonomousCommandProvider.get();
         justDrivePortionOfAuto.setAutoCommand(justDriveNeutralMoveCommand, Landmarks.blueStartTrenchToOutpost);

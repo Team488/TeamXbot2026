@@ -1,0 +1,37 @@
+{
+  "robotWidth": 0.892,
+  "robotLength": 0.892,
+  "holonomicMode": true,
+  "pathFolders": [
+    "TwoPassAuto",
+    "NoEventMarkers"
+  ],
+  "autoFolders": [],
+  "defaultMaxVel": 2.5,
+  "defaultMaxAccel": 3.0,
+  "defaultMaxAngVel": 540.0,
+  "defaultMaxAngAccel": 720.0,
+  "defaultNominalVoltage": 12.0,
+  "robotMass": 49.8951607,
+  "robotMOI": 6.883,
+  "robotTrackwidth": 0.546,
+  "driveWheelRadius": 0.051,
+  "driveGearing": 6.48,
+  "maxDriveSpeed": 4.5,
+  "driveMotorType": "krakenX60",
+  "driveCurrentLimit": 45.0,
+  "wheelCOF": 1.2,
+  "flModuleX": 0.279,
+  "flModuleY": 0.254,
+  "frModuleX": 0.279,
+  "frModuleY": -0.254,
+  "blModuleX": -0.279,
+  "blModuleY": 0.254,
+  "brModuleX": -0.279,
+  "brModuleY": -0.254,
+  "bumperOffsetX": 0.0,
+  "bumperOffsetY": 0.0,
+  "robotFeatures": [
+    "{\"name\":\"Hopper Extension\",\"type\":\"rounded_rect\",\"data\":{\"center\":{\"x\":0.56,\"y\":0.0},\"size\":{\"width\":0.75,\"length\":0.195},\"borderRadius\":0.05,\"strokeWidth\":0.02,\"filled\":false}}"
+  ]
+}
