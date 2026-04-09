@@ -23,6 +23,7 @@ import competition.subsystems.collector_intake.commands.CollectorEjectCommand;
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.drive.commands.DriveToOutpostCommand;
 import competition.subsystems.drive.commands.PrecisionModeCommand;
+import competition.subsystems.drive.commands.RobotRelativeForwardBackCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.drive.commands.XPositionCommand;
 import competition.subsystems.hood.HoodSubsystem;
@@ -72,7 +73,8 @@ public class OperatorCommandMap {
                                    DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand,
                                    IntakeSlowlyAndFireWhenReady intakeSlowlyAndFireWhenReady,
                                    PrecisionModeCommand precisionModeCommand,
-                                   AimAndShootFromHereCommand aimAndShootFromHereCommand
+                                   AimAndShootFromHereCommand aimAndShootFromHereCommand,
+                                   RobotRelativeForwardBackCommand robotRelativeForwardBackCommand
     ) {
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(driveThroughAllianceTrenchCommand);
         // operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
@@ -82,6 +84,7 @@ public class OperatorCommandMap {
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.RightBumper).whileTrue(intakeSlowlyAndFireWhenReady);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Y).whileTrue(precisionModeCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.B).whileTrue(aimAndShootFromHereCommand);
+        operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Back).whileTrue(robotRelativeForwardBackCommand);
 
         // Commenting out so it's not accidentally pressed during a match
         // operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
