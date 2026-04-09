@@ -2,8 +2,7 @@ package competition.command_groups;
 
 
 import competition.general_commands.WaitForDurationCommand;
-import competition.subsystems.intake_deploy.commands.IntakeDeployOscillating;
-import competition.subsystems.intake_deploy.commands.IntakeDeploySlowClosing;
+import competition.subsystems.intake_deploy.commands.IntakeDeployAdaptiveCloseWhileFiringCommand;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import xbot.common.command.BaseSequentialCommandGroup;
@@ -19,7 +18,7 @@ public class IntakeSlowlyAndFireWhenReady extends BaseSequentialCommandGroup {
     @Inject
     public IntakeSlowlyAndFireWhenReady(WaitForHoodAndShooterToBeAtGoalCommandGroup waitForHoodAndShooterToBeAtGoalCommandGroup,
                                         RunCollectorHopperFeederCommandGroup runCollectorHopperFeederCommandGroup,
-                                        IntakeDeployOscillating intakeDeployOscillating,
+                                        IntakeDeployAdaptiveCloseWhileFiringCommand intakeDeployOscillating,
                                         PropertyFactory propertyFactory
 
     ) {
