@@ -1,7 +1,6 @@
 
 package competition;
 
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,14 +24,11 @@ import xbot.common.command.BaseRobot;
 import xbot.common.math.FieldPose;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 
-import java.sql.Driver;
-
 public class Robot extends BaseRobot {
     Logger log = LogManager.getLogger(Robot.class);
 
     public static final double LOOP_INTERVAL = 0.04;
     private final Field2d field = new Field2d();
-
     BaseSimulator simulator;
     OperatorInterface oi;
 
@@ -172,20 +168,7 @@ public class Robot extends BaseRobot {
             this.oi.periodic();
         }
 
-        String mode;
         String matchShift;
-
-        if (DriverStation.isAutonomous()) {
-            mode = "Autonomous";
-        } else if (DriverStation.isTeleop()) {
-            mode = "Teleoperated";
-        } else if (DriverStation.isTeleop() && DriverStation.getMatchTime() <= 30) {
-            mode = "Endgame";
-        } else if (DriverStation.isDisabled()) {
-            mode = "Disabled";
-        } else {
-            mode = "Unknown";
-        }
 
         if (DriverStation.getMatchTime() <= 140 && DriverStation.getMatchTime() >= 130) {
             matchShift = "Transition Shift";
@@ -206,8 +189,8 @@ public class Robot extends BaseRobot {
         PoseSubsystem pose = (PoseSubsystem) getInjectorComponent().poseSubsystem();
         field.setRobotPose(pose.getCurrentPose2d());
 
-        SmartDashboard.putString("Current Mode", mode);
         SmartDashboard.putNumber("Current Match Time", DriverStation.getMatchTime());
         SmartDashboard.putString("Match Shift", matchShift);
+        SmartDashboard.putBoolean("Is Hood Down", getInjectorComponent().hoodSubsystem().isHoodDown());
     }
 }
