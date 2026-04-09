@@ -24,17 +24,11 @@ public class IntakeSlowlyAndFireWhenReady extends BaseSequentialCommandGroup {
     ) {
         propertyFactory.setPrefix(this);
 
-        var waitBeforeRetracting = new WaitForDurationCommand(
-                propertyFactory.createPersistentProperty
-                        ("waitBeforeRetractingSeconds", 2.0)::get
-        );
-
         this.addCommands(
                 waitForHoodAndShooterToBeAtGoalCommandGroup,
                 Commands.parallel(
                         runCollectorHopperFeederCommandGroup,
                         Commands.sequence(
-                                waitBeforeRetracting,
                                 intakeDeployOscillating
                         )
                 )
