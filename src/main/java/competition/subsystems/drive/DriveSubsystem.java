@@ -205,7 +205,6 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
         SwerveModuleState[] moduleStates = getSwerveDriveKinematics().toSwerveModuleStates(chassisSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, getMaxTargetSpeedMetersPerSecond());
 
-        aKitLog.setLogLevel(AKitLogger.LogLevel.INFO);
         aKitLog.record("DesiredSwerveState", moduleStates);
         this.getFrontLeftSwerveModuleSubsystem().setTargetState(moduleStates[0]);
         this.getFrontRightSwerveModuleSubsystem().setTargetState(moduleStates[1]);
