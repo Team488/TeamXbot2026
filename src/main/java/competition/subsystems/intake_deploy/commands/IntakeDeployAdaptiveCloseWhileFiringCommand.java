@@ -50,7 +50,7 @@ public class IntakeDeployAdaptiveCloseWhileFiringCommand extends BaseSetpointCom
     private final TimeStableValidator currentSpikeValidator;
     private State state;
     private Angle basePosition;
-    private double stallStartTime;
+    private double stateStartTime;
 
     @Inject
     public IntakeDeployAdaptiveCloseWhileFiringCommand(IntakeDeploySubsystem intakeDeploySubsystem,
@@ -82,14 +82,15 @@ public class IntakeDeployAdaptiveCloseWhileFiringCommand extends BaseSetpointCom
         super.initialize();
         basePosition = intakeDeploySubsystem.getCurrentValue();
         state = State.ADVANCING;
-        stallStartTime = 0;
+        stateStartTime = 0;
     }
 
     @Override
     public void execute() {
-        double now = XTimer.getFPGATimestamp();
+        double nowSeconds = XTimer.getFPGATimestamp();
+        // No pun intended
         double currentAmps = intakeDeploySubsystem.getMotorCurrent().in(Amps);
-        boolean currentIsHigh = currentSpikeValidator.checkStable(currentAmps > currentThresholdAmps.get());
+        boolean currentIsStableHigh = currentSpikeValidator.checkStable(currentAmps > currentThresholdAmps.get());
 
         switch (state) {
             case ADVANCING:
@@ -98,13 +99,13 @@ public class IntakeDeployAdaptiveCloseWhileFiringCommand extends BaseSetpointCom
                 if (basePosition.gte(retractLimit.get())) {
                     basePosition = retractLimit.get();
                     state = State.AT_LIMIT_OSCILLATING;
-                    stallStartTime = now;
+                    stateStartTime = nowSeconds;
                 }
 
                 // Transition to stalled only after current has been high for the stable window
-                if (currentIsHigh && state == State.ADVANCING) {
+                if (currentIsStableHigh && state == State.ADVANCING) {
                     state = State.STALLED;
-                    stallStartTime = now;
+                    stateStartTime = nowSeconds;
                 }
 
                 intakeDeploySubsystem.setTargetValue(basePosition);
@@ -112,7 +113,7 @@ public class IntakeDeployAdaptiveCloseWhileFiringCommand extends BaseSetpointCom
 
             case STALLED:
                 // Oscillate around the stall position to loosen balls
-                double elapsed = now - stallStartTime;
+                double elapsed = nowSeconds - stateStartTime;
                 double oscillation = oscillationAmplitude.get().in(Degrees)
                         * Math.sin(2 * Math.PI * elapsed / oscillationPeriod.get());
                 intakeDeploySubsystem.setTargetValue(basePosition.plus(Degrees.of(oscillation)));
@@ -125,7 +126,7 @@ public class IntakeDeployAdaptiveCloseWhileFiringCommand extends BaseSetpointCom
 
             case AT_LIMIT_OSCILLATING:
                 // Reached the retract limit — just oscillate indefinitely
-                double limitElapsed = now - stallStartTime;
+                double limitElapsed = nowSeconds - stateStartTime;
                 double limitOscillation = oscillationAmplitude.get().in(Degrees)
                         * Math.sin(2 * Math.PI * limitElapsed / oscillationPeriod.get());
                 intakeDeploySubsystem.setTargetValue(retractLimit.get().plus(Degrees.of(limitOscillation)));
@@ -137,12 +138,13 @@ public class IntakeDeployAdaptiveCloseWhileFiringCommand extends BaseSetpointCom
 
         aKitLog.record("State", state.name());
         aKitLog.record("BasePosition", basePosition.in(Degrees));
-        aKitLog.record("MotorCurrentAmps", currentAmps);
     }
 
     @Override
     public void end(boolean isInterrupted) {
         super.end(isInterrupted);
+
+        // leave the target in the current base position
         intakeDeploySubsystem.setTargetValue(basePosition);
     }
 
