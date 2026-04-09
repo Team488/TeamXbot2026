@@ -37,7 +37,7 @@ public class SecondDriveForCollectionCommand extends BaseDriveWithSimpleBezierCo
         var currentPose = this.pose.getCurrentPose2d();
         var lastCollectFinish = this.autoLandmarks.getStartCollectionPose(currentPose);
         var fullEndCollectionLocation = this.autoLandmarks.getMidBallPitCollectionPose(currentPose);
-        var startPose = new Pose2d(lastCollectFinish.getTranslation().interpolate(fullEndCollectionLocation.getTranslation(), 0.75),
+        var startPose = new Pose2d(lastCollectFinish.getTranslation().interpolate(fullEndCollectionLocation.getTranslation(), 0.90),
                                  fullEndCollectionLocation.getRotation());
         var endPose = new Pose2d(lastCollectFinish.getTranslation().interpolate(fullEndCollectionLocation.getTranslation(), 1.2),
                                  fullEndCollectionLocation.getRotation());
