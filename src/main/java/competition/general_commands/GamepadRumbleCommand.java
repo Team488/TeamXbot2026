@@ -1,34 +1,45 @@
-package competition.subsystems.shooter.commands;
+package competition.general_commands;
 
 import competition.operator_interface.OperatorInterface;
+import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
+import competition.subsystems.vision.AprilTagVisionSubsystemExtended;
 import edu.wpi.first.wpilibj.DriverStation;
 import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
-public class WhenShooterReadyRumbleCommand extends BaseCommand {
+public class GamepadRumbleCommand extends BaseCommand {
 
     final HoodSubsystem hood;
     final OperatorInterface oi;
     final ShooterSubsystem shooter;
+    final DriveSubsystem drive;
+    final AprilTagVisionSubsystemExtended vision;
 
 
     @Inject
-    public WhenShooterReadyRumbleCommand(HoodSubsystem hoodSubsystem, OperatorInterface oi, ShooterSubsystem shooterSubsystem) {
+    public GamepadRumbleCommand(HoodSubsystem hoodSubsystem, OperatorInterface oi, ShooterSubsystem shooterSubsystem,
+                                DriveSubsystem drive, AprilTagVisionSubsystemExtended vision) {
         this.hood = hoodSubsystem;
         this.oi = oi;
         this.shooter = shooterSubsystem;
+        this.drive = drive;
+        this.vision = vision;
     }
 
     @Override
     public void execute() {
-        if (DriverStation.isTeleop()
+        if (drive.getLookAtPointActive() && !vision.areAllCamerasConnected()) {
+            // Rumble when looking at a point but vision cameras aren't connected
+            oi.driverGamepad.getRumbleManager().rumbleGamepad(1, 0.5);
+        } else if (DriverStation.isTeleop()
                 && shooter.isReadyToFire()
                 && hood.isMaintainerAtGoal()){
-            oi.driverGamepad.getRumbleManager().rumbleGamepad(150, 3);
-            oi.operatorGamepad.getRumbleManager().rumbleGamepad(150,3);
+            // Rumble when we're ready to fire
+            oi.driverGamepad.getRumbleManager().rumbleGamepad(0.5, 1.0);
+            oi.operatorGamepad.getRumbleManager().rumbleGamepad(0.5,1.0);
         } else {
             oi.driverGamepad.getRumbleManager().stopGamepadRumble();
             oi.operatorGamepad.getRumbleManager().stopGamepadRumble();
