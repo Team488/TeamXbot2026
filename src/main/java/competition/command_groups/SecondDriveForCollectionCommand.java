@@ -17,13 +17,13 @@ import xbot.common.subsystems.oracle.SwervePointPathPlanning;
 import xbot.common.subsystems.pose.GameField;
 import xbot.common.trajectory.XbotSwervePoint;
 
-public class FirstDriveForCollectionCommand extends BaseDriveWithSimpleBezierCommand {
+public class SecondDriveForCollectionCommand extends BaseDriveWithSimpleBezierCommand {
     private final AutoLandmarks autoLandmarks;
     private final PoseSubsystem pose;
     private final SwervePointPathPlanning pathPlanning;
 
     @Inject
-    public FirstDriveForCollectionCommand(DriveSubsystem drive, PoseSubsystem pose,
+    public SecondDriveForCollectionCommand(DriveSubsystem drive, PoseSubsystem pose,
             PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
             RobotAssertionManager robotAssertionManager, SwervePointPathPlanning pathPlanning, GameField gamefield,
             AutoLandmarks autoLandmarks) {
@@ -35,9 +35,11 @@ public class FirstDriveForCollectionCommand extends BaseDriveWithSimpleBezierCom
 
     private List<XbotSwervePoint> calcSwervePoints() {
         var currentPose = this.pose.getCurrentPose2d();
-        var startPose = this.autoLandmarks.getStartCollectionPose(currentPose);
+        var lastCollectFinish = this.autoLandmarks.getStartCollectionPose(currentPose);
         var fullEndCollectionLocation = this.autoLandmarks.getMidBallPitCollectionPose(currentPose);
-        var endPose = new Pose2d(startPose.getTranslation().interpolate(fullEndCollectionLocation.getTranslation(), 0.75),
+        var startPose = new Pose2d(lastCollectFinish.getTranslation().interpolate(fullEndCollectionLocation.getTranslation(), 0.75),
+                                 fullEndCollectionLocation.getRotation());
+        var endPose = new Pose2d(lastCollectFinish.getTranslation().interpolate(fullEndCollectionLocation.getTranslation(), 1.2),
                                  fullEndCollectionLocation.getRotation());
 
         List<XbotSwervePoint> points = new ArrayList<>();

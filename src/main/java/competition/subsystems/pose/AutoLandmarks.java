@@ -118,12 +118,15 @@ public class AutoLandmarks {
         var path = this.getNearestNeutralToAllianceTrenchPath(pose);
         results.addAll(path);
 
-        var multiplier = nearestAllianceTrenchPose.getX() > this.gamefield.getFieldCenter().getX() ? 1 : -1;
+        var multiplierX = alliance == Alliance.Blue ? -1 : 1;
         var multiplierY = this.gamefield.getFieldCenter().getY() > nearestAllianceTrenchPose.getY() ? 1 : -1;
 
-        var endTranslation = new Translation2d(Units.Meters.of(0.05).times(multiplier), Units.Meters.of(1).times(multiplierY));
-        results.add(new Pose2d(path.get(path.size() - 1).getTranslation().plus(endTranslation),
-                pose.getRotation()));
+        var endAdjustment = new Translation2d(Units.Meters.of(0.05).times(multiplierX), Units.Meters.of(1).times(multiplierY));
+        var endTranslation = path.get(path.size() - 1).getTranslation().plus(endAdjustment);
+        var hubPosition = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance);
+        Translation2d vectorToHub = endTranslation.minus(hubPosition.getTranslation());
+        results.add(new Pose2d(endTranslation,
+                vectorToHub.getAngle()));
 
         return results;
     }
