@@ -1,7 +1,6 @@
 package competition.injection.components;
 
 import competition.ConfigurePathPlannerLib;
-import competition.auto_programs.AimAndShootFromHereCommand;
 import competition.auto_programs.ShootFromTrenchCommandGroup;
 import competition.operator_interface.OperatorCommandMap;
 import competition.operator_interface.OperatorInterface;
@@ -9,14 +8,12 @@ import competition.simulation.BaseSimulator;
 import competition.subsystems.SubsystemDefaultCommandMap;
 import competition.subsystems.climber.ClimberSubsystem;
 import competition.subsystems.collector_intake.CollectorSubsystem;
-import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
-import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import competition.subsystems.lights.LightsSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
-import competition.subsystems.shooter.commands.WhenShooterReadyRumbleCommand;
+import competition.general_commands.GamepadRumbleCommand;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
 import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
 import xbot.common.injection.components.BaseComponent;
@@ -63,7 +60,7 @@ public abstract class BaseRobotComponent extends BaseComponent {
 
     public abstract OperatorInterface operatorInterface();
 
-    public abstract WhenShooterReadyRumbleCommand whenShooterReadyRumbleCommand();
+    public abstract GamepadRumbleCommand gamepadRumbleCommand();
 
     public abstract SuperstructureMechanismSubsystem superstructureMechanismSubsystem();
 

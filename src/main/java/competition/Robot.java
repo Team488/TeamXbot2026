@@ -69,7 +69,7 @@ public class Robot extends BaseRobot {
 
         getInjectorComponent().superstructureMechanismSubsystem();
 
-        CommandScheduler.getInstance().schedule(getInjectorComponent().whenShooterReadyRumbleCommand());
+        CommandScheduler.getInstance().schedule(getInjectorComponent().gamepadRumbleCommand());
     }
 
     protected BaseRobotComponent createDaggerComponent() {
