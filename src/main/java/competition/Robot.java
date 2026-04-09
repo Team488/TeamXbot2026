@@ -72,11 +72,11 @@ public class Robot extends BaseRobot {
         dataFrameRefreshables.add(getInjectorComponent().climberSubsystem());
 
         getInjectorComponent().superstructureMechanismSubsystem();
-
-        CommandScheduler.getInstance().schedule(getInjectorComponent().whenShooterReadyRumbleCommand());
-
+      
         SmartDashboard.putData("Field", field);
-
+       
+        CommandScheduler.getInstance().schedule(getInjectorComponent().whenShooterReadyRumbleCommand())
+        CommandScheduler.getInstance().schedule(getInjectorComponent().gamepadRumbleCommand());
     }
 
     protected BaseRobotComponent createDaggerComponent() {
