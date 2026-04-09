@@ -52,7 +52,7 @@ public class AutoCommandFactory {
     private final Provider<PrepareToShootCommandGroup> prepareToShootProvider;
     private final Provider<ContinuousPrepareToShootFromHereCommand> continuousPrepareToShootProvider;
     private final Provider<RotateToHubCommand> rotateToHubProvider;
-    private final Provider<WaitForRotationAndHoodAndShooterToBeAtGoalCommandGroup> waitForGoalProvider;
+    private final Provider<WaitForRotationAndHoodAndShooterToBeAtGoalCommandGroup> waitForRotationAndHoodAndShooterToBeAtGoalProvider;
     private final Provider<RunCollectorHopperFeederCommandGroup> runFeederProvider;
     private final Provider<ShooterStopCommand> shooterStopProvider;
     private final Provider<ShooterFeederStop> feederStopProvider;
@@ -78,7 +78,7 @@ public class AutoCommandFactory {
             Provider<PrepareToShootCommandGroup> prepareToShootProvider,
             Provider<ContinuousPrepareToShootFromHereCommand> continuousPrepareToShootProvider,
             Provider<RotateToHubCommand> rotateToHubProvider,
-            Provider<WaitForRotationAndHoodAndShooterToBeAtGoalCommandGroup> waitForGoalProvider,
+            Provider<WaitForRotationAndHoodAndShooterToBeAtGoalCommandGroup> waitForRotationAndHoodAndShooterToBeAtGoalProvider,
             Provider<RunCollectorHopperFeederCommandGroup> runFeederProvider,
             Provider<ShooterStopCommand> shooterStopProvider,
             Provider<ShooterFeederStop> feederStopProvider,
@@ -101,7 +101,7 @@ public class AutoCommandFactory {
         this.prepareToShootProvider = prepareToShootProvider;
         this.continuousPrepareToShootProvider = continuousPrepareToShootProvider;
         this.rotateToHubProvider = rotateToHubProvider;
-        this.waitForGoalProvider = waitForGoalProvider;
+        this.waitForRotationAndHoodAndShooterToBeAtGoalProvider = waitForRotationAndHoodAndShooterToBeAtGoalProvider;
         this.runFeederProvider = runFeederProvider;
         this.shooterStopProvider = shooterStopProvider;
         this.feederStopProvider = feederStopProvider;
@@ -179,19 +179,30 @@ public class AutoCommandFactory {
         continuousPrepare.setTarget(ContinuousPrepareToShootFromHereCommand.ShootingTarget.HUB);
         continuousPrepare.setZeroHood(true);
 
-        var fireAndCloseIntake = runFeederProvider.get().alongWith(intakeOscillatingProvider.get());
-
-        var fireWithTimeout = waitForGoalProvider.get()
-                .andThen(shootingDeadline
-                        .deadlineFor(fireAndCloseIntake));
-
         group.addCommands(new ParallelDeadlineGroup(
-                fireWithTimeout, // when firing is done, move on
+                fireWhenReadyUntilDone(shootingDeadline), // when firing is done, move on
                 continuousPrepare,
                 swerveDriveWithJoysticksProvider.get(),
                 rotateToHubProvider.get()));
 
         return group;
+    }
+
+    /**
+     * Waits for the hood and shooter to be at their goal positions, then runs the
+     * feeder and oscillates the intake until the shooting deadline command
+     * finishes. This allows the robot to keep firing as long as possible within the
+     * time limit, without worrying about whether the shooter is up to speed or the
+     * hood is in position.
+     * 
+     * @param shootingDeadline when this command ends we stop shooting
+     */
+    public Command fireWhenReadyUntilDone(Command shootingDeadline) {
+        var fireAndCloseIntake = runFeederProvider.get().alongWith(intakeOscillatingProvider.get());
+
+        return waitForRotationAndHoodAndShooterToBeAtGoalProvider.get()
+                .andThen(shootingDeadline
+                        .deadlineFor(fireAndCloseIntake));
     }
 
     /**
