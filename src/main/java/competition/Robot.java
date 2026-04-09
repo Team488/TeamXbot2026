@@ -78,6 +78,7 @@ public class Robot extends BaseRobot {
 
         SmartDashboard.putData("Field", field);
 
+        CommandScheduler.getInstance().schedule(getInjectorComponent().gamepadRumbleCommand());
     }
 
     protected BaseRobotComponent createDaggerComponent() {
