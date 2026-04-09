@@ -43,6 +43,7 @@ public class Robot extends BaseRobot {
     @Override
     protected void initializeSystems() {
         super.initializeSystems();
+        getInjectorComponent().configurePathPlannerLib();
         getInjectorComponent().subsystemDefaultCommandMap();
         getInjectorComponent().operatorCommandMap();
         getInjectorComponent().swerveDefaultCommandMap();

@@ -4,11 +4,14 @@ import competition.command_groups.ContinuousPrepareToShootFromHereCommand;
 import competition.command_groups.DriveAcrossMidNeutralZoneCommand;
 import competition.command_groups.DriveFromNeutralZoneToAllianceCommand;
 import competition.command_groups.DriveToNeutralZoneForIntakeCommand;
+import competition.command_groups.DriveToNeutralZoneForIntakeSecondTimeCommand;
 import competition.command_groups.DriveToShootingPositionCommand;
+import competition.command_groups.FirstDriveForCollectionCommand;
+import competition.command_groups.SecondDriveForCollectionCommand;
 import competition.command_groups.PrepareToShootCommandGroup;
 import competition.subsystems.pose.TrajectoriesCalculation;
 import competition.command_groups.RunCollectorHopperFeederCommandGroup;
-import competition.command_groups.WaitForHoodAndShooterToBeAtGoalCommandGroup;
+import competition.command_groups.WaitForRotationAndHoodAndShooterToBeAtGoalCommandGroup;
 import competition.general_commands.WaitForDurationCommand;
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.collector_intake.commands.CollectorStopCommand;
@@ -35,7 +38,10 @@ import java.util.function.Supplier;
 public class AutoCommandFactory {
 
     private final Provider<DriveToNeutralZoneForIntakeCommand> driveToNeutralZoneProvider;
+    private final Provider<DriveToNeutralZoneForIntakeSecondTimeCommand> driveToNeutralZoneSecondTimeProvider;
     private final Provider<DriveAcrossMidNeutralZoneCommand> driveAcrossMidNeutralZoneProvider;
+    private final Provider<FirstDriveForCollectionCommand> firstDriveForCollectionCommandProvider;
+    private final Provider<SecondDriveForCollectionCommand> secondDriveForCollectionCommandProvider;
     private final Provider<IntakeDeployExtendCommand> intakeDeployExtendProvider;
     private final Provider<IntakeDeployOscillating> intakeOscillatingProvider;
     private final Provider<CollectorIntakeCommand> collectorIntakeProvider;
@@ -46,7 +52,7 @@ public class AutoCommandFactory {
     private final Provider<PrepareToShootCommandGroup> prepareToShootProvider;
     private final Provider<ContinuousPrepareToShootFromHereCommand> continuousPrepareToShootProvider;
     private final Provider<RotateToHubCommand> rotateToHubProvider;
-    private final Provider<WaitForHoodAndShooterToBeAtGoalCommandGroup> waitForGoalProvider;
+    private final Provider<WaitForRotationAndHoodAndShooterToBeAtGoalCommandGroup> waitForRotationAndHoodAndShooterToBeAtGoalProvider;
     private final Provider<RunCollectorHopperFeederCommandGroup> runFeederProvider;
     private final Provider<ShooterStopCommand> shooterStopProvider;
     private final Provider<ShooterFeederStop> feederStopProvider;
@@ -58,7 +64,10 @@ public class AutoCommandFactory {
     @Inject
     public AutoCommandFactory(
             Provider<DriveToNeutralZoneForIntakeCommand> driveToNeutralZoneProvider,
+            Provider<DriveToNeutralZoneForIntakeSecondTimeCommand> driveToNeutralZoneSecondTimeProvider,
             Provider<DriveAcrossMidNeutralZoneCommand> driveAcrossMidNeutralZoneProvider,
+            Provider<FirstDriveForCollectionCommand> firstDriveForCollectionCommandProvider,
+            Provider<SecondDriveForCollectionCommand> secondDriveForCollectionCommandProvider,
             Provider<IntakeDeployExtendCommand> intakeDeployExtendProvider,
             Provider<IntakeDeployOscillating> intakeOscillatingProvider,
             Provider<CollectorIntakeCommand> collectorIntakeProvider,
@@ -69,7 +78,7 @@ public class AutoCommandFactory {
             Provider<PrepareToShootCommandGroup> prepareToShootProvider,
             Provider<ContinuousPrepareToShootFromHereCommand> continuousPrepareToShootProvider,
             Provider<RotateToHubCommand> rotateToHubProvider,
-            Provider<WaitForHoodAndShooterToBeAtGoalCommandGroup> waitForGoalProvider,
+            Provider<WaitForRotationAndHoodAndShooterToBeAtGoalCommandGroup> waitForRotationAndHoodAndShooterToBeAtGoalProvider,
             Provider<RunCollectorHopperFeederCommandGroup> runFeederProvider,
             Provider<ShooterStopCommand> shooterStopProvider,
             Provider<ShooterFeederStop> feederStopProvider,
@@ -78,7 +87,10 @@ public class AutoCommandFactory {
             Provider<SwerveDriveWithJoysticksCommand> swerveDriveWithJoysticksProvider,
             AutonomousCommandSelector autoSelector) {
         this.driveToNeutralZoneProvider = driveToNeutralZoneProvider;
+        this.driveToNeutralZoneSecondTimeProvider = driveToNeutralZoneSecondTimeProvider;
         this.driveAcrossMidNeutralZoneProvider = driveAcrossMidNeutralZoneProvider;
+        this.firstDriveForCollectionCommandProvider = firstDriveForCollectionCommandProvider;
+        this.secondDriveForCollectionCommandProvider = secondDriveForCollectionCommandProvider;
         this.intakeDeployExtendProvider = intakeDeployExtendProvider;
         this.intakeOscillatingProvider = intakeOscillatingProvider;
         this.collectorIntakeProvider = collectorIntakeProvider;
@@ -89,7 +101,7 @@ public class AutoCommandFactory {
         this.prepareToShootProvider = prepareToShootProvider;
         this.continuousPrepareToShootProvider = continuousPrepareToShootProvider;
         this.rotateToHubProvider = rotateToHubProvider;
-        this.waitForGoalProvider = waitForGoalProvider;
+        this.waitForRotationAndHoodAndShooterToBeAtGoalProvider = waitForRotationAndHoodAndShooterToBeAtGoalProvider;
         this.runFeederProvider = runFeederProvider;
         this.shooterStopProvider = shooterStopProvider;
         this.feederStopProvider = feederStopProvider;
@@ -125,7 +137,23 @@ public class AutoCommandFactory {
         group.addCommands(driveToNeutralZoneProvider.get());
 
         group.addCommands(new ParallelDeadlineGroup(
-                driveAcrossMidNeutralZoneProvider.get(),
+                firstDriveForCollectionCommandProvider.get(),
+                collectorIntakeProvider.get()));
+
+        return group;
+    }
+
+        /**
+     * Drives to the neutral zone ball pit, deploys the intake, drives across to collect balls.
+     */
+    public Command collectFromNeutralZoneSecond() {
+        var group = new SequentialCommandGroup();
+        group.setName("CollectFromNeutralZoneSecond");
+
+        group.addCommands(driveToNeutralZoneSecondTimeProvider.get());
+
+        group.addCommands(new ParallelDeadlineGroup(
+                secondDriveForCollectionCommandProvider.get(),
                 collectorIntakeProvider.get()));
 
         return group;
@@ -151,19 +179,30 @@ public class AutoCommandFactory {
         continuousPrepare.setTarget(ContinuousPrepareToShootFromHereCommand.ShootingTarget.HUB);
         continuousPrepare.setZeroHood(true);
 
-        var fireAndCloseIntake = runFeederProvider.get().alongWith(intakeOscillatingProvider.get());
-
-        var fireWithTimeout = waitForGoalProvider.get()
-                .andThen(shootingDeadline
-                        .deadlineFor(fireAndCloseIntake));
-
         group.addCommands(new ParallelDeadlineGroup(
-                fireWithTimeout, // when firing is done, move on
+                fireWhenReadyUntilDone(shootingDeadline), // when firing is done, move on
                 continuousPrepare,
                 swerveDriveWithJoysticksProvider.get(),
                 rotateToHubProvider.get()));
 
         return group;
+    }
+
+    /**
+     * Waits for the hood and shooter to be at their goal positions, then runs the
+     * feeder and oscillates the intake until the shooting deadline command
+     * finishes. This allows the robot to keep firing as long as possible within the
+     * time limit, without worrying about whether the shooter is up to speed or the
+     * hood is in position.
+     * 
+     * @param shootingDeadline when this command ends we stop shooting
+     */
+    public Command fireWhenReadyUntilDone(Command shootingDeadline) {
+        var fireAndCloseIntake = runFeederProvider.get().alongWith(intakeOscillatingProvider.get());
+
+        return waitForRotationAndHoodAndShooterToBeAtGoalProvider.get()
+                .andThen(shootingDeadline
+                        .deadlineFor(fireAndCloseIntake));
     }
 
     /**

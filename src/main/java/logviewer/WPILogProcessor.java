@@ -48,7 +48,7 @@ public class WPILogProcessor {
                 }
             }
         } catch (Exception e) {
-            System.out.println("⚠️ Reached corrupted end of log, stopping early.");
+            System.out.println("Reached corrupted end of log, stopping early.");
         }
     }
 

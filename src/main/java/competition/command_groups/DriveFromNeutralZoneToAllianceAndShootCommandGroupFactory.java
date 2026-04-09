@@ -40,7 +40,7 @@ public class DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory {
                 this.collectorStopCommandProvider.get(),
                 prepareToShootAtTrench()
         ).withName("DriveFromNeutralToAllianceAndWarmUpShooter");
-        
+
         // Getting rid of the middle step such that we can immediately fire after
         // getting back to alliance from neutral zone.
         // group.addCommands(this.getReadyForFiringCommandGroup.get());

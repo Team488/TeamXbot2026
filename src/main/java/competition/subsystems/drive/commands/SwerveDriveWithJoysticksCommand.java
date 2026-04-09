@@ -54,7 +54,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         this.headingModule = headingModuleFactory.create(drive.getRotateToHeadingPid());
         this.hvmDecider = hvmFactory.create(pf.getPrefix());
         this.advisor = advisorFactory.create(hvmDecider);
-        this.advisor.setSnappingZoneCount(8);
+        this.advisor.setSnappingZoneCount(4);
         pf.setDefaultLevel(Property.PropertyLevel.Important);
         this.overallDrivingPowerScale = pf.createPersistentProperty("DrivingPowerScale", 1.0);
         this.overallTurningPowerScale = pf.createPersistentProperty("TurningPowerScale", 1.0);
