@@ -28,6 +28,7 @@ public class Robot extends BaseRobot {
     Logger log = LogManager.getLogger(Robot.class);
 
     public static final double LOOP_INTERVAL = 0.04;
+    private final Field2d field = new Field2d();
 
     BaseSimulator simulator;
     OperatorInterface oi;
@@ -74,7 +75,6 @@ public class Robot extends BaseRobot {
         getInjectorComponent().superstructureMechanismSubsystem();
 
         CommandScheduler.getInstance().schedule(getInjectorComponent().gamepadRumbleCommand());
-        CommandScheduler.getInstance().schedule(getInjectorComponent().whenShooterReadyRumbleCommand());
 
         SmartDashboard.putData("Field", field);
 
