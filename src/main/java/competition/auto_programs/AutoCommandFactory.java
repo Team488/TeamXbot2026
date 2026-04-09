@@ -5,6 +5,7 @@ import competition.command_groups.DriveAcrossMidNeutralZoneCommand;
 import competition.command_groups.DriveFromNeutralZoneToAllianceCommand;
 import competition.command_groups.DriveToNeutralZoneForIntakeCommand;
 import competition.command_groups.DriveToShootingPositionCommand;
+import competition.command_groups.FirstDriveForCollectionCommand;
 import competition.command_groups.PrepareToShootCommandGroup;
 import competition.subsystems.pose.TrajectoriesCalculation;
 import competition.command_groups.RunCollectorHopperFeederCommandGroup;
@@ -36,6 +37,7 @@ public class AutoCommandFactory {
 
     private final Provider<DriveToNeutralZoneForIntakeCommand> driveToNeutralZoneProvider;
     private final Provider<DriveAcrossMidNeutralZoneCommand> driveAcrossMidNeutralZoneProvider;
+    private final Provider<FirstDriveForCollectionCommand> firstDriveForCollectionCommandProvider;
     private final Provider<IntakeDeployExtendCommand> intakeDeployExtendProvider;
     private final Provider<IntakeDeployOscillating> intakeOscillatingProvider;
     private final Provider<CollectorIntakeCommand> collectorIntakeProvider;
@@ -59,6 +61,7 @@ public class AutoCommandFactory {
     public AutoCommandFactory(
             Provider<DriveToNeutralZoneForIntakeCommand> driveToNeutralZoneProvider,
             Provider<DriveAcrossMidNeutralZoneCommand> driveAcrossMidNeutralZoneProvider,
+            Provider<FirstDriveForCollectionCommand> firstDriveForCollectionCommandProvider,
             Provider<IntakeDeployExtendCommand> intakeDeployExtendProvider,
             Provider<IntakeDeployOscillating> intakeOscillatingProvider,
             Provider<CollectorIntakeCommand> collectorIntakeProvider,
@@ -79,6 +82,7 @@ public class AutoCommandFactory {
             AutonomousCommandSelector autoSelector) {
         this.driveToNeutralZoneProvider = driveToNeutralZoneProvider;
         this.driveAcrossMidNeutralZoneProvider = driveAcrossMidNeutralZoneProvider;
+        this.firstDriveForCollectionCommandProvider = firstDriveForCollectionCommandProvider;
         this.intakeDeployExtendProvider = intakeDeployExtendProvider;
         this.intakeOscillatingProvider = intakeOscillatingProvider;
         this.collectorIntakeProvider = collectorIntakeProvider;
@@ -125,7 +129,7 @@ public class AutoCommandFactory {
         group.addCommands(driveToNeutralZoneProvider.get());
 
         group.addCommands(new ParallelDeadlineGroup(
-                driveAcrossMidNeutralZoneProvider.get(),
+                firstDriveForCollectionCommandProvider.get(),
                 collectorIntakeProvider.get()));
 
         return group;
