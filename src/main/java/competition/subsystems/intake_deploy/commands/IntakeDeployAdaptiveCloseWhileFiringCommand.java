@@ -87,7 +87,6 @@ public class IntakeDeployAdaptiveCloseWhileFiringCommand extends BaseSetpointCom
 
     @Override
     public void execute() {
-        double nowSeconds = XTimer.getFPGATimestamp();
         // No pun intended
         double currentAmps = intakeDeploySubsystem.getMotorCurrent().in(Amps);
         boolean currentIsStableHigh = currentSpikeValidator.checkStable(currentAmps > currentThresholdAmps.get());
@@ -98,14 +97,12 @@ public class IntakeDeployAdaptiveCloseWhileFiringCommand extends BaseSetpointCom
                 basePosition = basePosition.plus(advanceRatePerSecond.get().times(Robot.LOOP_INTERVAL));
                 if (basePosition.gte(retractLimit.get())) {
                     basePosition = retractLimit.get();
-                    state = State.AT_LIMIT_OSCILLATING;
-                    stateStartTime = nowSeconds;
+                    changeState(State.AT_LIMIT_OSCILLATING);
                 }
 
                 // Transition to stalled only after current has been high for the stable window
                 if (currentIsStableHigh && state == State.ADVANCING) {
-                    state = State.STALLED;
-                    stateStartTime = nowSeconds;
+                    changeState(State.STALLED);
                 }
 
                 intakeDeploySubsystem.setTargetValue(basePosition);
@@ -113,23 +110,19 @@ public class IntakeDeployAdaptiveCloseWhileFiringCommand extends BaseSetpointCom
 
             case STALLED:
                 // Oscillate around the stall position to loosen balls
-                double elapsed = nowSeconds - stateStartTime;
-                double oscillation = oscillationAmplitude.get().in(Degrees)
-                        * Math.sin(2 * Math.PI * elapsed / oscillationPeriod.get());
-                intakeDeploySubsystem.setTargetValue(basePosition.plus(Degrees.of(oscillation)));
+                intakeDeploySubsystem.setTargetValue(
+                        basePosition.plus(calcOscillationOffset()));
 
                 // After dwell time, resume advancing
-                if (elapsed >= dwellTimeSeconds.get()) {
-                    state = State.ADVANCING;
+                if (timeInState() >= dwellTimeSeconds.get()) {
+                    changeState(State.ADVANCING);
                 }
                 break;
 
             case AT_LIMIT_OSCILLATING:
                 // Reached the retract limit — just oscillate indefinitely
-                double limitElapsed = nowSeconds - stateStartTime;
-                double limitOscillation = oscillationAmplitude.get().in(Degrees)
-                        * Math.sin(2 * Math.PI * limitElapsed / oscillationPeriod.get());
-                intakeDeploySubsystem.setTargetValue(retractLimit.get().plus(Degrees.of(limitOscillation)));
+                intakeDeploySubsystem.setTargetValue(
+                        retractLimit.get().plus(calcOscillationOffset()));
                 break;
 
             default:
@@ -138,6 +131,21 @@ public class IntakeDeployAdaptiveCloseWhileFiringCommand extends BaseSetpointCom
 
         aKitLog.record("State", state.name());
         aKitLog.record("BasePosition", basePosition.in(Degrees));
+    }
+
+    private void changeState(State newState) {
+        state = newState;
+        stateStartTime = XTimer.getFPGATimestamp();
+    }
+
+    private double timeInState() {
+        return XTimer.getFPGATimestamp() - stateStartTime;
+    }
+
+    private Angle calcOscillationOffset() {
+        double offset = oscillationAmplitude.get().in(Degrees)
+                * Math.sin(2 * Math.PI * timeInState() / oscillationPeriod.get());
+        return Degrees.of(offset);
     }
 
     @Override
