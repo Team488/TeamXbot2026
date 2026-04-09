@@ -24,7 +24,8 @@ public class IntakeDeployAdaptiveCloseWhileFiringCommand extends BaseSetpointCom
 
     private enum State {
         ADVANCING,
-        STALLED
+        STALLED,
+        AT_LIMIT_OSCILLATING
     }
 
     public final IntakeDeploySubsystem intakeDeploySubsystem;
@@ -94,12 +95,14 @@ public class IntakeDeployAdaptiveCloseWhileFiringCommand extends BaseSetpointCom
             case ADVANCING:
                 // Move base position toward retract limit
                 basePosition = basePosition.plus(advanceRatePerSecond.get().times(Robot.LOOP_INTERVAL));
-                if (basePosition.gt(retractLimit.get())) {
+                if (basePosition.gte(retractLimit.get())) {
                     basePosition = retractLimit.get();
+                    state = State.AT_LIMIT_OSCILLATING;
+                    stallStartTime = now;
                 }
 
                 // Transition to stalled only after current has been high for the stable window
-                if (currentIsHigh) {
+                if (currentIsHigh && state == State.ADVANCING) {
                     state = State.STALLED;
                     stallStartTime = now;
                 }
@@ -118,6 +121,14 @@ public class IntakeDeployAdaptiveCloseWhileFiringCommand extends BaseSetpointCom
                 if (elapsed >= dwellTimeSeconds.get()) {
                     state = State.ADVANCING;
                 }
+                break;
+
+            case AT_LIMIT_OSCILLATING:
+                // Reached the retract limit — just oscillate indefinitely
+                double limitElapsed = now - stallStartTime;
+                double limitOscillation = oscillationAmplitude.get().in(Degrees)
+                        * Math.sin(2 * Math.PI * limitElapsed / oscillationPeriod.get());
+                intakeDeploySubsystem.setTargetValue(retractLimit.get().plus(Degrees.of(limitOscillation)));
                 break;
 
             default:
