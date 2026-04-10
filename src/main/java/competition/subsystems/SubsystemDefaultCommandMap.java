@@ -11,6 +11,7 @@ import competition.subsystems.collector_intake.CollectorSubsystem;
 import competition.subsystems.collector_intake.commands.CollectorStopCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.HoodMaintainerCommand;
+import competition.subsystems.hood.commands.HoodToZeroCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployMaintainerCommand;
 import competition.subsystems.shooter.ShooterSubsystem;
@@ -64,8 +65,9 @@ public class SubsystemDefaultCommandMap {
     }
 
     @Inject
-    public void setupHoodSubsystem(HoodSubsystem hood, HoodMaintainerCommand command) {
+    public void setupHoodSubsystem(HoodSubsystem hood, HoodMaintainerCommand command, HoodToZeroCommand hoodToZeroCommand) {
         hood.setDefaultCommand(command);
+        hood.getSetpointLock().setDefaultCommand(hoodToZeroCommand);
     }
 
     @Inject
