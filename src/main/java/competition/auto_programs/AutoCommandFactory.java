@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import xbot.common.command.BaseRobot;
 import xbot.common.subsystems.autonomous.AutonomousCommandSelector;
 
 import javax.inject.Inject;
@@ -198,8 +199,11 @@ public class AutoCommandFactory {
      * @param shootingDeadline when this command ends we stop shooting
      */
     public Command fireWhenReadyUntilDone(Command shootingDeadline) {
-        var fireAndCloseIntake = runFeederProvider.get().alongWith(intakeOscillatingProvider.get());
+        if (BaseRobot.isSimulation()) {
+            return new WaitForDurationCommand(() -> 1.0);
+        }
 
+        var fireAndCloseIntake = runFeederProvider.get().alongWith(intakeOscillatingProvider.get());
         return waitForRotationAndHoodAndShooterToBeAtGoalProvider.get()
                 .andThen(shootingDeadline
                         .deadlineFor(fireAndCloseIntake));
