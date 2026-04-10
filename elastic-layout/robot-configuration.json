@@ -1793,9 +1793,9 @@
           {
             "title": "Match Shift",
             "x": 1152.0,
-            "y": 384.0,
+            "y": 640.0,
             "width": 512.0,
-            "height": 512.0,
+            "height": 256.0,
             "type": "Large Text Display",
             "properties": {
               "topic": "/SmartDashboard/Match Shift",
@@ -1818,6 +1818,33 @@
               "false_color": 4294198070,
               "true_icon": "None",
               "false_icon": "None"
+            }
+          },
+          {
+            "title": "Auto Selector",
+            "x": 1152.0,
+            "y": 384.0,
+            "width": 512.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Auto Selector",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "selected",
+            "x": 1152.0,
+            "y": 512.0,
+            "width": 512.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Auto Selector/selected",
+              "period": 0.06,
+              "data_type": "string",
+              "show_submit_button": false
             }
           }
         ]

@@ -1,9 +1,15 @@
 
 package competition;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import competition.auto_programs.CollectAndShootTwiceCommand;
+import competition.auto_programs.ShootFromHubCommandGroup;
+import competition.auto_programs.ShootFromTrenchCommandGroup;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,6 +35,8 @@ public class Robot extends BaseRobot {
 
     public static final double LOOP_INTERVAL = 0.04;
     private final Field2d field = new Field2d();
+    private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+
 
     BaseSimulator simulator;
     OperatorInterface oi;
@@ -50,6 +58,16 @@ public class Robot extends BaseRobot {
         getInjectorComponent().intakeDeploySubsystem();
         getInjectorComponent().voltageMonitorSubsystem();
         getInjectorComponent().climberSubsystem();
+
+        autoChooser.setDefaultOption("Normal Bump Auto Right", new PathPlannerAuto("NormalBumpAutoRight"));
+        autoChooser.addOption("Normal Bump Auto Left", new PathPlannerAuto("NormalBumpAutoLeft"));
+
+        autoChooser.addOption("Collect and Shoot Twice", getInjectorComponent().collectAndShootTwiceCommand());
+        autoChooser.addOption("Shoot From Hub", getInjectorComponent().shootFromHubCommandGroup());
+        autoChooser.addOption("Shoot From Trench", getInjectorComponent().shootFromTrenchCommandGroup());
+
+        SmartDashboard.putData("Auto Selector", autoChooser);
+
 
 
         if (BaseRobot.isSimulation()) {
@@ -121,6 +139,10 @@ public class Robot extends BaseRobot {
         super.autonomousInit();
         var pose = (PoseSubsystem) getInjectorComponent().poseSubsystem();
         CommandScheduler.getInstance().schedule(pose.getResetTranslationToVisionEstimateCommand());
+        Command autonomousCommand = autoChooser.getSelected();
+        if (autonomousCommand != null) {
+            CommandScheduler.getInstance().schedule(autonomousCommand);
+        }
 
         if(BaseRobot.isSimulation()) {
             getInjectorComponent().simulator().resetForAuto();
