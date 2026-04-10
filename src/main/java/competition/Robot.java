@@ -65,6 +65,7 @@ public class Robot extends BaseRobot {
         autoChooser.addOption("Collect and Shoot Twice", getInjectorComponent().collectAndShootTwiceCommand());
         autoChooser.addOption("Shoot From Hub", getInjectorComponent().shootFromHubCommandGroup());
         autoChooser.addOption("Shoot From Trench", getInjectorComponent().shootFromTrenchCommandGroup());
+        autoChooser.addOption("HubToDepoToTower", new PathPlannerAuto("HubToDepoToTower"));
 
         SmartDashboard.putData("Auto Selector", autoChooser);
 
