@@ -8,15 +8,15 @@ import xbot.common.subsystems.autonomous.AutonomousCommandSelector;
 
 import javax.inject.Inject;
 
-public class RightBumpAutoCommand extends BaseAutonomousSequentialCommandGroup {
+public class HubToDepoToTowerAutoCommand extends BaseAutonomousSequentialCommandGroup {
     @Inject
-    public RightBumpAutoCommand(
+    public HubToDepoToTowerAutoCommand(
             AutonomousCommandSelector autoSelector,
             PropertyFactory pf
     ) {
         super(autoSelector);
         pf.setPrefix(this.getName());
 
-        this.addCommands(AutoBuilder.buildAuto("NormalBumpAutoRight"));
+        this.addCommands(AutoBuilder.buildAuto("HubToDepoToTowerAuto"));
     }
 }

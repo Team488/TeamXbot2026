@@ -17,6 +17,6 @@ public class LeftBumpAutoCommand extends BaseAutonomousSequentialCommandGroup {
         super(autoSelector);
         pf.setPrefix(this.getName());
 
-        this.addCommands(new PathPlannerAuto("NormalBumpAutoLeft"));
+        this.addCommands(AutoBuilder.buildAuto("NormalBumpAutoLeft"));
     }
 }
