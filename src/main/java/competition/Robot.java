@@ -111,7 +111,7 @@ public class Robot extends BaseRobot {
     public void autonomousInit() {
         super.autonomousInit();
         var pose = (PoseSubsystem) getInjectorComponent().poseSubsystem();
-        CommandScheduler.getInstance().schedule(pose.getResetTranslationToVisionEstimateCommand());
+        CommandScheduler.getInstance().schedule(pose.getSnapOdometryPoseToVisionPoseCommand());
 
         if(BaseRobot.isSimulation()) {
             getInjectorComponent().simulator().resetForAuto();
