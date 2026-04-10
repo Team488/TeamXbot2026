@@ -15,7 +15,7 @@ import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployMaintainerCommand;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
-import competition.subsystems.shooter.commands.ShooterStopCommand;
+import competition.subsystems.shooter.commands.ShooterDefaultCommand;
 import competition.subsystems.shooter.commands.ShooterWheelMaintainerCommand;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederStop;
@@ -42,9 +42,9 @@ public class SubsystemDefaultCommandMap {
     @Inject
     public void setupShooterSubsystem(ShooterSubsystem shooter,
                                       ShooterWheelMaintainerCommand command,
-                                      ShooterStopCommand stopCommand) {
+                                      ShooterDefaultCommand defaultCommand) {
         shooter.setDefaultCommand(command);
-        shooter.getSetpointLock().setDefaultCommand(stopCommand);
+        shooter.getSetpointLock().setDefaultCommand(defaultCommand);
     }
 
     @Inject
