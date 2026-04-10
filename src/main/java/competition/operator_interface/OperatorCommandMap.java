@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import competition.auto_programs.AimAndShootFromHereCommand;
 import competition.auto_programs.ppl.LeftBumpAutoCommand;
 import competition.auto_programs.ShootFromHubCommandGroup;
@@ -213,6 +214,14 @@ public class OperatorCommandMap {
         var collectAndShootTwice = setAutonomousCommandProvider.get();
         collectAndShootTwice.setAutoCommand(collectAndShootTwiceCommand, Landmarks.blueStartTrenchToOutpost);
         collectAndShootTwice.includeOnSmartDashboard("Collect and shoot twice.");
+
+        var hubToDepoToTower = setAutonomousCommandProvider.get();
+        hubToDepoToTower.setAutoCommand(new PathPlannerAuto("Hub To Depo To Tower Auto"));
+        hubToDepoToTower.includeOnSmartDashboard("Hub to Depo to Tower Auto");
+
+        var normalBumpAutoRight = setAutonomousCommandProvider.get();
+        normalBumpAutoRight.setAutoCommand(new PathPlannerAuto("NormalBumpAutoRight"));
+        normalBumpAutoRight.includeOnSmartDashboard("Normal Bump Auto Right");
     }
 
     @Inject

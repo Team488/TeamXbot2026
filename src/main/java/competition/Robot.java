@@ -35,7 +35,6 @@ public class Robot extends BaseRobot {
 
     public static final double LOOP_INTERVAL = 0.04;
     private final Field2d field = new Field2d();
-    private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
 
     BaseSimulator simulator;
@@ -58,16 +57,6 @@ public class Robot extends BaseRobot {
         getInjectorComponent().intakeDeploySubsystem();
         getInjectorComponent().voltageMonitorSubsystem();
         getInjectorComponent().climberSubsystem();
-
-        autoChooser.setDefaultOption("Normal Bump Auto Right", new PathPlannerAuto("NormalBumpAutoRight"));
-        autoChooser.addOption("Normal Bump Auto Left", new PathPlannerAuto("NormalBumpAutoLeft"));
-
-        autoChooser.addOption("Collect and Shoot Twice", getInjectorComponent().collectAndShootTwiceCommand());
-        autoChooser.addOption("Shoot From Hub", getInjectorComponent().shootFromHubCommandGroup());
-        autoChooser.addOption("Shoot From Trench", getInjectorComponent().shootFromTrenchCommandGroup());
-        autoChooser.addOption("HubToDepoToTower", new PathPlannerAuto("HubToDepoToTower"));
-
-        SmartDashboard.putData("Auto Selector", autoChooser);
 
 
 
@@ -140,7 +129,6 @@ public class Robot extends BaseRobot {
         super.autonomousInit();
         var pose = (PoseSubsystem) getInjectorComponent().poseSubsystem();
         CommandScheduler.getInstance().schedule(pose.getResetTranslationToVisionEstimateCommand());
-        Command autonomousCommand = autoChooser.getSelected();
         if (autonomousCommand != null) {
             CommandScheduler.getInstance().schedule(autonomousCommand);
         }
