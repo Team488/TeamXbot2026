@@ -341,6 +341,18 @@ public class PoseSubsystem extends BasePoseSubsystem {
         }
     }
 
+    public boolean isInAllianceZone() {
+        var alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
+        double robotX = getCurrentPose2d().getX();
+        double midpoint = fieldXMidpointInMeters.in(Meters);
+
+        if (alliance == DriverStation.Alliance.Blue) {
+            return robotX < midpoint;
+        } else {
+            return robotX > midpoint;
+        }
+    }
+
     // Start of Closest Landmark Calcs
 
     public Pose2d closestAllianceTrench() {
