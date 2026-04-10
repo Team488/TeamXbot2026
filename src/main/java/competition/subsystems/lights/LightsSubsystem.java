@@ -4,6 +4,7 @@ import com.ctre.phoenix6.signals.LarsonBounceValue;
 import competition.electrical_contract.ElectricalContract;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
+import competition.subsystems.vision.AprilTagVisionSubsystemExtended;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import xbot.common.command.BaseSubsystem;
@@ -24,6 +25,7 @@ public class LightsSubsystem extends BaseSubsystem {
     public HoodSubsystem hoodSubsystem;
     public VoltageMonitorSubsystem voltageMonitor;
     public RobotAssertionManager assertionManager;
+    public final AprilTagVisionSubsystemExtended vision;
 
     @Inject
     public LightsSubsystem(XCANLightController.XCANLightControllerFactory lightsFactory,
@@ -31,12 +33,14 @@ public class LightsSubsystem extends BaseSubsystem {
                            IntakeDeploySubsystem intakeDeploy,
                            HoodSubsystem hoodSubsystem,
                            VoltageMonitorSubsystem voltageMonitor,
-                           RobotAssertionManager assertionManager
+                           RobotAssertionManager assertionManager,
+                           AprilTagVisionSubsystemExtended vision
     ) {
         this.intakeDeploy = intakeDeploy;
         this.hoodSubsystem = hoodSubsystem;
         this.voltageMonitor = voltageMonitor;
         this.assertionManager = assertionManager;
+        this.vision = vision;
         if (electricalContract.isLightsReady()) {
             this.lights = lightsFactory.create(
                     electricalContract.getLightControllerInfo()
@@ -53,7 +57,9 @@ public class LightsSubsystem extends BaseSubsystem {
             return;
         }
 
-        if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && voltageMonitor.isAtUnhealthyVoltage()) {
+        if (DriverStation.isDisabled() && !vision.areAllCamerasConnected()) {
+            lights.strobe(0, Hertz.of(1), Color.kRed);
+        } else if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && voltageMonitor.isAtUnhealthyVoltage()) {
             lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
         } else if (intakeDeploy.isCalibrated && DriverStation.isTeleop() && voltageMonitor.isAtUnhealthyVoltage()) {
             lights.larson(0, Hertz.of(25), Color.kGreen, LarsonBounceValue.Back);
