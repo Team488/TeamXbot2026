@@ -204,6 +204,12 @@
       }
     },
     {
+      "name": "WaitForRotationAndHoodAndShooterToBeAtGoalCommandGroup",
+      "waypointRelativePos": 6.09,
+      "endWaypointRelativePos": 8.0,
+      "command": null
+    },
+    {
       "name": "WarmupShooterNear",
       "waypointRelativePos": 6.092955508474575,
       "endWaypointRelativePos": 8.0,
