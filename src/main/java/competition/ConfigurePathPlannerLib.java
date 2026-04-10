@@ -8,6 +8,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import competition.auto_programs.AimAndShootFromHereCommand;
 import competition.command_groups.PrepareToShootCommandGroup;
+import competition.command_groups.WaitForRotationAndHoodAndShooterToBeAtGoalCommandGroup;
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
@@ -25,11 +26,13 @@ public class ConfigurePathPlannerLib {
                                    IntakeDeployExtendCommand intakeDeployExtendCommand,
                                    CollectorIntakeCommand collectorIntakeCommand,
                                    AimAndShootFromHereCommand aimAndShootFromHereCommand,
-                                   PrepareToShootCommandGroup prepareToShootCommandGroup
+                                   PrepareToShootCommandGroup prepareToShootCommandGroup,
+                                   WaitForRotationAndHoodAndShooterToBeAtGoalCommandGroup waitForRotationAndHoodAndShooterToBeAtGoalCommandGroup
     ) {
         NamedCommands.registerCommand("IntakeDeployExtend", intakeDeployExtendCommand);
         NamedCommands.registerCommand("CollectorIntake", collectorIntakeCommand);
         NamedCommands.registerCommand("AimAndShootFromHere", aimAndShootFromHereCommand);
+        NamedCommands.registerCommand("WaitForRotationAndHoodAndShooterToBeAtGoal", waitForRotationAndHoodAndShooterToBeAtGoalCommandGroup);
 
         NamedCommands.registerCommand("WarmupShooterNear", prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR));
 
