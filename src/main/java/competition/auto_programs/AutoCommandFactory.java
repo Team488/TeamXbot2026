@@ -22,8 +22,8 @@ import competition.subsystems.shooter.commands.ShooterStopCommand;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederStop;
 import competition.subsystems.shooter_feeder.commands.WaitForShootingFinished;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
+import competition.subsystems.intake_deploy.commands.IntakeDeployAdaptiveCloseWhileFiringCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
-import competition.subsystems.intake_deploy.commands.IntakeDeployOscillating;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -43,7 +43,7 @@ public class AutoCommandFactory {
     private final Provider<FirstDriveForCollectionCommand> firstDriveForCollectionCommandProvider;
     private final Provider<SecondDriveForCollectionCommand> secondDriveForCollectionCommandProvider;
     private final Provider<IntakeDeployExtendCommand> intakeDeployExtendProvider;
-    private final Provider<IntakeDeployOscillating> intakeOscillatingProvider;
+    private final Provider<IntakeDeployAdaptiveCloseWhileFiringCommand> intakeOscillatingProvider;
     private final Provider<CollectorIntakeCommand> collectorIntakeProvider;
     private final IntakeDeploySubsystem intakeDeploy;
     private final Provider<DriveFromNeutralZoneToAllianceCommand> driveFromNeutralZoneToAllianceProvider;
@@ -69,7 +69,7 @@ public class AutoCommandFactory {
             Provider<FirstDriveForCollectionCommand> firstDriveForCollectionCommandProvider,
             Provider<SecondDriveForCollectionCommand> secondDriveForCollectionCommandProvider,
             Provider<IntakeDeployExtendCommand> intakeDeployExtendProvider,
-            Provider<IntakeDeployOscillating> intakeOscillatingProvider,
+            Provider<IntakeDeployAdaptiveCloseWhileFiringCommand> intakeOscillatingProvider,
             Provider<CollectorIntakeCommand> collectorIntakeProvider,
             IntakeDeploySubsystem intakeDeploy,
             Provider<DriveFromNeutralZoneToAllianceCommand> driveFromNeutralZoneToAllianceProvider,
