@@ -65,7 +65,7 @@ public class Robot extends BaseRobot {
         }
 
         oi = getInjectorComponent().operatorInterface();
-        autonomousCommandSelector.setCurrentAutonomousCommand(getInjectorComponent().shootFromTrenchCommandGroup());
+        autonomousCommandSelector.setCurrentAutonomousCommand(getInjectorComponent().defaultAutoCommand());
 
         dataFrameRefreshables.add((DriveSubsystem)getInjectorComponent().driveSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().poseSubsystem());

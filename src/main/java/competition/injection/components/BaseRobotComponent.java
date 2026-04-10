@@ -58,6 +58,8 @@ public abstract class BaseRobotComponent extends BaseComponent {
 
     public abstract ClimberSubsystem climberSubsystem();
 
+    public abstract ShootFromTrenchCommandGroup defaultAutoCommand();
+
     public abstract OperatorInterface operatorInterface();
 
     public abstract GamepadRumbleCommand gamepadRumbleCommand();
