@@ -2,8 +2,10 @@ package competition.auto_programs;
 
 import competition.command_groups.FireWhenShooterAndHoodReadyUntilDone;
 import competition.command_groups.PrepareToShootCommandGroup;
+import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.TrajectoriesCalculation;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.autonomous.AutonomousCommandSelector;
@@ -19,6 +21,7 @@ public class ShootFromTrenchCommandGroup extends BaseAutonomousSequentialCommand
            TrajectoriesCalculation trajectoriesCalculation,
            FireWhenShooterAndHoodReadyUntilDone fireWhenShooterAndHoodReady,
            PrepareToShootCommandGroup prepareToShootCommandGroup,
+           DriveSubsystem driveSubsystem,
            PropertyFactory pf) {
         super(autoSelector);
 
@@ -28,7 +31,9 @@ public class ShootFromTrenchCommandGroup extends BaseAutonomousSequentialCommand
         getAutoStatusChangeCommand("Starting ShootFromTrenchCommandGroup");
         prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
 
-        var prepareAndShoot = new ParallelCommandGroup(prepareToShootCommandGroup, fireWhenShooterAndHoodReady)
+        // run a no-op command that requires the drive subsystem so the robot doesn't move for any reason
+        var holdPosition = new RunCommand(() -> {}, driveSubsystem);
+        var prepareAndShoot = new ParallelCommandGroup(prepareToShootCommandGroup, fireWhenShooterAndHoodReady, holdPosition)
                 .withTimeout(timeout.get());
 
         this.addCommands(prepareAndShoot);
