@@ -344,12 +344,13 @@ public class PoseSubsystem extends BasePoseSubsystem {
     public boolean isInAllianceZone() {
         var alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
         double robotX = getCurrentPose2d().getX();
-        double midpoint = fieldXMidpointInMeters.in(Meters);
+        double allianceZoneDepth = 5.0;
+        double fieldWidth = fieldXMidpointInMeters.in(Meters) * 2;
 
         if (alliance == DriverStation.Alliance.Blue) {
-            return robotX < midpoint;
+            return robotX < allianceZoneDepth;
         } else {
-            return robotX > midpoint;
+            return robotX > fieldWidth - allianceZoneDepth;
         }
     }
 
