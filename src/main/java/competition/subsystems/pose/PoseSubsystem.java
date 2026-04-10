@@ -168,12 +168,12 @@ public class PoseSubsystem extends BasePoseSubsystem {
      * 
      * @return The command that resets the pose estimator
      */
-    public Command getResetTranslationToVisionEstimateCommand() {
+    public Command getSnapOdometryPoseToVisionPoseCommand() {
         return new InstantCommand(() -> {
             var estimatedPose = new Pose2d(
                     this.getPrimaryPoseEstimator().getEstimatedPosition().getTranslation(),
-                    getCurrentHeadingGyroOnly());
-            resetPoseEstimator(estimatedPose);
+                    this.getPrimaryPoseEstimator().getEstimatedPosition().getRotation());
+            onlyWheelsGyroSwerveOdometry.resetPose(estimatedPose);
         }).ignoringDisable(true);
     }
 
