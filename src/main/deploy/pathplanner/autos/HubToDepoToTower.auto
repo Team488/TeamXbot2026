@@ -5,12 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "WarmupShooterNear"
-          }
-        },
-        {
           "type": "deadline",
           "data": {
             "commands": [
