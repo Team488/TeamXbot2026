@@ -130,11 +130,12 @@ public class AutoCommandFactory {
     /**
      * Drives to the neutral zone ball pit, deploys the intake, drives across to collect balls.
      */
-    public Command collectFromNeutralZone() {
+    public Command collectFromNeutralZone(Command collectorWaitCommand) {
         var group = new SequentialCommandGroup();
         group.setName("CollectFromNeutralZone");
 
-        group.addCommands(driveToNeutralZoneProvider.get());
+        group.addCommands(new ParallelDeadlineGroup(
+                collectorWaitCommand.andThen(driveToNeutralZoneProvider.get())));
 
         group.addCommands(new ParallelDeadlineGroup(
                 firstDriveForCollectionCommandProvider.get(),
@@ -146,11 +147,12 @@ public class AutoCommandFactory {
         /**
      * Drives to the neutral zone ball pit, deploys the intake, drives across to collect balls.
      */
-    public Command collectFromNeutralZoneSecond() {
+    public Command collectFromNeutralZoneSecond(Command collectorWaitCommand) {
         var group = new SequentialCommandGroup();
         group.setName("CollectFromNeutralZoneSecond");
 
-        group.addCommands(driveToNeutralZoneSecondTimeProvider.get());
+        group.addCommands(new ParallelDeadlineGroup(
+                collectorWaitCommand.andThen(driveToNeutralZoneSecondTimeProvider.get())));
 
         group.addCommands(new ParallelDeadlineGroup(
                 secondDriveForCollectionCommandProvider.get(),
@@ -172,7 +174,6 @@ public class AutoCommandFactory {
         prepareToShoot.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
         group.addCommands(new ParallelDeadlineGroup(
                 driveFromNeutralZoneToAllianceProvider.get(),
-                collectorStopProvider.get(),
                 prepareToShoot));
 
         var continuousPrepare = continuousPrepareToShootProvider.get();
