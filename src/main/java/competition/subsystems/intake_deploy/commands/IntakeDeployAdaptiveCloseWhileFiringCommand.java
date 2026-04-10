@@ -60,15 +60,15 @@ public class IntakeDeployAdaptiveCloseWhileFiringCommand extends BaseSetpointCom
         this.intakeDeploySubsystem = intakeDeploySubsystem;
 
         this.advanceRatePerSecond = propertyFactory.createPersistentProperty(
-                "AdvanceRatePerSecond", Degrees.of(60));
+                "AdvanceRatePerSecond", Degrees.of(90));
         this.retractLimit = propertyFactory.createPersistentProperty(
                 "RetractLimit", Degrees.of(-90));
         this.currentThresholdAmps = propertyFactory.createPersistentProperty(
                 "CurrentThresholdAmps", 15.0);
         this.oscillationAmplitude = propertyFactory.createPersistentProperty(
-                "OscillationAmplitude", Degrees.of(10));
+                "OscillationAmplitude", Degrees.of(15));
         this.oscillationPeriod = propertyFactory.createPersistentProperty(
-                "OscillationPeriod", 0.5);
+                "OscillationPeriod", 0.75);
         this.currentStableTimeSeconds = propertyFactory.createPersistentProperty(
                 "CurrentStableTimeSeconds", 0.25);
         this.dwellTimeSeconds = propertyFactory.createPersistentProperty(
