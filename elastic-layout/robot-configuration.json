@@ -188,7 +188,7 @@
           {
             "title": "Hub to Depo to Tower Auto",
             "x": 384.0,
-            "y": 768.0,
+            "y": 512.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Command",
@@ -202,7 +202,7 @@
           {
             "title": "Normal Bump Auto Right",
             "x": 640.0,
-            "y": 768.0,
+            "y": 512.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Command",
