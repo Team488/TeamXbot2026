@@ -102,6 +102,7 @@ public class IntakeDeployAdaptiveCloseWhileFiringCommand extends BaseSetpointCom
 
                 // Transition to stalled only after current has been high for the stable window
                 if (currentIsStableHigh && state == State.ADVANCING) {
+                    basePosition = intakeDeploySubsystem.getCurrentValue(); // lock in position at stall
                     changeState(State.STALLED);
                 }
 
