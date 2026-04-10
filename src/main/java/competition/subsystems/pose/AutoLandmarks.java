@@ -109,6 +109,27 @@ public class AutoLandmarks {
                 returnPathPose.getRotation());
     }
 
+    public List<Pose2d> getDriverCloserCollectionPath(Pose2d pose) {
+        var results = new ArrayList<Pose2d>();
+        var lastDriveFinish = this.getNearestAllianceToNeutralTrenchPath(pose);
+        var originalCollectionPose = this.getStartCollectionPose(pose);
+        var startPoseCollection = lastDriveFinish.get(lastDriveFinish.size() - 1);
+
+        var multiplierX = startPoseCollection.getX() > this.gamefield.getFieldCenter().getX() ? 1 : -1;
+        var multiplierY = startPoseCollection.getY() > this.gamefield.getFieldCenter().getY() ? 1 : -1;
+        var firstPoseAdjustment = new Translation2d(Units.Meters.of(0.05).times(multiplierX), Units.Meters.of(0.3).times(multiplierY));
+        var firstPathPose = new Pose2d(startPoseCollection.getTranslation().plus(firstPoseAdjustment), originalCollectionPose.getRotation());
+
+        results.add(firstPathPose);
+
+        var adjustedForRobotY = this.robotRadius.plus(this.pathPlanning.getAdditionalClearance()).times(multiplierY * -1).in(Units.Meters);
+        var midFieldAdjustedRobotTranslation = new Translation2d(firstPathPose.getX(), this.gamefield.getFieldCenter().getY() - adjustedForRobotY);
+        var endCollectionPose = new Pose2d(midFieldAdjustedRobotTranslation, firstPathPose.getRotation());
+        results.add(endCollectionPose);
+
+        return results;
+    }
+
     public List<Pose2d> getAllianceShootingStartingPath(Pose2d pose) {
         var alliance = this.getAlliance();
         var results = new ArrayList<Pose2d>();
