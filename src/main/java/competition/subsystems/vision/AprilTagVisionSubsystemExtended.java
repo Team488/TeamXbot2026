@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.Timer;
 import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.properties.PropertyFactory;
@@ -24,6 +25,7 @@ public class AprilTagVisionSubsystemExtended extends AprilTagVisionSubsystem {
     HashMap<Pose2d, Integer> aprilTagIDHashMap = new HashMap<>();
     private final AprilTagFieldLayout aprilTagFieldLayout;
     public final CameraInfo[] cameras;
+    private static final double STALE_THRESHOLD_SEC = 0.200;
 
     @Inject
     public AprilTagVisionSubsystemExtended(PropertyFactory pf,
@@ -112,6 +114,17 @@ public class AprilTagVisionSubsystemExtended extends AprilTagVisionSubsystem {
                 return false;
             }
         }
+        return true;
+    }
+
+    public boolean hasRecentPoseObservation() {
+        for (var poseObservation : this.getAllPoseObservations()) {
+            boolean stale = Timer.getFPGATimestamp() - poseObservation.getTimestampSeconds() > STALE_THRESHOLD_SEC;
+            if (!stale) {
+                return false;
+            }
+        }
+
         return true;
     }
 }
