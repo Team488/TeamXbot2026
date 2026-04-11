@@ -14,6 +14,7 @@ import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.lights.LightsSubsystem;
+import competition.subsystems.pose.TrajectoriesCalculation;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.general_commands.GamepadRumbleCommand;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
@@ -63,6 +64,8 @@ public abstract class BaseRobotComponent extends BaseComponent {
     public abstract OperatorInterface operatorInterface();
 
     public abstract GamepadRumbleCommand gamepadRumbleCommand();
+
+    public abstract TrajectoriesCalculation trajectoriesCalculation();
 
     public abstract SuperstructureMechanismSubsystem superstructureMechanismSubsystem();
 
