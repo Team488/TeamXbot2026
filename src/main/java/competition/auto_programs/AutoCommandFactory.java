@@ -135,7 +135,8 @@ public class AutoCommandFactory {
         group.setName("CollectFromNeutralZone");
 
         group.addCommands(new ParallelDeadlineGroup(
-                collectorWaitCommand.andThen(driveToNeutralZoneProvider.get())));
+                driveToNeutralZoneProvider.get(),
+                collectorWaitCommand.andThen(collectorIntakeProvider.get())));
 
         group.addCommands(new ParallelDeadlineGroup(
                 firstDriveForCollectionCommandProvider.get(),
@@ -152,7 +153,8 @@ public class AutoCommandFactory {
         group.setName("CollectFromNeutralZoneSecond");
 
         group.addCommands(new ParallelDeadlineGroup(
-                collectorWaitCommand.andThen(driveToNeutralZoneSecondTimeProvider.get())));
+                driveToNeutralZoneSecondTimeProvider.get()
+                collectorWaitCommand.andThen(collectorIntakeProvider.get())));
 
         group.addCommands(new ParallelDeadlineGroup(
                 secondDriveForCollectionCommandProvider.get(),
