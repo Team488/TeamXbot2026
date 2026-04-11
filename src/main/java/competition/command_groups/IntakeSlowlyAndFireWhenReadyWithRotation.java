@@ -2,6 +2,7 @@ package competition.command_groups;
 
 
 import competition.general_commands.WaitForDurationCommand;
+import competition.subsystems.intake_deploy.commands.IntakeDeployAdaptiveCloseWhileFiringCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployOscillating;
 import competition.subsystems.intake_deploy.commands.IntakeDeploySlowClosing;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -20,24 +21,19 @@ public class IntakeSlowlyAndFireWhenReadyWithRotation extends BaseSequentialComm
     public IntakeSlowlyAndFireWhenReadyWithRotation(
                                         WaitForRotationAndHoodAndShooterToBeAtGoalCommandGroup waitForRotationAndHoodAndShooterToBeAtGoalCommandGroup,
                                         RunCollectorHopperFeederCommandGroup runCollectorHopperFeederCommandGroup,
-                                        IntakeDeployOscillating intakeDeployOscillating,
+                                        IntakeDeployAdaptiveCloseWhileFiringCommand intakeDeployAdaptiveCloseWhilefiring,
                                         PropertyFactory propertyFactory
 
     ) {
         propertyFactory.setPrefix(this);
 
-        var waitBeforeRetracting = new WaitForDurationCommand(
-                propertyFactory.createPersistentProperty
-                        ("waitBeforeRetractingSeconds", 2.0)::get
-        );
 
         this.addCommands(
                 waitForRotationAndHoodAndShooterToBeAtGoalCommandGroup,
                 Commands.parallel(
                         runCollectorHopperFeederCommandGroup,
                         Commands.sequence(
-                                waitBeforeRetracting,
-                                intakeDeployOscillating
+                                intakeDeployAdaptiveCloseWhilefiring
                         )
                 )
         );
