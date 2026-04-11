@@ -172,6 +172,46 @@
               "show_type": true,
               "maximize_button_space": false
             }
+          },
+          {
+            "title": "DeviceHealth",
+            "x": 1152.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "Alerts",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/DeviceHealth",
+              "period": 0.06
+            }
+          },
+          {
+            "title": "Hub to Depo to Tower Auto",
+            "x": 384.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Hub to Depo to Tower Auto",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "Normal Bump Auto Right",
+            "x": 640.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Normal Bump Auto Right",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
           }
         ]
       }

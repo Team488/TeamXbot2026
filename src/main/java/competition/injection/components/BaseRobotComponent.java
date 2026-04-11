@@ -1,6 +1,8 @@
 package competition.injection.components;
 
 import competition.ConfigurePathPlannerLib;
+import competition.auto_programs.CollectAndShootTwiceCommand;
+import competition.auto_programs.ShootFromHubCommandGroup;
 import competition.auto_programs.ShootFromTrenchCommandGroup;
 import competition.operator_interface.OperatorCommandMap;
 import competition.operator_interface.OperatorInterface;
@@ -65,4 +67,11 @@ public abstract class BaseRobotComponent extends BaseComponent {
     public abstract SuperstructureMechanismSubsystem superstructureMechanismSubsystem();
 
     public abstract ConfigurePathPlannerLib configurePathPlannerLib();
+
+    public abstract CollectAndShootTwiceCommand collectAndShootTwiceCommand();
+
+    public abstract ShootFromHubCommandGroup shootFromHubCommandGroup();
+
+    public abstract ShootFromTrenchCommandGroup shootFromTrenchCommandGroup();
+
 }
