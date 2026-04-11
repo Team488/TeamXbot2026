@@ -9,23 +9,23 @@ import competition.command_groups.vision.BaseDriveWithSimpleBezierCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.AutoLandmarks;
 import competition.subsystems.pose.PoseSubsystem;
+import competition.subsystems.pose.RefinedSwervePointPathPlanning;
 import edu.wpi.first.math.geometry.Pose2d;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
-import xbot.common.subsystems.oracle.SwervePointPathPlanning;
 import xbot.common.subsystems.pose.GameField;
 import xbot.common.trajectory.XbotSwervePoint;
 
 public class SecondDriveForCollectionCommand extends BaseDriveWithSimpleBezierCommand {
     private final AutoLandmarks autoLandmarks;
     private final PoseSubsystem pose;
-    private final SwervePointPathPlanning pathPlanning;
+    private final RefinedSwervePointPathPlanning pathPlanning;
 
     @Inject
     public SecondDriveForCollectionCommand(DriveSubsystem drive, PoseSubsystem pose,
             PropertyFactory pf, HeadingModule.HeadingModuleFactory headingModuleFactory,
-            RobotAssertionManager robotAssertionManager, SwervePointPathPlanning pathPlanning, GameField gamefield,
+            RobotAssertionManager robotAssertionManager, RefinedSwervePointPathPlanning pathPlanning, GameField gamefield,
             AutoLandmarks autoLandmarks) {
         super(drive, pose, pf, headingModuleFactory, robotAssertionManager);
         this.pose = pose;
@@ -33,24 +33,15 @@ public class SecondDriveForCollectionCommand extends BaseDriveWithSimpleBezierCo
         this.autoLandmarks = autoLandmarks;
     }
 
-    private List<XbotSwervePoint> calcSwervePoints() {
-        var currentPose = this.pose.getCurrentPose2d();
-        var lastCollectFinish = this.autoLandmarks.getStartCollectionPose(currentPose);
-        var fullEndCollectionLocation = this.autoLandmarks.getMidBallPitCollectionPose(currentPose);
-        var startPose = new Pose2d(lastCollectFinish.getTranslation().interpolate(fullEndCollectionLocation.getTranslation(), 0.75),
-                                 fullEndCollectionLocation.getRotation());
-        var endPose = new Pose2d(lastCollectFinish.getTranslation().interpolate(fullEndCollectionLocation.getTranslation(), 1.2),
-                                 fullEndCollectionLocation.getRotation());
-
-        List<XbotSwervePoint> points = new ArrayList<>();
-        points.addAll(this.pathPlanning.generateSwervePoints(startPose, endPose, false));
-
-        return points;
-    }
-
     @Override
     public void initialize() {
-        super.logic.setKeyPoints(this.calcSwervePoints());
+        var currentPose = this.pose.getCurrentPose2d();
+        var lastDriveFinish = this.autoLandmarks.getNearestAllianceToNeutralTrenchPath(currentPose);
+        var startPose = lastDriveFinish.get(lastDriveFinish.size() - 1);
+        var pathPoses = this.autoLandmarks.getDriverCloserCollectionPath(currentPose);
+
+        super.logic.setKeyPoints(this.pathPlanning.generateSwervePoints(startPose, pathPoses,
+                false, true));
         super.setSegmentType(SegmentType.Mid);
         super.setMaxSpeed(MaxSpeed.Intake);
 
