@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.Timer;
 import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.XCameraElectricalContract;
+import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.vision.AprilTagVisionIO;
 import xbot.common.subsystems.vision.AprilTagVisionIOFactory;
@@ -25,7 +26,7 @@ public class AprilTagVisionSubsystemExtended extends AprilTagVisionSubsystem {
     HashMap<Pose2d, Integer> aprilTagIDHashMap = new HashMap<>();
     private final AprilTagFieldLayout aprilTagFieldLayout;
     public final CameraInfo[] cameras;
-    private static final double STALE_THRESHOLD_SEC = 0.200;
+    private final DoubleProperty stalenessThresholdInSeconds;
 
     @Inject
     public AprilTagVisionSubsystemExtended(PropertyFactory pf,
@@ -50,6 +51,8 @@ public class AprilTagVisionSubsystemExtended extends AprilTagVisionSubsystem {
         // aprilTagIDHashMap.put(Landmarks.BlueFarAlgae, 21);
         // aprilTagIDHashMap.put(Landmarks.BlueFarRightAlgae, 22);
 
+        pf.setPrefix("AprilTagVisionSubsystemExtended");
+        this.stalenessThresholdInSeconds = pf.createPersistentProperty("Staleness Threshold In Seconds", 0.2);
         aprilTagFieldLayout = fieldLayout;
     }
 
@@ -119,7 +122,7 @@ public class AprilTagVisionSubsystemExtended extends AprilTagVisionSubsystem {
 
     public boolean hasRecentPoseObservation() {
         for (var poseObservation : this.getAllPoseObservations()) {
-            boolean stale = Timer.getFPGATimestamp() - poseObservation.getTimestampSeconds() > STALE_THRESHOLD_SEC;
+            boolean stale = Timer.getFPGATimestamp() - poseObservation.timestampSeconds() > this.stalenessThresholdInSeconds.get();
             if (!stale) {
                 return false;
             }
