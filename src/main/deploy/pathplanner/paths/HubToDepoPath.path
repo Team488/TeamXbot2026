@@ -3,24 +3,24 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.4498813760379603,
-        "y": 4.018861209964412
+        "x": 3.106,
+        "y": 4.008
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.363807829181496,
-        "y": 6.439679715302491
+        "x": 3.0199402040181123,
+        "y": 6.428818994218959
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.7493238434163707,
+        "x": 0.8,
         "y": 5.944756820877817
       },
       "prevControl": {
-        "x": 1.4917081850533813,
+        "x": 1.5423843416370107,
         "y": 5.9124792408066424
       },
       "nextControl": null,
@@ -61,14 +61,14 @@
   "eventMarkers": [
     {
       "name": "IntakeDeployExtend",
-      "waypointRelativePos": 0.1,
-      "endWaypointRelativePos": null,
+      "waypointRelativePos": 0.04949381327333687,
+      "endWaypointRelativePos": 0.19347581552306164,
       "command": null
     },
     {
       "name": "CollectorIntake",
-      "waypointRelativePos": 0.39145106861641804,
-      "endWaypointRelativePos": 2.0,
+      "waypointRelativePos": 0.33070866141732724,
+      "endWaypointRelativePos": 1.0,
       "command": null
     }
   ],
