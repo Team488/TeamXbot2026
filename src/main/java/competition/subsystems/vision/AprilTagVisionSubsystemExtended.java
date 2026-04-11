@@ -124,10 +124,10 @@ public class AprilTagVisionSubsystemExtended extends AprilTagVisionSubsystem {
         for (var poseObservation : this.getAllPoseObservations()) {
             boolean stale = Timer.getFPGATimestamp() - poseObservation.timestampSeconds() > this.stalenessThresholdInSeconds.get();
             if (!stale) {
-                return false;
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 }
