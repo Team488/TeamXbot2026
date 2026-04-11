@@ -101,6 +101,10 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         setTargetValue(getTargetValue());
     }
 
+    public boolean isHoodDown() {
+        return hoodServoLeft.getNormalizedCurrentPosition() <= 0.05;
+    }
+
     public void runServo() {
         if (hoodServoLeft != null && hoodServoRight != null) {
             hoodServoLeft.setNormalizedTargetPosition(servoTargetNormalized.get());
