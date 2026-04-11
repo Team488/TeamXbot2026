@@ -73,10 +73,11 @@ public class OperatorCommandMap {
                                    PrecisionModeCommand precisionModeCommand,
                                    AimAndShootFromHereCommand aimAndShootFromHereCommand,
                                    IntakeDeployExtendCommand intakeDeployExtendCommand,
+                                   IntakeDeployRetractCommand intakeDeployRetractCommand,
                                    HopperAndIntakeCommandGroup collect
     ) {
         operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(driveThroughAllianceTrenchCommand);
-        // operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(lowPowerModeOffCommand);
+        operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(intakeDeployRetractCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Back).onTrue(resetHeading);
         var extendAndCollect = collect.alongWith(intakeDeployExtendCommand);
         operatorInterface.driverGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(extendAndCollect);
