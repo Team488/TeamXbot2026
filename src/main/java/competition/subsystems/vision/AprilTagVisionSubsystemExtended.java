@@ -7,8 +7,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.Timer;
 import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.XCameraElectricalContract;
+import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.vision.AprilTagVisionIO;
 import xbot.common.subsystems.vision.AprilTagVisionIOFactory;
@@ -24,6 +26,7 @@ public class AprilTagVisionSubsystemExtended extends AprilTagVisionSubsystem {
     HashMap<Pose2d, Integer> aprilTagIDHashMap = new HashMap<>();
     private final AprilTagFieldLayout aprilTagFieldLayout;
     public final CameraInfo[] cameras;
+    private final DoubleProperty stalenessThresholdInSeconds;
 
     @Inject
     public AprilTagVisionSubsystemExtended(PropertyFactory pf,
@@ -48,6 +51,8 @@ public class AprilTagVisionSubsystemExtended extends AprilTagVisionSubsystem {
         // aprilTagIDHashMap.put(Landmarks.BlueFarAlgae, 21);
         // aprilTagIDHashMap.put(Landmarks.BlueFarRightAlgae, 22);
 
+        pf.setPrefix("AprilTagVisionSubsystemExtended");
+        this.stalenessThresholdInSeconds = pf.createPersistentProperty("Staleness Threshold In Seconds", 0.2);
         aprilTagFieldLayout = fieldLayout;
     }
 
@@ -113,5 +118,16 @@ public class AprilTagVisionSubsystemExtended extends AprilTagVisionSubsystem {
             }
         }
         return true;
+    }
+
+    public boolean hasRecentPoseObservation() {
+        for (var poseObservation : this.getAllPoseObservations()) {
+            boolean stale = Timer.getFPGATimestamp() - poseObservation.timestampSeconds() > this.stalenessThresholdInSeconds.get();
+            if (!stale) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
