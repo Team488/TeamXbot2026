@@ -19,7 +19,7 @@ public class CollectorSimulator {
 
     final MockCANMotorController collectorMotor;
 
-    private int heldPieces = 0;
+    private int heldPieces = 8;
     final AKitLogger aKitLog = new AKitLogger("Simulator/Collector/");
 
     @Inject
@@ -52,6 +52,10 @@ public class CollectorSimulator {
             return true;
         }
         return false;
+    }
+
+    public void reset() {
+        heldPieces = 8;
     }
 
     public void update() {

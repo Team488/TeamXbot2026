@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import competition.auto_programs.AimAndShootFromHereCommand;
 import competition.auto_programs.ppl.LeftBumpAutoCommand;
 import competition.auto_programs.ShootFromHubCommandGroup;
@@ -27,7 +28,6 @@ import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.drive.commands.XPositionCommand;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hood.commands.DropHoodForTrenchCommand;
-import competition.subsystems.hood.commands.HoodToZeroCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployOscillating;
@@ -98,8 +98,7 @@ public class OperatorCommandMap {
                                      HopperAndIntakeCommandGroup intakeCommand,
                                      HopperAndIntakeEjectCommandGroup ejectCommand,
                                      IntakeSlowlyAndFireWhenReady  intakeSlowlyAndFireWhenReady,
-                                     Provider<PrepareToShootCommandGroup> prepareToShootCommand,
-                                     Provider<HoodToZeroCommand> hoodToZeroCommandProvider) {
+                                     Provider<PrepareToShootCommandGroup> prepareToShootCommand) {
         var prepareToShootNear = prepareToShootCommand.get()
                 .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR);
         var prepareToShootTowerClose = prepareToShootCommand.get()
@@ -121,17 +120,13 @@ public class OperatorCommandMap {
                 .whileTrue(intakeCommand);
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.X)
-                .whileTrue(prepareToShootNear)
-                .onFalse(hoodToZeroCommandProvider.get());
+                .whileTrue(prepareToShootNear);
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.Y)
-                .whileTrue(prepareToShootTrench)
-                .onFalse(hoodToZeroCommandProvider.get());
+                .whileTrue(prepareToShootTrench);
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.B)
-                .whileTrue(prepareToShootCorner)
-                .onFalse(hoodToZeroCommandProvider.get());
+                .whileTrue(prepareToShootCorner);
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.A)
-                .whileTrue(prepareToShootTowerClose)
-                .onFalse(hoodToZeroCommandProvider.get());
+                .whileTrue(prepareToShootTowerClose);
 
         operatorInterface.operatorGamepad.getPovIfAvailable(180).whileTrue(ejectCommand);
     }
@@ -213,6 +208,14 @@ public class OperatorCommandMap {
         var collectAndShootTwice = setAutonomousCommandProvider.get();
         collectAndShootTwice.setAutoCommand(collectAndShootTwiceCommand, Landmarks.blueStartTrenchToOutpost);
         collectAndShootTwice.includeOnSmartDashboard("Collect and shoot twice.");
+
+        var hubToDepoToTower = setAutonomousCommandProvider.get();
+        hubToDepoToTower.setAutoCommand(AutoBuilder.buildAuto("HubToDepoToTower"));
+        hubToDepoToTower.includeOnSmartDashboard("Hub to Depo to Tower Auto");
+
+        var normalBumpAutoRight = setAutonomousCommandProvider.get();
+        normalBumpAutoRight.setAutoCommand(AutoBuilder.buildAuto("NormalBumpAutoRight"));
+        normalBumpAutoRight.includeOnSmartDashboard("Normal Bump Auto Right");
     }
 
     @Inject

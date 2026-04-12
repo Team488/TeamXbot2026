@@ -147,6 +147,7 @@ public class MapleSimulator implements BaseSimulator {
     @Override
     public void resetPosition(Pose2d pose) {
         arena.resetFieldForAuto();
+        this.intakeSimulator.reset();
         this.swerveDriveSimulation.getDriveTrainSimulation().setSimulationWorldPose(pose);
         this.pose.setCurrentPoseInMeters(pose);
     }
