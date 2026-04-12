@@ -19,6 +19,8 @@ import xbot.common.advantage.AKitLogger;
 import xbot.common.controls.sensors.mock_adapters.MockGyro;
 import xbot.common.logic.TimeStableValidator;
 
+import static competition.subsystems.pose.Landmarks.blueStartTrenchToDepot;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Seconds;
 
@@ -91,7 +93,8 @@ public class MapleSimulator implements BaseSimulator {
                 drive.getRearRightSwerveModuleSubsystem().getModuleTranslation()
         });
 
-        // starting middle ish of the field on blue
+        // starting
+        // middle ish of the field on blue
         var startingPose = new Pose2d(7, 7 , new Rotation2d());
 
         // Creating the SelfControlledSwerveDriveSimulation instance

@@ -2,6 +2,7 @@ package competition.subsystems.hopper_roller;
 
 import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.NamedRunCommand;
 import xbot.common.controls.actuators.XCANMotorController;
@@ -145,7 +146,7 @@ public class HopperRollerSubsystem extends BaseSubsystem {
     }
 
     public Command getStopCommand() {
-        return new NamedRunCommand(getName() + "-stop", this::stop, this);
+        return new InstantCommand(this::stop, this);
     }
 
     public Command getCollectCommand() {return new NamedRunCommand(getName() + "-collect", this::setCollectPower, this);}
