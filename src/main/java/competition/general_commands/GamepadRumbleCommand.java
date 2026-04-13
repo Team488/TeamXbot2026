@@ -31,7 +31,7 @@ public class GamepadRumbleCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        var lookAtPointFault = drive.getLookAtPointActive() && !vision.areAllCamerasConnected();
+        var lookAtPointFault = drive.getLookAtPointActive() && !vision.hasRecentPoseObservation();
         var shooterReady = DriverStation.isTeleop() && shooter.isReadyToFire() && hood.isMaintainerAtGoal();
 
         if (shooterReady) {
