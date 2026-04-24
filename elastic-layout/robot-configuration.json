@@ -27,8 +27,7 @@
                 "properties": {
                   "topic": "/SmartDashboard/Shoot from trench then collect from netural zone.",
                   "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": false
+                  "show_type": false
                 }
               },
               {
@@ -68,8 +67,7 @@
                 "properties": {
                   "topic": "/SmartDashboard/Shoot from trench.",
                   "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": false
+                  "show_type": false
                 }
               },
               {
@@ -109,8 +107,7 @@
                 "properties": {
                   "topic": "/SmartDashboard/Shoot from hub.",
                   "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": false
+                  "show_type": false
                 }
               },
               {
@@ -141,8 +138,7 @@
             "properties": {
               "topic": "/SmartDashboard/Move midway through field and back.",
               "period": 0.06,
-              "show_type": false,
-              "maximize_button_space": false
+              "show_type": false
             }
           },
           {
@@ -169,8 +165,7 @@
             "properties": {
               "topic": "/SmartDashboard/Collect and shoot twice.",
               "period": 0.06,
-              "show_type": true,
-              "maximize_button_space": false
+              "show_type": true
             }
           },
           {
@@ -1727,7 +1722,63 @@
     {
       "name": "Test Labs for Auto!",
       "grid_layout": {
-        "layouts": [],
+        "layouts": [
+          {
+            "title": "Calculated Values",
+            "x": 512.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Distance Determined by Pose",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/TrajectoriesCalculationV3DynamicOriginalDistanceInMeters",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Distance With Offset",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/TrajectoriesCalculationV3DynamicWithOffsetDistanceInMeters",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Distance Found in Trajectories Json",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/TrajectoriesCalculationV3DynamicDeterminedDistanceInMeters",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          }
+        ],
         "containers": [
           {
             "title": "AimAndShootFromHereCommand",
@@ -1739,8 +1790,7 @@
             "properties": {
               "topic": "/SmartDashboard/AimAndShootFromHereCommand",
               "period": 0.06,
-              "show_type": true,
-              "maximize_button_space": false
+              "show_type": true
             }
           },
           {
@@ -1753,8 +1803,7 @@
             "properties": {
               "topic": "/SmartDashboard/DriveThroughAllianceTrenchCommand",
               "period": 0.06,
-              "show_type": true,
-              "maximize_button_space": false
+              "show_type": true
             }
           },
           {
@@ -1780,6 +1829,20 @@
             "type": "Text Display",
             "properties": {
               "topic": "/Preferences/TrajectoriesCalculation/v3DistanceOffsetMeters",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "v3DistanceOffsetSlope",
+            "x": 128.0,
+            "y": 640.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/TrajectoriesCalculation/v3DistanceOffsetSlope",
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": true
