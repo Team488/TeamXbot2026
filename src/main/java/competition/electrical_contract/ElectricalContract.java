@@ -17,14 +17,14 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class ElectricalContract implements XSwerveDriveElectricalContract, XCameraElectricalContract {
-    private final Set<Hardware> readinessMap;
+    private final Set<Hardware> readinessSet;
 
-    protected ElectricalContract(Set<Hardware> readinessMap) {
-        this.readinessMap = readinessMap;
+    protected ElectricalContract(Set<Hardware> readinessSet) {
+        this.readinessSet = readinessSet;
     }
 
     public boolean isReady(Hardware hardware) {
-        return readinessMap.contains(hardware);
+        return readinessSet.contains(hardware);
     }
 
     // TODO: Remove these later

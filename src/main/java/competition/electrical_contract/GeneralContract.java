@@ -20,8 +20,8 @@ import static edu.wpi.first.units.Units.Seconds;
 
 public abstract class GeneralContract extends ElectricalContract {
 
-    protected GeneralContract(Set<Hardware> readinessMap) {
-        super(readinessMap);
+    protected GeneralContract(Set<Hardware> readinessSet) {
+        super(readinessSet);
     }
 
     @Override
