@@ -32,9 +32,7 @@ public class Contract2025 extends GeneralContract {
 
     @Inject
     public Contract2025() {
-        super(Set.of(
-
-        ));
+        super(Set.of());
     }
 
     @Override
