@@ -1,6 +1,7 @@
 package competition.subsystems.hopper_roller;
 
 import competition.electrical_contract.ElectricalContract;
+import competition.electrical_contract.Hardware;
 import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.NamedRunCommand;
@@ -39,7 +40,7 @@ public class HopperRollerSubsystem extends BaseSubsystem {
         pf.setPrefix(this);
         this.electricalContract = electricalContract;
         this.voltageRampTime = pf.createPersistentProperty("VoltageRampTime", 0.1);
-        if (electricalContract.isHopperRollerReady()) {
+        if (electricalContract.isReady(Hardware.HopperRoller)) {
             this.hopperRollerMotor = motorFactory.create(
                     electricalContract.getHopperRollerMotor(),
                     getPrefix(),

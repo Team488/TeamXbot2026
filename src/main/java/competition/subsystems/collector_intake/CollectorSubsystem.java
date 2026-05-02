@@ -1,6 +1,7 @@
 package competition.subsystems.collector_intake;
 
 import competition.electrical_contract.ElectricalContract;
+import competition.electrical_contract.Hardware;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
@@ -41,7 +42,7 @@ public class CollectorSubsystem extends BaseSubsystem {
                 .withMaxPowerOutput(1.0)
                 .build();
 
-        if (electricalContract.isFuelIntakeMotorReady()) {
+        if (electricalContract.isReady(Hardware.FuelIntake)) {
             this.collectorMotor = motorFactory.create(
                     electricalContract.getFuelIntakeMotor(),
                     getPrefix(),
@@ -97,7 +98,7 @@ public class CollectorSubsystem extends BaseSubsystem {
 
     @Override
     public void periodic() {
-        if (electricalContract.isFuelIntakeMotorReady()) {
+        if (collectorMotor != null) {
             collectorMotor.periodic();
         }
     }

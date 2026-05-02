@@ -31,70 +31,40 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Seconds;
 
-public class Contract2026 extends ElectricalContract {
-
-    protected final double simulationScalingValue = 256.0 * PoseSubsystem.INCHES_IN_A_METER;
+public class Contract2026 extends GeneralContract {
 
     @Inject
-    public Contract2026() {}
+    public Contract2026() {
+        super(Set.of(
+                Hardware.LeftShooter,
+                Hardware.MiddleShooter,
+                Hardware.RightShooter,
+                Hardware.ShooterFeeder,
+                Hardware.IntakeDeploy,
+                Hardware.IntakeDeployEncoder,
+                Hardware.FuelIntake,
+                Hardware.HopperRoller,
+                Hardware.HoodServoLeft,
+                Hardware.HoodServoRight,
+                Hardware.Lights
+        ));
+    }
+
+    protected Contract2026(Set<Hardware> readinessSet) {
+        super(readinessSet);
+    }
 
     @Override
     public boolean isDriveReady() { return true; }
 
     @Override
     public boolean areCanCodersReady() { return true; }
-
-    @Override
-    public boolean isClimberLeftReady() { return false; }
-
-    @Override
-    public CANMotorControllerInfo getClimberMotorLeft() {
-        return new CANMotorControllerInfo("ClimberMotorLeft",
-                MotorControllerType.TalonFx,
-                CANBusId.Canivore,
-                25,
-                PDHPort.PDH05,
-                new TalonFxMotorControllerOutputConfig()
-                        .withStatorCurrentLimit(Amps.of(80))
-                        .withSupplyCurrentLimit(Amps.of(40), Amps.of(60), Seconds.of(1)));
-    }
-
-    @Override
-    public boolean isClimberRightReady() { return false; }
-
-    @Override
-    public CANMotorControllerInfo getClimberMotorRight() {
-        return new CANMotorControllerInfo("ClimberMotorRight",
-                MotorControllerType.TalonFx,
-                CANBusId.Canivore,
-                26,
-                PDHPort.PDH06,
-                new TalonFxMotorControllerOutputConfig()
-                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                        .withStatorCurrentLimit(Amps.of(80))
-                        .withSupplyCurrentLimit(Amps.of(40), Amps.of(60), Seconds.of(1)));
-    }
-
-    @Override
-    public boolean isClimberAbsoluteEncoderReady() { return false; }
-
-    @Override
-    public DeviceInfo getClimberAbsoluteEncoder() {
-        return new DeviceInfo("ClimberAbsoluteEncoderReady", CANBusId.Canivore, 59);
-    }
-
-    @Override
-    public boolean isClimberSensorReady() { return false; }
-
-    @Override
-    public DeviceInfo getClimberSensor() {
-        return new DeviceInfo("ClimberSensor", 0, PowerSource.RIO);
-    }
 
     @Override
     public IMUInfo getIMUInfo() {
@@ -107,183 +77,6 @@ public class Contract2026 extends ElectricalContract {
 
     public DeviceInfo candle() {
         return new DeviceInfo("CANdle",CANBusId.Canivore, 57);
-    }
-
-    @Override                                    
-    public boolean isShooterFeederReady() { return true; }
-
-    public CANMotorControllerInfo getShooterFeederMotor() {
-        return new CANMotorControllerInfo("ShooterFeederMotor",
-                MotorControllerType.TalonFx,
-                CANBusId.Canivore,
-                37,
-                PDHPort.PDH17,
-                new TalonFxMotorControllerOutputConfig()
-                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                        .withStatorCurrentLimit(Amps.of(35)));
-    }
-
-    @Override
-    public boolean isLeftShooterReady() { return true; }
-
-    @Override
-    public boolean isMiddleShooterReady() { return true; }
-
-    @Override
-    public boolean isRightShooterReady() { return true; }
-
-    @Override
-    public CANMotorControllerInfo getLeftShooterMotor() {
-        return new CANMotorControllerInfo("ShooterLeftMotor",
-                MotorControllerType.TalonFx,
-                CANBusId.Canivore,
-                22,
-                PDHPort.PDH02,
-                new TalonFxMotorControllerOutputConfig()
-                        .withStatorCurrentLimit(Amps.of(50))
-                        .withSupplyCurrentLimit(
-                                Amps.of(40),
-                                Amps.of(60),
-                                Seconds.of(1)));
-    }
-
-    @Override
-    public CANMotorControllerInfo getMiddleShooterMotor() {
-        return new CANMotorControllerInfo("ShooterMiddleMotor",
-                MotorControllerType.TalonFx,
-                CANBusId.Canivore,
-                23,
-                PDHPort.PDH03,
-                new TalonFxMotorControllerOutputConfig()
-                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Normal)
-                        .withStatorCurrentLimit(Amps.of(50))
-                        .withSupplyCurrentLimit(
-                                Amps.of(40),
-                                Amps.of(60),
-                                Seconds.of(1)));
-    }
-
-    @Override
-    public CANMotorControllerInfo getRightShooterMotor() {
-        return new CANMotorControllerInfo("ShooterRightMotor",
-                MotorControllerType.TalonFx,
-                CANBusId.Canivore,
-                24,
-                PDHPort.PDH04,
-                new TalonFxMotorControllerOutputConfig()
-                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                        .withStatorCurrentLimit(Amps.of(50))
-                        .withSupplyCurrentLimit(
-                                Amps.of(40),
-                                Amps.of(60),
-                                Seconds.of(1)));
-    }
-
-    @Override
-    public boolean isIntakeDeployReady() { return true; }
-
-    @Override
-    public CANMotorControllerInfo getIntakeDeployMotor() {
-        return new CANMotorControllerInfo("IntakeDeployMotor",
-                MotorControllerType.TalonFx,
-                CANBusId.Canivore,
-                34,
-                PDHPort.PDH14,
-                new TalonFxMotorControllerOutputConfig()
-                        .withSupplyCurrentLimit(Amps.of(15), Amps.of(30), Seconds.of(1))
-                        .withStatorCurrentLimit(Amps.of(50))
-                        .withRemoteCanCoderFeedback(getIntakeDeployAbsoluteEncoder().channel));
-    }
-
-    @Override
-    public boolean isIntakeDeployAbsoluteEncoderReady() { return true; }
-
-    @Override
-    public DeviceInfo getIntakeDeployAbsoluteEncoder() {
-        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady", CANBusId.Canivore, 58);
-    }
-
-    @Override
-    public boolean isHoodServoLeftReady() { return true; }
-
-    @Override
-    public DeviceInfo getHoodServoLeft() {
-        return new DeviceInfo("HoodServoLeft", 7);
-    }
-
-    @Override
-    public boolean isHoodServoRightReady() { return true;}
-
-    @Override
-    public DeviceInfo getHoodServoRight() {
-        return new DeviceInfo("HoodServoRight", 9);
-    }
-    
-    // OrangePis - powered via buck converters (see getAdditionalPowerBranches)
-    public DeviceInfo getFrontOrangePi() {
-        return new DeviceInfo("FrontOrangePi", -1, PowerSource.NONE);
-    }
-
-    public DeviceInfo getBackOrangePi() {
-        return new DeviceInfo("BackOrangePi", -1, PowerSource.NONE);
-    }
-
-    // Orin Nano - powered via FrontBuckBoost_Pwr (see getAdditionalPowerBranches)
-    public DeviceInfo getOrinNano() {
-        return new DeviceInfo("Orin_Nano", -1, PowerSource.NONE);
-    }
-
-    // Ethernet switch - powered via BackBuckBoost_Pwr (see getAdditionalPowerBranches)
-    public DeviceInfo getEthernetSwitch() {
-        return new DeviceInfo("EthernetSwitch", -1, PowerSource.NONE);
-    }
-
-    // VRM1 12V/2A outputs
-    public DeviceInfo getVrm1_12v_2a() {
-        return new DeviceInfo("FrontBuckBoost_Pwr", -1, PowerSource.VRM1_12V_2A);
-    }
-
-    public DeviceInfo getVrm1_12v_2b() {
-        return new DeviceInfo("BackBuckBoost_Pwr", -1, PowerSource.VRM1_12V_2B);
-    }
-
-    // VRM1 12V/500mA outputs
-    public DeviceInfo getVrm1_12v_500ma() {
-        return new DeviceInfo("FrontBuckBoost_Fan", -1, PowerSource.VRM1_12V_500MA);
-    }
-
-    public DeviceInfo getVrm1_12v_500mb() {
-        return new DeviceInfo("BackBuckBoost_Fan", -1, PowerSource.VRM1_12V_500MB);
-    }
-
-    // VRM1 5V/2A outputs - unused
-    public DeviceInfo getVrm1_5v_2a() {
-        return new DeviceInfo("No_Connect", -1, PowerSource.VRM1_5V_2A);
-    }
-
-    public DeviceInfo getVrm1_5v_2b() {
-        return new DeviceInfo("No_Connect", -1, PowerSource.VRM1_5V_2B);
-    }
-
-    // VRM1 5V/500mA outputs
-    public DeviceInfo getVrm1_5v_500ma() {
-        return new DeviceInfo("CANdle", -1, PowerSource.VRM1_5V_500MA);
-    }
-
-    public DeviceInfo getVrm1_5v_500mb() {
-        return new DeviceInfo("No_Connect", -1, PowerSource.VRM1_5V_500MB);
-    }
-
-    protected String getDriveControllerName(SwerveInstance swerveInstance) {
-        return "DriveSubsystem/" + swerveInstance.label() + "/Drive";
-    }
-
-    protected String getSteeringControllerName(SwerveInstance swerveInstance) {
-        return "DriveSubsystem/" + swerveInstance.label() + "/Steering";
-    }
-
-    protected String getSteeringEncoderControllerName(SwerveInstance swerveInstance) {
-        return "DriveSubsystem/" + swerveInstance.label() + "/SteeringEncoder";
     }
 
     @Override
@@ -330,7 +123,6 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public CANMotorControllerInfo getSteeringMotor(SwerveInstance swerveInstance) {
-        double simulationScalingValue = 1.0;
         var motorConfig = new TalonFxMotorControllerOutputConfig()
                 .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
                 .withStatorCurrentLimit(Amps.of(40));
@@ -373,47 +165,6 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public boolean isFuelIntakeMotorReady() { return true; }
-
-    @Override
-    public CANMotorControllerInfo getFuelIntakeMotor() {
-        return new CANMotorControllerInfo("FuelIntakeMotor",
-                MotorControllerType.TalonFx,
-                CANBusId.Canivore,
-                32,
-                PDHPort.PDH12,
-                new TalonFxMotorControllerOutputConfig()
-                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                        .withStatorCurrentLimit(Amps.of(70)));
-    }
-
-    @Override
-    public boolean isLightsReady() { return true; }
-
-    @Override
-    public CANLightControllerInfo getLightControllerInfo() {
-        return new CANLightControllerInfo("Lights",
-                LightControllerType.Candle, CANBusId.Canivore,
-                57, new CANLightControllerOutputConfig(LEDStripType.GRB,
-                0.15, new int[] {8, 30, 30}));
-
-    }
-
-    @Override
-    public boolean isHopperRollerReady() { return true; }
-
-    @Override
-    public CANMotorControllerInfo getHopperRollerMotor() {
-        return new CANMotorControllerInfo("HopperRoller",
-                MotorControllerType.TalonFx,
-                CANBusId.Canivore,
-                33,
-                PDHPort.PDH13,
-                new TalonFxMotorControllerOutputConfig()
-                        .withStatorCurrentLimit(Amps.of(40)));
-    }
-
-    @Override
     public DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance) {
         double simulationScalingValue = 1.0;
 
@@ -440,8 +191,6 @@ public class Contract2026 extends ElectricalContract {
             default -> new Translation2d(0, 0);
         };
     }
-
-
 
     @Override
     public double getSteeringGearRatio() {
