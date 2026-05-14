@@ -192,7 +192,8 @@ public class Contract2026 extends ElectricalContract {
                 new TalonFxMotorControllerOutputConfig()
                         .withSupplyCurrentLimit(Amps.of(15), Amps.of(30), Seconds.of(1))
                         .withStatorCurrentLimit(Amps.of(50))
-                        .withRemoteCanCoderFeedback(getIntakeDeployAbsoluteEncoder().channel));
+                        .withRemoteCanCoderFeedback(getIntakeDeployAbsoluteEncoder().channel)
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted));
     }
 
     @Override
@@ -200,7 +201,7 @@ public class Contract2026 extends ElectricalContract {
 
     @Override
     public DeviceInfo getIntakeDeployAbsoluteEncoder() {
-        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady", CANBusId.Canivore, 58);
+        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady", CANBusId.Canivore, 58, true);
     }
 
     @Override

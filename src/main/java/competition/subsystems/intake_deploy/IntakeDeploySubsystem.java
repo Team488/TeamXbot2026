@@ -80,13 +80,13 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             this.intakeDeployEncoder = null;
         }
 
-        this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", -10.0);
-        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", -145.0);
+        this.retractedPosition = propertyFactory.createPersistentProperty("RetractedPosition", 10.0);
+        this.extendedPosition = propertyFactory.createPersistentProperty("ExtendedPosition", 145.0);
 
         this.manualControlPower = propertyFactory.createPersistentProperty("ManualControlPower", 0.2);
 
         this.mechanismDegreePerMotorRotation = propertyFactory.createPersistentProperty("MechanismDegreePerMotorRotation", 360);
-        this.mechanismTargetRotation = propertyFactory.createPersistentProperty("MechanismTargetRotation", Degrees.of(-10));
+        this.mechanismTargetRotation = propertyFactory.createPersistentProperty("MechanismTargetRotation", Degrees.of(10));
 
         this.maxPidVelocity = propertyFactory.createPersistentProperty("PidMaxMotorVelocity-RotationsPerSecond", 200);
         this.maxPidAcceleration = propertyFactory.createPersistentProperty("PidMaxMotorAcceleration-RotationsPerSecondPerSecond", 200);
@@ -103,7 +103,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
     @Override
     public Angle getCurrentValue() {
         if (intakeDeployEncoder != null) {
-            return intakeDeployEncoder.getAbsolutePosition();
+            return intakeDeployEncoder.getAbsolutePosition().times(-1);
         }
 
 
