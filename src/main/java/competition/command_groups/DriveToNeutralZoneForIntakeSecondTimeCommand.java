@@ -36,14 +36,8 @@ public class DriveToNeutralZoneForIntakeSecondTimeCommand extends BaseDriveWithS
     @Override
     public void initialize() {
         var currentPose = pose.getCurrentPose2d();
-        var pathPoses = this.autoLandmarks.getStartCollectionPath(currentPose);
+        var pathPoses = this.autoLandmarks.getNearestAllianceToNeutralTrenchPath(currentPose);
 
-        var endPathPose = this.autoLandmarks.getStartCollectionPose(currentPose);
-        var fullEndCollectionLocation = this.autoLandmarks.getMidBallPitCollectionPose(currentPose);
-        var endPose = new Pose2d(endPathPose.getTranslation().interpolate(fullEndCollectionLocation.getTranslation(), 0.75),
-                                 fullEndCollectionLocation.getRotation());
-
-        pathPoses.add(endPose);
         super.setSegmentType(SegmentType.Start);
         super.logic.setKeyPoints(this.pathPlanning.generateSwervePoints(currentPose, pathPoses,
                                                                         false, true));
