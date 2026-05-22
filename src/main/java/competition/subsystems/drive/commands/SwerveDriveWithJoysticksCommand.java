@@ -102,6 +102,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         aKitLog.record("HumanTranslationIntentX", translationIntent.x);
         aKitLog.record("HumanTranslationIntentY", translationIntent.y);
         aKitLog.record("HumanRotationIntent", rawRotationIntent);
+        return false;
     }
 
     private XYPair getRawHumanTranslationIntent() {

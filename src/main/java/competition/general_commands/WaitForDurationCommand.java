@@ -30,5 +30,6 @@ public class WaitForDurationCommand extends BaseCommand {
     @Override
     public void end(boolean interrupted) {
         timer.stop();
+        return interrupted;
     }
 }

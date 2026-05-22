@@ -67,5 +67,6 @@ public class IntakeDeployMaintainerCommand extends BaseMaintainerCommand<Angle, 
     public void end(boolean interrupted) {
         super.end(interrupted);
         this.initialize();
+        return interrupted;
     }
 }

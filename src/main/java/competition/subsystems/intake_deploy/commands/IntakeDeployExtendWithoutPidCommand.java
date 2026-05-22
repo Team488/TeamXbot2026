@@ -44,5 +44,6 @@ public class IntakeDeployExtendWithoutPidCommand extends BaseCommand {
     public void end(boolean isInterrupted) {
         super.end(isInterrupted);
         this.subsystem.stop();
+        return isInterrupted;
     }
 }

@@ -48,6 +48,7 @@ public class IntakeDeploySlowClosing extends BaseSetpointCommand {
         } else {
             intakeDeploySubsystem.setTargetValue(currentTarget);
         }
+        return false;
     }
 
         @Override

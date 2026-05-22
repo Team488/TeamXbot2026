@@ -204,4 +204,11 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
                 (Degrees.of(extendedPosition.get()),
                 (Degrees.of(tolerance.get())));
     }
+
+    public boolean intakeDeployIsRetracted() {
+        var current = getCurrentValue();
+        return current.isNear
+                (Degrees.of(retractedPosition.get()),
+                        (Degrees.of(tolerance.get())));
+    }
 }

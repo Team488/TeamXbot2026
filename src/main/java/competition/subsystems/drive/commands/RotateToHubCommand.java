@@ -61,6 +61,7 @@ public class RotateToHubCommand extends BaseCommand {
         );
 
         drive.setLookAtPointTargetActive(areWeInAllianceZone || autoAimWhenNotInZone.get());
+        return areWeInAllianceZone;
     }
 
     @Override
@@ -68,5 +69,6 @@ public class RotateToHubCommand extends BaseCommand {
         super.end(interrupted);
         drive.setLookAtPointTargetActive(false);
         drive.setLookAtPointInverted(false);
+        return interrupted;
     }
 }

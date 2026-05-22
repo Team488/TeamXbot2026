@@ -44,6 +44,7 @@ public class DriveForwardToClimbCommand extends BaseCommand {
                 0,
                 true
         );
+        return false;
     }
 
     @Override
@@ -55,5 +56,6 @@ public class DriveForwardToClimbCommand extends BaseCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
         drive.stop();
+        return interrupted;
     }
 }

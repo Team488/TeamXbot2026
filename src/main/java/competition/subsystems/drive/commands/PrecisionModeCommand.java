@@ -28,5 +28,6 @@ public class PrecisionModeCommand extends BaseCommand {
         drive.setUnlockFullDrivePower(true);
         drive.setPrecisionTranslationActive(false);
         drive.setPrecisionRotationActive(false);
+        return isInterrupted;
     }
 }

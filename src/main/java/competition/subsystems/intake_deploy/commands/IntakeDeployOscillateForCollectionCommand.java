@@ -50,6 +50,7 @@ public class IntakeDeployOscillateForCollectionCommand extends BaseSetpointComma
         // Example: magnitude=5, period=1 -> intake sweeps from -140 to -130 degrees once per second.
         double offsetDegrees = magnitude * Math.sin(2 * Math.PI * elapsed / period);
         intakeDeploy.setTargetValue(Degrees.of(baseDegrees + offsetDegrees));
+        return false;
     }
 
     @Override
@@ -61,5 +62,6 @@ public class IntakeDeployOscillateForCollectionCommand extends BaseSetpointComma
     public void end(boolean interrupted) {
         // Stop the oscillation and hold the intake at the extended position.
         intakeDeploy.setTargetValue(Degrees.of(intakeDeploy.extendedPosition.get()));
+        return interrupted;
     }
 }

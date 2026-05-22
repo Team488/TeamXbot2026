@@ -51,6 +51,7 @@ public class ContinuousPrepareToShootFromHereCommand extends BaseSetpointCommand
         this.prepareToShootAtTarget();
 
         super.execute();
+        return false;
     }
 
     public void setTarget(ShootingTarget shootingTarget) {

@@ -47,5 +47,6 @@ public class DriveToOutpostCommand extends SwerveSimpleTrajectoryCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
         log.info("end");
+        return interrupted;
     }
 }

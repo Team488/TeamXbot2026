@@ -76,5 +76,6 @@ public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<Angular
         if (interrupted) {
             shooterWheel.stop();
         }
+        return interrupted;
     }
 }

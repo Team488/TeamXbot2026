@@ -79,6 +79,7 @@ public class RotateToAllianceZoneCommand extends BaseCommand {
         );
 
         drive.setLookAtPointTargetActive(areWeInNeutralZone || autoAimWhenNotInNeutralZone.get());
+        return areWeInNeutralZone;
     }
 
     @Override
@@ -86,5 +87,6 @@ public class RotateToAllianceZoneCommand extends BaseCommand {
         super.end(interrupted);
         drive.setStaticHeadingTargetActive(false);
         drive.setLookAtPointInverted(false);
+        return interrupted;
     }
 }

@@ -31,12 +31,14 @@ public class WhenShooterReadyRumbleCommand extends BaseCommand {
         } else {
             oi.driverGamepad.getRumbleManager().stopGamepadRumble();
         }
+        return false;
     }
 
     @Override
     public void end(boolean isInterrupted) {
         super.end(isInterrupted);
         oi.driverGamepad.getRumbleManager().stopGamepadRumble();
+        return isInterrupted;
     }
 
     @Override

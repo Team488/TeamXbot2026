@@ -74,5 +74,6 @@ public class ClimberMaintainerCommand extends BaseMaintainerCommand<Angle, Doubl
         if (interrupted) {
             climber.stop();
         }
+        return interrupted;
     }
 }

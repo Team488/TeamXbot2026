@@ -10,6 +10,7 @@ public class IntakeDeployRetryCommand extends BaseCommand {
     IntakeDeploySubsystem intakeDeploySubsystem;
     public DoubleProperty timeout;
     public double startTime = 0;
+    public boolean extended = false;
 
     public IntakeDeployRetryCommand(IntakeDeploySubsystem intakeDeploy, PropertyFactory pf) {
         this.intakeDeploySubsystem = intakeDeploy;
@@ -17,13 +18,32 @@ public class IntakeDeployRetryCommand extends BaseCommand {
         this.timeout = pf.createPersistentProperty("SecondsInTimeout", 3.0);
     }
 
+    public void initialize() {
+        startTime = Timer.getFPGATimestamp();
+        intakeDeploySubsystem.setTargetValue(intakeDeploySubsystem.extendedPosition); //position we want to get to
+    }
+
     public boolean isTimeoutExpired() {
         return Timer.getFPGATimestamp() > startTime + timeout.get();
     }
 
+    @Override
+    public void execute() {
+        //if the intake deploy is extent
+        if (!intakeDeploySubsystem.intakeDeployIsExtended() && isTimeoutExpired()) {
+            intakeDeploySubsystem.setTargetValue(intakeDeploySubsystem.retractedPosition);
+            Timer.delay(0.2); //delay for testing only unless wanted in comp
+            intakeDeploySubsystem.setTargetValue(intakeDeploySubsystem.extendedPosition);
+            startTime = Timer.getFPGATimestamp();
+        }
+        return;
+    }
 
     @Override
     public boolean isFinished() {
         return (isTimeoutExpired()) || intakeDeploySubsystem.intakeDeployIsExtended();
+
     }
+
+    //if timeout.get() is over 3 seconds, retract intake deploy.
 }

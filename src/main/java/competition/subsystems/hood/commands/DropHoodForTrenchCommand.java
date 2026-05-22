@@ -31,12 +31,14 @@ public class DropHoodForTrenchCommand extends BaseCommand {
         if (Math.abs(HoodSubsystem.servoMinBound - hood.getCurrentValue()) <= .1) {
             oi.driverGamepad.getRumbleManager().rumbleGamepad(100,100);
         }
+        return false;
     }
 
     @Override
     public void end(boolean isInterrupted) {
         super.end(isInterrupted);
         oi.driverGamepad.getRumbleManager().stopGamepadRumble();
+        return isInterrupted;
     }
 
     @Override
