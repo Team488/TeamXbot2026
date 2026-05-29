@@ -2,6 +2,7 @@ package competition.subsystems.lights;
 
 import com.ctre.phoenix6.signals.LarsonBounceValue;
 import competition.electrical_contract.ElectricalContract;
+import competition.electrical_contract.Hardware;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.vision.AprilTagVisionSubsystemExtended;
@@ -41,7 +42,7 @@ public class LightsSubsystem extends BaseSubsystem {
         this.voltageMonitor = voltageMonitor;
         this.assertionManager = assertionManager;
         this.vision = vision;
-        if (electricalContract.isLightsReady()) {
+        if (electricalContract.isReady(Hardware.Lights)) {
             this.lights = lightsFactory.create(
                     electricalContract.getLightControllerInfo()
             );

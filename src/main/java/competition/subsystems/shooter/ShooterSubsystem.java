@@ -1,6 +1,7 @@
 package competition.subsystems.shooter;
 
 import competition.electrical_contract.ElectricalContract;
+import competition.electrical_contract.Hardware;
 import competition.subsystems.shooter.commands.WaitForShooterAtGoalCommand;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -82,7 +83,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
 
         this.voltageRampTime = propertyFactory.createPersistentProperty("VoltageRampTime", 0.2);
 
-        if (electricalContract.isLeftShooterReady()) {
+        if (electricalContract.isReady(Hardware.LeftShooter)) {
             this.leftShooterMotor = xcanMotorControllerFactory.create(electricalContract.getLeftShooterMotor(),
                     getPrefix(), "leftShooterMotor", shooterLeftMotorDefaultPIDProperties);
             this.leftShooterMotor.setClosedLoopRampRates(
@@ -93,7 +94,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
             this.leftShooterMotor = null;
         }
 
-        if (electricalContract.isMiddleShooterReady()) {
+        if (electricalContract.isReady(Hardware.MiddleShooter)) {
             this.middleShooterMotor = xcanMotorControllerFactory.create(electricalContract.getMiddleShooterMotor(),
                     getPrefix(), "middleShooterMotor", shooterMiddleMotorDefaultPIDProperties);
             this.middleShooterMotor.setClosedLoopRampRates(
@@ -104,7 +105,7 @@ public class ShooterSubsystem extends BaseSetpointSubsystem<AngularVelocity, Dou
             this.middleShooterMotor = null;
         }
 
-        if (electricalContract.isRightShooterReady()) {
+        if (electricalContract.isReady(Hardware.RightShooter)) {
             this.rightShooterMotor = xcanMotorControllerFactory.create(electricalContract.getRightShooterMotor(),
                     getPrefix(), "rightShooterMotor", shooterRightMotorDefaultPIDProperties);
             this.rightShooterMotor.setClosedLoopRampRates(

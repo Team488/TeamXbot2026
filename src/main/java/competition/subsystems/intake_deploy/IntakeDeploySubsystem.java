@@ -1,6 +1,7 @@
 package competition.subsystems.intake_deploy;
 
 import competition.electrical_contract.ElectricalContract;
+import competition.electrical_contract.Hardware;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -56,7 +57,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
 
         this.voltageRampTime = propertyFactory.createPersistentProperty("VoltageRampTime", 0.1);
 
-        if (electricalContract.isIntakeDeployReady()) {
+        if (electricalContract.isReady(Hardware.IntakeDeploy)) {
             this.intakeDeployMotor = xcanMotorControllerFactory.create(electricalContract.getIntakeDeployMotor(),
                     getPrefix(), "IntakeDeployPID", defaultPIDProperties);
             this.intakeDeployMotor.setOpenLoopRampRates(
@@ -70,7 +71,7 @@ public class IntakeDeploySubsystem extends BaseSetpointSubsystem<Angle,Double>  
             this.intakeDeployMotor = null;
         }
 
-        if (electricalContract.isIntakeDeployAbsoluteEncoderReady()) {
+        if (electricalContract.isReady(Hardware.IntakeDeployEncoder)) {
             this.intakeDeployEncoder = xAbsoluteEncoderFactory.create(
                     electricalContract.getIntakeDeployAbsoluteEncoder(),
                     this.getPrefix()
