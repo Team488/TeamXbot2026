@@ -1,4 +1,4 @@
-package competition.auto.commands;
+package competition.auto.vision;
 
 import competition.auto.BaseAutonomousSequentialCommandGroup;
 import competition.command_groups.FireWhenShooterAndHoodReadyUntilDone;

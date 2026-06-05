@@ -8,9 +8,9 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import competition.command_groups.vision.DriveThroughAllianceTrenchCommand;
 import competition.auto.commands.AimAndShootFromHereCommand;
-import competition.auto.commands.CollectAndShootTwiceCommand;
-import competition.auto.commands.ShootFromHubCommandGroup;
-import competition.auto.commands.ShootFromTrenchCommandGroup;
+import competition.auto.vision.CollectAndShootTwiceCommand;
+import competition.auto.vision.ShootFromHubCommandGroup;
+import competition.auto.vision.ShootFromTrenchCommandGroup;
 import competition.auto.pathplanner.LeftBumpAutoCommand;
 import competition.auto.pathplanner.RightBumpAutoCommand;
 import competition.auto.vision.JustDriveNeutralMoveCommand;
