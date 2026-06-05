@@ -5,16 +5,17 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import competition.auto_programs.AimAndShootFromHereCommand;
-import competition.auto_programs.ppl.LeftBumpAutoCommand;
-import competition.auto_programs.ShootFromHubCommandGroup;
-import competition.auto_programs.ShootFromTrenchCommandGroup;
-import competition.auto_programs.CollectAndShootTwiceCommand;
-import competition.auto_programs.ppl.RightBumpAutoCommand;
-import competition.auto_programs.vision.JustDriveNeutralMoveCommand;
-import competition.auto_programs.vision.MoveAcrossFieldCommandGroup;
-import competition.auto_programs.vision.ShootFromTrenchThenMoveToNeutralCommand;
+
 import competition.command_groups.vision.DriveThroughAllianceTrenchCommand;
+import competition.auto.commands.AimAndShootFromHereCommand;
+import competition.auto.vision.CollectAndShootTwiceCommand;
+import competition.auto.vision.ShootFromHubCommandGroup;
+import competition.auto.vision.ShootFromTrenchCommandGroup;
+import competition.auto.pathplanner.LeftBumpAutoCommand;
+import competition.auto.pathplanner.RightBumpAutoCommand;
+import competition.auto.vision.JustDriveNeutralMoveCommand;
+import competition.auto.vision.MoveAcrossFieldCommandGroup;
+import competition.auto.vision.ShootFromTrenchThenMoveToNeutralCommand;
 import competition.command_groups.HopperAndIntakeCommandGroup;
 import competition.command_groups.HopperAndIntakeEjectCommandGroup;
 import competition.command_groups.IntakeSlowlyAndFireWhenReady;

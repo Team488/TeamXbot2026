@@ -1,9 +1,9 @@
-package competition.auto_programs.vision;
+package competition.auto.vision;
 
-import competition.auto_programs.BaseAutonomousSequentialCommandGroup;
 import competition.command_groups.FireWhenReadyAndRetractIntakeDeployUntilDone;
 import competition.command_groups.NoWaitFinishedShootingCommand;
 import competition.command_groups.PrepareToShootCommandGroup;
+import competition.auto.BaseAutonomousSequentialCommandGroup;
 import competition.command_groups.DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory;
 import competition.command_groups.DriveToNeutralZoneAndDeployIntakeCommandGroupFactory;
 import competition.subsystems.pose.TrajectoriesCalculation;

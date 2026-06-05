@@ -1,10 +1,12 @@
-package competition.auto_programs;
+package competition.auto.vision;
 
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.autonomous.AutonomousCommandSelector;
 
 import javax.inject.Inject;
 
+import competition.auto.AutoCommandFactory;
+import competition.auto.BaseAutonomousSequentialCommandGroup;
 import competition.general_commands.WaitForDurationCommand;
 
 public class CollectAndShootTwiceCommand extends BaseAutonomousSequentialCommandGroup {

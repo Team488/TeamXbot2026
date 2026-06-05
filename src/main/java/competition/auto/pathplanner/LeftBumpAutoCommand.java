@@ -1,7 +1,8 @@
-package competition.auto_programs.ppl;
+package competition.auto.pathplanner;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import competition.auto_programs.BaseAutonomousSequentialCommandGroup;
+
+import competition.auto.BaseAutonomousSequentialCommandGroup;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.autonomous.AutonomousCommandSelector;
 

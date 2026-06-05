@@ -1,6 +1,6 @@
-package competition.auto_programs.vision;
+package competition.auto.vision;
 
-import competition.auto_programs.BaseAutonomousSequentialCommandGroup;
+import competition.auto.BaseAutonomousSequentialCommandGroup;
 import competition.command_groups.DriveFromNeutralZoneToAllianceAndShootCommandGroupFactory;
 import competition.command_groups.DriveToNeutralZoneAndDeployIntakeCommandGroupFactory;
 import xbot.common.subsystems.autonomous.AutonomousCommandSelector;

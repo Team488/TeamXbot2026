@@ -3,7 +3,7 @@ package competition.command_groups;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import competition.auto_programs.AimAndShootFromHereCommand;
+import competition.auto.commands.AimAndShootFromHereCommand;
 import competition.subsystems.collector_intake.commands.CollectorStopCommand;
 import competition.subsystems.pose.TrajectoriesCalculation;
 import edu.wpi.first.wpilibj2.command.Command;

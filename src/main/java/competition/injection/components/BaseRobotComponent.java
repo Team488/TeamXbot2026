@@ -1,9 +1,5 @@
 package competition.injection.components;
 
-import competition.ConfigurePathPlannerLib;
-import competition.auto_programs.CollectAndShootTwiceCommand;
-import competition.auto_programs.ShootFromHubCommandGroup;
-import competition.auto_programs.ShootFromTrenchCommandGroup;
 import competition.operator_interface.OperatorCommandMap;
 import competition.operator_interface.OperatorInterface;
 import competition.simulation.BaseSimulator;
@@ -15,6 +11,10 @@ import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.lights.LightsSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
+import competition.auto.vision.CollectAndShootTwiceCommand;
+import competition.auto.vision.ShootFromHubCommandGroup;
+import competition.auto.vision.ShootFromTrenchCommandGroup;
+import competition.auto.pathplanner.ConfigurePathPlannerLib;
 import competition.general_commands.GamepadRumbleCommand;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
 import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
