@@ -1,4 +1,4 @@
-package competition;
+package competition.auto.pathplanner;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -6,7 +6,8 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import competition.auto_programs.AimAndShootFromHereCommand;
+
+import competition.auto.commands.AimAndShootFromHereCommand;
 import competition.command_groups.FireWhenShooterAndHoodReady;
 import competition.command_groups.PrepareToShootCommandGroup;
 import competition.command_groups.WaitForRotationAndHoodAndShooterToBeAtGoalCommandGroup;

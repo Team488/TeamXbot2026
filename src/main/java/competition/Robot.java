@@ -1,7 +1,6 @@
 
 package competition;
 
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,6 +16,7 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import xbot.common.command.BaseRobot;
 import xbot.common.math.FieldPose;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
@@ -36,7 +36,6 @@ public class Robot extends BaseRobot {
     @Override
     protected void initializeSystems() {
         super.initializeSystems();
-        getInjectorComponent().configurePathPlannerLib();
         getInjectorComponent().subsystemDefaultCommandMap();
         getInjectorComponent().operatorCommandMap();
         getInjectorComponent().swerveDefaultCommandMap();
@@ -46,6 +45,8 @@ public class Robot extends BaseRobot {
         getInjectorComponent().intakeDeploySubsystem();
         getInjectorComponent().voltageMonitorSubsystem();
         getInjectorComponent().climberSubsystem();
+        // https://pathplanner.dev/pplib-getting-started.html#configure-autobuilder -- it is suggested to build pathplanner last
+        getInjectorComponent().configurePathPlannerLib();
 
         if (BaseRobot.isSimulation()) {
             simulator = getInjectorComponent().simulator();

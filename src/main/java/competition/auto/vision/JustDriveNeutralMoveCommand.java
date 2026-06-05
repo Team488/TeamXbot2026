@@ -1,9 +1,9 @@
-package competition.auto_programs.vision;
+package competition.auto.vision;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import competition.auto_programs.BaseAutonomousSequentialCommandGroup;
+import competition.auto.BaseAutonomousSequentialCommandGroup;
 import competition.command_groups.JustDriveFullNeutralZoneAndShootMovementCommand;
 import xbot.common.subsystems.autonomous.AutonomousCommandSelector;
 

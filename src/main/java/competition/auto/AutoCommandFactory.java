@@ -1,4 +1,4 @@
-package competition.auto_programs;
+package competition.auto;
 
 import competition.command_groups.ContinuousPrepareToShootFromHereCommand;
 import competition.command_groups.DriveAcrossMidNeutralZoneCommand;

@@ -1,5 +1,6 @@
-package competition.auto_programs;
+package competition.auto.commands;
 
+import competition.auto.BaseAutonomousSequentialCommandGroup;
 import competition.command_groups.FireWhenShooterAndHoodReadyUntilDone;
 import competition.command_groups.PrepareToShootCommandGroup;
 import competition.subsystems.drive.DriveSubsystem;

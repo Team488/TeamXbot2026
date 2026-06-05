@@ -1,4 +1,4 @@
-package competition.auto_programs;
+package competition.auto.commands;
 
 import javax.inject.Inject;
 

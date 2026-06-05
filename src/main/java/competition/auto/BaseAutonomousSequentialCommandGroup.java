@@ -1,4 +1,4 @@
-package competition.auto_programs;
+package competition.auto;
 
 import competition.subsystems.pose.Landmarks;
 import edu.wpi.first.wpilibj2.command.Command;
