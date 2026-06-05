@@ -1,6 +1,7 @@
 package competition.subsystems.shooter_feeder;
 
 import competition.electrical_contract.ElectricalContract;
+import competition.electrical_contract.Hardware;
 import edu.wpi.first.units.measure.Current;
 import xbot.common.command.BaseSubsystem;
 import javax.inject.Inject;
@@ -40,7 +41,7 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
 
         this.voltageRampTime = pf.createPersistentProperty("VoltageRampTime", 0.1);
 
-        if (electricalContract.isShooterFeederReady()) {
+        if (electricalContract.isReady(Hardware.ShooterFeeder)) {
             this.shooterFeederMotor = motorFactory.create(electricalContract.getShooterFeederMotor(),
                     getPrefix(), "ShooterFeederMotorPID", defaultPIDProperties);
             this.shooterFeederMotor.setOpenLoopRampRates(

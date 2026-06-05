@@ -1,73 +1,12 @@
 package competition.electrical_contract;
 
 import javax.inject.Inject;
+import java.util.EnumSet;
 
 public class UnitTestCompetitionContract extends Contract2026 {
 
     @Inject
-    public UnitTestCompetitionContract() {}
-
-    @Override
-    public boolean isShooterFeederReady() {
-        return true;
+    public UnitTestCompetitionContract() {
+        super(EnumSet.allOf(Hardware.class));
     }
-
-    @Override
-    public boolean isLeftShooterReady() {
-        return true;
-    }
-
-    @Override
-    public boolean isMiddleShooterReady() {
-        return true;
-    }
-
-    @Override
-    public boolean isRightShooterReady() {
-        return true;
-    }
-
-    @Override
-    public boolean isFuelIntakeMotorReady() {
-        return true;
-    }
-
-    @Override
-    public boolean isIntakeDeployReady() {
-        return true;
-    }
-
-    @Override
-    public boolean isLightsReady() {
-        return true;
-    }
-
-    @Override
-    public boolean isClimberRightReady() {
-        return true;
-    }
-
-    @Override
-    public boolean isClimberLeftReady() {
-        return true;
-    }
-
-    @Override
-    public boolean isIntakeDeployAbsoluteEncoderReady() {
-        return true;
-    }
-
-    @Override
-    public boolean isClimberSensorReady() {return true;}
-
-    @Override
-    public boolean isHopperRollerReady() {
-        return true;
-    }
-
-    @Override
-    public boolean isHoodServoLeftReady() {return true;}
-
-    @Override
-    public boolean isHoodServoRightReady() {return true;}
 }

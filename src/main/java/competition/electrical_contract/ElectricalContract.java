@@ -14,79 +14,48 @@ import xbot.common.injection.swerve.SwerveInstance;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class ElectricalContract implements XSwerveDriveElectricalContract, XCameraElectricalContract {
-    public abstract boolean isDriveReady();
+    private final Set<Hardware> readinessSet;
 
+    protected ElectricalContract(Set<Hardware> readinessSet) {
+        this.readinessSet = readinessSet;
+    }
+
+    public boolean isReady(Hardware hardware) {
+        return readinessSet.contains(hardware);
+    }
+
+    // TODO: Remove these later
+    public abstract boolean isDriveReady();
     public abstract boolean areCanCodersReady();
 
     public abstract CANMotorControllerInfo getDriveMotor(SwerveInstance swerveInstance);
-
     public abstract CANMotorControllerInfo getSteeringMotor(SwerveInstance swerveInstance);
-
     public abstract DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance);
-
     public abstract Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance);
-
     public abstract IMUInfo getIMUInfo();
 
-    public abstract boolean isLeftShooterReady();
-
     public abstract CANMotorControllerInfo getLeftShooterMotor();
-
-    public abstract boolean isMiddleShooterReady();
-
     public abstract CANMotorControllerInfo getMiddleShooterMotor();
-
-    public abstract boolean isRightShooterReady();
-
     public abstract CANMotorControllerInfo getRightShooterMotor();
 
-    public abstract boolean isHoodServoLeftReady();
-
     public abstract DeviceInfo getHoodServoLeft();
-
-    public abstract boolean isHoodServoRightReady();
-
     public abstract DeviceInfo getHoodServoRight();
 
-    public abstract boolean isIntakeDeployReady();
-
     public abstract CANMotorControllerInfo getIntakeDeployMotor();
-
-    public abstract boolean isIntakeDeployAbsoluteEncoderReady();
-
     public abstract DeviceInfo getIntakeDeployAbsoluteEncoder();
 
-    public abstract boolean isClimberLeftReady();
-
     public abstract  CANMotorControllerInfo getClimberMotorLeft();
-
-    public abstract boolean isClimberRightReady();
-
     public abstract CANMotorControllerInfo getClimberMotorRight();
-
-    public abstract  boolean isClimberAbsoluteEncoderReady();
-
-    public abstract DeviceInfo getClimberAbsoluteEncoder();
-
-    public abstract boolean isClimberSensorReady();
-
     public abstract DeviceInfo getClimberSensor();
-
-    public abstract boolean isShooterFeederReady();
 
     public abstract CANMotorControllerInfo getShooterFeederMotor();
 
-    public abstract boolean isFuelIntakeMotorReady();
-
     public abstract CANMotorControllerInfo getFuelIntakeMotor();
 
-    public abstract boolean isLightsReady();
-
     public abstract CANLightControllerInfo getLightControllerInfo();
-
-    public abstract boolean isHopperRollerReady();
 
     public abstract CANMotorControllerInfo getHopperRollerMotor();
 
@@ -109,4 +78,16 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     }
 
     public abstract Distance getRadiusOfRobot();
+
+    protected String getDriveControllerName(SwerveInstance swerveInstance) {
+        return "DriveSubsystem/" + swerveInstance.label() + "/Drive";
+    }
+
+    protected String getSteeringControllerName(SwerveInstance swerveInstance) {
+        return "DriveSubsystem/" + swerveInstance.label() + "/Steering";
+    }
+
+    protected String getSteeringEncoderControllerName(SwerveInstance swerveInstance) {
+        return "DriveSubsystem/" + swerveInstance.label() + "/SteeringEncoder";
+    }
 }

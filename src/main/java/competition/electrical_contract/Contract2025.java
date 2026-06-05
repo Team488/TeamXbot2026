@@ -5,6 +5,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Distance;
 import xbot.common.controls.sensors.XGyro;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
@@ -21,16 +23,16 @@ import xbot.common.subsystems.vision.CameraCapabilities;
 import javax.inject.Inject;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 
-public class Contract2025 extends Contract2026 {
-
-    protected final double simulationScalingValue = 256.0 * PoseSubsystem.INCHES_IN_A_METER;
+public class Contract2025 extends GeneralContract {
 
     @Inject
     public Contract2025() {
+        super(Set.of());
     }
 
     @Override
@@ -39,80 +41,8 @@ public class Contract2025 extends Contract2026 {
     }
 
     @Override
-    public boolean isDriveReady() {
-        return true;
-    }
-
-    @Override
-    public boolean areCanCodersReady() {
-        return true;
-    }
-
-    @Override
-    public boolean isLightsReady() {
-        return false;
-    }
-
-    @Override
-    public boolean isHopperRollerReady() {
-        return false;
-    }
-
-    @Override
-    public boolean isShooterFeederReady() {
-        return false;
-    }
-
-    @Override
-    public boolean isIntakeDeployReady() {
-        return false;
-    }
-
-    @Override
-    public boolean isLeftShooterReady() {
-        return false;
-    }
-
-    @Override
-    public boolean isMiddleShooterReady() {
-        return false;
-    }
-
-    @Override
-    public boolean isRightShooterReady() {
-        return false;
-    }
-
-    @Override
-    public boolean isHoodServoLeftReady() {
-        return false;
-    }
-
-    @Override
-    public boolean isHoodServoRightReady() {
-        return false;
-    }
-
-    @Override
-    public boolean isClimberLeftReady() {
-        return false;
-    }
-
-    @Override
-    public boolean isClimberRightReady() {
-        return false;
-    }
-
-    protected String getDriveControllerName(SwerveInstance swerveInstance) {
-        return "DriveSubsystem/" + swerveInstance.label() + "/Drive";
-    }
-
-    protected String getSteeringControllerName(SwerveInstance swerveInstance) {
-        return "DriveSubsystem/" + swerveInstance.label() + "/Steering";
-    }
-
-    protected String getSteeringEncoderControllerName(SwerveInstance swerveInstance) {
-        return "DriveSubsystem/" + swerveInstance.label() + "/SteeringEncoder";
+    public Distance getRadiusOfRobot() {
+        return Units.Inches.of(18);
     }
 
     TalonFxMotorControllerOutputConfig regularDriveMotorConfig =
@@ -126,6 +56,16 @@ public class Contract2025 extends Contract2026 {
                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
                     .withStatorCurrentLimit(Amps.of(80))
                     .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake);
+
+    @Override
+    public boolean isDriveReady() {
+        return false;
+    }
+
+    @Override
+    public boolean areCanCodersReady() {
+        return false;
+    }
 
     @Override
     public CANMotorControllerInfo getDriveMotor(SwerveInstance swerveInstance) {

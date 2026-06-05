@@ -2,6 +2,7 @@ package competition.subsystems.hood;
 
 import competition.electrical_contract.ElectricalContract;
 
+import competition.electrical_contract.Hardware;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSetpointSubsystem;
@@ -56,7 +57,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         propertyFactory.setPrefix(this);
         this.electricalContract = electricalContract;
 
-        if (electricalContract.isHoodServoLeftReady()) {
+        if (electricalContract.isReady(Hardware.HoodServoLeft)) {
             var servoLeft = servoFactory.create(
                     electricalContract.getHoodServoLeft().channel, getName() + "/Servo");
             registerDataFrameRefreshable(servoLeft);
@@ -69,7 +70,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
             hoodServoLeft = null;
         }
 
-        if (electricalContract.isHoodServoRightReady()) {
+        if (electricalContract.isReady(Hardware.HoodServoRight)) {
             var servoRight = servoFactory.create(
                     electricalContract.getHoodServoRight().channel, getName() + "/Servo");
             registerDataFrameRefreshable(servoRight);

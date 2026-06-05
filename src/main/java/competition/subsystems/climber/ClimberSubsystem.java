@@ -1,6 +1,7 @@
 package competition.subsystems.climber;
 
 import competition.electrical_contract.ElectricalContract;
+import competition.electrical_contract.Hardware;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSetpointSubsystem;
@@ -66,7 +67,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
                 .withMaxPowerOutput(1.0)
                 .build();
 
-        if (electricalContract.isClimberLeftReady() && electricalContract.isClimberRightReady()) {
+        if (electricalContract.isReady(Hardware.ClimberLeft) && electricalContract.isReady(Hardware.ClimberRight)) {
             this.climberMotorLeft = motorFactory.create(electricalContract.getClimberMotorLeft(),
                     getPrefix(), "ClimberMotorPID", defaultPIDProperties);
 
@@ -82,7 +83,7 @@ public class ClimberSubsystem extends BaseSetpointSubsystem <Angle, Double> {
             this.climberMotorRight = null;
         }
 
-        if (electricalContract.isClimberSensorReady()) {
+        if (electricalContract.isReady(Hardware.ClimberSensor)) {
             this.climberSensor = xDigitalInputFactory.create(
                     electricalContract.getClimberSensor(),
                     this.getPrefix());
