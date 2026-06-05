@@ -1,4 +1,4 @@
-package competition.auto.commands;
+package competition.auto.vision;
 
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.autonomous.AutonomousCommandSelector;

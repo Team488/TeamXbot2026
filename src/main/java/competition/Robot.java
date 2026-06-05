@@ -36,6 +36,7 @@ public class Robot extends BaseRobot {
     @Override
     protected void initializeSystems() {
         super.initializeSystems();
+        getInjectorComponent().configurePathPlannerLib();
         getInjectorComponent().subsystemDefaultCommandMap();
         getInjectorComponent().operatorCommandMap();
         getInjectorComponent().swerveDefaultCommandMap();
@@ -45,8 +46,6 @@ public class Robot extends BaseRobot {
         getInjectorComponent().intakeDeploySubsystem();
         getInjectorComponent().voltageMonitorSubsystem();
         getInjectorComponent().climberSubsystem();
-        // https://pathplanner.dev/pplib-getting-started.html#configure-autobuilder -- it is suggested to build pathplanner last
-        getInjectorComponent().configurePathPlannerLib();
 
         if (BaseRobot.isSimulation()) {
             simulator = getInjectorComponent().simulator();
