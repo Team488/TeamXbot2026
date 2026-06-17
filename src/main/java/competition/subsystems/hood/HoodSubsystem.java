@@ -60,6 +60,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         if (electricalContract.isReady(Hardware.HoodServoLeft)) {
             var servoLeft = servoFactory.create(
                     electricalContract.getHoodServoLeft().channel, getName() + "/Servo");
+            servoLeft.set(0);
             registerDataFrameRefreshable(servoLeft);
             hoodServoLeft = new TimedAndBoundedServo(
                     servoLeft,
@@ -73,6 +74,7 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         if (electricalContract.isReady(Hardware.HoodServoRight)) {
             var servoRight = servoFactory.create(
                     electricalContract.getHoodServoRight().channel, getName() + "/Servo");
+            servoRight.set(0);
             registerDataFrameRefreshable(servoRight);
             hoodServoRight = new TimedAndBoundedServo(
                     servoRight,
@@ -85,6 +87,8 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
         this.servoTargetNormalized = propertyFactory.createPersistentProperty(
                 "ServoTargetPositionNormalized", 0);
+        // make sure this starts at zero always
+        this.servoTargetNormalized.set(0.0);
         this.extend = propertyFactory.createPersistentProperty("MaxExtensionGoal", 1.0);
         this.retract = propertyFactory.createPersistentProperty("MinExtensionGoal", 0.0);
         this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("ReadinessTimeoutSeconds", 3.0);
