@@ -62,7 +62,7 @@ public class ContinuousPrepareToShootFromHereCommand extends BaseSetpointCommand
         TrajectoriesCalculation.ShootingData data;
         switch (this.target) {
             case ALLIANCE_ZONE:
-                data = this.trajectoriesCalculation.calculateAllianceZoneShootingData(pose, this.zeroHood);
+                data = this.trajectoriesCalculation.calculateAllianceZoneShootingDataV4(pose, this.zeroHood);
                 break;
             case HUB:
             default:

@@ -13,6 +13,9 @@ import javax.inject.Singleton;
 //library used for JSON
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.wpi.first.math.interpolation.Interpolatable;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,10 +30,11 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
-import xbot.common.advantage.AKitLogger;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.properties.StringProperty;
+
+import static edu.wpi.first.units.Units.RPM;
 
 @Singleton()
 public class TrajectoriesCalculation {
@@ -44,7 +48,6 @@ public class TrajectoriesCalculation {
     private final DoubleProperty interpolationFactor;
     private final DoubleProperty v3DistanceOffsetMeters;
     private final StringProperty trajectoryCalcVersion;
-    private AKitLogger aKitLog;
 
     private static void getOrCreatePresetLookup(PropertyFactory propManager) {
         if (presetShootingLookup == null) {
@@ -74,7 +77,6 @@ public class TrajectoriesCalculation {
 
     @Inject
     public TrajectoriesCalculation(AprilTagFieldLayout aprilTagFieldLayout, PropertyFactory propManager) {
-        this.aKitLog = new AKitLogger("TrajectoriesCalculation");
         this.aprilTagFieldLayout = aprilTagFieldLayout;
         this.log = LogManager.getLogger(getClass().getName());
         propManager.setPrefix("TrajectoriesCalculation");
@@ -97,24 +99,34 @@ public class TrajectoriesCalculation {
     private record PresetShootingProperties(DoubleProperty shooterRpmProperty, DoubleProperty hoodServoRatio) {
     }
 
-    private static final ShootingData emptyShootingData = new ShootingData(Rotation2d.kZero, Units.RPM.of(0), 0.0);
+    private static final ShootingData emptyShootingData = new ShootingData(Rotation2d.kZero, RPM.of(0), 0.0);
 
     private record TrajectoryKey(double distance) {
     }
 
     // hashmaps holding all the values
-    private static HashMap<TrajectoryKey, HoodTrajectory> trajectoryMap = null;
-    private static HashMap<TrajectoryKey, HoodTrajectory> trajectoryZeroHoodMap = null;
+    private static InterpolatingTreeMap<Double, HoodTrajectory> trajectoryMap;
+    private static InterpolatingTreeMap<Double, HoodTrajectory> trajectoryZeroHoodMap;
 
     // CHECKSTYLE:OFF
     // essentially holds all the values for the JSON to fill hashmap
-    public static class HoodTrajectory {
+    public static class HoodTrajectory implements Interpolatable<HoodTrajectory> {
         public double distance;
         public double theta;
         public double servo;
         public double velocity;
         public double RPM;
+
+        @Override
+        public HoodTrajectory interpolate(HoodTrajectory endValue, double t) {
+            HoodTrajectory result = new HoodTrajectory();
+            result.RPM = this.RPM + (endValue.RPM - this.RPM) * t; // Point slope equation
+            result.servo = this.servo + (endValue.servo - this.servo) * t; // Point slope equation
+
+            return result;
+        }
     }
+
     // CHECKSTYLE:ON
 
     public enum PresetShootingDistance {
@@ -147,19 +159,35 @@ public class TrajectoriesCalculation {
         return calculateTrajectory(robotPose, targetPose, zeroHood);
     }
 
+    public ShootingData calculateAllianceZoneShootingDataV4(Pose2d robotPose, boolean zeroHood) {
+        Pose2d closestTrenchNeutralSideIdPose = Landmarks.getClosestTrenchNeutralSideIdPose(
+                aprilTagFieldLayout,
+                DriverStation.getAlliance().orElse(Alliance.Blue),
+                robotPose);
+
+        Translation2d target = Landmarks
+                .getAllianceHubPose(aprilTagFieldLayout, DriverStation.getAlliance().orElse(Alliance.Blue))
+                .getTranslation()
+                .interpolate(closestTrenchNeutralSideIdPose.getTranslation(), interpolationFactor.get());
+
+        Pose2d targetPose = new Pose2d(target, Rotation2d.kZero);
+
+        return calculateTrajectory(robotPose, targetPose, zeroHood);
+    }
+
     public PresetShootingData getPresetShootingSettings(PresetShootingDistance shootingDistance) {
         var mapLookup = presetShootingLookup.get(shootingDistance);
 
         return new PresetShootingData(
-                        Units.RPM.of(mapLookup.shooterRpmProperty.get()),
-                        mapLookup.hoodServoRatio.get());
+                RPM.of(mapLookup.shooterRpmProperty.get()),
+                mapLookup.hoodServoRatio.get());
     }
 
     private ShootingData calculateTrajectory(Pose2d robotPose, Pose2d targetPose, boolean zeroHood) {
         return switch (trajectoryCalcVersion.get()) {
             case "1" -> this.calculateTrajectoryV1DumbFixedArcToHub(robotPose, targetPose);
             case "2" -> this.calculateTrajectoryV2KnownDistance(robotPose, targetPose);
-            default -> this.calculateTrajectoryV3Dynamic(robotPose, targetPose, zeroHood);
+            default -> this.calculateTrajectoryV4Dynamic(robotPose, targetPose, zeroHood);
         };
     }
 
@@ -171,7 +199,7 @@ public class TrajectoriesCalculation {
 
     // Fixed shooter parameters. Should only be used when things to very wrong.
     private ShootingData calculateTrajectoryV1DumbFixedArcToHub(Pose2d robotPose, Pose2d targetPose) {
-        return new ShootingData(this.rotationToShootFrom(robotPose, targetPose), Units.RPM.of(3800), 0.2);
+        return new ShootingData(this.rotationToShootFrom(robotPose, targetPose), RPM.of(3800), 0.2);
     }
 
     // Look up known distances based on a preset distances rather than continuous
@@ -191,17 +219,15 @@ public class TrajectoriesCalculation {
         return Math.round(distance * 100.0) / 100.0;
     }
 
-    // Look up optimal shooting parameters based on current pose and shooting
-    // target's pose.
     private ShootingData calculateTrajectoryV3Dynamic(Pose2d robotPose, Pose2d targetPose, boolean zeroHood) {
         // This does take a performance hit, so we should consider loading these in when we aren't doing anything.
         if (zeroHood) {
             if (trajectoryZeroHoodMap == null) {
-                trajectoryZeroHoodMap = loadTrajectories("trajectories_0_hood.json");
+                trajectoryZeroHoodMap = loadTrajectoriesV4("trajectories_0_hood.json");
             }
         } else {
             if (trajectoryMap == null) {
-                trajectoryMap = loadTrajectories("trajectories.json");
+                trajectoryMap = loadTrajectoriesV4("trajectories.json");
             }
         }
         Rotation2d finalRotation = this.rotationToShootFrom(robotPose, targetPose);
@@ -210,9 +236,7 @@ public class TrajectoriesCalculation {
         Pose2d shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
         double distance = shooterPose.getTranslation().getDistance(targetPose.getTranslation());
         var roundedDistance = roundingDistance(distance);
-        this.aKitLog.record("V3DynamicOriginalDistanceInMeters", roundedDistance);
         var offsetDistance = roundedDistance + v3DistanceOffsetMeters.get();
-        this.aKitLog.record("V3DynamicWithOffsetDistanceInMeters", offsetDistance);
         var key = new TrajectoryKey(roundingDistance(offsetDistance));
         var hoodTrajectory = this.searchForHoodTrajectory(key, zeroHood);
         if (hoodTrajectory.isEmpty()) {
@@ -232,24 +256,33 @@ public class TrajectoriesCalculation {
         return new ShootingData(finalRotation, Units.RPM.of(matchedTrajectory.RPM), matchedTrajectory.servo);
     }
 
+    // Look up optimal shooting parameters based on current pose and shooting
+    // target's pose.
+    private ShootingData calculateTrajectoryV4Dynamic(Pose2d robotPose, Pose2d targetPose, boolean zeroHood) {
+        if (trajectoryMap == null) {
+            trajectoryMap = loadTrajectoriesV4("trajectories.json");
+        }
+        if (trajectoryZeroHoodMap == null) {
+            trajectoryZeroHoodMap = loadTrajectoriesV4("trajectories_0_hood.json");
+        }
+
+        InterpolatingTreeMap<Double, HoodTrajectory> activeMap = zeroHood ? trajectoryZeroHoodMap : trajectoryMap;
+
+        Rotation2d finalRotation = this.rotationToShootFrom(robotPose, targetPose);
+        Pose2d finalPose = new Pose2d(robotPose.getX(), robotPose.getY(), finalRotation);
+        Pose2d shooterPose = finalPose.plus(HOOD_OFFSET_FROM_CENTER_ROBOT);
+        double distance = shooterPose.getTranslation().getDistance(targetPose.getTranslation());
+        var offsetDistance = distance + v3DistanceOffsetMeters.get();
+
+        HoodTrajectory result = activeMap.get(offsetDistance);
+        if (result == null) {
+            log.warn("Trajectory not found for distance: {}", offsetDistance);
+            return TrajectoriesCalculation.emptyShootingData;
+        }
+        return new ShootingData(finalRotation, Units.RPM.of(result.RPM), result.servo);
+    }
+
     private Optional<HoodTrajectory> searchForHoodTrajectory(TrajectoryKey key, boolean zeroHood) {
-        var mapToUse = zeroHood ? trajectoryZeroHoodMap : trajectoryMap;
-
-        if (mapToUse.containsKey(key)) {
-            this.aKitLog.record("V3DynamicDeterminedDistanceInMeters", key.distance);
-            return Optional.of(mapToUse.get(key));
-        }
-
-        var adjustedDistanceCheck = roundingDistance(key.distance + 0.01);
-        while (adjustedDistanceCheck < 10.0) {
-            var check = new TrajectoryKey(adjustedDistanceCheck);
-            if (mapToUse.containsKey(check)) {
-                this.aKitLog.record("V3DynamicDeterminedDistanceInMeters", check.distance);
-                return Optional.of(mapToUse.get(check));
-            }
-            adjustedDistanceCheck = roundingDistance(adjustedDistanceCheck + 0.01);
-            log.info("adjustedDistanceCheck: {}", adjustedDistanceCheck);
-        }
 
         if (zeroHood) {
             log.error(
@@ -283,6 +316,27 @@ public class TrajectoriesCalculation {
 
     // This method loads the trajectories from the JSON file and populates the
     // HashMap.
+    private InterpolatingTreeMap<Double, HoodTrajectory> loadTrajectoriesV4(String filename) {
+        InterpolatingTreeMap<Double, HoodTrajectory> map =
+                new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), Interpolatable::interpolate);
+        try {
+            File configFile = new File(Filesystem.getDeployDirectory(), filename);
+            if (configFile.exists()) {
+                ObjectMapper mapper = new ObjectMapper();
+                HoodTrajectory[] rawArray = mapper.readValue(configFile, HoodTrajectory[].class);
+                for (HoodTrajectory point : rawArray) {
+                    map.put(point.distance, point);
+                }
+                log.info("Loaded trajectories from {}", filename);
+            } else {
+                log.warn("{} not found in the deploy directory!", filename);
+            }
+        } catch (Exception e) {
+            log.error("Failed to load JSON from {}: {}", filename, e.getMessage());
+        }
+        return map; // always returns map, even if empty
+    }
+
     private HashMap<TrajectoryKey, HoodTrajectory> loadTrajectories(String filename) {
         var loadedMap = new HashMap<TrajectoryKey, HoodTrajectory>();
 
@@ -312,4 +366,6 @@ public class TrajectoriesCalculation {
 
         return loadedMap;
     }
+
+
 }
