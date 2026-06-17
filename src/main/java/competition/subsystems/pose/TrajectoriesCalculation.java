@@ -43,6 +43,7 @@ public class TrajectoriesCalculation {
     private final DoubleProperty trajectoriesShooterRPMFixed;
     private final DoubleProperty interpolationFactor;
     private final DoubleProperty v3DistanceOffsetMeters;
+    private final DoubleProperty v3DistanceOffsetSlope;
     private final StringProperty trajectoryCalcVersion;
     private AKitLogger aKitLog;
 
@@ -83,6 +84,7 @@ public class TrajectoriesCalculation {
                 0.5);
         this.trajectoryCalcVersion = propManager.createPersistentProperty("TrajectoryCalcVersion", "3");
         this.v3DistanceOffsetMeters = propManager.createPersistentProperty("v3DistanceOffsetMeters", 0.45);
+        this.v3DistanceOffsetSlope = propManager.createPersistentProperty("v3DistanceOffsetSlope", 0);
         getOrCreatePresetLookup(propManager);
     }
 
@@ -102,9 +104,14 @@ public class TrajectoriesCalculation {
     private record TrajectoryKey(double distance) {
     }
 
+    private record TrajectoryMapRange(double minimum, double maximum, double delta) {
+    }
+
     // hashmaps holding all the values
     private static HashMap<TrajectoryKey, HoodTrajectory> trajectoryMap = null;
+    private static TrajectoryMapRange trajectoryMapRange = null;
     private static HashMap<TrajectoryKey, HoodTrajectory> trajectoryZeroHoodMap = null;
+    private static TrajectoryMapRange trajectoryZeroHoodMapRange = null;
 
     // CHECKSTYLE:OFF
     // essentially holds all the values for the JSON to fill hashmap
@@ -191,6 +198,14 @@ public class TrajectoriesCalculation {
         return Math.round(distance * 100.0) / 100.0;
     }
 
+    private double calculateOffset(double distance, boolean zeroHood) {
+        var rangeToUse = zeroHood ? trajectoryZeroHoodMapRange : trajectoryMapRange;
+
+        var deltaFromMinimum = distance - rangeToUse.minimum;
+        var offset = (v3DistanceOffsetSlope.get() * (deltaFromMinimum / rangeToUse.delta)) + v3DistanceOffsetMeters.get();
+        return roundingDistance(offset);
+    }
+
     // Look up optimal shooting parameters based on current pose and shooting
     // target's pose.
     private ShootingData calculateTrajectoryV3Dynamic(Pose2d robotPose, Pose2d targetPose, boolean zeroHood) {
@@ -198,10 +213,12 @@ public class TrajectoriesCalculation {
         if (zeroHood) {
             if (trajectoryZeroHoodMap == null) {
                 trajectoryZeroHoodMap = loadTrajectories("trajectories_0_hood.json");
+                trajectoryZeroHoodMapRange = buildTrajectoryRange(trajectoryZeroHoodMap);
             }
         } else {
             if (trajectoryMap == null) {
                 trajectoryMap = loadTrajectories("trajectories.json");
+                trajectoryMapRange = buildTrajectoryRange(trajectoryMap);
             }
         }
         Rotation2d finalRotation = this.rotationToShootFrom(robotPose, targetPose);
@@ -211,7 +228,7 @@ public class TrajectoriesCalculation {
         double distance = shooterPose.getTranslation().getDistance(targetPose.getTranslation());
         var roundedDistance = roundingDistance(distance);
         this.aKitLog.record("V3DynamicOriginalDistanceInMeters", roundedDistance);
-        var offsetDistance = roundedDistance + v3DistanceOffsetMeters.get();
+        var offsetDistance = roundingDistance(calculateOffset(roundedDistance, zeroHood) + roundedDistance);
         this.aKitLog.record("V3DynamicWithOffsetDistanceInMeters", offsetDistance);
         var key = new TrajectoryKey(roundingDistance(offsetDistance));
         var hoodTrajectory = this.searchForHoodTrajectory(key, zeroHood);
@@ -279,6 +296,21 @@ public class TrajectoriesCalculation {
                         preset -> Math.abs(distance.abs(Units.Meter) - preset.distance.abs(Units.Meter))))
                 .map(PresetShootingDistanceLookup::presetShootingDistance)
                 .orElse(PresetShootingDistance.NEAR);
+    }
+
+    private TrajectoryMapRange buildTrajectoryRange(HashMap<TrajectoryKey, HoodTrajectory> map) {
+        var minimum = 0.0;
+        var maximum = 0.0;
+        for (TrajectoryKey key : map.keySet()) {
+            if (minimum == 0.0 || key.distance < minimum) {
+                minimum = key.distance;
+            }
+            if (maximum == 0.0 || key.distance > maximum) {
+                maximum = key.distance;
+            }
+        }
+
+        return new TrajectoryMapRange(minimum, maximum, maximum - minimum);
     }
 
     // This method loads the trajectories from the JSON file and populates the
