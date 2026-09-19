@@ -227,7 +227,8 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupTestingCommands(AimAndShootFromHereCommand aimAndShootFromHereCommand,
-                                     DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand, IntakeDeployClosingAndOscillatingForShootingCommand intakeDeployOscillating) {
+                                     DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand,
+                                     IntakeDeployClosingAndOscillatingForShootingCommand intakeDeployOscillating) {
         aimAndShootFromHereCommand.includeOnSmartDashboard();
         driveThroughAllianceTrenchCommand.includeOnSmartDashboard();
         intakeDeployOscillating.includeOnSmartDashboard();
