@@ -3,8 +3,9 @@
   "robotLength": 0.892,
   "holonomicMode": true,
   "pathFolders": [
-    "TwoPassAuto",
-    "NoEventMarkers"
+    "GirlsGen Autos",
+    "NoEventMarkers",
+    "TwoPassAuto"
   ],
   "autoFolders": [],
   "defaultMaxVel": 2.5,
@@ -12,7 +13,7 @@
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "defaultNominalVoltage": 12.0,
-  "robotMass": 49.8951607,
+  "robotMass": 49.895,
   "robotMOI": 6.883,
   "robotTrackwidth": 0.546,
   "driveWheelRadius": 0.051,
