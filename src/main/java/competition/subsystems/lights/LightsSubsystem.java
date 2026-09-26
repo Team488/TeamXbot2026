@@ -6,6 +6,7 @@ import competition.electrical_contract.Hardware;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.vision.AprilTagVisionSubsystemExtended;
+import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import xbot.common.command.BaseSubsystem;
@@ -27,6 +28,7 @@ public class LightsSubsystem extends BaseSubsystem {
     public VoltageMonitorSubsystem voltageMonitor;
     public RobotAssertionManager assertionManager;
     public final AprilTagVisionSubsystemExtended vision;
+    final PoseSubsystem pose;
 
     @Inject
     public LightsSubsystem(XCANLightController.XCANLightControllerFactory lightsFactory,
@@ -35,13 +37,15 @@ public class LightsSubsystem extends BaseSubsystem {
                            HoodSubsystem hoodSubsystem,
                            VoltageMonitorSubsystem voltageMonitor,
                            RobotAssertionManager assertionManager,
-                           AprilTagVisionSubsystemExtended vision
+                           AprilTagVisionSubsystemExtended vision,
+                           PoseSubsystem pose
     ) {
         this.intakeDeploy = intakeDeploy;
         this.hoodSubsystem = hoodSubsystem;
         this.voltageMonitor = voltageMonitor;
         this.assertionManager = assertionManager;
         this.vision = vision;
+        this.pose = pose;
         if (electricalContract.isReady(Hardware.Lights)) {
             this.lights = lightsFactory.create(
                     electricalContract.getLightControllerInfo()
@@ -58,7 +62,7 @@ public class LightsSubsystem extends BaseSubsystem {
             return;
         }
 
-        if (vision.isAlignedToHub()) {
+        if (pose.isAlignedToHub()) {
             lights.strobe(0, Hertz.of(5), Color.kGreen);
         }
 
