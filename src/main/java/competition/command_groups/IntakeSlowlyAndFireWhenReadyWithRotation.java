@@ -1,12 +1,8 @@
 package competition.command_groups;
 
 
-import competition.general_commands.WaitForDurationCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployAdaptiveCloseWhileFiringCommand;
-import competition.subsystems.intake_deploy.commands.IntakeDeployOscillating;
-import competition.subsystems.intake_deploy.commands.IntakeDeploySlowClosing;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import xbot.common.command.BaseSequentialCommandGroup;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;

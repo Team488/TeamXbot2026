@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Seconds;
 
-public class IntakeDeployOscillating extends BaseSetpointCommand {
+public class IntakeDeployClosingAndOscillatingForShootingCommand extends BaseSetpointCommand {
 
     public final IntakeDeploySubsystem intakeDeploySubsystem;
     public final AngleProperty amplitude;
@@ -30,7 +30,7 @@ public class IntakeDeployOscillating extends BaseSetpointCommand {
 
 
     @Inject
-    public IntakeDeployOscillating(IntakeDeploySubsystem intakeDeploySubsystem, PropertyFactory propertyFactory) {
+    public IntakeDeployClosingAndOscillatingForShootingCommand(IntakeDeploySubsystem intakeDeploySubsystem, PropertyFactory propertyFactory) {
         super(intakeDeploySubsystem);
         propertyFactory.setPrefix(this);
         this.intakeDeploySubsystem = intakeDeploySubsystem;
