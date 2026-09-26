@@ -1,0 +1,92 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.621,
+        "y": 1.017
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.041032028469752,
+        "y": 0.6727520759193351
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.3650177935943075,
+        "y": 0.5974377224199281
+      },
+      "prevControl": {
+        "x": 5.0142633556343466,
+        "y": 0.5389180072086583
+      },
+      "nextControl": {
+        "x": 5.611609357536815,
+        "y": 0.6385789498249095
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.13,
+        "y": 1.0278054567022525
+      },
+      "prevControl": {
+        "x": 6.090487698933909,
+        "y": 0.7885405763693415
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 0.976909413854352,
+      "rotationDegrees": 7.308642542537996
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "IntakeDeployRetract",
+      "waypointRelativePos": 0.15748031496063172,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "IntakeDeployExtend",
+      "waypointRelativePos": 1.102362204724392,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.5,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 68.854
+  },
+  "reversed": false,
+  "folder": "GirlsGen Autos",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -126.67399999999999
+  },
+  "useDefaultConstraints": true
+}
