@@ -212,6 +212,20 @@
               "show_type": true,
               "maximize_button_space": false
             }
+          },
+          {
+            "title": "One Loop Right Auto",
+            "x": 896.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/One Loop Right Auto",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
           }
         ]
       }
