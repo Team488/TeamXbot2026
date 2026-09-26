@@ -1,12 +1,13 @@
 package competition.subsystems.vision;
 
-//import competition.subsystems.pose.Landmarks;
+import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.DriverStation;
 import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.properties.PropertyFactory;
@@ -21,15 +22,19 @@ import java.util.Optional;
 
 @Singleton
 public class AprilTagVisionSubsystemExtended extends AprilTagVisionSubsystem {
+    final PoseSubsystem pose;
     HashMap<Pose2d, Integer> aprilTagIDHashMap = new HashMap<>();
     private final AprilTagFieldLayout aprilTagFieldLayout;
     public final CameraInfo[] cameras;
 
     @Inject
     public AprilTagVisionSubsystemExtended(PropertyFactory pf,
-                                           AprilTagFieldLayout fieldLayout, XCameraElectricalContract contract,
+                                           PoseSubsystem pose,
+                                           AprilTagFieldLayout fieldLayout,
+                                           XCameraElectricalContract contract,
                                            AprilTagVisionIOFactory visionIOFactory) {
         super(pf, fieldLayout, contract, visionIOFactory);
+        this.pose = pose;
         this.cameras = contract.getCameraInfo();
         // TODO update these landmarks if needed, see https://github.com/Team488/TeamXbot2026/pull/11
         //
@@ -113,5 +118,12 @@ public class AprilTagVisionSubsystemExtended extends AprilTagVisionSubsystem {
             }
         }
         return true;
+    }
+
+    public boolean isAlignedToHub() {
+        Translation2d hub = Landmarks.getAllianceHubPose(aprilTagFieldLayout,
+                DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)).getTranslation();
+
+        return pose.isFacingTarget(hub);
     }
 }

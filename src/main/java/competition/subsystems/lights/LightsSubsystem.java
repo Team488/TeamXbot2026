@@ -58,6 +58,10 @@ public class LightsSubsystem extends BaseSubsystem {
             return;
         }
 
+        if (vision.isAlignedToHub()) {
+            lights.strobe(0, Hertz.of(5), Color.kGreen);
+        }
+
         if (DriverStation.isDisabled() && !vision.areAllCamerasConnected()) {
             lights.strobe(0, Hertz.of(1), Color.kRed);
         } else if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && voltageMonitor.isAtUnhealthyVoltage()) {
