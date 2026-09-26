@@ -130,13 +130,13 @@
   "eventMarkers": [
     {
       "name": "IntakeDeployExtend",
-      "waypointRelativePos": 0.7019122609673876,
+      "waypointRelativePos": 0.4499437570303522,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "CollectorIntake",
-      "waypointRelativePos": 0.9,
+      "waypointRelativePos": 0.584926884139489,
       "endWaypointRelativePos": 2.3,
       "command": null
     },
