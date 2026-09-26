@@ -20,12 +20,12 @@
         "y": 1.264507710557533
       },
       "prevControl": {
-        "x": 6.40433069542915,
-        "y": 0.5224079746556892
+        "x": 6.6130842230130495,
+        "y": 0.4145314353499394
       },
       "nextControl": {
-        "x": 8.246771607013754,
-        "y": 1.6430170030918188
+        "x": 8.073250826214652,
+        "y": 1.6416927295300145
       },
       "isLocked": false,
       "linkedName": null
@@ -127,7 +127,32 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "IntakeDeployExtend",
+      "waypointRelativePos": 0.7019122609673876,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "CollectorIntake",
+      "waypointRelativePos": 0.9,
+      "endWaypointRelativePos": 2.3,
+      "command": null
+    },
+    {
+      "name": "WaitForRotationAndHoodAndShooterToBeAtGoalCommandGroup",
+      "waypointRelativePos": 2.5,
+      "endWaypointRelativePos": 4.0,
+      "command": null
+    },
+    {
+      "name": "WarmupShooterNear",
+      "waypointRelativePos": 2.7,
+      "endWaypointRelativePos": 4.0,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 2.5,
     "maxAcceleration": 3.0,

@@ -3,55 +3,44 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.159,
-        "y": 2.666
+        "x": 7.13,
+        "y": 1.028
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.562187074709489,
-        "y": 2.730540208256099
+        "x": 7.775077105570398,
+        "y": 1.9100593119736207
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.03208778173191,
-        "y": 2.3081494661921704
+        "x": 7.581411625150304,
+        "y": 3.308754448399775
       },
       "prevControl": {
-        "x": 5.84485432626054,
-        "y": 2.473810666091998
-      },
-      "nextControl": {
-        "x": 6.548360575192797,
-        "y": 1.8513594645065798
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 7.13,
-        "y": 1.0278054567022525
-      },
-      "prevControl": {
-        "x": 6.436353143081075,
-        "y": 1.6644498923063185
+        "x": 7.871909845783922,
+        "y": 3.8144365361729076
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.3712255772646537,
+      "rotationDegrees": 83.20016274988633
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "IntakeDeployExtend",
-      "waypointRelativePos": 0.8,
-      "endWaypointRelativePos": null,
+      "name": "CollectorIntake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 1.0,
       "command": null
     }
   ],
@@ -65,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 68.854
+    "rotation": 87.39743779770183
   },
   "reversed": false,
   "folder": "GirlsGen Autos",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 68.854
   },
   "useDefaultConstraints": true
 }
