@@ -1,0 +1,77 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.159,
+        "y": 2.666
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.562187074709489,
+        "y": 2.730540208256099
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.03208778173191,
+        "y": 2.3081494661921704
+      },
+      "prevControl": {
+        "x": 5.84485432626054,
+        "y": 2.473810666091998
+      },
+      "nextControl": {
+        "x": 6.548360575192797,
+        "y": 1.8513594645065798
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.13,
+        "y": 1.0278054567022525
+      },
+      "prevControl": {
+        "x": 6.436353143081075,
+        "y": 1.6644498923063185
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "IntakeDeployExtend",
+      "waypointRelativePos": 0.8,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.5,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 68.854
+  },
+  "reversed": false,
+  "folder": "GirlsGen Autos",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

@@ -1,0 +1,141 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.589750889679717,
+        "y": 0.6297153024911029
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.9040541085924265,
+        "y": 0.650515366734048
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.161198102016608,
+        "y": 1.2537485171950937
+      },
+      "prevControl": {
+        "x": 5.483368920521947,
+        "y": 0.28542111505986334
+      },
+      "nextControl": {
+        "x": 6.74770946618046,
+        "y": 2.0916218945720253
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.161198102016608,
+        "y": 3.513179122182681
+      },
+      "prevControl": {
+        "x": 5.6395659886618805,
+        "y": 3.000869251571342
+      },
+      "nextControl": {
+        "x": 7.382688240277397,
+        "y": 4.712839646648625
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.344709371293003,
+        "y": 2.415741399762752
+      },
+      "prevControl": {
+        "x": 7.696952763674577,
+        "y": 2.564866339604412
+      },
+      "nextControl": {
+        "x": 5.87069988137604,
+        "y": 1.7917081850480008
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.159,
+        "y": 2.666
+      },
+      "prevControl": {
+        "x": 3.534729138279924,
+        "y": 2.7428360139525774
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 0.9520426287744145,
+      "rotationDegrees": 68.46246497854388
+    },
+    {
+      "waypointRelativePos": 1.44227353463588,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 1.925399644760195,
+      "rotationDegrees": 54.15519773825734
+    },
+    {
+      "waypointRelativePos": 2.6429840142096053,
+      "rotationDegrees": -97.30386876598085
+    },
+    {
+      "waypointRelativePos": 3.2539964476021357,
+      "rotationDegrees": 178.1558506428744
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 3.788526434195735,
+      "maxWaypointRelativePos": 4.0,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.5,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -135.0
+  },
+  "reversed": false,
+  "folder": "GirlsGen Autos",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}
