@@ -237,13 +237,6 @@ public class PoseSubsystem extends BasePoseSubsystem {
         return (Math.toDegrees(angleError) < isFacingTargetMarginOfError.get());
     }
 
-    public boolean isAlignedToHub() {
-        Translation2d hub = Landmarks.getAllianceHubPose(aprilTagFieldLayout,
-                DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)).getTranslation();
-
-        return isFacingTarget(hub);
-    }
-
     public Rotation2d desiredHeadingToTarget(Translation2d target) {
         Pose2d currentPose = this.getCurrentPose2d();
 
@@ -253,6 +246,13 @@ public class PoseSubsystem extends BasePoseSubsystem {
         }
 
         return vectorToTarget.getAngle();
+    }
+
+    public boolean isAlignedToHub() {
+        Translation2d hub = Landmarks.getAllianceHubPose(aprilTagFieldLayout,
+                DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)).getTranslation();
+
+        return isFacingTarget(hub);
     }
 
     @Override
