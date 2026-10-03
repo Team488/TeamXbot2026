@@ -62,23 +62,25 @@ public class LightsSubsystem extends BaseSubsystem {
             return;
         }
 
-        // Flash Green when aligned to Hub
-        if (pose.isAlignedToHub()) {
-            lights.strobe(0, Hertz.of(5), Color.kGreen);
-            aKitLog.record("Green Light Hub Flash", true);
-        }
-        else {
-            aKitLog.record("Green Light Hub Not Flash", false);
-        }
-
         // The state of the robot
+            //Red lights when Drive is disabled & not all cameras are connected
         if (DriverStation.isDisabled() && !vision.areAllCamerasConnected()) {
             lights.strobe(0, Hertz.of(1), Color.kRed);
-        } else if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && voltageMonitor.isAtUnhealthyVoltage()) {
+        }
+            //Flashes Green when robot is aligned to hub
+        else if (pose.isAlignedToHub()) {
+            lights.strobe(0, Hertz.of(5), Color.kGreen);
+        }
+            //DodgerBlue Lights when intake is calibrated, drive in auto & voltage is unhealthy
+        else if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && voltageMonitor.isAtUnhealthyVoltage()) {
             lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
-        } else if (intakeDeploy.isCalibrated && DriverStation.isTeleop() && voltageMonitor.isAtUnhealthyVoltage()) {
+        }
+            //Green Lights when intake is calibrated, drive in auto & voltage is unhealthy
+        else if (intakeDeploy.isCalibrated && DriverStation.isTeleop() && voltageMonitor.isAtUnhealthyVoltage()) {
             lights.larson(0, Hertz.of(25), Color.kGreen, LarsonBounceValue.Back);
-        } else {
+        }
+            //FireRed Lights when none of the above apply
+        else {
             lights.larson(0, Hertz.of(25), Color.kFirstRed, LarsonBounceValue.Back);
         }
 
@@ -92,6 +94,7 @@ public class LightsSubsystem extends BaseSubsystem {
         var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
         switch (alliance) {
+            //Alliance side
             case Blue -> lights.larson(2, Hertz.of(25), Color.kBlue, LarsonBounceValue.Front);
             case Red -> lights.larson(2, Hertz.of(25), Color.kRed, LarsonBounceValue.Front);
             default -> assertionManager.throwException("No Alliance Selected!", new Exception());
