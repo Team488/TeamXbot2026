@@ -1,7 +1,5 @@
 package competition.subsystems.vision;
 
-//import competition.subsystems.pose.Landmarks;
-import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -27,7 +25,8 @@ public class AprilTagVisionSubsystemExtended extends AprilTagVisionSubsystem {
 
     @Inject
     public AprilTagVisionSubsystemExtended(PropertyFactory pf,
-                                           AprilTagFieldLayout fieldLayout, XCameraElectricalContract contract,
+                                           AprilTagFieldLayout fieldLayout,
+                                           XCameraElectricalContract contract,
                                            AprilTagVisionIOFactory visionIOFactory) {
         super(pf, fieldLayout, contract, visionIOFactory);
         this.cameras = contract.getCameraInfo();

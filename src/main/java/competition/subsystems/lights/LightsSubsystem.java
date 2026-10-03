@@ -6,6 +6,7 @@ import competition.electrical_contract.Hardware;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.vision.AprilTagVisionSubsystemExtended;
+import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import xbot.common.command.BaseSubsystem;
@@ -27,6 +28,7 @@ public class LightsSubsystem extends BaseSubsystem {
     public VoltageMonitorSubsystem voltageMonitor;
     public RobotAssertionManager assertionManager;
     public final AprilTagVisionSubsystemExtended vision;
+    final PoseSubsystem pose;
 
     @Inject
     public LightsSubsystem(XCANLightController.XCANLightControllerFactory lightsFactory,
@@ -35,13 +37,15 @@ public class LightsSubsystem extends BaseSubsystem {
                            HoodSubsystem hoodSubsystem,
                            VoltageMonitorSubsystem voltageMonitor,
                            RobotAssertionManager assertionManager,
-                           AprilTagVisionSubsystemExtended vision
+                           AprilTagVisionSubsystemExtended vision,
+                           PoseSubsystem pose
     ) {
         this.intakeDeploy = intakeDeploy;
         this.hoodSubsystem = hoodSubsystem;
         this.voltageMonitor = voltageMonitor;
         this.assertionManager = assertionManager;
         this.vision = vision;
+        this.pose = pose;
         if (electricalContract.isReady(Hardware.Lights)) {
             this.lights = lightsFactory.create(
                     electricalContract.getLightControllerInfo()
@@ -58,16 +62,29 @@ public class LightsSubsystem extends BaseSubsystem {
             return;
         }
 
+        // The state of the robot
+            //Red lights when Drive is disabled & not all cameras are connected
         if (DriverStation.isDisabled() && !vision.areAllCamerasConnected()) {
             lights.strobe(0, Hertz.of(1), Color.kRed);
-        } else if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && voltageMonitor.isAtUnhealthyVoltage()) {
+        }
+            //Flashes Green when robot is aligned to hub
+        else if (pose.isAlignedToHub()) {
+            lights.strobe(0, Hertz.of(5), Color.kGreen);
+        }
+            //DodgerBlue Lights when intake is calibrated, drive in auto & voltage is unhealthy
+        else if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && voltageMonitor.isAtUnhealthyVoltage()) {
             lights.larson(0, Hertz.of(25), Color.kDodgerBlue, LarsonBounceValue.Back);
-        } else if (intakeDeploy.isCalibrated && DriverStation.isTeleop() && voltageMonitor.isAtUnhealthyVoltage()) {
+        }
+            //Green Lights when intake is calibrated, drive in auto & voltage is unhealthy
+        else if (intakeDeploy.isCalibrated && DriverStation.isTeleop() && voltageMonitor.isAtUnhealthyVoltage()) {
             lights.larson(0, Hertz.of(25), Color.kGreen, LarsonBounceValue.Back);
-        } else {
+        }
+            //FireRed Lights when none of the above apply
+        else {
             lights.larson(0, Hertz.of(25), Color.kFirstRed, LarsonBounceValue.Back);
         }
 
+        //Hood level
         if (hoodSubsystem.getCurrentValue() >= 0.02) {
             lights.larson(1, Hertz.of(25), Color.kDarkRed, LarsonBounceValue.Front);
         } else {
@@ -77,6 +94,7 @@ public class LightsSubsystem extends BaseSubsystem {
         var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
         switch (alliance) {
+            //Alliance side
             case Blue -> lights.larson(2, Hertz.of(25), Color.kBlue, LarsonBounceValue.Front);
             case Red -> lights.larson(2, Hertz.of(25), Color.kRed, LarsonBounceValue.Front);
             default -> assertionManager.throwException("No Alliance Selected!", new Exception());
