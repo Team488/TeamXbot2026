@@ -62,10 +62,16 @@ public class LightsSubsystem extends BaseSubsystem {
             return;
         }
 
+        // Flash Green when aligned to Hub
         if (pose.isAlignedToHub()) {
             lights.strobe(0, Hertz.of(5), Color.kGreen);
+            aKitLog.record("Green Light Hub Flash", true);
+        }
+        else {
+            aKitLog.record("Green Light Hub Not Flash", false);
         }
 
+        // The state of the robot
         if (DriverStation.isDisabled() && !vision.areAllCamerasConnected()) {
             lights.strobe(0, Hertz.of(1), Color.kRed);
         } else if (intakeDeploy.isCalibrated && DriverStation.isAutonomous() && voltageMonitor.isAtUnhealthyVoltage()) {
@@ -76,6 +82,7 @@ public class LightsSubsystem extends BaseSubsystem {
             lights.larson(0, Hertz.of(25), Color.kFirstRed, LarsonBounceValue.Back);
         }
 
+        //Hood level
         if (hoodSubsystem.getCurrentValue() >= 0.02) {
             lights.larson(1, Hertz.of(25), Color.kDarkRed, LarsonBounceValue.Front);
         } else {
