@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import competition.electrical_contract.ElectricalContract;
+import competition.subsystems.pose.XbotIMU;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.vision.AprilTagVisionSubsystemExtended;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -27,6 +28,7 @@ import static edu.wpi.first.units.Units.Meters;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import xbot.common.controls.sensors.XGyro;
 import xbot.common.controls.sensors.XGyro.XGyroFactory;
 import xbot.common.math.WrappedRotation2d;
 import xbot.common.properties.BooleanProperty;
@@ -46,6 +48,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
     private final BooleanProperty useVisionAssistedPose;
     private final BooleanProperty reportCameraPoses;
     private final DoubleProperty isFacingTargetMarginOfError;
+    private final XbotIMU imu;
     private AprilTagFieldLayout aprilTagFieldLayout;
 
     private boolean preferOdometryToVision = false;
@@ -56,13 +59,14 @@ public class PoseSubsystem extends BasePoseSubsystem {
     protected Optional<SwerveModulePosition[]> simulatedModulePositions = Optional.empty();
 
     @Inject
-    public PoseSubsystem(ElectricalContract electricalContract,
-                         XGyroFactory gyroFactory,
+    public PoseSubsystem(XbotIMU imu,
                          PropertyFactory propManager,
                          DriveSubsystem drive,
                          AprilTagVisionSubsystemExtended aprilTagVisionSubsystem,
                          AprilTagFieldLayout aprilTagFieldLayout) {
-        super(gyroFactory.create(electricalContract.getIMUInfo()), propManager);
+        super((XGyro) imu, propManager);
+        this.imu = imu;
+
         this.drive = drive;
         this.aprilTagVisionSubsystem = aprilTagVisionSubsystem;
         this.aprilTagFieldLayout = aprilTagFieldLayout;
@@ -309,6 +313,11 @@ public class PoseSubsystem extends BasePoseSubsystem {
                     .fromRotation2d(this.getPrimaryOdometryOnlyPoseEstimator().getEstimatedPosition().getRotation());
         }
     }
+
+    public XbotIMU getImu() {
+        return imu;
+    }
+
 
     // used by the physics simulator to mock what the swerve modules are doing
     // currently for pose estimation
