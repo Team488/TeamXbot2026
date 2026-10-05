@@ -160,6 +160,7 @@ public class AutoLandmarks {
         var changeInX = alliance == Alliance.Blue ? -1 : 1;
         var driverSideTranslation = nearestAllianceTrenchPose.getTranslation()
                 .plus(new Translation2d(this.trenchPlanningOffsetMeters.get() * changeInX, 0));
+        var midpointTranslation = nearestAllianceTrenchPose.getTranslation();
         var neutralSideTranslation = nearestAllianceTrenchPose.getTranslation()
                 .plus(new Translation2d(this.trenchPlanningOffsetMeters.get() * -1 * changeInX, 0));
         var rotationThroughTrench = alliance == Alliance.Blue
@@ -167,6 +168,7 @@ public class AutoLandmarks {
                 : Rotation2d.kPi;
 
         results.add(new Pose2d(driverSideTranslation, rotationThroughTrench));
+        results.add(new Pose2d(midpointTranslation, rotationThroughTrench));
         results.add(new Pose2d(neutralSideTranslation, rotationThroughTrench));
 
         return results;
