@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "FirstLoopRightAuto"
+            "pathName": "RightTrenchMidPath"
           }
         },
         {
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Second-MidLoopTransition"
+            "pathName": "RightTrenchMid-MiddlePath"
           }
         },
         {

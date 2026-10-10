@@ -48,15 +48,15 @@
     },
     {
       "anchor": {
-        "x": 6.010569395017794,
+        "x": 6.699157769869515,
         "y": 0.6297153024911029
       },
       "prevControl": {
-        "x": 6.33744246649674,
+        "x": 7.026030841348462,
         "y": 0.559068531939399
       },
       "nextControl": {
-        "x": 5.766211455473818,
+        "x": 6.454799830325539,
         "y": 0.6825281549213842
       },
       "isLocked": false,
@@ -170,7 +170,7 @@
     "rotation": -126.67434966957315
   },
   "reversed": false,
-  "folder": "GirlsGen Autos",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0
