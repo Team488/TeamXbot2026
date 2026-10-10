@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.775077105570398,
-        "y": 1.9100593119736207
+        "x": 8.194928220384199,
+        "y": 1.2731142333684473
       },
       "isLocked": false,
       "linkedName": null
@@ -39,8 +39,8 @@
   "eventMarkers": [
     {
       "name": "CollectorIntake",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 1.0,
+      "waypointRelativePos": 0.008998875140608063,
+      "endWaypointRelativePos": 0.9898762654668166,
       "command": null
     }
   ],
@@ -57,7 +57,7 @@
     "rotation": 87.39743779770183
   },
   "reversed": false,
-  "folder": "GirlsGen Autos",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 68.854

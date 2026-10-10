@@ -59,13 +59,13 @@
   "eventMarkers": [
     {
       "name": "IntakeDeployRetract",
-      "waypointRelativePos": 0.15748031496063172,
+      "waypointRelativePos": 0.22947131608548418,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "IntakeDeployExtend",
-      "waypointRelativePos": 1.102362204724392,
+      "waypointRelativePos": 1.5613048368954145,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -83,7 +83,7 @@
     "rotation": 68.854
   },
   "reversed": false,
-  "folder": "GirlsGen Autos",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": -126.67399999999999

@@ -133,21 +133,21 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "CollectorIntake",
+      "waypointRelativePos": 0.584926884139489,
+      "endWaypointRelativePos": 2.600674915635537,
+      "command": null
+    },
+    {
       "name": "IntakeDeployExtend",
-      "waypointRelativePos": 0.4499437570303522,
+      "waypointRelativePos": 0.7199100112486057,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "CollectorIntake",
-      "waypointRelativePos": 0.584926884139489,
-      "endWaypointRelativePos": 2.3,
-      "command": null
-    },
-    {
       "name": "WarmupShooterNear",
-      "waypointRelativePos": 3.32058492688417,
-      "endWaypointRelativePos": 4.0,
+      "waypointRelativePos": 3.6175478065242364,
+      "endWaypointRelativePos": 3.986501687289095,
       "command": null
     },
     {
