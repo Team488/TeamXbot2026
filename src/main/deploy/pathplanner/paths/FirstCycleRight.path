@@ -3,61 +3,61 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5283019572470513,
-        "y": 0.6009254248137801
+        "x": 3.708102016607355,
+        "y": 0.5974377224199281
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.99313591773743,
-        "y": 1.0654726461307877
+        "x": 5.351152372527564,
+        "y": 0.5939500200260761
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.376986951364176,
-        "y": 1.361340450771056
+        "x": 7.484578884934758,
+        "y": 1.3828588374851711
       },
       "prevControl": {
-        "x": 6.701200355321033,
-        "y": 0.5843037636788718
+        "x": 6.656120996441281,
+        "y": 0.6189561091340455
       },
       "nextControl": {
-        "x": 7.541045801920271,
-        "y": 1.5499795070510667
+        "x": 7.809782355876498,
+        "y": 1.6827217782236579
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.73143534994069,
-        "y": 3.297995255041518
+        "x": 7.3115467877094975,
+        "y": 3.4767954201582865
       },
       "prevControl": {
-        "x": 8.304143517276245,
-        "y": 2.772233594153424
+        "x": 7.955284332188758,
+        "y": 3.139609604996897
       },
       "nextControl": {
-        "x": 5.796118388426103,
-        "y": 3.6106748794983767
+        "x": 6.561135667541527,
+        "y": 3.8698562062348394
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.977686832740215,
-        "y": 2.4802965599051015
+        "x": 5.210230834885388,
+        "y": 2.547092401846678
       },
       "prevControl": {
-        "x": 5.668839794797942,
-        "y": 2.6527551939106333
+        "x": 5.649838774115803,
+        "y": 2.6490688250869683
       },
       "nextControl": {
-        "x": 4.194908432603863,
-        "y": 2.284975261976155
+        "x": 4.6777617076283216,
+        "y": 2.4235748485044613
       },
       "isLocked": false,
       "linkedName": null
@@ -68,8 +68,8 @@
         "y": 2.6663886949099935
       },
       "prevControl": {
-        "x": 2.9173021293851544,
-        "y": 2.6012794185842734
+        "x": 2.9093432977510614,
+        "y": 2.6914412796137515
       },
       "nextControl": null,
       "isLocked": false,
@@ -78,8 +78,20 @@
   ],
   "rotationTargets": [
     {
+      "waypointRelativePos": 0.0,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 0.3,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 25.0
+    },
+    {
       "waypointRelativePos": 1.0003402903811247,
-      "rotationDegrees": 90.0
+      "rotationDegrees": 75.0
     },
     {
       "waypointRelativePos": 1.7897572595281306,
@@ -88,15 +100,19 @@
     {
       "waypointRelativePos": 2.5985424228675136,
       "rotationDegrees": -138.88321599938664
+    },
+    {
+      "waypointRelativePos": 3.0,
+      "rotationDegrees": -145.0
     }
   ],
   "constraintZones": [
     {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.2916777012711862,
-      "maxWaypointRelativePos": 1.9576602224576278,
+      "name": "Speed Up Before Fuel",
+      "minWaypointRelativePos": 0.38695163104611585,
+      "maxWaypointRelativePos": 0.8998875140606943,
       "constraints": {
-        "maxVelocity": 1.5,
+        "maxVelocity": 3.0,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -109,7 +125,7 @@
   "eventMarkers": [
     {
       "name": "IntakeDeployExtend",
-      "waypointRelativePos": 0.5535619703389831,
+      "waypointRelativePos": 0.7019122609673792,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -128,12 +144,6 @@
           "name": "CollectorIntake"
         }
       }
-    },
-    {
-      "name": "WaitForRotationAndHoodAndShooterToBeAtGoalCommandGroup",
-      "waypointRelativePos": 2.59,
-      "endWaypointRelativePos": 4.0,
-      "command": null
     },
     {
       "name": "WarmupShooterNear",
@@ -163,7 +173,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.45039630190234
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }
