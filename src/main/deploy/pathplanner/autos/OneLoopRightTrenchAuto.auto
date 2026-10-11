@@ -53,6 +53,12 @@
               }
             ]
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightTrenchToMid"
+          }
         }
       ]
     }

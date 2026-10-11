@@ -48,16 +48,16 @@
     },
     {
       "anchor": {
-        "x": 6.376381969157771,
-        "y": 0.6297153024911029
+        "x": 6.2903084223013055,
+        "y": 0.5974377224199281
       },
       "prevControl": {
-        "x": 6.748291122680355,
-        "y": 0.7563460568670879
+        "x": 6.662217575823889,
+        "y": 0.7240684767959131
       },
       "nextControl": {
-        "x": 5.981292268034173,
-        "y": 0.4951918404423913
+        "x": 5.895218721177708,
+        "y": 0.4629142603712165
       },
       "isLocked": false,
       "linkedName": null
@@ -125,7 +125,18 @@
   "eventMarkers": [
     {
       "name": "IntakeDeployRetract",
-      "waypointRelativePos": 0.1079865016872891,
+      "waypointRelativePos": 0.035995500562435306,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeDeployRetract"
+        }
+      }
+    },
+    {
+      "name": "IntakeDeployRetract",
+      "waypointRelativePos": 0.1889763779527467,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
