@@ -41,7 +41,7 @@
       },
       "nextControl": {
         "x": 8.063462794625597,
-        "y": 1.5159377464481645
+        "y": 1.5159377464481647
       },
       "isLocked": false,
       "linkedName": null
@@ -69,7 +69,7 @@
       },
       "prevControl": {
         "x": 5.7820656534626576,
-        "y": 0.47407771063521864
+        "y": 0.4740777106352186
       },
       "nextControl": null,
       "isLocked": false,
@@ -169,7 +169,7 @@
     },
     {
       "name": "WarmupShooterNear",
-      "waypointRelativePos": 3.65,
+      "waypointRelativePos": 3.482564679415074,
       "endWaypointRelativePos": 3.986501687289095,
       "command": {
         "type": "named",
