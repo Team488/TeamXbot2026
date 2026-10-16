@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.988446026097272,
-        "y": 0.7050296559905087
+        "x": 4.4658539826374,
+        "y": 0.5976940666190532
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.644756820877818,
-        "y": 0.6942704626280727
+        "x": 6.2903084223013055,
+        "y": 0.7050296559905087
       },
       "prevControl": {
-        "x": 5.327271327590772,
-        "y": 0.6069340737789655
+        "x": 5.954745702065148,
+        "y": 0.5897312460794514
       },
       "nextControl": {
-        "x": 7.386041818368763,
-        "y": 1.1732767380439026
+        "x": 7.298432337453816,
+        "y": 1.0514182069254643
       },
       "isLocked": false,
       "linkedName": null
@@ -36,22 +36,28 @@
         "y": 1.1676749703440101
       },
       "prevControl": {
-        "x": 7.0132009298258495,
-        "y": 0.7817477662784769
+        "x": 6.764789446774394,
+        "y": 0.860680171754671
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [
     {
-      "waypointRelativePos": 0.4014209591474248,
-      "rotationDegrees": -89.9931176491535
+      "fieldPosition": {
+        "x": 7.0,
+        "y": 0.75
+      },
+      "rotationOffset": 0.0,
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0.4094488188976311,
+      "name": "Point Towards Zone"
     }
   ],
-  "constraintZones": [],
-  "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "IntakeDeployRetract",

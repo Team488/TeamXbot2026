@@ -69,7 +69,7 @@
       },
       "prevControl": {
         "x": 5.7820656534626576,
-        "y": 0.4740777106352186
+        "y": 0.4740777106352185
       },
       "nextControl": null,
       "isLocked": false,
@@ -121,7 +121,18 @@
       }
     }
   ],
-  "pointTowardsZones": [],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 7.0,
+        "y": 0.75
+      },
+      "rotationOffset": 0.0,
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0.3509561304836896,
+      "name": "Point Towards Zone"
+    }
+  ],
   "eventMarkers": [
     {
       "name": "IntakeDeployRetract",
