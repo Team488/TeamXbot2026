@@ -217,6 +217,14 @@ public class OperatorCommandMap {
         var normalBumpAutoRight = setAutonomousCommandProvider.get();
         normalBumpAutoRight.setAutoCommand(AutoBuilder.buildAuto("NormalBumpAutoRight"));
         normalBumpAutoRight.includeOnSmartDashboard("Normal Bump Auto Right");
+
+        var twoLoopRightTrenchAuto = setAutonomousCommandProvider.get();
+        twoLoopRightTrenchAuto.setAutoCommand(AutoBuilder.buildAuto("TwoLoopRightTrenchAuto"));
+        twoLoopRightTrenchAuto.includeOnSmartDashboard("Two Loop Right Trench Auto");
+
+        var twoLoopRightBumpAuto = setAutonomousCommandProvider.get();
+        twoLoopRightBumpAuto.setAutoCommand(AutoBuilder.buildAuto("TwoLoopRightBumpAuto"));
+        twoLoopRightBumpAuto.includeOnSmartDashboard("Two Loop Right Bump Auto");
     }
 
     @Inject
