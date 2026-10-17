@@ -7,15 +7,15 @@ import xbot.common.subsystems.autonomous.AutonomousCommandSelector;
 
 import javax.inject.Inject;
 
-public class OneLoopRightTrenchAuto extends BaseAutonomousSequentialCommandGroup {
+public class TwoLoopRightTrenchAuto extends BaseAutonomousSequentialCommandGroup {
     @Inject
-    public OneLoopRightTrenchAuto(
+    public TwoLoopRightTrenchAuto(
             AutonomousCommandSelector autoSelector,
             PropertyFactory pf
     ) {
         super(autoSelector);
         pf.setPrefix(this.getName());
 
-        this.addCommands(AutoBuilder.buildAuto("OneLoopRightTrenchAuto"));
+        this.addCommands(AutoBuilder.buildAuto("TwoLoopRightTrenchAuto"));
     }
 }
