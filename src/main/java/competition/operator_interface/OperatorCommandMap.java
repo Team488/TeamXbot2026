@@ -101,13 +101,17 @@ public class OperatorCommandMap {
                                      IntakeSlowlyAndFireWhenReady  intakeSlowlyAndFireWhenReady,
                                      Provider<PrepareToShootCommandGroup> prepareToShootCommand) {
         var prepareToShootNear = prepareToShootCommand.get()
-                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR);
+                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR)
+                .withName("PrepareToShootNEAR");
         var prepareToShootTowerClose = prepareToShootCommand.get()
-                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TOWER_FAR);
+                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TOWER_FAR)
+                .withName("PrepareToShootTOWERFAR");
         var prepareToShootTrench = prepareToShootCommand.get()
-                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
+                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH)
+                .withName("PrepareToShootTRENCH");
         var prepareToShootCorner = prepareToShootCommand.get()
-                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.CORNER);
+                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.CORNER)
+                .withName("PrepareToShootCORNER");
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger)
                 .whileTrue(intakeSlowlyAndFireWhenReady);
