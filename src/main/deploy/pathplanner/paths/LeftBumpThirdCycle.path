@@ -163,17 +163,6 @@
       }
     },
     {
-      "name": "IntakeDeployManualRetract",
-      "waypointRelativePos": 0.163,
-      "endWaypointRelativePos": 0.772,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "IntakeDeployManualRetract"
-        }
-      }
-    },
-    {
       "name": "IntakeDeployExtend",
       "waypointRelativePos": 1.151856017997751,
       "endWaypointRelativePos": null,
@@ -181,17 +170,6 @@
         "type": "named",
         "data": {
           "name": "IntakeDeployExtend"
-        }
-      }
-    },
-    {
-      "name": "IntakeDeployManualExtend",
-      "waypointRelativePos": 1.162,
-      "endWaypointRelativePos": 1.505,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "IntakeDeployManualExtend"
         }
       }
     },
