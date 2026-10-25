@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 0.9,
-        "y": 0.3
+        "y": 0.30000000000000004
       },
       "isLocked": false,
       "linkedName": null
@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 5.6,
-        "y": 0.64
+        "y": 0.6399999999999998
       },
       "nextControl": {
         "x": 7.6,
@@ -79,17 +79,17 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.6,
-      "rotationDegrees": 0
+      "rotationDegrees": 0.0
     },
     {
       "waypointRelativePos": 0.97,
-      "rotationDegrees": 0
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [
     {
       "name": "Start To Middle",
-      "minWaypointRelativePos": 0.0,
+      "minWaypointRelativePos": 0.5489313835770542,
       "maxWaypointRelativePos": 1.232845894263218,
       "constraints": {
         "maxVelocity": 2.5,
@@ -172,6 +172,17 @@
       }
     },
     {
+      "name": "IntakeDeployManualRetract",
+      "waypointRelativePos": 0.199,
+      "endWaypointRelativePos": 0.623,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeDeployManualRetract"
+        }
+      }
+    },
+    {
       "name": "IntakeDeployExtend",
       "waypointRelativePos": 0.7019122609673796,
       "endWaypointRelativePos": null,
@@ -179,6 +190,17 @@
         "type": "named",
         "data": {
           "name": "IntakeDeployExtend"
+        }
+      }
+    },
+    {
+      "name": "IntakeDeployManualExtend",
+      "waypointRelativePos": 0.712,
+      "endWaypointRelativePos": 0.985,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeDeployManualExtend"
         }
       }
     },

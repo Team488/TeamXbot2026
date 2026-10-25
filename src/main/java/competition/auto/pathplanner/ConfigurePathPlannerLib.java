@@ -14,6 +14,7 @@ import competition.command_groups.WaitForRotationAndHoodAndShooterToBeAtGoalComm
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
+import competition.subsystems.intake_deploy.commands.IntakeDeployExtendWithoutPidCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.pose.TrajectoriesCalculation;
@@ -24,10 +25,14 @@ import javax.inject.Inject;
 
 public class ConfigurePathPlannerLib {
 
+    private static final double manualIntakeDeployTimeoutSeconds = 1.5;
+
     @Inject
     public ConfigurePathPlannerLib(PoseSubsystem pose, DriveSubsystem drive,
                                    IntakeDeployExtendCommand intakeDeployExtendCommand,
                                    IntakeDeployRetractCommand intakeDeployRetractCommand,
+                                   IntakeDeployExtendWithoutPidCommand intakeDeployManualExtendCommand,
+                                   IntakeDeployExtendWithoutPidCommand intakeDeployManualRetractCommand,
                                    CollectorIntakeCommand collectorIntakeCommand,
                                    AimAndShootFromHereCommand aimAndShootFromHereCommand,
                                    PrepareToShootCommandGroup prepareToShootCommandGroup,
@@ -36,6 +41,13 @@ public class ConfigurePathPlannerLib {
     ) {
         NamedCommands.registerCommand("IntakeDeployExtend", intakeDeployExtendCommand);
         NamedCommands.registerCommand("IntakeDeployRetract", intakeDeployRetractCommand);
+        // Same as the operator holding the left stick fully down/up (the maintainer's manual control calls
+        // setPower with the stick value). These run until cancelled, so use them as zoned event markers;
+        // the timeout is only a safety net.
+        NamedCommands.registerCommand("IntakeDeployManualExtend",
+                intakeDeployManualExtendCommand.setPower(() -> -1.0).withTimeout(manualIntakeDeployTimeoutSeconds));
+        NamedCommands.registerCommand("IntakeDeployManualRetract",
+                intakeDeployManualRetractCommand.setPower(() -> 1.0).withTimeout(manualIntakeDeployTimeoutSeconds));
         NamedCommands.registerCommand("CollectorIntake", collectorIntakeCommand);
         NamedCommands.registerCommand("AimAndShootFromHere", aimAndShootFromHereCommand);
         NamedCommands.registerCommand("WaitForRotationAndHoodAndShooterToBeAtGoal", waitForRotationAndHoodAndShooterToBeAtGoalCommandGroup);
