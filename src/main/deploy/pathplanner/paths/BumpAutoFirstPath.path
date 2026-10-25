@@ -79,7 +79,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.55,
-      "rotationDegrees": 0
+      "rotationDegrees": 0.0
     },
     {
       "waypointRelativePos": 0.95,
@@ -87,11 +87,11 @@
     },
     {
       "waypointRelativePos": 2.75,
-      "rotationDegrees": 180
+      "rotationDegrees": 180.0
     },
     {
       "waypointRelativePos": 3.4,
-      "rotationDegrees": 180
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [
@@ -139,18 +139,31 @@
   "eventMarkers": [
     {
       "name": "IntakeDeployExtend",
-      "waypointRelativePos": 0.5219347581552318,
+      "waypointRelativePos": 0.26096737907761586,
       "endWaypointRelativePos": null,
       "command": {
-        "type": "named",
+        "type": "deadline",
         "data": {
-          "name": "IntakeDeployExtend"
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeDeployExtend"
+              }
+            },
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 1.0
+              }
+            }
+          ]
         }
       }
     },
     {
       "name": "CollectorIntake",
-      "waypointRelativePos": 0.7199100112485947,
+      "waypointRelativePos": 0.9268841394825689,
       "endWaypointRelativePos": 2.6906636670416195,
       "command": {
         "type": "named",

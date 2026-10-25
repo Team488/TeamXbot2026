@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9,
+        "x": 0.9000000000000001,
         "y": 7.7700000000000005
       },
       "isLocked": false,
@@ -152,30 +152,32 @@
   ],
   "eventMarkers": [
     {
-      "name": "IntakeDeployRetract",
-      "waypointRelativePos": 0.15298087739032834,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "IntakeDeployRetract"
-        }
-      }
-    },
-    {
       "name": "IntakeDeployExtend",
-      "waypointRelativePos": 1.151856017997751,
+      "waypointRelativePos": 0.63,
       "endWaypointRelativePos": null,
       "command": {
-        "type": "named",
+        "type": "deadline",
         "data": {
-          "name": "IntakeDeployExtend"
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeDeployExtend"
+              }
+            },
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 1.0
+              }
+            }
+          ]
         }
       }
     },
     {
       "name": "CollectorIntake",
-      "waypointRelativePos": 1.2418447694038248,
+      "waypointRelativePos": 1.718785151856022,
       "endWaypointRelativePos": 3.977502812148512,
       "command": {
         "type": "named",

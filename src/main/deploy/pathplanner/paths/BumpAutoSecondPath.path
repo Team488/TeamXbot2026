@@ -161,30 +161,32 @@
   ],
   "eventMarkers": [
     {
-      "name": "IntakeDeployRetract",
-      "waypointRelativePos": 0.18897637795275782,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "IntakeDeployRetract"
-        }
-      }
-    },
-    {
       "name": "IntakeDeployExtend",
-      "waypointRelativePos": 0.7019122609673796,
+      "waypointRelativePos": 0.37795275590551486,
       "endWaypointRelativePos": null,
       "command": {
-        "type": "named",
+        "type": "deadline",
         "data": {
-          "name": "IntakeDeployExtend"
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeDeployExtend"
+              }
+            },
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 1.0
+              }
+            }
+          ]
         }
       }
     },
     {
       "name": "CollectorIntake",
-      "waypointRelativePos": 0.857142857142857,
+      "waypointRelativePos": 1.077,
       "endWaypointRelativePos": 2.4836895388076488,
       "command": {
         "type": "named",
