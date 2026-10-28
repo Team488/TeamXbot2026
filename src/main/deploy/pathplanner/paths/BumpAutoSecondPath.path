@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9,
-        "y": 0.30000000000000004
+        "x": -0.7568187233993817,
+        "y": 0.21020559088949398
       },
       "isLocked": false,
       "linkedName": null
@@ -89,7 +89,7 @@
   "constraintZones": [
     {
       "name": "Start To Middle",
-      "minWaypointRelativePos": 0.5489313835770542,
+      "minWaypointRelativePos": 0.557930258717661,
       "maxWaypointRelativePos": 1.232845894263218,
       "constraints": {
         "maxVelocity": 2.5,
