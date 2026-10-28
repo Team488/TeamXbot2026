@@ -14,6 +14,7 @@ import competition.command_groups.WaitForRotationAndHoodAndShooterToBeAtGoalComm
 import competition.subsystems.collector_intake.commands.CollectorIntakeCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
+import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.pose.TrajectoriesCalculation;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -26,6 +27,7 @@ public class ConfigurePathPlannerLib {
     @Inject
     public ConfigurePathPlannerLib(PoseSubsystem pose, DriveSubsystem drive,
                                    IntakeDeployExtendCommand intakeDeployExtendCommand,
+                                   IntakeDeployRetractCommand intakeDeployRetractCommand,
                                    CollectorIntakeCommand collectorIntakeCommand,
                                    AimAndShootFromHereCommand aimAndShootFromHereCommand,
                                    PrepareToShootCommandGroup prepareToShootCommandGroup,
@@ -33,9 +35,12 @@ public class ConfigurePathPlannerLib {
                                    FireWhenShooterAndHoodReady fireWhenShooterAndHoodReady
     ) {
         NamedCommands.registerCommand("IntakeDeployExtend", intakeDeployExtendCommand);
+        NamedCommands.registerCommand("IntakeDeployRetract", intakeDeployRetractCommand);
         NamedCommands.registerCommand("CollectorIntake", collectorIntakeCommand);
         NamedCommands.registerCommand("AimAndShootFromHere", aimAndShootFromHereCommand);
         NamedCommands.registerCommand("WaitForRotationAndHoodAndShooterToBeAtGoal", waitForRotationAndHoodAndShooterToBeAtGoalCommandGroup);
+        // The path files' event markers use this longer name.
+        NamedCommands.registerCommand("WaitForRotationAndHoodAndShooterToBeAtGoalCommandGroup", waitForRotationAndHoodAndShooterToBeAtGoalCommandGroup);
 
         NamedCommands.registerCommand("WarmupShooterNear", prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR));
         NamedCommands.registerCommand("FireWhenShooterAndHoodReady", fireWhenShooterAndHoodReady);

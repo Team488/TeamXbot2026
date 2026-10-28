@@ -101,13 +101,17 @@ public class OperatorCommandMap {
                                      IntakeSlowlyAndFireWhenReady  intakeSlowlyAndFireWhenReady,
                                      Provider<PrepareToShootCommandGroup> prepareToShootCommand) {
         var prepareToShootNear = prepareToShootCommand.get()
-                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR);
+                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR)
+                .withName("PrepareToShootNEAR");
         var prepareToShootTowerClose = prepareToShootCommand.get()
-                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TOWER_FAR);
+                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TOWER_FAR)
+                .withName("PrepareToShootTOWERFAR");
         var prepareToShootTrench = prepareToShootCommand.get()
-                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH);
+                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.TRENCH)
+                .withName("PrepareToShootTRENCH");
         var prepareToShootCorner = prepareToShootCommand.get()
-                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.CORNER);
+                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.CORNER)
+                .withName("PrepareToShootCORNER");
 
         operatorInterface.operatorGamepad.getifAvailable(XXboxController.XboxButton.RightTrigger)
                 .whileTrue(intakeSlowlyAndFireWhenReady);
@@ -217,6 +221,22 @@ public class OperatorCommandMap {
         var normalBumpAutoRight = setAutonomousCommandProvider.get();
         normalBumpAutoRight.setAutoCommand(AutoBuilder.buildAuto("NormalBumpAutoRight"));
         normalBumpAutoRight.includeOnSmartDashboard("Normal Bump Auto Right");
+
+        var twoLoopRightTrenchAuto = setAutonomousCommandProvider.get();
+        twoLoopRightTrenchAuto.setAutoCommand(AutoBuilder.buildAuto("TwoLoopRightTrenchAuto"));
+        twoLoopRightTrenchAuto.includeOnSmartDashboard("Two Loop Right Trench Auto");
+
+        var twoLoopLeftTrenchAuto = setAutonomousCommandProvider.get();
+        twoLoopLeftTrenchAuto.setAutoCommand(AutoBuilder.buildAuto("TwoLoopLeftTrenchAuto"));
+        twoLoopLeftTrenchAuto.includeOnSmartDashboard("Two Loop Left Trench Auto");
+
+        var twoLoopRightBumpAuto = setAutonomousCommandProvider.get();
+        twoLoopRightBumpAuto.setAutoCommand(AutoBuilder.buildAuto("TwoLoopRightBumpAuto"));
+        twoLoopRightBumpAuto.includeOnSmartDashboard("Two Loop Right Bump Auto");
+
+        var twoLoopLeftBumpAuto = setAutonomousCommandProvider.get();
+        twoLoopLeftBumpAuto.setAutoCommand(AutoBuilder.buildAuto("TwoLoopLeftBumpAuto"));
+        twoLoopLeftBumpAuto.includeOnSmartDashboard("Two Loop Left Bump Auto");
     }
 
     @Inject
