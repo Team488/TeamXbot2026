@@ -438,7 +438,9 @@ public class Main {
                         // DIO devices - identified by the "DIO" suffix on the device name (e.g. "ClimbHomeDIO").
                         // This is more reliable than checking PowerSource.RIO because canBusId defaults to
                         // CANBusId.RIO for all DeviceInfo, making PowerSource.RIO alone ambiguous.
-                        else if (device.name != null && device.name.endsWith("DIO")) {
+                        // Non-CAN devices powered from the RIO (e.g. "ClimberSensor") are also DIO.
+                        else if ((device.name != null && device.name.endsWith("DIO"))
+                                || device.powerFrom == PowerSource.RIO) {
                             dioDevices.add(device);
                         }
                         // CAN devices - have CAN bus ID and no RIO power source
