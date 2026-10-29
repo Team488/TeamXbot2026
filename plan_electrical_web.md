@@ -1,6 +1,6 @@
 # Plan: Electrical Contract Tool on the Web
 
-Status: all open questions decided (2026-10-26). Ready to build once approved.
+Status: phase 1 (local demo) built 2026-10-27; phases 2–4 not started. See §8.
 
 ## 1. Goal and constraints
 
@@ -192,40 +192,92 @@ Ranked by friction, lowest first:
   makes Cloudflare Access easy. The trade-off is that a Cloudflare account becomes
   the only place to edit. **Decided (Q8):** front end on GitHub Pages.
 
-## 8. Migration steps
+## 8. Implementation phases
 
-1. **Mentor action:** pick the owner of the Cloudflare
-   account and the passcode secret, using a team email (Q6).
-2. **Refactor the Java tool.**
-   - Split `Main.java` into discovery, which returns a data model, and formatting.
-   - Add `--json` output; keep the text report byte-identical for comparison.
-   - This also gives a unit-testable discovery layer.
-3. **Add a CI snapshot.** A GitHub Action on push to `main` and `ElectricalChecks`
-   runs `./gradlew electricalReport --args="--json -f snapshot.json"` and POSTs the
-   file to `/robots/:id/snapshot` with a CI secret.
-4. **Stand up the backend.**
-   - Create the Cloudflare account under the team email the mentors chose (Q6).
-   - Write the D1 schema and the Worker CRUD + rev + auth endpoints, and set up
-     Wrangler deploy from GitHub Actions.
-5. **Seed the data.** A one-time import from the current `Contract2026` snapshot
-   fills `device`, `power_port`, `power_branch` and `can_chain`. Then check that the
-   web report matches `electrical-report.txt`.
-6. **Build the front end.**
-   - One tab per report section, with inline edit on PDH and VRM rows and a
-     drag-reorder CAN chain.
-   - A validation panel that ports the Java checks to JS and runs them in the
-     browser.
-   - A "code proposals" list.
-   - A print view for the pit (Q1): browser print or "Save as PDF" of the full
-     report with validation summary, timestamp and revision, plus a `.txt` download
-     that reproduces `electrical-report.txt`.
-7. **Pilot** with the electrical subteam on the 2026 robot, with the Java report
-   still running in parallel.
-8. **Cut over.** Students switch fully to the web app; keep `./gradlew electricalReport` as a developer
-   and CI check, then do the phase 2 cleanup in §3.
+Code lives in a separate local repo, `C:\Users\tjbla\Code\Team488\electrical-contract-web`
+(`worker/`, `web/`, `scripts/`), which has no remote until phase 2. Run steps and the
+data flow are in its `README.md`.
 
-Rough size: the Java refactor and CI take about 1–2 days, the Worker and schema about
-2 days, the front end 3–5 days, and the pilot and fixes about 1 week elapsed.
+### Phase 1: local demo for the 2026 robot (done 2026-10-27)
+
+Everything runs on one laptop, with no Cloudflare account. `wrangler dev` runs the
+Worker against a local SQLite copy of D1. The same code, schema and migrations deploy
+unchanged in phase 2.
+
+- **Java exporter.** `Main.java` has a `--json` mode, run as
+  `./gradlew electricalReport --args="--json -f snapshot.json"`. It uses the same
+  discovery as the text report, and the text output is unchanged (checked by diff).
+- **Worker API.** TypeScript, in `worker/src`:
+  - versioned writes that return 409 with the current row when someone saved first
+  - an audit log with undo
+  - a revision counter that pages poll
+  - passcode login that returns an HMAC token
+  - snapshot import that seeds the wiring tables on first import only
+  - 12 vitest tests
+- **Front end.** Plain ES modules with vendored Preact/htm, in `web/`:
+  - tabs for Checks, CAN, CAN chain (↑/↓ reorder), PDH, VRM, Devices & branches,
+    DIO/PWM, Code changes and History
+  - a conflict dialog when two people edit the same thing
+  - print/PDF and `.txt` export
+- **Launcher.** `scripts/dev.ps1` with `-Snapshot`, `-Reset` and `-Lan`.
+- **Differences from §4–5:**
+  - Each device stores what powers it in `device.supply` (a PDH or VRM port, `RIO`,
+    or `dev:<id>` for a converter). That replaces `power_port.device_id` and the
+    `power_branch` table; `power_port` now holds only breaker, AWG and notes.
+  - The CAN chain uses ↑/↓ buttons instead of drag-and-drop, so it works on phones.
+- **New checks:**
+  - breaker size over the PDH channel limit (40 A on ports 0–19, 15 A on 20–23)
+  - wire gauge too thin for the breaker. The gauge table in `web/validate.js` needs
+    checking against the current game manual.
+
+### Phase 2: Cloudflare and GitHub Pages
+
+This waits on the mentor action (Q6). Every step publishes something outside the
+laptop, so each one gets confirmed first.
+
+1. A mentor creates the Cloudflare account under the team email, then runs
+   `npx wrangler login`.
+2. Run `wrangler d1 create electrical-contract` and put the `database_id` in
+   `worker/wrangler.toml`.
+3. Run `wrangler d1 migrations apply DB --remote`, then `wrangler secret put` for
+   `PASSCODE`, `TOKEN_SECRET` and `SNAPSHOT_KEY`, then `wrangler deploy`.
+4. Create `Team488/electrical-contract-web`, which needs a Team488 org admin. Push
+   the repo and turn on Pages from `web/`.
+   - In `web/config.js`, set `API_BASE` to the workers.dev URL.
+   - In the Worker config, set `ALLOWED_ORIGINS` to `https://team488.github.io`.
+5. Import a fresh snapshot into the hosted database. Demo data is throwaway.
+6. Verify by rerunning the phase 1 demo against the hosted URLs from a phone off the
+   team Wi-Fi.
+
+### Phase 3: automation
+
+- **Snapshot on push.** A TeamXbot2026 GitHub Action runs on push to `main` or
+  `ElectricalChecks` when `electrical_contract/**` or `electrical/report/**` changes.
+  It runs the JSON exporter and POSTs the result to `/snapshot` using a
+  `SNAPSHOT_KEY` repo secret.
+- **Worker deploy.** An `electrical-contract-web` Action runs `wrangler deploy` and
+  the migrations on push, using a `CLOUDFLARE_API_TOKEN` secret. Pages deploys
+  itself.
+- **Nightly backup.** An Action exports the robot's data as JSON and commits it to
+  the repo, which gives a git history of the wiring. D1 Time Travel covers the last
+  7 days.
+
+### Phase 4: pilot and cutover
+
+1. Pilot with the electrical subteam on the 2026 robot. The Gradle report keeps
+   running as a cross-check.
+2. Students move fully to the web. `./gradlew electricalReport` stays as a developer
+   and CI tool.
+3. Do the §3 cleanup: remove the report-only methods from `Contract2026`
+   (`getCanBusConnectionOrder`, `getAdditionalPDHConnections`,
+   `getAdditionalPowerBranches`, `getVrm1_*`). The PDH field in SeriouslyCommonLib
+   stays (Q3).
+
+### Later
+
+- Photos, using R2.
+- Cloudflare Access email login, if the passcode spreads too widely.
+- More robots or seasons, which are new `robot` rows.
 
 ## 9. Decisions (2026-10-26)
 
