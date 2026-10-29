@@ -4,7 +4,7 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.Landmarks;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import xbot.common.command.BaseCommand;
@@ -26,7 +26,6 @@ public class RotateToHubCommand extends BaseCommand {
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
     private Alliance alliance;
-    private Pose2d targetPose;
     private final BooleanProperty autoAimWhenNotInZone;
 
     @Inject
@@ -43,28 +42,31 @@ public class RotateToHubCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
+        log.info("Initializing");
         alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-        targetPose = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance);
+        Translation2d targetTranslation = Landmarks.getAllianceHubPose(this.aprilTagFieldLayout, alliance).getTranslation();
+        drive.setLookAtPointTarget(targetTranslation);
+        drive.setLookAtPointInverted(true);
+
     }
 
     @Override
     public void execute() {
-        if (!pose.isFacingTarget(targetPose)) {
-            drive.setLookAtPointTarget(targetPose.getTranslation());
-            boolean areWeInAllianceZone = Landmarks.isBetweenIdX(
-                    this.aprilTagFieldLayout,
-                    Landmarks.getTrenchDriverDepotSideId(alliance),
-                    Landmarks.getOutpostId(alliance),
-                    pose.getCurrentPose2d()
-            );
+        boolean areWeInAllianceZone = Landmarks.isBetweenIdX(
+                this.aprilTagFieldLayout,
+                Landmarks.getTrenchDriverDepotSideId(alliance),
+                Landmarks.getOutpostFiducialId(alliance),
+                pose.getCurrentPose2d()
+        );
 
-            drive.setLookAtPointTargetActive(areWeInAllianceZone || autoAimWhenNotInZone.get());
-        }
+        drive.setLookAtPointTargetActive(areWeInAllianceZone || autoAimWhenNotInZone.get());
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
         drive.setLookAtPointTargetActive(false);
+        drive.setLookAtPointInverted(false);
     }
 }

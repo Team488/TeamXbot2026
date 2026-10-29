@@ -51,4 +51,9 @@ public class OperatorInterface {
     public double getOperatorGamepadTypicalDeadband() {
         return operatorDeadband.get();
     }
+
+    public void periodic() {
+        driverGamepad.getRumbleManager().periodic();
+        operatorGamepad.getRumbleManager().periodic();
+    }
 }

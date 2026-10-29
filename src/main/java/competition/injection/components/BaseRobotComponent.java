@@ -1,20 +1,27 @@
 package competition.injection.components;
 
 import competition.operator_interface.OperatorCommandMap;
+import competition.operator_interface.OperatorInterface;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.SubsystemDefaultCommandMap;
 import competition.subsystems.climber.ClimberSubsystem;
-import competition.subsystems.fuel_intake.IntakeSubsystem;
+import competition.subsystems.collector_intake.CollectorSubsystem;
 import competition.subsystems.hood.HoodSubsystem;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.lights.LightsSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
+import competition.auto.vision.CollectAndShootTwiceCommand;
+import competition.auto.vision.ShootFromHubCommandGroup;
+import competition.auto.vision.ShootFromTrenchCommandGroup;
+import competition.auto.pathplanner.ConfigurePathPlannerLib;
+import competition.general_commands.GamepadRumbleCommand;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
 import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
 import xbot.common.injection.components.BaseComponent;
 import xbot.common.injection.swerve.SwerveComponentHolder;
 import xbot.common.subsystems.drive.swerve.SwerveDefaultCommandMap;
+import competition.subsystems.superstructure_mechanism.SuperstructureMechanismSubsystem;
 import competition.subsystems.vision.AprilTagVisionSubsystemExtended;
 import xbot.common.subsystems.pose.GameField;
 
@@ -43,9 +50,28 @@ public abstract class BaseRobotComponent extends BaseComponent {
 
     public abstract IntakeDeploySubsystem intakeDeploySubsystem();
 
-    public abstract IntakeSubsystem intakeSubsystem();
+    public abstract CollectorSubsystem collectorSubsystem();
 
     public abstract HopperRollerSubsystem hopperRollerSubsystem();
 
     public abstract VoltageMonitorSubsystem voltageMonitorSubsystem();
-    }
+
+    public abstract ClimberSubsystem climberSubsystem();
+
+    public abstract ShootFromTrenchCommandGroup defaultAutoCommand();
+
+    public abstract OperatorInterface operatorInterface();
+
+    public abstract GamepadRumbleCommand gamepadRumbleCommand();
+
+    public abstract SuperstructureMechanismSubsystem superstructureMechanismSubsystem();
+
+    public abstract ConfigurePathPlannerLib configurePathPlannerLib();
+
+    public abstract CollectAndShootTwiceCommand collectAndShootTwiceCommand();
+
+    public abstract ShootFromHubCommandGroup shootFromHubCommandGroup();
+
+    public abstract ShootFromTrenchCommandGroup shootFromTrenchCommandGroup();
+
+}

@@ -1,0 +1,37 @@
+package competition.command_groups;
+
+
+import competition.subsystems.intake_deploy.commands.IntakeDeployAdaptiveCloseWhileFiringCommand;
+import edu.wpi.first.wpilibj2.command.Commands;
+import xbot.common.command.BaseSequentialCommandGroup;
+import xbot.common.properties.DoubleProperty;
+import xbot.common.properties.PropertyFactory;
+
+import javax.inject.Inject;
+
+public class IntakeSlowlyAndFireWhenReadyWithRotation extends BaseSequentialCommandGroup {
+
+    public DoubleProperty waitBeforeRetracting;
+
+    @Inject
+    public IntakeSlowlyAndFireWhenReadyWithRotation(
+                                        WaitForRotationAndHoodAndShooterToBeAtGoalCommandGroup waitForRotationAndHoodAndShooterToBeAtGoalCommandGroup,
+                                        RunCollectorHopperFeederCommandGroup runCollectorHopperFeederCommandGroup,
+                                        IntakeDeployAdaptiveCloseWhileFiringCommand intakeDeployAdaptiveCloseWhilefiring,
+                                        PropertyFactory propertyFactory
+
+    ) {
+        propertyFactory.setPrefix(this);
+
+
+        this.addCommands(
+                waitForRotationAndHoodAndShooterToBeAtGoalCommandGroup,
+                Commands.parallel(
+                        runCollectorHopperFeederCommandGroup,
+                        Commands.sequence(
+                                intakeDeployAdaptiveCloseWhilefiring
+                        )
+                )
+        );
+    }
+}

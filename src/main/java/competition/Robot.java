@@ -1,21 +1,22 @@
 
 package competition;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import competition.injection.components.BaseRobotComponent;
 import competition.injection.components.DaggerRobotComponent;
 import competition.injection.components.DaggerRobotComponent2023;
 import competition.injection.components.DaggerRobotComponent2025;
 import competition.injection.components.DaggerRoboxComponent;
 import competition.injection.components.DaggerSimulationComponent;
+import competition.operator_interface.OperatorInterface;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
-import competition.subsystems.shooter.ShooterSubsystem;
-import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import xbot.common.command.BaseRobot;
 import xbot.common.math.FieldPose;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
@@ -23,9 +24,10 @@ import xbot.common.subsystems.pose.BasePoseSubsystem;
 public class Robot extends BaseRobot {
     Logger log = LogManager.getLogger(Robot.class);
 
-    public static final double LOOP_INTERVAL = 0.02;
+    public static final double LOOP_INTERVAL = 0.04;
 
     BaseSimulator simulator;
+    OperatorInterface oi;
 
     Robot() {
         super(LOOP_INTERVAL);
@@ -34,6 +36,7 @@ public class Robot extends BaseRobot {
     @Override
     protected void initializeSystems() {
         super.initializeSystems();
+        getInjectorComponent().configurePathPlannerLib();
         getInjectorComponent().subsystemDefaultCommandMap();
         getInjectorComponent().operatorCommandMap();
         getInjectorComponent().swerveDefaultCommandMap();
@@ -42,10 +45,14 @@ public class Robot extends BaseRobot {
         getInjectorComponent().hopperRollerSubsystem();
         getInjectorComponent().intakeDeploySubsystem();
         getInjectorComponent().voltageMonitorSubsystem();
+        getInjectorComponent().climberSubsystem();
 
         if (BaseRobot.isSimulation()) {
             simulator = getInjectorComponent().simulator();
         }
+
+        oi = getInjectorComponent().operatorInterface();
+        autonomousCommandSelector.setCurrentAutonomousCommand(getInjectorComponent().defaultAutoCommand());
 
         dataFrameRefreshables.add((DriveSubsystem)getInjectorComponent().driveSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().poseSubsystem());
@@ -53,11 +60,16 @@ public class Robot extends BaseRobot {
         dataFrameRefreshables.add(getInjectorComponent().shooterSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().shooterFeederSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().hoodSubsystem());
-        dataFrameRefreshables.add(getInjectorComponent().intakeSubsystem());
+        dataFrameRefreshables.add(getInjectorComponent().collectorSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().intakeDeploySubsystem());
         dataFrameRefreshables.add(getInjectorComponent().lightsSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().hopperRollerSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().voltageMonitorSubsystem());
+        dataFrameRefreshables.add(getInjectorComponent().climberSubsystem());
+
+        getInjectorComponent().superstructureMechanismSubsystem();
+
+        CommandScheduler.getInstance().schedule(getInjectorComponent().gamepadRumbleCommand());
     }
 
     protected BaseRobotComponent createDaggerComponent() {
@@ -96,6 +108,22 @@ public class Robot extends BaseRobot {
     }
 
     @Override
+    public void autonomousInit() {
+        super.autonomousInit();
+        var pose = (PoseSubsystem) getInjectorComponent().poseSubsystem();
+        CommandScheduler.getInstance().schedule(pose.getSnapOdometryPoseToVisionPoseCommand());
+
+        if(BaseRobot.isSimulation()) {
+            getInjectorComponent().simulator().resetForAuto();
+        }
+    }
+
+    @Override
+    public void teleopInit() {
+        super.teleopInit();
+    }
+
+    @Override
     public void simulationInit() {
         super.simulationInit();
         // Automatically enables the robot; remove this line of code if you want the robot
@@ -110,10 +138,10 @@ public class Robot extends BaseRobot {
         // From a birds-eye view where your alliance station is at the bottom, this is the bottom-left corner
         // of the field.
         return new FieldPose(
-            -2.33*PoseSubsystem.INCHES_IN_A_METER, 
-            -4.58*PoseSubsystem.INCHES_IN_A_METER, 
-            BasePoseSubsystem.FACING_TOWARDS_DRIVERS
-            );
+                -2.33*PoseSubsystem.INCHES_IN_A_METER,
+                -4.58*PoseSubsystem.INCHES_IN_A_METER,
+                BasePoseSubsystem.FACING_TOWARDS_DRIVERS
+        );
     }
 
     @Override
@@ -122,6 +150,15 @@ public class Robot extends BaseRobot {
 
         if (simulator != null) {
             simulator.update();
+        }
+    }
+
+    @Override
+    protected void sharedPeriodic() {
+        super.sharedPeriodic();
+
+        if (this.oi != null) {
+            this.oi.periodic();
         }
     }
 }

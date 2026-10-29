@@ -4,16 +4,16 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import competition.subsystems.climber.ClimberSubsystem;
-import competition.subsystems.climber.commands.ClimberStopCommand;
+import competition.subsystems.climber.commands.ClimberMaintainerCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
-import competition.subsystems.fuel_intake.IntakeSubsystem;
-import competition.subsystems.fuel_intake.commands.FuelStopCommand;
+import competition.subsystems.collector_intake.CollectorSubsystem;
+import competition.subsystems.collector_intake.commands.CollectorStopCommand;
 import competition.subsystems.hood.HoodSubsystem;
-import competition.subsystems.hood.commands.HoodToGoalCommand;
+import competition.subsystems.hood.commands.HoodMaintainerCommand;
+import competition.subsystems.hood.commands.HoodToZeroCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployMaintainerCommand;
-import competition.subsystems.intake_deploy.commands.IntakeDeployRetractCommand;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.shooter.commands.ShooterStopCommand;
@@ -36,8 +36,8 @@ public class SubsystemDefaultCommandMap {
     }
 
     @Inject
-    public void setupIntakeSubsystem(IntakeSubsystem intake, FuelStopCommand command) {
-        intake.setDefaultCommand(command);
+    public void setupCollectorSubsystem(CollectorSubsystem collect, CollectorStopCommand command) {
+        collect.setDefaultCommand(command);
     }
 
     @Inject
@@ -49,7 +49,7 @@ public class SubsystemDefaultCommandMap {
     }
 
     @Inject
-    public void setupClimberSubsystem(ClimberSubsystem climber, ClimberStopCommand command) {
+    public void setupClimberSubsystem(ClimberSubsystem climber, ClimberMaintainerCommand command) {
         climber.setDefaultCommand(command);
     }
 
@@ -60,15 +60,14 @@ public class SubsystemDefaultCommandMap {
 
     @Inject
     public void setupIntakeDeploySubsystem(IntakeDeploySubsystem intakeDeploy,
-                                           IntakeDeployMaintainerCommand command,
-                                           IntakeDeployRetractCommand retractCommand) {
+                                           IntakeDeployMaintainerCommand command) {
         intakeDeploy.setDefaultCommand(command);
-        intakeDeploy.getSetpointLock().setDefaultCommand(retractCommand);
     }
 
     @Inject
-    public void setupHoodSubsystem(HoodSubsystem hood, HoodToGoalCommand command) {
+    public void setupHoodSubsystem(HoodSubsystem hood, HoodMaintainerCommand command, HoodToZeroCommand hoodToZeroCommand) {
         hood.setDefaultCommand(command);
+        hood.getSetpointLock().setDefaultCommand(hoodToZeroCommand);
     }
 
     @Inject

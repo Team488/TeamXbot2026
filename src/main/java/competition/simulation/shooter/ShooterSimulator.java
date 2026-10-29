@@ -2,9 +2,11 @@ package competition.simulation.shooter;
 
 import competition.Robot;
 import competition.simulation.SimulatorConstants;
+import competition.simulation.intake.CollectorSimulator;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -12,7 +14,6 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import competition.simulation.intake.IntakeSimulator;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
 import xbot.common.math.PIDManager;
@@ -29,7 +30,6 @@ import java.util.Random;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 @Singleton
@@ -38,10 +38,13 @@ public class ShooterSimulator {
     final ShooterSubsystem shooter;
     final ShooterFeederSubsystem shooterFeeder;
 
-    final MockCANMotorController shooterMotor;
+    final MockCANMotorController leftShooterMotor;
+    final MockCANMotorController middleShooterMotor;
+    final MockCANMotorController rightShooterMotor;
+
     final MockCANMotorController shooterFeederMotor;
 
-    final IntakeSimulator intakeSimulator;
+    final CollectorSimulator intakeSimulator;
 
     final PIDManager pidManager;
 
@@ -53,26 +56,28 @@ public class ShooterSimulator {
 
     @Inject
     public ShooterSimulator(PoseSubsystem pose, ShooterSubsystem shooter, ShooterFeederSubsystem shooterFeeder,
-                            PropertyFactory pf, IntakeSimulator intakeSimulator, PIDManagerFactory pidManagerFactory) {
+                            PropertyFactory pf, CollectorSimulator intakeSimulator, PIDManagerFactory pidManagerFactory) {
         pf.setPrefix("Simulator/");
         this.pose = pose;
         this.shooter = shooter;
         this.shooterFeeder = shooterFeeder;
 
-        this.shooterMotor = (MockCANMotorController) shooter.middleShooterMotor;
+        this.leftShooterMotor = (MockCANMotorController) shooter.leftShooterMotor;
+        this.middleShooterMotor = (MockCANMotorController) shooter.middleShooterMotor;
+        this.rightShooterMotor = (MockCANMotorController) shooter.rightShooterMotor;
         this.shooterFeederMotor = (MockCANMotorController) shooterFeeder.shooterFeederMotor;
 
         this.intakeSimulator = intakeSimulator;
 
         this.pidManager = pidManagerFactory.create(
                 pf.getPrefix() + "ShooterSimulationPID",
-                0.2,
+                0.000005,
                 0.001,
                 0.0,
                 0.0,
                 1.0,
                 -1.0
-        ); // TODO: Adjust
+        );
 
         this.ballsPerSecond = pf.createPersistentProperty("ballsPerSecond", 10);
         this.random = new Random();
@@ -88,8 +93,7 @@ public class ShooterSimulator {
     }
 
     public boolean isShooting() {
-        // TODO: Change to shooter feeder once integrated
-        return shooterMotor.getPower() > 0;
+        return shooterFeederMotor.getPower() > 0;
     }
 
     public AngularVelocity getShooterVelocity() {
@@ -104,32 +108,35 @@ public class ShooterSimulator {
     public void updateShooterSimAndMotor() {
         // Update the power of the motor based on our current velocity and goal
         MotorInternalPIDHelper.updateInternalPIDWithVelocity(
-                this.shooterMotor, pidManager, shooter.getTrimmedTargetValue());
+                this.middleShooterMotor, pidManager, shooter.getTrimmedTargetValue());
 
         // Update the sim with our new power
         if (DriverStation.isEnabled()) {
-            this.shooterSim.setInputVoltage(this.shooterMotor.getPower() * RobotController.getBatteryVoltage());
+            this.shooterSim.setInputVoltage(this.middleShooterMotor.getPower() * RobotController.getBatteryVoltage());
         } else {
             this.shooterSim.setInputVoltage(0);
         }
         this.shooterSim.update(Robot.LOOP_INTERVAL);
 
         // Reflect our new velocity in the sim to our motor
-        this.shooterMotor.setVelocity(getShooterVelocity());
+        this.leftShooterMotor.setVelocity(getShooterVelocity());
+        this.middleShooterMotor.setVelocity(getShooterVelocity());
+        this.rightShooterMotor.setVelocity(getShooterVelocity());
     }
 
     public void updateShootingProjectile(Arena2026Rebuilt arena) {
         if (isShooting() && random.nextDouble() < ballsPerSecond.get() / 50.0) {
-            if (!intakeSimulator.getPieceFromIntake()) {
+            if (!intakeSimulator.getPieceFromCollector()) {
                 return;
             }
 
             double speed = getShooterVelocity().in(RadiansPerSecond) * SimulatorConstants.flywheelRadius.in(Meters);
             Translation2d robotPose = pose.getCurrentPose2d().getTranslation();
-            Translation2d shooterOffset = new Translation2d(0.25, 0);
+            Translation2d shooterOffset = new Translation2d(-0.25, 0);
+            var shooterHeading = pose.getCurrentHeading().rotateBy(Rotation2d.fromDegrees(180));
             arena.addPieceWithVariance(
                     robotPose.plus(shooterOffset.rotateBy(pose.getCurrentHeading())),
-                    pose.getCurrentHeading(),
+                    shooterHeading,
                     SimulatorConstants.shooterHeight,
                     MetersPerSecond.of(speed),
                     Degrees.of(80), // TODO: Read from hood sim

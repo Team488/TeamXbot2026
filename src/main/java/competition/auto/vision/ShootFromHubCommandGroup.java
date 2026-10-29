@@ -1,0 +1,43 @@
+package competition.auto.vision;
+
+import competition.auto.BaseAutonomousSequentialCommandGroup;
+import competition.command_groups.FireWhenShooterAndHoodReadyUntilDone;
+import competition.command_groups.PrepareToShootCommandGroup;
+import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.pose.TrajectoriesCalculation;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import xbot.common.properties.DoubleProperty;
+import xbot.common.properties.PropertyFactory;
+import xbot.common.subsystems.autonomous.AutonomousCommandSelector;
+
+import javax.inject.Inject;
+
+public class ShootFromHubCommandGroup extends BaseAutonomousSequentialCommandGroup {
+
+    private final DoubleProperty timeout;
+
+    @Inject
+    public ShootFromHubCommandGroup(AutonomousCommandSelector autoSelector,
+            TrajectoriesCalculation trajectoriesCalculation,
+            FireWhenShooterAndHoodReadyUntilDone fireWhenShooterAndHoodReady,
+            PrepareToShootCommandGroup prepareToShootCommandGroup,
+            DriveSubsystem driveSubsystem,
+            PropertyFactory pf) {
+        super(autoSelector);
+
+        pf.setPrefix(this.getName());
+        this.timeout = pf.createPersistentProperty("TimeoutSeconds", 5.0);
+
+        getAutoStatusChangeCommand("Starting ShootFromHubCommandGroup");
+        prepareToShootCommandGroup.setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR);
+
+        // run a no-op command that requires the drive subsystem so the robot doesn't move for any reason
+        var holdPosition = new RunCommand(() -> {}, driveSubsystem);
+
+        var prepareAndShoot = new ParallelCommandGroup(prepareToShootCommandGroup, fireWhenShooterAndHoodReady, holdPosition)
+                .withTimeout(timeout.get());
+
+        this.addCommands(prepareAndShoot);
+    }
+}

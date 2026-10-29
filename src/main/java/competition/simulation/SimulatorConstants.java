@@ -21,11 +21,11 @@ public class SimulatorConstants {
     public static final double flywheelGearing = 1;
 
     /** Intake **/
-    public static final Distance intakeWidth = Inches.of(28);
-    public static final Distance intakeLengthExtended = Inches.of(12);
+    public static final Distance collectorWidth = Inches.of(28);
+    public static final Distance collectorLengthExtended = Inches.of(12);
 
     /** Intake Deploy **/
-    public static final Angle intakeDeployedAngle = Degrees.of(80);
+    public static final Angle intakeDeployedAngle = Degrees.of(90);
     public static final double intakeDeployJKgMetersSquared = 0.005;
     public static final double intakeDeployGearing = 60;
 }

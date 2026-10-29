@@ -13,7 +13,6 @@ import xbot.common.advantage.AKitLogger;
 import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
 import xbot.common.controls.sensors.mock_adapters.MockAbsoluteEncoder;
 import xbot.common.math.PIDManager;
-import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.simulation.MotorInternalPIDHelper;
 
@@ -21,10 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.Second;
 
 @Singleton
 public class IntakeDeploySimulator {
@@ -36,7 +32,7 @@ public class IntakeDeploySimulator {
 
     final IntakeDeploySubsystem intakeDeploy;
     final MockCANMotorController motor;
-    final MockAbsoluteEncoder absoluteEncoder;
+    final MockAbsoluteEncoder encoder;
 
     @Inject
     public IntakeDeploySimulator(IntakeDeploySubsystem intakeDeploy, PIDManager.PIDManagerFactory pidManagerFactory,
@@ -45,12 +41,12 @@ public class IntakeDeploySimulator {
         aKitLog = new AKitLogger(pf.getPrefix());
         this.intakeDeploy = intakeDeploy;
         this.motor = (MockCANMotorController) intakeDeploy.intakeDeployMotor;
-        this.absoluteEncoder = (MockAbsoluteEncoder) intakeDeploy.intakeDeployAbsoluteEncoder;
+        this.encoder = (MockAbsoluteEncoder) intakeDeploy.intakeDeployEncoder;
         this.pidManager = pidManagerFactory.create(
                 pf.getPrefix() + "IntakeDeploySimulatorPID",
-                0.2,
-                0.001,
+                0.6,
                 0.0,
+                0.001,
                 0.0,
                 1.0,
                 -1.0
@@ -71,7 +67,8 @@ public class IntakeDeploySimulator {
     }
 
     public boolean isDeployed() {
-        return getAngularPosition().isNear(SimulatorConstants.intakeDeployedAngle, Degrees.of(5));
+        return getAngularPosition()
+                .isNear(Degrees.of(intakeDeploy.extendedPosition.get()), Degrees.of(5));
     }
 
     public void update() {
@@ -88,16 +85,13 @@ public class IntakeDeploySimulator {
 
         // Update motor position and velocity with the motorSim
         var mechanismAngle = getAngularPosition();
-        double motorRotation = mechanismAngle.in(Degrees) / intakeDeploy.degreesPerRotation.get();
+        double motorRotation = mechanismAngle.in(Degrees) / intakeDeploy.mechanismDegreePerMotorRotation.get();
 
         this.motor.setPosition(Rotations.of(motorRotation));
-
-        if (absoluteEncoder != null) {
-            absoluteEncoder.setPosition(mechanismAngle);
-            aKitLog.record("IntakeDeployEncoderPos", this.absoluteEncoder.getPosition().in(Degrees));
-        }
-
-        aKitLog.record("IntakeDeployMotorPos", this.motor.getPosition().in(Rotations));
+        this.encoder.setPosition(Rotations.of(motorRotation));
         aKitLog.record("IntakeDeployed", isDeployed());
+        aKitLog.record("MotorSimAngleDegrees", mechanismAngle.in(Degrees));
+        aKitLog.record("ExtendedPositionDegrees", intakeDeploy.extendedPosition.get());
+        aKitLog.record("MotorPower", motor.getPower());
     }
 }

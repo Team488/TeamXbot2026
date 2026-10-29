@@ -18,11 +18,17 @@ public class ShooterStopCommand extends BaseSetpointCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         this.subsystem.setTargetValue(RPM.of(0));
     }
 
     @Override
     public boolean runsWhenDisabled() {
         return true;
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
     }
 }

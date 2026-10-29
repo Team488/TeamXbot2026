@@ -7,4 +7,6 @@ public interface BaseSimulator extends SimulatedPositionSupplier {
     public void update();
 
     public void resetPosition(Pose2d pose);
+
+    public void resetForAuto();
 }

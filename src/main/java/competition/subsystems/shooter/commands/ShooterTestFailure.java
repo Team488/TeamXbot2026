@@ -21,6 +21,7 @@ public class ShooterTestFailure extends BaseCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         log.info("Robot current position: " + pose.getCurrentPose2d());
         log.info("Shooter's RPM is: " + shooter.getTargetValue());
         if (hood.getHoodServoLeft().isPresent() && hood.getHoodServoRight().isPresent()) {

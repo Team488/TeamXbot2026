@@ -2,6 +2,7 @@ package competition.subsystems.shooter.commands;
 
 import competition.subsystems.shooter.ShooterSubsystem;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.DriverStation;
 import xbot.common.command.BaseMaintainerCommand;
 import xbot.common.logic.HumanVsMachineDecider;
 import xbot.common.properties.PropertyFactory;
@@ -17,7 +18,7 @@ public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<Angular
     @Inject
     public ShooterWheelMaintainerCommand(ShooterSubsystem shooterWheel, PropertyFactory pf,
                                          HumanVsMachineDecider.HumanVsMachineDeciderFactory hvmFactory) {
-        super(shooterWheel, pf, hvmFactory, 0.01, 0.01); // tweak number
+        super(shooterWheel, pf, hvmFactory, 300, 0.05);
         this.shooterWheel = shooterWheel;
     }
 
@@ -29,6 +30,15 @@ public class ShooterWheelMaintainerCommand extends BaseMaintainerCommand<Angular
     @Override
     protected void coastAction() {
         shooterWheel.stop();
+    }
+
+    @Override
+    protected void initializeMachineControlAction() {
+        // The base implementation here will reset the target (probably incorrectly). Fixing it here
+        // to avoid side-effects while we reason through a better implementation of the base class.
+        if (this.shooterWheel.getSetpointLock().getCurrentCommand() != null && !DriverStation.isAutonomous()) {
+            this.shooterWheel.getSetpointLock().getCurrentCommand().cancel();
+        }
     }
 
     @Override
