@@ -8,7 +8,10 @@ import xbot.common.injection.electrical_contract.IMUInfo;
 import xbot.common.injection.electrical_contract.PDHPort;
 import xbot.common.injection.electrical_contract.PowerSource;
 import xbot.common.injection.swerve.SwerveInstance;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.lang.reflect.Method;
+import java.time.Instant;
+import java.util.LinkedHashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -90,12 +93,19 @@ public class Main {
     
     public static void main(String[] args) throws Exception {
         // Determine output file: default is electrical-report.txt, override with -f <filename>
-        String outputFile = "electrical-report.txt";
+        // --json writes a machine-readable snapshot (default electrical-snapshot.json) for the web tool
+        boolean json = Arrays.asList(args).contains("--json");
+        String outputFile = json ? "electrical-snapshot.json" : "electrical-report.txt";
         for (int i = 0; i < args.length - 1; i++) {
             if (args[i].equals("-f")) {
                 outputFile = args[i + 1];
                 break;
             }
+        }
+        if (json) {
+            writeJsonSnapshot(createContract(), outputFile);
+            System.err.println("Wrote electrical snapshot to: " + outputFile);
+            return;
         }
         PrintStream fileOut = new PrintStream(new FileOutputStream(new File(outputFile)));
         System.setOut(fileOut);
@@ -530,6 +540,96 @@ public class Main {
         }
     }
     
+    /**
+     * Writes the discovered contract as a JSON snapshot for the electrical web tool.
+     * Uses the same discovery as the text report so both always agree.
+     */
+    private static void writeJsonSnapshot(Contract2026 contract, String outputFile) throws Exception {
+        Map<CANBusId, List<CANDevice>> devicesByBus = new HashMap<>();
+        List<DeviceInfo> dioDevices = new ArrayList<>();
+        List<DeviceInfo> pwmDevices = new ArrayList<>();
+        Map<PowerSource, List<String>> devicesByPowerSource = new HashMap<>();
+        List<String> positionWarnings = new ArrayList<>();
+        autoDiscoverDevices(contract, devicesByBus, dioDevices, pwmDevices, devicesByPowerSource, positionWarnings);
+
+        Map<String, Object> root = new LinkedHashMap<>();
+        root.put("source", contract.getClass().getName());
+        root.put("gitSha", gitSha());
+        root.put("generatedAt", Instant.now().toString());
+
+        List<Map<String, Object>> canDevices = new ArrayList<>();
+        for (Map.Entry<CANBusId, List<CANDevice>> entry : devicesByBus.entrySet()) {
+            List<CANDevice> devices = new ArrayList<>(entry.getValue());
+            Collections.sort(devices);
+            for (CANDevice d : devices) {
+                Map<String, Object> m = new LinkedHashMap<>();
+                m.put("name", d.name);
+                m.put("bus", busName(d.busId));
+                m.put("canId", d.deviceId);
+                m.put("type", d.type);
+                m.put("kind", Arrays.asList("CANCoder", "Sensor", "IMU").contains(d.type) ? "can_sensor" : "motor");
+                m.put("pdhPort", d.pdhPort == null ? null : d.pdhPort.name());
+                m.put("powerFrom", d.powerSource == null ? null : d.powerSource.name());
+                m.put("busPosition", d.busPosition);
+                canDevices.add(m);
+            }
+        }
+        root.put("canDevices", canDevices);
+        root.put("dio", channelDevices(dioDevices));
+        root.put("pwm", channelDevices(pwmDevices));
+
+        Map<String, List<String>> additionalPdh = new TreeMap<>();
+        contract.getAdditionalPDHConnections().forEach((port, names) -> additionalPdh.put(port.name(), names));
+        root.put("additionalPdh", additionalPdh);
+
+        Map<String, List<String>> powerSources = new TreeMap<>();
+        devicesByPowerSource.forEach((source, names) -> powerSources.put(source.name(), names));
+        root.put("powerSources", powerSources);
+
+        root.put("powerBranches", new TreeMap<>(contract.getAdditionalPowerBranches()));
+
+        List<Map<String, Object>> canOrder = new ArrayList<>();
+        for (Contract2026.CanBusOrderEntry e : contract.getCanBusConnectionOrder()) {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("bus", busName(e.busId()));
+            m.put("canId", e.canId());
+            m.put("deviceName", e.deviceName());
+            m.put("busPosition", e.busPosition());
+            canOrder.add(m);
+        }
+        root.put("canOrder", canOrder);
+        root.put("warnings", positionWarnings);
+
+        new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(new File(outputFile), root);
+    }
+
+    private static String busName(CANBusId busId) {
+        return busId.equals(CANBusId.Canivore) ? "Canivore" : "rio";
+    }
+
+    private static List<Map<String, Object>> channelDevices(List<DeviceInfo> devices) {
+        List<Map<String, Object>> out = new ArrayList<>();
+        devices.sort(Comparator.comparingInt(d -> d.channel));
+        for (DeviceInfo d : devices) {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("name", d.name);
+            m.put("channel", d.channel);
+            m.put("powerFrom", d.powerFrom == null ? null : d.powerFrom.name());
+            out.add(m);
+        }
+        return out;
+    }
+
+    private static String gitSha() {
+        try {
+            Process p = new ProcessBuilder("git", "rev-parse", "HEAD").redirectErrorStream(true).start();
+            String sha = new String(p.getInputStream().readAllBytes()).trim();
+            return p.waitFor() == 0 ? sha : null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     /**
      * Generates VRM port usage report.
      */

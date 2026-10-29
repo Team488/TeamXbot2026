@@ -83,11 +83,11 @@ public class Contract2026 extends ElectricalContract {
         return new DeviceInfo("ClimberAbsoluteEncoderReady",CANBusId.Canivore, 59);
     }
 
-    public DeviceInfo Pigeon2() {
+    public DeviceInfo getPigeon2() {
         return new DeviceInfo("Pigeon2.0",CANBusId.Canivore, 56);
     }
 
-    public DeviceInfo CANdle() {
+    public DeviceInfo getCandle() {
         return new DeviceInfo("CANdle",CANBusId.Canivore, 57);
     }
 
