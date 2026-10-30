@@ -1,8 +1,8 @@
 # Plan: Electrical Contract Tool on the Web
 
-Status: phase 1 (local demo, Cloudflare stack) built 2026-10-27. On 2026-10-29 the
-hosting target changed to **AWS, deployed with CDK** (decision 10). Phase 1b ports the
-demo to the AWS stack; phases 2–4 are not started. See §7–8.
+Status: phase 1 (local demo) built 2026-10-27. On 2026-10-29 the hosting target
+changed to **AWS, deployed with CDK** (decision 10), and phase 1b ported the demo to
+the AWS stack the same day. Phases 2–4 are not started. See §7–8.
 
 ## 1. Goal and constraints
 
@@ -263,7 +263,26 @@ against a local SQLite copy of D1.
   - wire gauge too thin for the breaker. The gauge table in `web/validate.js` needs
     checking against the current game manual.
 
-### Phase 1b: port the backend to the AWS stack (local, no AWS account)
+### Phase 1b: port the backend to the AWS stack (done 2026-10-29; local, no AWS account)
+
+Done as described below, in `api/` and `infra/`. The Cloudflare `worker/` is removed.
+Results:
+- 15 API tests pass against DynamoDB Local: the original 12, plus a true
+  simultaneous-save race (exactly one save wins), real ids for seeded converters, and
+  the Lambda Function URL adapter.
+- 4 CDK template tests pass, and `cdk synth` produces a 20 KB Lambda bundle. That
+  bundle was run against DynamoDB Local and answered correctly.
+- The browser demo works through `scripts/dev.ps1`, against the current `main`
+  contract (24 CAN, 1 DIO, 2 PWM devices). DynamoDB Local (v3.3.2) runs on the WPILib
+  JDK.
+- Small differences from the steps below:
+  - The undo route is now `/api/robots/:id/audit/:auditId/revert`.
+  - CDK settings live in `infra/cdk.json`, including the budget email, the
+    reserved-concurrency cap and the OIDC options.
+  - Reserved concurrency is off unless set, because new accounts often can't reserve
+    any.
+
+Planned steps:
 
 Same features and front end; only the backend changes. Still runs on one laptop.
 
