@@ -2,7 +2,8 @@
 
 Status: phase 1 (local demo) built 2026-10-27. On 2026-10-29 the hosting target
 changed to **AWS, deployed with CDK** (decision 10), and phase 1b ported the demo to
-the AWS stack the same day. Phases 2–4 are not started. See §7–8.
+the AWS stack the same day. Phase 2 (deploy) done 2026-10-31: live at
+https://team488.github.io/electrical-contract-web/. Phases 3–4 are not started. See §7–8.
 
 ## 1. Goal and constraints
 
@@ -323,7 +324,38 @@ Same features and front end; only the backend changes. Still runs on one laptop.
 Rough size: 2–3 days, mostly the DynamoDB store and its tests. Verify with the same
 browser demo as phase 1, run against the new local stack.
 
-### Phase 2: deploy to AWS and GitHub Pages
+### Phase 2: deploy to AWS and GitHub Pages (done 2026-10-31)
+
+Results:
+- **AWS:** account 851725533387 (shared with the scouting app), us-west-2, stack
+  `ElectricalContractStack`. The existing 2024 CDK bootstrap was reused.
+  - API: `https://iqzxovxrrtmrmj7luwdtc457c40lyehm.lambda-url.us-west-2.on.aws`
+  - Reserved concurrency is 5.
+  - No budget alert, by decision: AWS budgets are account-wide and would count the
+    scouting app's costs too.
+  - The GitHub deploy role `electrical-contract-github-deploy` exists, for phase 3.
+- **Secrets:** generated and stored as SSM SecureStrings under `/electrical-contract/`.
+  Read the passcode with `aws ssm get-parameter --with-decryption`.
+- **Data:** seeded from the `ElectricalWeb` contract at `441fa73` (24 CAN, 1 DIO,
+  2 PWM devices).
+- **Front end:** public repo `Team488/electrical-contract-web`. Pages deploys `web/`
+  through a GitHub Actions workflow, since branch-based Pages can only serve the repo
+  root or `/docs`. `web/config.js` uses the local API when the page is opened from
+  localhost or the LAN, and the hosted API otherwise.
+- **Verified on the hosted stack:**
+  - CORS allows only the Pages origin (plus localhost:8000).
+  - A wrong passcode gets 403, and an edit without login gets 401.
+  - Two saves at the same instant give 200 and 409.
+  - Undo works.
+  - The Pages site loads live data.
+- **Follow-ups:**
+  - CDK reports the account's bootstrap stack is older than version 21. Updating it
+    (`cdk bootstrap aws://851725533387/us-west-2`) changes the stack the scouting app
+    also deploys through, so check with its owners first.
+  - `aws login` credentials aren't read by CDK directly. Export them first with
+    `aws configure export-credentials`.
+
+Planned steps:
 
 This waits on the mentor action (decision 6). Every step creates or publishes
 something outside the laptop, so each one gets confirmed first.
