@@ -2,8 +2,8 @@
   "source" : "competition.electrical_contract.Contract2023",
   "contractName" : "2023",
   "robotName" : "2023 Robot",
-  "gitSha" : "7c8a9d28a7173bce23f4ddbc47409cdaf385b0d7",
-  "generatedAt" : "2026-10-31T23:50:20.752381400Z",
+  "gitSha" : "1429902b53bf2950f795fb8a8158b29c8c96e033",
+  "generatedAt" : "2026-10-31T23:53:30.883599300Z",
   "canDevices" : [ {
     "name" : "DriveSubsystem/RearRightDrive/Drive",
     "bus" : "rio",
@@ -129,7 +129,7 @@
   "pwm" : [ ],
   "additionalPdh" : { },
   "powerSources" : {
-    "NONE" : [ "BackOrangePi", "Orin_Nano", "FrontOrangePi", "EthernetSwitch" ],
+    "NONE" : [ "FrontOrangePi", "Orin_Nano", "BackOrangePi", "EthernetSwitch" ],
     "VRM1_12V_2A" : [ "FrontBuckBoost_Pwr" ],
     "VRM1_12V_2B" : [ "BackBuckBoost_Pwr" ],
     "VRM1_12V_500MA" : [ "FrontBuckBoost_Fan" ],

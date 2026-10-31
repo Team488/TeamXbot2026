@@ -2,8 +2,8 @@
   "source" : "competition.electrical_contract.RoboxContract",
   "contractName" : "Robox",
   "robotName" : "Robox",
-  "gitSha" : "7c8a9d28a7173bce23f4ddbc47409cdaf385b0d7",
-  "generatedAt" : "2026-10-31T23:50:24.565178900Z",
+  "gitSha" : "1429902b53bf2950f795fb8a8158b29c8c96e033",
+  "generatedAt" : "2026-10-31T23:53:34.187267500Z",
   "canDevices" : [ {
     "name" : "ShooterMotor",
     "bus" : "rio",
@@ -119,7 +119,7 @@
   } ],
   "additionalPdh" : { },
   "powerSources" : {
-    "NONE" : [ "FrontOrangePi", "Orin_Nano", "EthernetSwitch", "BackOrangePi" ],
+    "NONE" : [ "EthernetSwitch", "FrontOrangePi", "Orin_Nano", "BackOrangePi" ],
     "PDH03" : [ "ShooterMiddleMotor" ],
     "PDH04" : [ "ShooterRightMotor" ],
     "PDH12" : [ "FuelIntakeMotor" ],
@@ -137,6 +137,6 @@
   },
   "powerBranches" : { },
   "canOrder" : [ ],
-  "warnings" : [ "ShooterMotor (ID 32 on CANBusId[id=rio])", "Pigeon2.0 (ID 56 on CANBusId[id=*])", "CANdle (ID 57 on CANBusId[id=*])", "FuelIntakeMotor (ID 32 on CANBusId[id=*])", "IntakeDeployMotor (ID 34 on CANBusId[id=*])", "ShooterFeederMotor (ID 37 on CANBusId[id=*])", "ShooterRightMotor (ID 24 on CANBusId[id=*])", "HopperRoller (ID 33 on CANBusId[id=*])", "ShooterMiddleMotor (ID 23 on CANBusId[id=*])", "IntakeDeployAbsoluteEncoderReady (ID 58 on CANBusId[id=*])" ],
+  "warnings" : [ "ShooterMotor (ID 32 on CANBusId[id=rio])", "Pigeon2.0 (ID 56 on CANBusId[id=*])", "CANdle (ID 57 on CANBusId[id=*])", "FuelIntakeMotor (ID 32 on CANBusId[id=*])", "ShooterMiddleMotor (ID 23 on CANBusId[id=*])", "ShooterRightMotor (ID 24 on CANBusId[id=*])", "ShooterFeederMotor (ID 37 on CANBusId[id=*])", "HopperRoller (ID 33 on CANBusId[id=*])", "IntakeDeployAbsoluteEncoderReady (ID 58 on CANBusId[id=*])", "IntakeDeployMotor (ID 34 on CANBusId[id=*])" ],
   "disabled" : [ "ClimberMotorLeft", "ClimberMotorRight", "ClimberSensor", "DriveSubsystem/FrontLeftDrive/Drive", "DriveSubsystem/FrontLeftDrive/Steering", "DriveSubsystem/FrontLeftDrive/SteeringEncoder", "DriveSubsystem/FrontRightDrive/Drive", "DriveSubsystem/FrontRightDrive/Steering", "DriveSubsystem/FrontRightDrive/SteeringEncoder", "DriveSubsystem/RearLeftDrive/Drive", "DriveSubsystem/RearLeftDrive/Steering", "DriveSubsystem/RearLeftDrive/SteeringEncoder", "DriveSubsystem/RearRightDrive/Drive", "DriveSubsystem/RearRightDrive/Steering", "DriveSubsystem/RearRightDrive/SteeringEncoder" ]
 }

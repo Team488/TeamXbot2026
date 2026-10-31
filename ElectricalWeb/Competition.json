@@ -2,8 +2,8 @@
   "source" : "competition.electrical_contract.Contract2026",
   "contractName" : "Competition",
   "robotName" : "2026 Competition",
-  "gitSha" : "7c8a9d28a7173bce23f4ddbc47409cdaf385b0d7",
-  "generatedAt" : "2026-10-31T23:50:12.941955900Z",
+  "gitSha" : "1429902b53bf2950f795fb8a8158b29c8c96e033",
+  "generatedAt" : "2026-10-31T23:53:24.209723800Z",
   "canDevices" : [ {
     "name" : "DriveSubsystem/RearRightDrive/Drive",
     "bus" : "Canivore",
@@ -247,7 +247,7 @@
     "PDH23" : [ "Pigeon" ]
   },
   "powerSources" : {
-    "NONE" : [ "BackOrangePi", "FrontOrangePi", "Orin_Nano", "EthernetSwitch" ],
+    "NONE" : [ "EthernetSwitch", "FrontOrangePi", "BackOrangePi", "Orin_Nano" ],
     "PDH00" : [ "DriveSubsystem/RearRightDrive/Drive" ],
     "PDH01" : [ "DriveSubsystem/RearRightDrive/Steering" ],
     "PDH02" : [ "ShooterLeftMotor" ],
