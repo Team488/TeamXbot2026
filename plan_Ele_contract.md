@@ -65,6 +65,34 @@ Browser page: GitHub Pages, served from web/ in electrical-contract-web
   `getAdditionalPDHConnections`, `getAdditionalPowerBranches` and `getVrm1_*`. The PDH
   port field in SeriouslyCommonLib stays, and the robot code ignores it.
 
+### 3.1 One web robot per contract
+
+The season's code runs on earlier physical robots by choosing a different contract at
+startup: the `ContractToUse` preference picks `Competition` (2026), `2025`, `2023` or
+`Robox` in `competition.Robot`. The web tool mirrors that. Each selectable contract is
+its own **web robot**, with its own snapshot, wiring, breakers, CAN chain, proposals,
+history and checks. A **robot picker** in the page header switches between them, and
+the browser remembers the choice.
+
+- **Readiness.** A contract passes the `Hardware` mechanisms its robot has
+  (`readinessSet`). Contract getters are tagged `@ReadyWhen(Hardware.X)`, and the
+  exporter leaves out devices whose mechanism isn't ready. The swerve drive follows
+  `isDriveReady()`, and the CANcoders follow `areCanCodersReady()`. Left-out devices
+  show in a **Not on this robot** list (CAN tab, report).
+- **Shared definitions.** The exporter records which class defines each device
+  (`defined_in`). A device defined anywhere but the robot's own contract class (for
+  example `GeneralContract`) is tagged **shared**. Proposing a change to it warns
+  that other robots' contracts use the same definition, and that Programming can
+  override it in this robot's class instead.
+- **Report-only wiring lists** (CAN order, extra PDH loads, power branches) are used
+  only when the robot's own contract class declares them, so Robox doesn't inherit
+  the 2026 robot's wiring. The VRM getters in `GeneralContract` still seed every
+  robot; check them during the first review (§8.1).
+- **Verified on robot (not built).** An Electrical-owned checkbox per device, with
+  name and date, plus a check for unverified devices. It confirms each physical
+  device really is set to the ID its contract says before running this year's code
+  on an older robot.
+
 ## 4. Data model (one DynamoDB table, `pk`/`sk`)
 
 | Item          | `pk` / `sk`                  | Holds                                                                                                           |
@@ -82,8 +110,9 @@ Browser page: GitHub Pages, served from web/ in electrical-contract-web
   (mA), used for the shared-rail checks in §10. **(not built:** `smartio`, mode and
   current draw.**)**
 - One query loads everything the page needs.
-- Each robot or season is its own `ROBOT#<n>` partition. Only the 2026 robot exists
-  today.
+- Each robot is its own `ROBOT#<n>` partition, found by its `ContractToUse` name
+  (`contract_name` on the robot record). Devices also store `defined_in`, the Java
+  class that defines them.
 
 ## 5. Editing together
 
@@ -133,19 +162,19 @@ often have no internet. **Download .txt** gives the same text.
 
 ### 8.1 Starting a robot or season
 
-The live system holds the 2026 competition robot (`ROBOT#1`). To start a robot:
-
-1. **Create the robot.**
-   - The API does this automatically for robot 1 on its very first start. It creates
-     the robot record (name `2026 Competition`), 24 empty PDH ports (`PDH00`–`PDH23`)
-     and the 8 VRM1 outputs.
-   - Another robot or season needs a robot record with a new number, `ROBOT#2` and so
-     on, and a **controller profile** (§10). The profile decides which ports get
-     created: PDH channels, VRM outputs if any, and the SmartIO and USB slots. **(not built:** today the name and ports are hard-coded in `api/src/table.ts`,
-     and the page always shows robot 1 (`ROBOT_ID` in `web/config.js`).**)**
-2. **Point the exporter at the right contract.** `electrical/report/Main.java`
-   `createContract()` returns `Contract2026`; change it for a new season's contract.
-   **(not built:** choosing the contract per robot.**)**
+1. **Create the robot.** It's created automatically by its first snapshot import:
+   `POST /api/contracts/<ContractToUse name>/snapshot` finds the robot with that
+   contract name, or creates the next one.
+   - The robot record holds its name, season, contract name and class, and
+     controller profile.
+   - It starts with empty power ports for its profile: 24 PDH ports (`PDH00`–`PDH23`)
+     and the 8 VRM1 outputs for roboRIO.
+   - Robot 1 (2026 Competition) also gets created on the API's very first start.
+   - **(not built:** SystemCore profiles (§10); every robot is roboRIO today.**)**
+2. **Register the contract with the exporter.** `CONTRACTS` in
+   `electrical/report/Main.java` maps each `ContractToUse` name to its class and a
+   display name. Use the same names as the switch in `competition.Robot`. A new
+   season's contract is one new line there.
 3. **Import the first snapshot** (§12.3). On a robot's first import, the importer:
    1. Creates a device for every code device: CAN devices keyed `can:<bus>:<id>`, DIO
       and PWM devices keyed `dio:<ch>` and `pwm:<ch>`. Each motor's power source starts
@@ -304,18 +333,22 @@ a hardware choice for Electrical before the 2027 contract is written.
 | Close a proposal automatically when the snapshot shows the new value | Programming | 3 | Today Programming marks it done |
 | Pilot on the 2026 robot, then full switch to the web | Electrical | 4 | |
 | Contract cleanup (§9.2) | Programming | 4 | |
-| Controller profiles, and starting another robot or season (§8.1, §10) | Programming | 2027 prep | Robot name, ports and `ROBOT_ID` are hard-coded for robot 1; the exporter is hard-coded to `Contract2026` |
+| Controller profiles (§10) | Programming | 2027 prep | Robots and contracts are per robot already (§3.1); every robot uses the roboRIO port layout |
 | SystemCore I/O model: `smartio` kind with mode, SmartIO tab, CAN-FD bus names (§10) | Programming | 2027 prep | |
 | SystemCore checks and report layout: ports 0–5, modes, 3.3 V rail and USB current (§10) | Programming | 2027 prep | |
 | Current-draw field per device | Programming | 2027 prep | Electrical fills in the values |
 | Explicit port type and mode in SeriouslyCommonLib `DeviceInfo`; port the exporter to the 2027 libraries (§10) | Programming | 2027 prep | Agree with the library maintainers |
 | Replace the hood servos, which have no SystemCore support (§10) | Electrical | 2027 prep | Programming updates the 2027 contract to match |
 | Check the SystemCore profile's port lists, connectors and pull direction against the final 2027 docs | Electrical | 2027 prep | Specs so far are from alpha hardware |
+| "Verified on robot" checkbox per device, with a check for unverified devices (§3.1) | Electrical | Later | Programming builds it; Electrical owns the data |
 | Photos (S3), Cognito logins | Programming | Later | |
 | Budget alert | Programming | Open | Left off because the account is shared with the scouting app |
 | Update the account's CDK bootstrap stack (older than version 21) | Programming | Open | Shared with the scouting app; check with its owners first |
 | Fix the wire-gauge table against the game manual | Electrical | Open | `web/validate.js` |
 | Remove the stale CAN ID 59 from `getCanBusConnectionOrder` | Programming | Open | Java data fix |
+| `Contract2023` gives its steering motors the drive motors' names (`…/Drive` twice per corner) | Programming | Open | Same bug `main` already fixed in `Contract2026` |
+| `Contract2025` turns off the drive and every mechanism, so the 2025 robot shows no code devices | Programming | Open | Check whether that's intended before running 2026 code on it |
+| Review each older robot's seeded wiring, especially the VRM layout inherited from `GeneralContract` (§3.1) | Electrical | Open | |
 
 ## 12. How to run it
 
@@ -347,16 +380,20 @@ everyone out, also replace `/electrical-contract/TOKEN_SECRET`.
 
 ### 12.3 Programmers: send a contract change to the web
 
-Until the phase 3 Action exists, run these after merging contract changes:
+Until the phase 3 Action exists, run this after merging contract changes. It exports
+every robot's contract and imports each into its web robot:
 
 ```powershell
-cd TeamXbot2026
-./gradlew electricalReport --args="--json -f snapshot.json"
 $env:SNAPSHOT_KEY = aws ssm get-parameter --with-decryption --name /electrical-contract/SNAPSHOT_KEY --query Parameter.Value --output text --region us-west-2
-node ..\electrical-contract-web\scripts\import-snapshot.mjs snapshot.json https://iqzxovxrrtmrmj7luwdtc457c40lyehm.lambda-url.us-west-2.on.aws
+..\electrical-contract-web\scripts\sync-contracts.ps1 -Api https://iqzxovxrrtmrmj7luwdtc457c40lyehm.lambda-url.us-west-2.on.aws
 ```
 
-`./gradlew electricalReport` with no options still writes `electrical-report.txt`.
+To do one robot by hand:
+`./gradlew electricalReport --args="--contract 2025 --json -f snapshot.json"`, then
+`node ..\electrical-contract-web\scripts\import-snapshot.mjs snapshot.json <api>`.
+
+Without `--json`, `./gradlew electricalReport [--args="--contract NAME"]` still writes
+`electrical-report.txt`, now including a "Not on this robot" section.
 
 ### 12.4 Programmers: change and deploy the web tool
 
