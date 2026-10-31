@@ -25,8 +25,11 @@ roboRIO (2026 robot) and SystemCore, the controller FRC adopts for the 2027 seas
 
 ```
 TeamXbot2026 (Java contract)
-   │  ./gradlew electricalReport --args="--json"   → snapshot.json
-   │  GitHub Action on push to main  (not built; done by hand today)
+   │  merge to main → GitHub Action "Electrical snapshots" runs the exporter for every
+   │  robot and publishes JSON to the electrical-snapshots branch
+   ▼
+raw.githubusercontent.com/Team488/TeamXbot2026/electrical-snapshots/<branch>/
+   │  read by the API on page load (at most every 2 min), imported when the commit is new
    ▼
 API: AWS Lambda behind a Function URL  ◄──────►  DynamoDB (one table)
    ▲                                              SSM: passcode + keys
@@ -55,6 +58,17 @@ Browser page: GitHub Pages, served from web/ in electrical-contract-web
   Programming-owned field changed (for example "move ShooterLeft to CAN 27"), they file
   a proposal. Programming makes the change in Java through normal code review, then
   marks the proposal done.
+- **How Java reaches the web: automatically.** On every merge to `main` that touches
+  the contracts or the exporter, the GitHub Action **Electrical snapshots**
+  (`.github/workflows/electrical-snapshots.yml`) does the following:
+  1. Runs `electricalReport --contract X --json` for each robot.
+  2. Commits the files to the `electrical-snapshots` branch, under a folder named
+     after the source branch: `index.json` plus one `<Contract>.json` per robot.
+
+  When a page loads, the API checks that folder at most every 2 minutes. If the commit
+  differs from the last one it imported, it imports every robot's file. Only one API
+  instance imports a given commit. A merge shows up on the web a few minutes later,
+  with no secret stored in the robot repo and nobody running anything.
 - **Snapshot import.** The importer matches code devices by `(bus, CAN ID)` or by
   DIO/PWM channel, never by name. It adds new devices and flags ones removed from the
   code.
@@ -236,9 +250,9 @@ code, so they only change in Java, through code review.
 3. **Physical change.** If it's a CAN ID, someone sets the new ID on the device itself
    (Phoenix Tuner X for CTRE devices) when the code is deployed. The web tool doesn't
    track this step.
-4. **The snapshot reaches the web.** Today Programming runs the export and import by
-   hand (§12.3). **(not built:** a GitHub Action that does it on every push to
-   `main`.**)**
+4. **The snapshot reaches the web by itself.** The merge runs the Electrical snapshots
+   Action, and the API picks up the new files on the next page load, a few minutes
+   later (§3). The page header shows which Java commit each robot is on.
 5. **Programming marks the proposal** *Done in Java* on the Code changes tab. **(not
    built:** closing it automatically when the snapshot shows the new value.**)**
 
@@ -325,7 +339,7 @@ a hardware choice for Electrical before the 2027 contract is written.
 
 | Item | Owner | Phase | Notes |
 | --- | --- | --- | --- |
-| GitHub Action in TeamXbot2026 that posts the snapshot on every push to `main` | Programming | 3 | Today: run the exporter and import by hand (§12.3). Needs the `SNAPSHOT_KEY` repo secret |
+| Point `snapshotSource` at the `main` folder once `ElectricalWeb` is merged (§12.3) | Programming | 3 | One line in `infra/cdk.json`, then `cdk deploy` |
 | GitHub Action that runs `cdk deploy` on push to `electrical-contract-web` `main` | Programming | 3 | The OIDC deploy role `electrical-contract-github-deploy` already exists |
 | Nightly JSON backup of the data, committed to git | Programming | 3 | DynamoDB point-in-time recovery (35 days) already covers restores |
 | Copy wiring and chain position to the new device when a CAN ID or port changes (§9.1) | Programming | 3 | Today Electrical re-enters them by hand |
@@ -380,17 +394,24 @@ everyone out, also replace `/electrical-contract/TOKEN_SECRET`.
 
 ### 12.3 Programmers: send a contract change to the web
 
-Until the phase 3 Action exists, run this after merging contract changes. It exports
-every robot's contract and imports each into its web robot:
+Merge it to `main`. That's all:
+1. The **Electrical snapshots** Action runs, in about a minute; it shows in the repo's
+   Actions tab.
+2. The web picks up the new files on its next page load, at most a couple of minutes
+   later.
+3. Check the header: "Java <commit>" should show the merge.
 
-```powershell
-$env:SNAPSHOT_KEY = aws ssm get-parameter --with-decryption --name /electrical-contract/SNAPSHOT_KEY --query Parameter.Value --output text --region us-west-2
-..\electrical-contract-web\scripts\sync-contracts.ps1 -Api https://iqzxovxrrtmrmj7luwdtc457c40lyehm.lambda-url.us-west-2.on.aws
-```
-
-To do one robot by hand:
-`./gradlew electricalReport --args="--contract 2025 --json -f snapshot.json"`, then
-`node ..\electrical-contract-web\scripts\import-snapshot.mjs snapshot.json <api>`.
+- **Source branch:** the API reads the folder set by `snapshotSource` in
+  `electrical-contract-web/infra/cdk.json`. Until the `ElectricalWeb` branch is
+  merged, that's the `ElectricalWeb` folder. After the merge, change it to `.../main`
+  and run `cdk deploy`.
+- **Re-run without a code change:** Actions → Electrical snapshots → **Run workflow**.
+  This works once the workflow is on `main`.
+- **Manual import** (local testing, or if GitHub is down):
+  `scripts/sync-contracts.ps1 -Api <url>` with `$env:SNAPSHOT_KEY` set. The key is in
+  SSM at `/electrical-contract/SNAPSHOT_KEY`. For one robot, run
+  `./gradlew electricalReport --args="--contract 2025 --json -f snapshot.json"`, then
+  `node ..\electrical-contract-web\scripts\import-snapshot.mjs snapshot.json <api>`.
 
 Without `--json`, `./gradlew electricalReport [--args="--contract NAME"]` still writes
 `electrical-report.txt`, now including a "Not on this robot" section.
