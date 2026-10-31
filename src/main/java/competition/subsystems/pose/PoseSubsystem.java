@@ -6,8 +6,7 @@ import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import competition.electrical_contract.ElectricalContract;
-import competition.subsystems.pose.XbotIMU;
+import competition.subsystems.pose.imu.XbotIMU;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.vision.AprilTagVisionSubsystemExtended;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -29,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import xbot.common.controls.sensors.XGyro;
-import xbot.common.controls.sensors.XGyro.XGyroFactory;
 import xbot.common.math.WrappedRotation2d;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;

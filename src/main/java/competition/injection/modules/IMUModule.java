@@ -4,8 +4,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import competition.subsystems.pose.XbotIMU;
-import competition.subsystems.pose.XGyroIMU;
+import competition.subsystems.pose.imu.XbotIMU;
+import competition.subsystems.pose.imu.XGyroIMU;
 import xbot.common.controls.sensors.XGyro;
 import competition.electrical_contract.ElectricalContract;
 
