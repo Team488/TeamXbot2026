@@ -1,0 +1,409 @@
+{
+  "source" : "competition.electrical_contract.Contract2026",
+  "contractName" : "Competition",
+  "robotName" : "2026 Competition",
+  "gitSha" : "7c8a9d28a7173bce23f4ddbc47409cdaf385b0d7",
+  "generatedAt" : "2026-10-31T23:50:12.941955900Z",
+  "canDevices" : [ {
+    "name" : "DriveSubsystem/RearRightDrive/Drive",
+    "bus" : "Canivore",
+    "canId" : 20,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH00",
+    "powerFrom" : null,
+    "busPosition" : 7,
+    "definedIn" : "Contract2026"
+  }, {
+    "name" : "DriveSubsystem/RearRightDrive/Steering",
+    "bus" : "Canivore",
+    "canId" : 21,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH01",
+    "powerFrom" : null,
+    "busPosition" : 9,
+    "definedIn" : "Contract2026"
+  }, {
+    "name" : "ShooterLeftMotor",
+    "bus" : "Canivore",
+    "canId" : 22,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH02",
+    "powerFrom" : null,
+    "busPosition" : 21,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "ShooterMiddleMotor",
+    "bus" : "Canivore",
+    "canId" : 23,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH03",
+    "powerFrom" : null,
+    "busPosition" : 22,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "ShooterRightMotor",
+    "bus" : "Canivore",
+    "canId" : 24,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH04",
+    "powerFrom" : null,
+    "busPosition" : 24,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "DriveSubsystem/RearLeftDrive/Drive",
+    "bus" : "Canivore",
+    "canId" : 28,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH08",
+    "powerFrom" : null,
+    "busPosition" : 6,
+    "definedIn" : "Contract2026"
+  }, {
+    "name" : "DriveSubsystem/RearLeftDrive/Steering",
+    "bus" : "Canivore",
+    "canId" : 29,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH09",
+    "powerFrom" : null,
+    "busPosition" : 4,
+    "definedIn" : "Contract2026"
+  }, {
+    "name" : "DriveSubsystem/FrontLeftDrive/Drive",
+    "bus" : "Canivore",
+    "canId" : 30,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH10",
+    "powerFrom" : null,
+    "busPosition" : 1,
+    "definedIn" : "Contract2026"
+  }, {
+    "name" : "DriveSubsystem/FrontLeftDrive/Steering",
+    "bus" : "Canivore",
+    "canId" : 31,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH11",
+    "powerFrom" : null,
+    "busPosition" : 3,
+    "definedIn" : "Contract2026"
+  }, {
+    "name" : "FuelIntakeMotor",
+    "bus" : "Canivore",
+    "canId" : 32,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH12",
+    "powerFrom" : null,
+    "busPosition" : 17,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "HopperRoller",
+    "bus" : "Canivore",
+    "canId" : 33,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH13",
+    "powerFrom" : null,
+    "busPosition" : 18,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "IntakeDeployMotor",
+    "bus" : "Canivore",
+    "canId" : 34,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH14",
+    "powerFrom" : null,
+    "busPosition" : 16,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "ShooterFeederMotor",
+    "bus" : "Canivore",
+    "canId" : 37,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH17",
+    "powerFrom" : null,
+    "busPosition" : 19,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "DriveSubsystem/FrontRightDrive/Drive",
+    "bus" : "Canivore",
+    "canId" : 38,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH18",
+    "powerFrom" : null,
+    "busPosition" : 12,
+    "definedIn" : "Contract2026"
+  }, {
+    "name" : "DriveSubsystem/FrontRightDrive/Steering",
+    "bus" : "Canivore",
+    "canId" : 39,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH19",
+    "powerFrom" : null,
+    "busPosition" : 10,
+    "definedIn" : "Contract2026"
+  }, {
+    "name" : "DriveSubsystem/RearRightDrive/SteeringEncoder",
+    "bus" : "Canivore",
+    "canId" : 51,
+    "type" : "CANCoder",
+    "kind" : "can_sensor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : 8,
+    "definedIn" : "Contract2026"
+  }, {
+    "name" : "DriveSubsystem/RearLeftDrive/SteeringEncoder",
+    "bus" : "Canivore",
+    "canId" : 52,
+    "type" : "CANCoder",
+    "kind" : "can_sensor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : 5,
+    "definedIn" : "Contract2026"
+  }, {
+    "name" : "DriveSubsystem/FrontLeftDrive/SteeringEncoder",
+    "bus" : "Canivore",
+    "canId" : 53,
+    "type" : "CANCoder",
+    "kind" : "can_sensor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : 2,
+    "definedIn" : "Contract2026"
+  }, {
+    "name" : "DriveSubsystem/FrontRightDrive/SteeringEncoder",
+    "bus" : "Canivore",
+    "canId" : 54,
+    "type" : "CANCoder",
+    "kind" : "can_sensor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : 11,
+    "definedIn" : "Contract2026"
+  }, {
+    "name" : "Pigeon2.0",
+    "bus" : "Canivore",
+    "canId" : 56,
+    "type" : "Sensor",
+    "kind" : "can_sensor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : 13,
+    "definedIn" : "Contract2026"
+  }, {
+    "name" : "CANdle",
+    "bus" : "Canivore",
+    "canId" : 57,
+    "type" : "Sensor",
+    "kind" : "can_sensor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : 14,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "IntakeDeployAbsoluteEncoderReady",
+    "bus" : "Canivore",
+    "canId" : 58,
+    "type" : "CANCoder",
+    "kind" : "can_sensor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : 15,
+    "definedIn" : "GeneralContract"
+  } ],
+  "dio" : [ ],
+  "pwm" : [ {
+    "name" : "HoodServoLeft",
+    "channel" : 7,
+    "powerFrom" : null,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "HoodServoRight",
+    "channel" : 9,
+    "powerFrom" : null,
+    "definedIn" : "GeneralContract"
+  } ],
+  "additionalPdh" : {
+    "PDH07" : [ "No_Connect" ],
+    "PDH15" : [ "FrontBuck_Pwr" ],
+    "PDH16" : [ "BackBuck_Pwr" ],
+    "PDH20" : [ "RoboRio" ],
+    "PDH21" : [ "VRM1" ],
+    "PDH22" : [ "Radio_Power_Module" ],
+    "PDH23" : [ "Pigeon" ]
+  },
+  "powerSources" : {
+    "NONE" : [ "BackOrangePi", "FrontOrangePi", "Orin_Nano", "EthernetSwitch" ],
+    "PDH00" : [ "DriveSubsystem/RearRightDrive/Drive" ],
+    "PDH01" : [ "DriveSubsystem/RearRightDrive/Steering" ],
+    "PDH02" : [ "ShooterLeftMotor" ],
+    "PDH03" : [ "ShooterMiddleMotor" ],
+    "PDH04" : [ "ShooterRightMotor" ],
+    "PDH08" : [ "DriveSubsystem/RearLeftDrive/Drive" ],
+    "PDH09" : [ "DriveSubsystem/RearLeftDrive/Steering" ],
+    "PDH10" : [ "DriveSubsystem/FrontLeftDrive/Drive" ],
+    "PDH11" : [ "DriveSubsystem/FrontLeftDrive/Steering" ],
+    "PDH12" : [ "FuelIntakeMotor" ],
+    "PDH13" : [ "HopperRoller" ],
+    "PDH14" : [ "IntakeDeployMotor" ],
+    "PDH17" : [ "ShooterFeederMotor" ],
+    "PDH18" : [ "DriveSubsystem/FrontRightDrive/Drive" ],
+    "PDH19" : [ "DriveSubsystem/FrontRightDrive/Steering" ],
+    "VRM1_12V_2A" : [ "FrontBuckBoost_Pwr" ],
+    "VRM1_12V_2B" : [ "BackBuckBoost_Pwr" ],
+    "VRM1_12V_500MA" : [ "FrontBuckBoost_Fan" ],
+    "VRM1_12V_500MB" : [ "BackBuckBoost_Fan" ],
+    "VRM1_5V_2A" : [ "No_Connect" ],
+    "VRM1_5V_2B" : [ "No_Connect" ],
+    "VRM1_5V_500MA" : [ "CANdle" ],
+    "VRM1_5V_500MB" : [ "No_Connect" ]
+  },
+  "powerBranches" : {
+    "BackBuckBoost_Pwr" : [ "EthernetSwitch" ],
+    "BackBuck_Pwr" : [ "BackOrangePi" ],
+    "FrontBuckBoost_Pwr" : [ "Orin_Nano" ],
+    "FrontBuck_Pwr" : [ "FrontOrangePi" ]
+  },
+  "canOrder" : [ {
+    "bus" : "Canivore",
+    "canId" : 30,
+    "deviceName" : "FrontLeftDrive/Drive",
+    "busPosition" : 1
+  }, {
+    "bus" : "Canivore",
+    "canId" : 53,
+    "deviceName" : "FrontLeftDrive/SteeringEncoder",
+    "busPosition" : 2
+  }, {
+    "bus" : "Canivore",
+    "canId" : 31,
+    "deviceName" : "FrontLeftDrive/Steering",
+    "busPosition" : 3
+  }, {
+    "bus" : "Canivore",
+    "canId" : 29,
+    "deviceName" : "RearLeftDrive/Steering",
+    "busPosition" : 4
+  }, {
+    "bus" : "Canivore",
+    "canId" : 52,
+    "deviceName" : "RearLeftDrive/SteeringEncoder",
+    "busPosition" : 5
+  }, {
+    "bus" : "Canivore",
+    "canId" : 28,
+    "deviceName" : "RearLeftDrive/Drive",
+    "busPosition" : 6
+  }, {
+    "bus" : "Canivore",
+    "canId" : 20,
+    "deviceName" : "RearRightDrive/Drive",
+    "busPosition" : 7
+  }, {
+    "bus" : "Canivore",
+    "canId" : 51,
+    "deviceName" : "RearRightDrive/SteeringEncoder",
+    "busPosition" : 8
+  }, {
+    "bus" : "Canivore",
+    "canId" : 21,
+    "deviceName" : "RearRightDrive/Steering",
+    "busPosition" : 9
+  }, {
+    "bus" : "Canivore",
+    "canId" : 39,
+    "deviceName" : "FrontRightDrive/Steering",
+    "busPosition" : 10
+  }, {
+    "bus" : "Canivore",
+    "canId" : 54,
+    "deviceName" : "FrontRightDrive/SteeringEncoder",
+    "busPosition" : 11
+  }, {
+    "bus" : "Canivore",
+    "canId" : 38,
+    "deviceName" : "FrontRightDrive/Drive",
+    "busPosition" : 12
+  }, {
+    "bus" : "Canivore",
+    "canId" : 56,
+    "deviceName" : "Pigeon",
+    "busPosition" : 13
+  }, {
+    "bus" : "Canivore",
+    "canId" : 57,
+    "deviceName" : "CANdle",
+    "busPosition" : 14
+  }, {
+    "bus" : "Canivore",
+    "canId" : 58,
+    "deviceName" : "IntakeDeployAbsoluteEncoderReady",
+    "busPosition" : 15
+  }, {
+    "bus" : "Canivore",
+    "canId" : 34,
+    "deviceName" : "IntakeDeployMotor",
+    "busPosition" : 16
+  }, {
+    "bus" : "Canivore",
+    "canId" : 32,
+    "deviceName" : "FuelIntakeMotor",
+    "busPosition" : 17
+  }, {
+    "bus" : "Canivore",
+    "canId" : 33,
+    "deviceName" : "HopperRoller",
+    "busPosition" : 18
+  }, {
+    "bus" : "Canivore",
+    "canId" : 37,
+    "deviceName" : "ShooterFeederMotor",
+    "busPosition" : 19
+  }, {
+    "bus" : "Canivore",
+    "canId" : 25,
+    "deviceName" : "ClimberMotorLeft",
+    "busPosition" : 20
+  }, {
+    "bus" : "Canivore",
+    "canId" : 22,
+    "deviceName" : "ShooterLeftMotor",
+    "busPosition" : 21
+  }, {
+    "bus" : "Canivore",
+    "canId" : 23,
+    "deviceName" : "ShooterMiddleMotor",
+    "busPosition" : 22
+  }, {
+    "bus" : "Canivore",
+    "canId" : 59,
+    "deviceName" : "ClimberAbsoluteEncoderReady",
+    "busPosition" : 23
+  }, {
+    "bus" : "Canivore",
+    "canId" : 24,
+    "deviceName" : "ShooterRightMotor",
+    "busPosition" : 24
+  }, {
+    "bus" : "Canivore",
+    "canId" : 26,
+    "deviceName" : "ClimberMotorRight",
+    "busPosition" : 25
+  } ],
+  "warnings" : [ ],
+  "disabled" : [ "ClimberMotorLeft", "ClimberMotorRight", "ClimberSensor" ]
+}

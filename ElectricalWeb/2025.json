@@ -1,0 +1,26 @@
+{
+  "source" : "competition.electrical_contract.Contract2025",
+  "contractName" : "2025",
+  "robotName" : "2025 Robot",
+  "gitSha" : "7c8a9d28a7173bce23f4ddbc47409cdaf385b0d7",
+  "generatedAt" : "2026-10-31T23:50:17.123483300Z",
+  "canDevices" : [ ],
+  "dio" : [ ],
+  "pwm" : [ ],
+  "additionalPdh" : { },
+  "powerSources" : {
+    "NONE" : [ "FrontOrangePi", "Orin_Nano", "EthernetSwitch", "BackOrangePi" ],
+    "VRM1_12V_2A" : [ "FrontBuckBoost_Pwr" ],
+    "VRM1_12V_2B" : [ "BackBuckBoost_Pwr" ],
+    "VRM1_12V_500MA" : [ "FrontBuckBoost_Fan" ],
+    "VRM1_12V_500MB" : [ "BackBuckBoost_Fan" ],
+    "VRM1_5V_2A" : [ "No_Connect" ],
+    "VRM1_5V_2B" : [ "No_Connect" ],
+    "VRM1_5V_500MA" : [ "CANdle" ],
+    "VRM1_5V_500MB" : [ "No_Connect" ]
+  },
+  "powerBranches" : { },
+  "canOrder" : [ ],
+  "warnings" : [ ],
+  "disabled" : [ "ClimberMotorLeft", "ClimberMotorRight", "ClimberSensor", "DriveSubsystem/FrontLeftDrive/Drive", "DriveSubsystem/FrontLeftDrive/Steering", "DriveSubsystem/FrontLeftDrive/SteeringEncoder", "DriveSubsystem/FrontRightDrive/Drive", "DriveSubsystem/FrontRightDrive/Steering", "DriveSubsystem/FrontRightDrive/SteeringEncoder", "DriveSubsystem/RearLeftDrive/Drive", "DriveSubsystem/RearLeftDrive/Steering", "DriveSubsystem/RearLeftDrive/SteeringEncoder", "DriveSubsystem/RearRightDrive/Drive", "DriveSubsystem/RearRightDrive/Steering", "DriveSubsystem/RearRightDrive/SteeringEncoder", "FuelIntakeMotor", "HoodServoLeft", "HoodServoRight", "HopperRoller", "IntakeDeployAbsoluteEncoderReady", "IntakeDeployMotor", "ShooterFeederMotor", "ShooterLeftMotor", "ShooterMiddleMotor", "ShooterRightMotor" ]
+}

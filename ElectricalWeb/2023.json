@@ -1,0 +1,146 @@
+{
+  "source" : "competition.electrical_contract.Contract2023",
+  "contractName" : "2023",
+  "robotName" : "2023 Robot",
+  "gitSha" : "7c8a9d28a7173bce23f4ddbc47409cdaf385b0d7",
+  "generatedAt" : "2026-10-31T23:50:20.752381400Z",
+  "canDevices" : [ {
+    "name" : "DriveSubsystem/RearRightDrive/Drive",
+    "bus" : "rio",
+    "canId" : 20,
+    "type" : "SparkMax",
+    "kind" : "motor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "Contract2023"
+  }, {
+    "name" : "DriveSubsystem/RearRightDrive/Drive",
+    "bus" : "rio",
+    "canId" : 21,
+    "type" : "SparkMax",
+    "kind" : "motor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "Contract2023"
+  }, {
+    "name" : "DriveSubsystem/FrontRightDrive/Drive",
+    "bus" : "rio",
+    "canId" : 28,
+    "type" : "SparkMax",
+    "kind" : "motor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "Contract2023"
+  }, {
+    "name" : "DriveSubsystem/FrontRightDrive/Drive",
+    "bus" : "rio",
+    "canId" : 29,
+    "type" : "SparkMax",
+    "kind" : "motor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "Contract2023"
+  }, {
+    "name" : "DriveSubsystem/FrontLeftDrive/Drive",
+    "bus" : "rio",
+    "canId" : 30,
+    "type" : "SparkMax",
+    "kind" : "motor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "Contract2023"
+  }, {
+    "name" : "DriveSubsystem/FrontLeftDrive/Drive",
+    "bus" : "rio",
+    "canId" : 31,
+    "type" : "SparkMax",
+    "kind" : "motor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "Contract2023"
+  }, {
+    "name" : "DriveSubsystem/RearLeftDrive/Drive",
+    "bus" : "rio",
+    "canId" : 38,
+    "type" : "SparkMax",
+    "kind" : "motor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "Contract2023"
+  }, {
+    "name" : "DriveSubsystem/RearLeftDrive/Drive",
+    "bus" : "rio",
+    "canId" : 39,
+    "type" : "SparkMax",
+    "kind" : "motor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "Contract2023"
+  }, {
+    "name" : "DriveSubsystem/FrontLeftDrive/SteeringEncoder",
+    "bus" : "rio",
+    "canId" : 51,
+    "type" : "CANCoder",
+    "kind" : "can_sensor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "Contract2023"
+  }, {
+    "name" : "DriveSubsystem/FrontRightDrive/SteeringEncoder",
+    "bus" : "rio",
+    "canId" : 52,
+    "type" : "CANCoder",
+    "kind" : "can_sensor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "Contract2023"
+  }, {
+    "name" : "DriveSubsystem/RearLeftDrive/SteeringEncoder",
+    "bus" : "rio",
+    "canId" : 53,
+    "type" : "CANCoder",
+    "kind" : "can_sensor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "Contract2023"
+  }, {
+    "name" : "DriveSubsystem/RearRightDrive/SteeringEncoder",
+    "bus" : "rio",
+    "canId" : 54,
+    "type" : "CANCoder",
+    "kind" : "can_sensor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "Contract2023"
+  } ],
+  "dio" : [ ],
+  "pwm" : [ ],
+  "additionalPdh" : { },
+  "powerSources" : {
+    "NONE" : [ "BackOrangePi", "Orin_Nano", "FrontOrangePi", "EthernetSwitch" ],
+    "VRM1_12V_2A" : [ "FrontBuckBoost_Pwr" ],
+    "VRM1_12V_2B" : [ "BackBuckBoost_Pwr" ],
+    "VRM1_12V_500MA" : [ "FrontBuckBoost_Fan" ],
+    "VRM1_12V_500MB" : [ "BackBuckBoost_Fan" ],
+    "VRM1_5V_2A" : [ "No_Connect" ],
+    "VRM1_5V_2B" : [ "No_Connect" ],
+    "VRM1_5V_500MA" : [ "CANdle" ],
+    "VRM1_5V_500MB" : [ "No_Connect" ]
+  },
+  "powerBranches" : { },
+  "canOrder" : [ ],
+  "warnings" : [ "DriveSubsystem/FrontLeftDrive/Drive (ID 31 on CANBusId[id=rio])", "DriveSubsystem/FrontLeftDrive/Drive (ID 30 on CANBusId[id=rio])", "DriveSubsystem/FrontLeftDrive/SteeringEncoder (ID 51 on CANBusId[id=rio])", "DriveSubsystem/FrontRightDrive/Drive (ID 29 on CANBusId[id=rio])", "DriveSubsystem/FrontRightDrive/Drive (ID 28 on CANBusId[id=rio])", "DriveSubsystem/FrontRightDrive/SteeringEncoder (ID 52 on CANBusId[id=rio])", "DriveSubsystem/RearLeftDrive/Drive (ID 38 on CANBusId[id=rio])", "DriveSubsystem/RearLeftDrive/Drive (ID 39 on CANBusId[id=rio])", "DriveSubsystem/RearLeftDrive/SteeringEncoder (ID 53 on CANBusId[id=rio])", "DriveSubsystem/RearRightDrive/Drive (ID 21 on CANBusId[id=rio])", "DriveSubsystem/RearRightDrive/Drive (ID 20 on CANBusId[id=rio])", "DriveSubsystem/RearRightDrive/SteeringEncoder (ID 54 on CANBusId[id=rio])" ],
+  "disabled" : [ "ClimberMotorLeft", "ClimberMotorRight", "ClimberSensor", "FuelIntakeMotor", "HoodServoLeft", "HoodServoRight", "HopperRoller", "IntakeDeployAbsoluteEncoderReady", "IntakeDeployMotor", "ShooterFeederMotor", "ShooterLeftMotor", "ShooterMiddleMotor", "ShooterRightMotor" ]
+}

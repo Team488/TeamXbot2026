@@ -1,0 +1,23 @@
+{
+  "gitSha": "7c8a9d28a7173bce23f4ddbc47409cdaf385b0d7",
+  "branch": "ElectricalWeb",
+  "generatedAt": "2026-10-31T23:50:25.735337Z",
+  "contracts": [
+    {
+      "name": "Competition",
+      "file": "Competition.json"
+    },
+    {
+      "name": "2025",
+      "file": "2025.json"
+    },
+    {
+      "name": "2023",
+      "file": "2023.json"
+    },
+    {
+      "name": "Robox",
+      "file": "Robox.json"
+    }
+  ]
+}

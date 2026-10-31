@@ -1,0 +1,142 @@
+{
+  "source" : "competition.electrical_contract.RoboxContract",
+  "contractName" : "Robox",
+  "robotName" : "Robox",
+  "gitSha" : "7c8a9d28a7173bce23f4ddbc47409cdaf385b0d7",
+  "generatedAt" : "2026-10-31T23:50:24.565178900Z",
+  "canDevices" : [ {
+    "name" : "ShooterMotor",
+    "bus" : "rio",
+    "canId" : 32,
+    "type" : "SparkMax",
+    "kind" : "motor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "RoboxContract"
+  }, {
+    "name" : "ShooterMiddleMotor",
+    "bus" : "Canivore",
+    "canId" : 23,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH03",
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "ShooterRightMotor",
+    "bus" : "Canivore",
+    "canId" : 24,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH04",
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "FuelIntakeMotor",
+    "bus" : "Canivore",
+    "canId" : 32,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH12",
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "HopperRoller",
+    "bus" : "Canivore",
+    "canId" : 33,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH13",
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "IntakeDeployMotor",
+    "bus" : "Canivore",
+    "canId" : 34,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH14",
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "ShooterFeederMotor",
+    "bus" : "Canivore",
+    "canId" : 37,
+    "type" : "TalonFx",
+    "kind" : "motor",
+    "pdhPort" : "PDH17",
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "Pigeon2.0",
+    "bus" : "Canivore",
+    "canId" : 56,
+    "type" : "Sensor",
+    "kind" : "can_sensor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "Contract2026"
+  }, {
+    "name" : "CANdle",
+    "bus" : "Canivore",
+    "canId" : 57,
+    "type" : "Sensor",
+    "kind" : "can_sensor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "IntakeDeployAbsoluteEncoderReady",
+    "bus" : "Canivore",
+    "canId" : 58,
+    "type" : "CANCoder",
+    "kind" : "can_sensor",
+    "pdhPort" : null,
+    "powerFrom" : null,
+    "busPosition" : null,
+    "definedIn" : "GeneralContract"
+  } ],
+  "dio" : [ ],
+  "pwm" : [ {
+    "name" : "HoodServoLeft",
+    "channel" : 7,
+    "powerFrom" : null,
+    "definedIn" : "GeneralContract"
+  }, {
+    "name" : "HoodServoRight",
+    "channel" : 9,
+    "powerFrom" : null,
+    "definedIn" : "GeneralContract"
+  } ],
+  "additionalPdh" : { },
+  "powerSources" : {
+    "NONE" : [ "FrontOrangePi", "Orin_Nano", "EthernetSwitch", "BackOrangePi" ],
+    "PDH03" : [ "ShooterMiddleMotor" ],
+    "PDH04" : [ "ShooterRightMotor" ],
+    "PDH12" : [ "FuelIntakeMotor" ],
+    "PDH13" : [ "HopperRoller" ],
+    "PDH14" : [ "IntakeDeployMotor" ],
+    "PDH17" : [ "ShooterFeederMotor" ],
+    "VRM1_12V_2A" : [ "FrontBuckBoost_Pwr" ],
+    "VRM1_12V_2B" : [ "BackBuckBoost_Pwr" ],
+    "VRM1_12V_500MA" : [ "FrontBuckBoost_Fan" ],
+    "VRM1_12V_500MB" : [ "BackBuckBoost_Fan" ],
+    "VRM1_5V_2A" : [ "No_Connect" ],
+    "VRM1_5V_2B" : [ "No_Connect" ],
+    "VRM1_5V_500MA" : [ "CANdle" ],
+    "VRM1_5V_500MB" : [ "No_Connect" ]
+  },
+  "powerBranches" : { },
+  "canOrder" : [ ],
+  "warnings" : [ "ShooterMotor (ID 32 on CANBusId[id=rio])", "Pigeon2.0 (ID 56 on CANBusId[id=*])", "CANdle (ID 57 on CANBusId[id=*])", "FuelIntakeMotor (ID 32 on CANBusId[id=*])", "IntakeDeployMotor (ID 34 on CANBusId[id=*])", "ShooterFeederMotor (ID 37 on CANBusId[id=*])", "ShooterRightMotor (ID 24 on CANBusId[id=*])", "HopperRoller (ID 33 on CANBusId[id=*])", "ShooterMiddleMotor (ID 23 on CANBusId[id=*])", "IntakeDeployAbsoluteEncoderReady (ID 58 on CANBusId[id=*])" ],
+  "disabled" : [ "ClimberMotorLeft", "ClimberMotorRight", "ClimberSensor", "DriveSubsystem/FrontLeftDrive/Drive", "DriveSubsystem/FrontLeftDrive/Steering", "DriveSubsystem/FrontLeftDrive/SteeringEncoder", "DriveSubsystem/FrontRightDrive/Drive", "DriveSubsystem/FrontRightDrive/Steering", "DriveSubsystem/FrontRightDrive/SteeringEncoder", "DriveSubsystem/RearLeftDrive/Drive", "DriveSubsystem/RearLeftDrive/Steering", "DriveSubsystem/RearLeftDrive/SteeringEncoder", "DriveSubsystem/RearRightDrive/Drive", "DriveSubsystem/RearRightDrive/Steering", "DriveSubsystem/RearRightDrive/SteeringEncoder" ]
+}
