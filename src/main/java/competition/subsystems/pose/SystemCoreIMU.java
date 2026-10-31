@@ -1,4 +1,4 @@
-package competition.subsystems.pose.imu;
+package competition.subsystems.pose;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 

@@ -6,7 +6,6 @@ import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import competition.subsystems.pose.imu.XbotIMU;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.vision.AprilTagVisionSubsystemExtended;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
