@@ -5,9 +5,12 @@ How the system works once all phases are done. Anything not built yet is marked
 `plan_electrical_web.md`.
 
 Live site: https://team488.github.io/electrical-contract-web/
-Code: `Team488/electrical-contract-web` (web tool) and this repo (Java contract and
-2026 exporter). From 2027 on, the exporter and `@ReadyWhen` live in SeriouslyCommonLib,
-and each season repo gets its contract list and workflow from FRCRobotTemplate (§10.1).
+Code: `Team488/electrical-contract-web` (web tool), plus the Java side:
+- **2026:** this repo holds the contract, the exporter and the snapshot workflow.
+- **2027 on:** the exporter and `@ReadyWhen` move to SeriouslyCommonLib. Each season
+  repo gets its robot list and workflow from FRCRobotTemplate.
+
+§13 has what changed and where each piece lives.
 
 ## 1. Purpose
 
@@ -26,11 +29,12 @@ roboRIO (2026 robot) and SystemCore, the controller FRC adopts for the 2027 seas
 ## 2. Architecture
 
 ```
-TeamXbot2026 (Java contract)
+Season robot repo (TeamXbot2026 now; the 2027 repo, made from FRCRobotTemplate, next)
    │  merge to main → GitHub Action "Electrical snapshots" runs the exporter for every
    │  robot and publishes JSON to the electrical-snapshots branch
+   │  (2027 on: the exporter itself comes from SeriouslyCommonLib, §13)
    ▼
-raw.githubusercontent.com/Team488/TeamXbot2026/electrical-snapshots/<branch>/
+raw.githubusercontent.com/Team488/<season repo>/electrical-snapshots/<branch>/
    │  read by the API on page load (at most every 2 min), imported when the commit is new
    ▼
 API: AWS Lambda behind a Function URL  ◄──────►  DynamoDB (one table)
@@ -63,7 +67,9 @@ Browser page: GitHub Pages, served from web/ in electrical-contract-web
 - **How Java reaches the web: automatically.** On every merge to `main` that touches
   the contracts or the exporter, the GitHub Action **Electrical snapshots**
   (`.github/workflows/electrical-snapshots.yml`) does the following:
-  1. Runs `electricalReport --contract X --json` for each robot.
+  1. Runs the exporter for each robot. In 2026 that's one
+     `electricalReport --contract X --json` per robot. From 2027 it's a single
+     `electricalReport --args="--all -d out"` (§13).
   2. Commits the files to the `electrical-snapshots` branch, under a folder named
      after the source branch: `index.json` plus one `<Contract>.json` per robot.
 
@@ -91,8 +97,9 @@ history and checks. A **robot picker** in the page header switches between them,
 the browser remembers the choice.
 
 - **Readiness.** A contract passes the `Hardware` mechanisms its robot has
-  (`readinessSet`). Contract getters are tagged `@ReadyWhen(Hardware.X)`, and the
-  exporter leaves out devices whose mechanism isn't ready. The swerve drive follows
+  (`readinessSet`). Contract getters are tagged with the mechanism they belong to, and
+  the exporter leaves out devices whose mechanism isn't ready. In 2026 the tag is
+  `@ReadyWhen(Hardware.X)`; from 2027 it's `@ReadyWhen("X")`, from the library (§13). The swerve drive follows
   `isDriveReady()`, and the CANcoders follow `areCanCodersReady()`. Left-out devices
   show in a **Not on this robot** list (CAN tab, report).
 - **Shared definitions.** The exporter records which class defines each device
@@ -190,8 +197,8 @@ often have no internet. **Download .txt** gives the same text.
 2. **Register the contract with the exporter.** `CONTRACTS` in
    `electrical/report/Main.java` maps each `ContractToUse` name to its class and a
    display name. Use the same names as the switch in `competition.Robot`. A new
-   season's contract is one new line there. (2027 on: the same file comes from
-   FRCRobotTemplate and calls the library's `ElectricalReport.run`; §10.1.)
+   season's contract is one new line there. From 2027 the file comes from
+   FRCRobotTemplate and is only that list plus a call to the library (§13.3).
 3. **Import the first snapshot** (§12.3). On a robot's first import, the importer:
    1. Creates a device for every code device: CAN devices keyed `can:<bus>:<id>`, DIO
       and PWM devices keyed `dio:<ch>` and `pwm:<ch>`. Each motor's power source starts
@@ -326,8 +333,8 @@ digital-input pull direction.
 
 **Exporter and contract:**
 - The 2027 contract is written against the 2027 SeriouslyCommonLib and WPILib, where
-  packages move to `org.wpilib`. The exporter has been ported and moved into the
-  library (§10.1).
+  packages move to `org.wpilib`. The exporter has been ported to them and moved into
+  the library (§13).
 - The exporter stops guessing I/O types from names. Today it treats method names with
   "servo"/"pwm", device names ending in "DIO", or devices powered from the RIO as I/O
   devices.
@@ -335,32 +342,6 @@ digital-input pull direction.
   That's a shared-library change to agree with the library's maintainers.
 - `busName()` uses the bus's own name instead of only `Canivore` and `rio`. (Done in
   the library exporter: buses come from the devices, `can_s0`–`can_s4` and Canivore.)
-
-### 10.1 Where the exporter lives from 2027
-
-So the 2027 repo starts with everything when it's created from the template:
-
-| Piece | Home | Status |
-| --- | --- | --- |
-| `@ReadyWhen("Name")` (string name) and `XElectricalReportContract` (`isReady`, `getHardwareNames`, CAN order, extra PDH loads, power branches) | SeriouslyCommonLib | PR #692 |
-| Exporter `xbot.common.electrical.report.ElectricalReport` (text report, JSON, `--all -d DIR` writes every robot plus `index.json`) | SeriouslyCommonLib | PR #692 |
-| `PDHPort` with PDH00–23 | SeriouslyCommonLib | Done (#653) |
-| `ElectricalContract` implementing the interface, `Hardware` names, robot list `electrical/report/Main.java`, workflow `electrical-snapshots.yml` | FRCRobotTemplate | Draft PR #96 |
-
-- `@ReadyWhen` takes a string because the library can't see each season's `Hardware`
-  enum. `getHardwareNames()` returns the enum's names, so a misspelt name fails the
-  export instead of silently hiding a device.
-- The workflow runs `./gradlew electricalReport --args="--all -d out"`, so it needs no
-  list of robots of its own.
-- **2026 stays as it is.** TeamXbot2026 keeps its own exporter, enum-typed
-  `@ReadyWhen` and a local `PDHPort` copy, because its library build (20260214.33)
-  predates these changes.
-- **Order to land it:** merge and release #692, then bump `SeriouslyCommonLibVersion`
-  in the template and take #96 out of draft. The template's `main` first needs fixing
-  for SeriouslyCommonLib #688 (`CANBusId.RIO` and a `DeviceInfo` constructor were
-  removed), or the bump won't compile.
-- Once the 2027 repo exists, point `snapshotSource` at its `electrical-snapshots`
-  folder (§12.3) and add its robot to the web tool.
 
 **Known carry-over issue:** the 2026 hood servos (PWM 7 and 9) can't move to
 SystemCore as they are. Servos aren't supported, and SmartIO has only ports 0–5. That's
@@ -382,9 +363,10 @@ a hardware choice for Electrical before the 2027 contract is written.
 | SystemCore I/O model: `smartio` kind with mode, SmartIO tab, CAN-FD bus names (§10) | Programming | 2027 prep | |
 | SystemCore checks and report layout: ports 0–5, modes, 3.3 V rail and USB current (§10) | Programming | 2027 prep | |
 | Current-draw field per device | Programming | 2027 prep | Electrical fills in the values |
-| Explicit port type and mode in SeriouslyCommonLib `DeviceInfo` (§10) | Programming | 2027 prep | Agree with the library maintainers. Exporter port to 2027 libraries is done (SeriouslyCommonLib #692) |
-| Land the exporter move: release SeriouslyCommonLib #692, fix template `main` for #688, bump the template's library version, merge FRCRobotTemplate #96 (§10.1) | Programming | 2027 prep | |
-| Point `snapshotSource` at the 2027 repo once it's created from the template (§10.1) | Programming | 2027 prep | |
+| Explicit port type and mode in SeriouslyCommonLib `DeviceInfo` (§10) | Programming | 2027 prep | Agree with the library maintainers. Porting the exporter to the 2027 libraries is done (SeriouslyCommonLib #692) |
+| Land the exporter move, in order (§13.5): merge and release SeriouslyCommonLib #692; fix FRCRobotTemplate `main` for SeriouslyCommonLib #688; bump the template's library version; merge FRCRobotTemplate #96 | Programming | 2027 prep | |
+| Settle 2027 contract names so they don't clash with 2026 robots on the web (§13.6) | Programming | 2027 prep | Unique names, or key robots by repo as well |
+| Create the 2027 repo from the template; tag its contract getters with `@ReadyWhen`; point `snapshotSource` at its folder (§13.6) | Programming | 2027 prep | |
 | Replace the hood servos, which have no SystemCore support (§10) | Electrical | 2027 prep | Programming updates the 2027 contract to match |
 | Check the SystemCore profile's port lists, connectors and pull direction against the final 2027 docs | Electrical | 2027 prep | Specs so far are from alpha hardware |
 | "Verified on robot" checkbox per device, with a check for unverified devices (§3.1) | Electrical | Later | Programming builds it; Electrical owns the data |
@@ -449,6 +431,9 @@ Merge it to `main`. That's all:
 Without `--json`, `./gradlew electricalReport [--args="--contract NAME"]` still writes
 `electrical-report.txt`, now including a "Not on this robot" section.
 
+From 2027 the same commands work, and `--args="--all -d out"` writes every robot at
+once, as the workflow does (§13.3). Building needs JDK 25.
+
 ### 12.4 Programmers: change and deploy the web tool
 
 Work in `electrical-contract-web`.
@@ -468,7 +453,9 @@ Work in `electrical-contract-web`.
 
 ### 12.5 Programmers: local development (no AWS)
 
-Needs Node 22+, Python 3 and Java 17+ (the WPILib JDK is found automatically).
+Needs Node 22+, Python 3 and Java 17+ (the WPILib JDK is found automatically). The
+2027 repos (SeriouslyCommonLib `main`, FRCRobotTemplate) need JDK 25
+(`winget install EclipseAdoptium.Temurin.25.JDK`).
 
 ```powershell
 cd electrical-contract-web\api; npm install; cd ..
@@ -481,3 +468,149 @@ cd electrical-contract-web\api; npm install; cd ..
   Firewall must allow ports 8000 and 8787).
 - Tests: `cd api; npm test` (API, against an in-memory DynamoDB Local) and
   `cd infra; npm test` (CDK template).
+
+## 13. Java code organization: 2026 and from 2027
+
+The Java side of the tool reads a robot's electrical contract and turns it into a text
+report and JSON snapshots. In 2026 it was built inside TeamXbot2026. For 2027 it's
+split so that every new season repo gets it without copying code:
+
+- **SeriouslyCommonLib** holds what doesn't change from season to season: the
+  `@ReadyWhen` tag, the report interface and the exporter.
+- **FRCRobotTemplate** holds what each season repo owns: the robot list and the
+  workflow. A new season repo made from the template has the whole pipeline on day one.
+
+### 13.1 What changed
+
+| Piece | 2026 (TeamXbot2026) | From 2027 |
+| --- | --- | --- |
+| Readiness tag | `@ReadyWhen(Hardware.X)`, enum-typed, in `competition.electrical_contract` | `@ReadyWhen("X")`, a string, in SeriouslyCommonLib `xbot.common.injection.electrical_contract` |
+| Readiness check | Exporter calls `isReady(Hardware)` directly | Contract implements `XElectricalReportContract.isReady(String)` and `getHardwareNames()` |
+| Report-only wiring lists (CAN order, extra PDH loads, power branches) | Methods on `ElectricalContract`; `CanBusOrderEntry` record nested in `Contract2026` | Default methods and the `CanBusOrderEntry` record on `XElectricalReportContract`. A contract overrides only what it has |
+| Exporter | `src/main/java/electrical/report/Main.java`, about 1,000 lines, with the robot list inside | `xbot.common.electrical.report.ElectricalReport` in the library. The season repo's `Main.java` is about 40 lines, mostly comments: the robot list and `ElectricalReport.run(args, CONTRACTS)` |
+| CAN bus names | Hard-coded: `Canivore` and `rio` | Taken from each device's `CANBusId`: `can_s0`–`can_s4` (SystemCore) and `Canivore` |
+| Writing every robot | Workflow loops over a list of robots, then builds `index.json` with Python | `--all -d DIR` writes every robot plus `index.json` |
+| `PDHPort` with PDH00–23 | Local copy in this repo (the 2026 library build stops at PDH19) | In the library since SeriouslyCommonLib #653; no copy needed |
+| Workflow | `.github/workflows/electrical-snapshots.yml` here, Windows runner, also runs on `ElectricalWeb` | Same file in FRCRobotTemplate, Ubuntu runner, JDK 25, `main` only |
+| Tests | None | 8 unit tests in the library (`ElectricalReportTest`) |
+
+**JSON output is unchanged.** The web API imports 2026 and 2027 snapshots the same
+way. The template's output was checked against the API's test fixtures.
+
+**2026 doesn't change.** TeamXbot2026 keeps its own exporter, enum `@ReadyWhen` and
+`PDHPort` copy, because its library build (20260214.33) predates all of this. The
+`PDHPort` copy has a comment saying so.
+
+### 13.2 SeriouslyCommonLib (PR #692)
+
+- **`xbot.common.injection.electrical_contract.ReadyWhen`:** annotation on a
+  contract getter, `@ReadyWhen("Shooter")`. It's kept at run time so the exporter can
+  read it. The exporter also finds it on the abstract getter in `ElectricalContract`,
+  so one tag there covers every contract's override.
+- **`xbot.common.injection.electrical_contract.XElectricalReportContract`:** the
+  interface the exporter reads. All its methods have defaults, so a contract only
+  overrides what it uses:
+
+  | Method | Default | Purpose |
+  | --- | --- | --- |
+  | `isReady(String name)` | `true` | Is that mechanism on this robot? |
+  | `getHardwareNames()` | `null` (no check) | All valid names. A `@ReadyWhen` name not in this set stops the export with an error, so a typo can't silently hide a device |
+  | `getCanBusConnectionOrder()` | empty | `List<CanBusOrderEntry(busId, canId, deviceName, busPosition)>`: physical chain order |
+  | `getAdditionalPDHConnections()` | empty | `Map<PDHPort, List<String>>`: loads on PDH ports that aren't in the code |
+  | `getAdditionalPowerBranches()` | empty | `Map<String, List<String>>`: devices fed from a converter |
+
+- **`xbot.common.electrical.report.ElectricalReport`:** the exporter.
+  - `RobotContract(String robotName, Supplier<? extends XElectricalReportContract> create)`
+    is one robot.
+  - `run(String[] args, Map<String, RobotContract> contracts)` is the command line.
+    Map keys are the `ContractToUse` names, and the first entry is the default.
+  - `writeAll(Path dir, Map<String, RobotContract> contracts)` writes every robot.
+  - How it finds devices:
+    - It calls every no-argument getter that returns `CANMotorControllerInfo`,
+      `DeviceInfo` and similar types.
+    - For a swerve contract (`XSwerveDriveElectricalContract`), it also calls the
+      per-module getters.
+    - Getters whose `@ReadyWhen` mechanism isn't ready go into the "Not on this robot"
+      list.
+  - For each device it records the class that defines it (`definedIn`). It uses the
+    report-only wiring lists only when the robot's own class declares them.
+  - It writes its own JSON, so the library gets no new dependency.
+  - Plain `DeviceInfo` devices are still sorted into DIO and PWM by naming
+    convention. The fix is the explicit port type in §10, marked `TODO(SystemCore)`
+    in the code.
+- **Tests (`ElectricalReportTest`):**
+  - leaving out devices that aren't ready
+  - rejecting a misspelled name
+  - `definedIn`
+  - wiring lists taken only from the robot's own class
+  - sorting DIO and PWM devices
+  - JSON and text output
+  - `--all` with `index.json`
+  - JSON escaping
+
+### 13.3 FRCRobotTemplate (draft PR #96)
+
+| File | Change |
+| --- | --- |
+| `competition/electrical_contract/ElectricalContract.java` | Implements `XElectricalReportContract`. `isReady(String)` and `getHardwareNames()` map to the `Hardware` enum. The class comment shows the `@ReadyWhen` pattern |
+| `competition/electrical_contract/Hardware.java` | Comment: `@ReadyWhen` names must match these constants. The enum starts empty; each season adds its mechanisms |
+| `competition/electrical_contract/Contract2026.java` | Uses the library's `CanBusOrderEntry`; its nested copy is removed |
+| `electrical/report/Main.java` (new) | `CONTRACTS`: `Competition`→`Contract2026`, `2025`, `2023`, `Robox`, matching the `ContractToUse` switch in `competition.Robot`. `main` calls `ElectricalReport.run` |
+| `.github/workflows/electrical-snapshots.yml` (new) | Runs on a push to `main` that touches the contracts, the exporter, `build.gradle` or `vendordeps`, or by hand (`workflow_dispatch`). Runs `./gradlew electricalReport --args="--all -d out"` and commits `out/` to the `electrical-snapshots` branch under `<branch>/`. Uses only the built-in `GITHUB_TOKEN`; no secrets |
+| `README.md` | "Electrical report and web tool" section |
+
+`build.gradle` already had the `electricalReport` task, so it doesn't change.
+
+Commands, from a template-based repo:
+
+```
+./gradlew electricalReport                                        text report, first robot
+./gradlew electricalReport --args="--contract 2025"               text report, another robot
+./gradlew electricalReport --args="--contract 2025 --json -f x.json"
+./gradlew electricalReport --args="--all -d out"                  every robot as JSON + index.json
+```
+
+### 13.4 How it was checked
+
+Checked on 2026-11-03, with JDK 25.
+- **SeriouslyCommonLib `electrical-report`:** `./gradlew build` passes, including all
+  tests and checkstyle.
+- **FRCRobotTemplate `electrical-report`:** built with `-DuseLocalCommonLib=true`
+  against the library at #684 (the template's pinned 20261010.5) plus #692's files.
+  - `./gradlew build` passes.
+  - `--all` wrote 4 robots plus `index.json`: Competition with 39 CAN devices, 2023
+    with 12, Robox with 14, and 2025 with 0, because `Contract2025` turns everything
+    off (§11).
+
+### 13.5 Landing order
+
+1. **Merge SeriouslyCommonLib #692 and publish a release.**
+2. **Fix FRCRobotTemplate `main` for SeriouslyCommonLib #688.** #688 removed
+   `CANBusId.RIO` and the `DeviceInfo(name, id, inverted, simScaling)` constructor.
+   The template's `main` already fails to compile against the library's `main`, so this
+   fix is needed whatever happens to #96.
+3. **Bump `SeriouslyCommonLibVersion` in the template** (currently `20261010.5`), and
+   take #96 out of draft. CI then compiles it, and it can merge.
+
+### 13.6 Starting the 2027 season repo
+
+1. Create the repo from FRCRobotTemplate after step 3 above.
+2. Add the season's mechanisms to `Hardware`, and tag each contract getter with
+   `@ReadyWhen("<Mechanism>")`. Untagged getters are always reported.
+3. Keep `CONTRACTS` in `electrical/report/Main.java` in step with the `ContractToUse`
+   switch.
+4. Merge to `main`; the workflow publishes the first snapshots.
+5. In `electrical-contract-web/infra/cdk.json`, set `snapshotSource` to
+   `https://raw.githubusercontent.com/Team488/<2027 repo>/electrical-snapshots/main`,
+   then run `cdk deploy`.
+   - The 2027 robots appear on the next page load. Their contract names come from that
+     repo's `CONTRACTS`.
+   - Until profiles exist (§10), every robot uses the roboRIO port layout.
+
+**Name clash to settle first (open, §11).** The web finds a robot by its contract name
+alone. If the 2027 repo also calls its main contract `Competition`, its snapshot lands
+on the 2026 Competition robot and replaces that robot's code devices. Do one of these
+before step 5:
+- Give the 2027 contracts names the 2026 robots don't use, for example `2027`, and
+  `2026` for the 2026 robot run on 2027 code.
+- Or key web robots by season repo and contract name. That's an API change.
