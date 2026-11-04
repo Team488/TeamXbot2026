@@ -4,6 +4,10 @@ package xbot.common.injection.electrical_contract;
  * Represents the available ports on a Power Distribution Hub (PDH).
  * REV PDH has 20 ports (0-19), CTRE PDH has 24 ports (0-23).
  * Extended here to support all 24 ports of the CTRE PDH.
+ *
+ * Local copy for the 2026 season only: it shadows SeriouslyCommonLib's PDHPort, because the 2026
+ * library build this repo uses (20260214.33) stops at PDH19. SeriouslyCommonLib main has all 24
+ * ports since #653 (2027 line), so new season repos don't need this file.
  */
 public enum PDHPort {
     PDH00(0),
