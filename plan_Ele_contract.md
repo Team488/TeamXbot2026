@@ -5,7 +5,9 @@ How the system works once all phases are done. Anything not built yet is marked
 `plan_electrical_web.md`.
 
 Live site: https://team488.github.io/electrical-contract-web/
-Code: `Team488/electrical-contract-web` (web tool) and this repo (Java contract and exporter).
+Code: `Team488/electrical-contract-web` (web tool) and this repo (Java contract and
+2026 exporter). From 2027 on, the exporter and `@ReadyWhen` live in SeriouslyCommonLib,
+and each season repo gets its contract list and workflow from FRCRobotTemplate (§10.1).
 
 ## 1. Purpose
 
@@ -188,7 +190,8 @@ often have no internet. **Download .txt** gives the same text.
 2. **Register the contract with the exporter.** `CONTRACTS` in
    `electrical/report/Main.java` maps each `ContractToUse` name to its class and a
    display name. Use the same names as the switch in `competition.Robot`. A new
-   season's contract is one new line there.
+   season's contract is one new line there. (2027 on: the same file comes from
+   FRCRobotTemplate and calls the library's `ElectricalReport.run`; §10.1.)
 3. **Import the first snapshot** (§12.3). On a robot's first import, the importer:
    1. Creates a device for every code device: CAN devices keyed `can:<bus>:<id>`, DIO
       and PWM devices keyed `dio:<ch>` and `pwm:<ch>`. Each motor's power source starts
@@ -323,13 +326,41 @@ digital-input pull direction.
 
 **Exporter and contract:**
 - The 2027 contract is written against the 2027 SeriouslyCommonLib and WPILib, where
-  packages move to `org.wpilib`. The exporter is ported with it.
+  packages move to `org.wpilib`. The exporter has been ported and moved into the
+  library (§10.1).
 - The exporter stops guessing I/O types from names. Today it treats method names with
   "servo"/"pwm", device names ending in "DIO", or devices powered from the RIO as I/O
   devices.
 - Instead, SeriouslyCommonLib's `DeviceInfo` gets an explicit **port type and mode**.
   That's a shared-library change to agree with the library's maintainers.
-- `busName()` uses the bus's own name instead of only `Canivore` and `rio`.
+- `busName()` uses the bus's own name instead of only `Canivore` and `rio`. (Done in
+  the library exporter: buses come from the devices, `can_s0`–`can_s4` and Canivore.)
+
+### 10.1 Where the exporter lives from 2027
+
+So the 2027 repo starts with everything when it's created from the template:
+
+| Piece | Home | Status |
+| --- | --- | --- |
+| `@ReadyWhen("Name")` (string name) and `XElectricalReportContract` (`isReady`, `getHardwareNames`, CAN order, extra PDH loads, power branches) | SeriouslyCommonLib | PR #692 |
+| Exporter `xbot.common.electrical.report.ElectricalReport` (text report, JSON, `--all -d DIR` writes every robot plus `index.json`) | SeriouslyCommonLib | PR #692 |
+| `PDHPort` with PDH00–23 | SeriouslyCommonLib | Done (#653) |
+| `ElectricalContract` implementing the interface, `Hardware` names, robot list `electrical/report/Main.java`, workflow `electrical-snapshots.yml` | FRCRobotTemplate | Draft PR #96 |
+
+- `@ReadyWhen` takes a string because the library can't see each season's `Hardware`
+  enum. `getHardwareNames()` returns the enum's names, so a misspelt name fails the
+  export instead of silently hiding a device.
+- The workflow runs `./gradlew electricalReport --args="--all -d out"`, so it needs no
+  list of robots of its own.
+- **2026 stays as it is.** TeamXbot2026 keeps its own exporter, enum-typed
+  `@ReadyWhen` and a local `PDHPort` copy, because its library build (20260214.33)
+  predates these changes.
+- **Order to land it:** merge and release #692, then bump `SeriouslyCommonLibVersion`
+  in the template and take #96 out of draft. The template's `main` first needs fixing
+  for SeriouslyCommonLib #688 (`CANBusId.RIO` and a `DeviceInfo` constructor were
+  removed), or the bump won't compile.
+- Once the 2027 repo exists, point `snapshotSource` at its `electrical-snapshots`
+  folder (§12.3) and add its robot to the web tool.
 
 **Known carry-over issue:** the 2026 hood servos (PWM 7 and 9) can't move to
 SystemCore as they are. Servos aren't supported, and SmartIO has only ports 0–5. That's
@@ -351,7 +382,9 @@ a hardware choice for Electrical before the 2027 contract is written.
 | SystemCore I/O model: `smartio` kind with mode, SmartIO tab, CAN-FD bus names (§10) | Programming | 2027 prep | |
 | SystemCore checks and report layout: ports 0–5, modes, 3.3 V rail and USB current (§10) | Programming | 2027 prep | |
 | Current-draw field per device | Programming | 2027 prep | Electrical fills in the values |
-| Explicit port type and mode in SeriouslyCommonLib `DeviceInfo`; port the exporter to the 2027 libraries (§10) | Programming | 2027 prep | Agree with the library maintainers |
+| Explicit port type and mode in SeriouslyCommonLib `DeviceInfo` (§10) | Programming | 2027 prep | Agree with the library maintainers. Exporter port to 2027 libraries is done (SeriouslyCommonLib #692) |
+| Land the exporter move: release SeriouslyCommonLib #692, fix template `main` for #688, bump the template's library version, merge FRCRobotTemplate #96 (§10.1) | Programming | 2027 prep | |
+| Point `snapshotSource` at the 2027 repo once it's created from the template (§10.1) | Programming | 2027 prep | |
 | Replace the hood servos, which have no SystemCore support (§10) | Electrical | 2027 prep | Programming updates the 2027 contract to match |
 | Check the SystemCore profile's port lists, connectors and pull direction against the final 2027 docs | Electrical | 2027 prep | Specs so far are from alpha hardware |
 | "Verified on robot" checkbox per device, with a check for unverified devices (§3.1) | Electrical | Later | Programming builds it; Electrical owns the data |
