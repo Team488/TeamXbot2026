@@ -107,6 +107,8 @@ chain, proposals, history and checks.
   don't reach the other. A robot from a repo that isn't the newest is tagged **older
   repository**. Edit the copy whose code is on the robot.
 - Robots created before repos were tracked belong to `Team488/TeamXbot2026`.
+- **Repositories on the site today:** TeamXbot2026 (updated automatically) and
+  TeamXbot2025 (a one-off, frozen import; §13.7).
 
 - **Readiness.** A contract passes the `Hardware` mechanisms its robot has
   (`readinessSet`). Contract getters are tagged with the mechanism they belong to, and
@@ -392,6 +394,7 @@ a hardware choice for Electrical before the 2027 contract is written.
 | `Contract2023` gives its steering motors the drive motors' names (`…/Drive` twice per corner) | Programming | Open | Same bug `main` already fixed in `Contract2026` |
 | `Contract2025` turns off the drive and every mechanism, so the 2025 robot shows no code devices | Programming | Open | Check whether that's intended before running 2026 code on it |
 | Review each older robot's seeded wiring, especially the VRM layout inherited from `GeneralContract` (§3.1) | Electrical | Open | |
+| TeamXbot2025's `Contract2024` and `Contract2023` inherit the 2025 elevator, coral and algae devices as ready, so its 2023 and 2024 robots list them (§13.7) | Programming | Open | Only matters if 2025 code is run on those robots |
 
 ## 12. How to run it
 
@@ -627,3 +630,50 @@ Checked on 2026-11-03, with JDK 25.
      reviews it (§8.1), or copies it over from the older repo's copy of the same
      robot.
    - Until profiles exist (§10), every robot uses the roboRIO port layout.
+
+### 13.7 Older season repos: one-off import (TeamXbot2025)
+
+Repos from before 2026 have no exporter or snapshot workflow, so they aren't pulled
+automatically. TeamXbot2025 was imported once, on 2026-11-04, so last season's robots
+can be viewed and compared. It shows under **Repository → TeamXbot2025**:
+
+| Robot (ContractToUse) | Contract | CAN | DIO | Not on this robot |
+| --- | --- | --- | --- | --- |
+| 2025 Competition (`Competition`) | `Contract2025` | 18 | 7 | 1 |
+| 2024 Robot (`2024`) | `Contract2024` | 18 | 7 | 1 |
+| 2023 Robot (`2023`) | `Contract2023` | 18 | 7 | 1 |
+| Robox (`Robox`) | `RoboxContract` | 3 | 6 | 17 |
+
+- **Source:** TeamXbot2025 `main` at `05ea658` (2026-01-15). The import is **frozen**:
+  it changes only if someone reruns it. That repo is no longer being changed.
+- **No power data.** The 2025 SeriouslyCommonLib has no `PDHPort` or `PowerSource`, so
+  the snapshots carry only CAN devices (bus, ID, type) and DIO channels. Power ports
+  start empty, and there's no CAN chain order. Electrical fills them in on the web.
+- **Readiness** comes from each getter's `isXReady()` method; the 2025 code has no
+  `@ReadyWhen`. The swerve drive follows `isDriveReady()`, and the CANcoders follow
+  `areCanCodersReady()`. Getters with no readiness method (lights, Pigeon) are always
+  included.
+- **Inherited mechanisms (open, §11).** In TeamXbot2025, `Contract2024` extends
+  `Contract2025`, and `Contract2023` extends `Contract2024`; both override only the
+  drive. So the 2024 and 2023 robots inherit the 2025 elevator, coral and algae devices
+  as ready, and the web lists them. That's what the 2025 code says; it isn't an export
+  error. Their drive, steering and CANcoder IDs do differ per robot.
+- **How it was done.** Nothing was committed to TeamXbot2025.
+  - A separate worktree at `C:\Users\tjbla\Code\Team488\TeamXbot2025-export`, with the
+    SeriouslyCommonLib submodule checked out.
+  - A small exporter, `src/main/java/electrical/report/Export2025.java`, plus an
+    `export2025` Gradle task. It writes `<ContractToUse>.json` and `index.json` in the
+    web tool's snapshot format.
+  - PathplannerLib changed from 2025.1.1 to 2025.2.7 in that worktree only, because
+    2025.1.1 can no longer be downloaded.
+- **To rerun:**
+  ```bash
+  cd TeamXbot2025-export
+  JAVA_HOME=/c/Users/Public/wpilib/2025/jdk ./gradlew export2025 --args="out"
+  # then, with SNAPSHOT_KEY set from SSM (/electrical-contract/SNAPSHOT_KEY):
+  node ../electrical-contract-web/scripts/import-snapshot.mjs out/Competition.json <api> --repo Team488/TeamXbot2025
+  ```
+  Repeat the import for `2024`, `2023` and `Robox`. A rerun updates the code fields and
+  keeps any wiring entered on the web.
+- **Other old repos** (XBot2024, TeamXbot2023) could be imported the same way, with an
+  exporter adapted to their library version.
