@@ -381,7 +381,7 @@ a hardware choice for Electrical before the 2027 contract is written.
 | SystemCore checks and report layout: ports 0–5, modes, 3.3 V rail and USB current (§10) | Programming | 2027 prep | |
 | Current-draw field per device | Programming | 2027 prep | Electrical fills in the values |
 | Explicit port type and mode in SeriouslyCommonLib `DeviceInfo` (§10) | Programming | 2027 prep | Agree with the library maintainers. Porting the exporter to the 2027 libraries is done (SeriouslyCommonLib #692) |
-| Land the exporter move, in order (§13.5): merge and release SeriouslyCommonLib #692; fix FRCRobotTemplate `main` for SeriouslyCommonLib #688; bump the template's library version; merge FRCRobotTemplate #96 | Programming | 2027 prep | |
+| Land the exporter move, in order (§13.5): merge FRCRobotTemplate #97 (fix for SeriouslyCommonLib #688); merge and release SeriouslyCommonLib #692; rebase FRCRobotTemplate #96, bump its library version and merge | Programming | 2027 prep | |
 | Create the 2027 repo from the template; tag its contract getters with `@ReadyWhen`; add its folder to `snapshotSources` (§13.6) | Programming | 2027 prep | |
 | Replace the hood servos, which have no SystemCore support (§10) | Electrical | 2027 prep | Programming updates the 2027 contract to match |
 | Check the SystemCore profile's port lists, connectors and pull direction against the final 2027 docs | Electrical | 2027 prep | Specs so far are from alpha hardware |
@@ -607,12 +607,15 @@ Checked on 2026-11-03, with JDK 25.
 ### 13.5 Landing order
 
 1. **Merge SeriouslyCommonLib #692 and publish a release.**
-2. **Fix FRCRobotTemplate `main` for SeriouslyCommonLib #688.** #688 removed
+2. **Merge FRCRobotTemplate #97: the fix for SeriouslyCommonLib #688.** #688 removed
    `CANBusId.RIO` and the `DeviceInfo(name, id, inverted, simScaling)` constructor.
-   The template's `main` already fails to compile against the library's `main`, so this
-   fix is needed whatever happens to #96.
-3. **Bump `SeriouslyCommonLibVersion` in the template** (currently `20261010.5`), and
-   take #96 out of draft. CI then compiles it, and it can merge.
+   #97 moves the template from `20261010.5` to `20261031.5`, the first release with
+   #688, and changes `Contract2023` to `CANPort.CAN_S0`. It builds against both that
+   release and the library's `main`, and is needed whatever happens to #96. It can
+   merge before step 1.
+3. **Rebase #96 on `main`, set `SeriouslyCommonLibVersion` to the #692 release**, and
+   take it out of draft. CI builds #96 against the library's `main`, so its checks
+   fail until #692 merges there.
 
 ### 13.6 Starting the 2027 season repo
 
