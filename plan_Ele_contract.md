@@ -398,6 +398,9 @@ a hardware choice for Electrical before the 2027 contract is written.
 
 ## 12. How to run it
 
+The one-page summary for mentors and new programmers (where things live, what's
+unfinished, what to check when something breaks) is `electrical-contract-web/HANDOFF.md`.
+
 ### 12.1 Students and mentors: use it
 
 1. Open https://team488.github.io/electrical-contract-web/ on any device.
@@ -465,10 +468,10 @@ Work in `electrical-contract-web`.
   ```powershell
   cd infra; npm install
   aws configure export-credentials --format powershell | Invoke-Expression   # CDK can't read `aws login` credentials directly
-  npx cdk deploy -c reservedConcurrency=5
+  npx cdk deploy
   ```
   
-  Settings are in `infra/cdk.json`. The table is kept even if the stack is destroyed.
+  Settings are in `infra/cdk.json`, including `reservedConcurrency` (5). The table is kept even if the stack is destroyed.
 
 ### 12.5 Programmers: local development (no AWS)
 
@@ -658,22 +661,15 @@ can be viewed and compared. It shows under **Repository → TeamXbot2025**:
   drive. So the 2024 and 2023 robots inherit the 2025 elevator, coral and algae devices
   as ready, and the web lists them. That's what the 2025 code says; it isn't an export
   error. Their drive, steering and CANcoder IDs do differ per robot.
-- **How it was done.** Nothing was committed to TeamXbot2025.
-  - A separate worktree at `C:\Users\tjbla\Code\Team488\TeamXbot2025-export`, with the
-    SeriouslyCommonLib submodule checked out.
-  - A small exporter, `src/main/java/electrical/report/Export2025.java`, plus an
-    `export2025` Gradle task. It writes `<ContractToUse>.json` and `index.json` in the
-    web tool's snapshot format.
-  - PathplannerLib changed from 2025.1.1 to 2025.2.7 in that worktree only, because
-    2025.1.1 can no longer be downloaded.
-- **To rerun:**
-  ```bash
-  cd TeamXbot2025-export
-  JAVA_HOME=/c/Users/Public/wpilib/2025/jdk ./gradlew export2025 --args="out"
-  # then, with SNAPSHOT_KEY set from SSM (/electrical-contract/SNAPSHOT_KEY):
-  node ../electrical-contract-web/scripts/import-snapshot.mjs out/Competition.json <api> --repo Team488/TeamXbot2025
-  ```
-  Repeat the import for `2024`, `2023` and `Robox`. A rerun updates the code fields and
+- **How it was done.** Nothing was committed to TeamXbot2025. The tools are kept in
+  `electrical-contract-web/scripts/legacy/teamxbot2025/`:
+  - `Export2025.java`, a small exporter. It writes `<ContractToUse>.json` and
+    `index.json` in the web tool's snapshot format.
+  - `teamxbot2025.patch`, which adds an `export2025` Gradle task and moves PathplannerLib
+    from 2025.1.1 to 2025.2.7, because 2025.1.1 can no longer be downloaded.
+- **To rerun:** follow that folder's README. It clones TeamXbot2025 into a throwaway
+  checkout, adds the two files, runs the export with the 2025 WPILib JDK, and imports
+  each robot with `--repo Team488/TeamXbot2025`. A rerun updates the code fields and
   keeps any wiring entered on the web.
 - **Other old repos** (XBot2024, TeamXbot2023) could be imported the same way, with an
   exporter adapted to their library version.
