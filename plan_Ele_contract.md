@@ -87,14 +87,26 @@ Browser page: GitHub Pages, served from web/ in electrical-contract-web
   `getAdditionalPDHConnections`, `getAdditionalPowerBranches` and `getVrm1_*`. The PDH
   port field in SeriouslyCommonLib stays, and the robot code ignores it.
 
-### 3.1 One web robot per contract
+### 3.1 One web robot per repository and contract
 
 The season's code runs on earlier physical robots by choosing a different contract at
 startup: the `ContractToUse` preference picks `Competition` (2026), `2025`, `2023` or
-`Robox` in `competition.Robot`. The web tool mirrors that. Each selectable contract is
-its own **web robot**, with its own snapshot, wiring, breakers, CAN chain, proposals,
-history and checks. A **robot picker** in the page header switches between them, and
-the browser remembers the choice.
+`Robox` in `competition.Robot`. The web tool mirrors that. Each selectable contract of
+each season repo is its own **web robot**, with its own snapshot, wiring, breakers, CAN
+chain, proposals, history and checks.
+
+- **Two pickers in the page header.** **Repository** (season repo, newest first), then
+  **Robot** (that repo's contracts). Switching repository keeps the same contract name
+  when the other repo has it. The browser remembers the choice. Each picker shows only
+  when there's more than one choice.
+- **Repo + contract is the key.** `Competition` in TeamXbot2026 and `Competition` in
+  the 2027 repo are two robots, so season repos can reuse contract names freely.
+- **The same physical robot appears once per repo.** For example, the 2025 robot is
+  `2025` in TeamXbot2026 and will be another robot under the 2027 repo. Each copy has
+  its own wiring, seeded from that repo's contract on its first import; edits to one
+  don't reach the other. A robot from a repo that isn't the newest is tagged **older
+  repository**. Edit the copy whose code is on the robot.
+- Robots created before repos were tracked belong to `Team488/TeamXbot2026`.
 
 - **Readiness.** A contract passes the `Hardware` mechanisms its robot has
   (`readinessSet`). Contract getters are tagged with the mechanism they belong to, and
@@ -133,8 +145,9 @@ the browser remembers the choice.
   (mA), used for the shared-rail checks in §10. **(not built:** `smartio`, mode and
   current draw.**)**
 - One query loads everything the page needs.
-- Each robot is its own `ROBOT#<n>` partition, found by its `ContractToUse` name
-  (`contract_name` on the robot record). Devices also store `defined_in`, the Java
+- Each robot is its own `ROBOT#<n>` partition, found by its season repo and
+  `ContractToUse` name (`repo` and `contract_name` on the robot record). Pull state is
+  kept per repo (`SYNC` / `SNAPSHOTS#<repo>`). Devices also store `defined_in`, the Java
   class that defines them.
 
 ## 5. Editing together
@@ -186,9 +199,10 @@ often have no internet. **Download .txt** gives the same text.
 ### 8.1 Starting a robot or season
 
 1. **Create the robot.** It's created automatically by its first snapshot import:
-   `POST /api/contracts/<ContractToUse name>/snapshot` finds the robot with that
-   contract name, or creates the next one.
-   - The robot record holds its name, season, contract name and class, and
+   `POST /api/repos/<owner>/<repo>/contracts/<ContractToUse name>/snapshot` finds the
+   robot with that repo and contract name, or creates the next one. (The older
+   `POST /api/contracts/<name>/snapshot` means TeamXbot2026.)
+   - The robot record holds its repo, name, season, contract name and class, and
      controller profile.
    - It starts with empty power ports for its profile: 24 PDH ports (`PDH00`–`PDH23`)
      and the 8 VRM1 outputs for roboRIO.
@@ -351,7 +365,8 @@ a hardware choice for Electrical before the 2027 contract is written.
 
 | Item | Owner | Phase | Notes |
 | --- | --- | --- | --- |
-| Point `snapshotSource` at the `main` folder once `ElectricalWeb` is merged (§12.3) | Programming | 3 | One line in `infra/cdk.json`, then `cdk deploy` |
+| Point `snapshotSources` at the `main` folder once `ElectricalWeb` is merged (§12.3) | Programming | 3 | One line in `infra/cdk.json`, then `cdk deploy` |
+| Copy a robot's wiring from an older repo's copy when it first appears in a new repo (§3.1) | Programming | 2027 prep | Today the new copy is seeded from that repo's Java, and Electrical re-checks it |
 | GitHub Action that runs `cdk deploy` on push to `electrical-contract-web` `main` | Programming | 3 | The OIDC deploy role `electrical-contract-github-deploy` already exists |
 | Nightly JSON backup of the data, committed to git | Programming | 3 | DynamoDB point-in-time recovery (35 days) already covers restores |
 | Copy wiring and chain position to the new device when a CAN ID or port changes (§9.1) | Programming | 3 | Today Electrical re-enters them by hand |
@@ -365,8 +380,7 @@ a hardware choice for Electrical before the 2027 contract is written.
 | Current-draw field per device | Programming | 2027 prep | Electrical fills in the values |
 | Explicit port type and mode in SeriouslyCommonLib `DeviceInfo` (§10) | Programming | 2027 prep | Agree with the library maintainers. Porting the exporter to the 2027 libraries is done (SeriouslyCommonLib #692) |
 | Land the exporter move, in order (§13.5): merge and release SeriouslyCommonLib #692; fix FRCRobotTemplate `main` for SeriouslyCommonLib #688; bump the template's library version; merge FRCRobotTemplate #96 | Programming | 2027 prep | |
-| Settle 2027 contract names so they don't clash with 2026 robots on the web (§13.6) | Programming | 2027 prep | Unique names, or key robots by repo as well |
-| Create the 2027 repo from the template; tag its contract getters with `@ReadyWhen`; point `snapshotSource` at its folder (§13.6) | Programming | 2027 prep | |
+| Create the 2027 repo from the template; tag its contract getters with `@ReadyWhen`; add its folder to `snapshotSources` (§13.6) | Programming | 2027 prep | |
 | Replace the hood servos, which have no SystemCore support (§10) | Electrical | 2027 prep | Programming updates the 2027 contract to match |
 | Check the SystemCore profile's port lists, connectors and pull direction against the final 2027 docs | Electrical | 2027 prep | Specs so far are from alpha hardware |
 | "Verified on robot" checkbox per device, with a check for unverified devices (§3.1) | Electrical | Later | Programming builds it; Electrical owns the data |
@@ -416,17 +430,19 @@ Merge it to `main`. That's all:
    later.
 3. Check the header: "Java <commit>" should show the merge.
 
-- **Source branch:** the API reads the folder set by `snapshotSource` in
-  `electrical-contract-web/infra/cdk.json`. Until the `ElectricalWeb` branch is
-  merged, that's the `ElectricalWeb` folder. After the merge, change it to `.../main`
-  and run `cdk deploy`.
+- **Source branch:** the API reads the folders listed in `snapshotSources`
+  (comma-separated, one per season repo) in `electrical-contract-web/infra/cdk.json`.
+  Until the `ElectricalWeb` branch is merged, TeamXbot2026's entry is the
+  `ElectricalWeb` folder. After the merge, change it to `.../main` and run
+  `cdk deploy`.
 - **Re-run without a code change:** Actions → Electrical snapshots → **Run workflow**.
   This works once the workflow is on `main`.
 - **Manual import** (local testing, or if GitHub is down):
-  `scripts/sync-contracts.ps1 -Api <url>` with `$env:SNAPSHOT_KEY` set. The key is in
+  `scripts/sync-contracts.ps1 -Api <url> [-Repo owner/name]` with `$env:SNAPSHOT_KEY`
+  set. The key is in
   SSM at `/electrical-contract/SNAPSHOT_KEY`. For one robot, run
   `./gradlew electricalReport --args="--contract 2025 --json -f snapshot.json"`, then
-  `node ..\electrical-contract-web\scripts\import-snapshot.mjs snapshot.json <api>`.
+  `node ..\electrical-contract-web\scripts\import-snapshot.mjs snapshot.json <api> --repo Team488/TeamXbot2026`.
 
 Without `--json`, `./gradlew electricalReport [--args="--contract NAME"]` still writes
 `electrical-report.txt`, now including a "Not on this robot" section.
@@ -600,17 +616,14 @@ Checked on 2026-11-03, with JDK 25.
 3. Keep `CONTRACTS` in `electrical/report/Main.java` in step with the `ContractToUse`
    switch.
 4. Merge to `main`; the workflow publishes the first snapshots.
-5. In `electrical-contract-web/infra/cdk.json`, set `snapshotSource` to
-   `https://raw.githubusercontent.com/Team488/<2027 repo>/electrical-snapshots/main`,
-   then run `cdk deploy`.
-   - The 2027 robots appear on the next page load. Their contract names come from that
-     repo's `CONTRACTS`.
+5. In `electrical-contract-web/infra/cdk.json`, add
+   `https://raw.githubusercontent.com/Team488/<2027 repo>/electrical-snapshots/main` to
+   `snapshotSources` (comma-separated after TeamXbot2026's entry), then run `cdk deploy`.
+   - The 2027 repo appears in the **Repository** picker on the next page load, with
+     its robots under it. Their contract names come from that repo's `CONTRACTS`, and
+     may repeat the 2026 names: robots are keyed by repo and contract (§3.1).
+   - The 2026 repo's robots stay as they are, tagged **older repository**.
+   - Each 2027 robot starts with wiring seeded from the 2027 repo's Java. Electrical
+     reviews it (§8.1), or copies it over from the older repo's copy of the same
+     robot.
    - Until profiles exist (§10), every robot uses the roboRIO port layout.
-
-**Name clash to settle first (open, §11).** The web finds a robot by its contract name
-alone. If the 2027 repo also calls its main contract `Competition`, its snapshot lands
-on the 2026 Competition robot and replaces that robot's code devices. Do one of these
-before step 5:
-- Give the 2027 contracts names the 2026 robots don't use, for example `2027`, and
-  `2026` for the 2026 robot run on 2027 code.
-- Or key web robots by season repo and contract name. That's an API change.
