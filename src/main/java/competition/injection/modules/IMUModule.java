@@ -2,6 +2,7 @@ package competition.injection.modules;
 
 import javax.inject.Singleton;
 
+import competition.subsystems.pose.SystemCoreIMU;
 import dagger.Module;
 import dagger.Provides;
 import competition.subsystems.pose.XbotIMU;
@@ -14,7 +15,7 @@ public class IMUModule {
 
     @Provides
     @Singleton
-    public XbotIMU provideIMU(XGyro.XGyroFactory gyroFactory, ElectricalContract contract) {
-        return new XGyroIMU(gyroFactory.create(contract.getIMUInfo()));
+    public XbotIMU provideIMU(ElectricalContract contract) {
+        return new SystemCoreIMU();
     }
 }
