@@ -61,7 +61,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
                          DriveSubsystem drive,
                          AprilTagVisionSubsystemExtended aprilTagVisionSubsystem,
                          AprilTagFieldLayout aprilTagFieldLayout) {
-        // Can't change imu into XGyro as they send different stuff (placeholder for now so it isn't red)
+        // Apperently BasePoseSubsystem needs to be changed to support imu
         super((XGyro) imu, propManager);
         this.imu = imu;
 
