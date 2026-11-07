@@ -36,7 +36,6 @@ public class Robot extends BaseRobot {
     @Override
     protected void initializeSystems() {
         super.initializeSystems();
-        getInjectorComponent().configurePathPlannerLib();
         getInjectorComponent().subsystemDefaultCommandMap();
         getInjectorComponent().operatorCommandMap();
         getInjectorComponent().swerveDefaultCommandMap();
@@ -52,7 +51,6 @@ public class Robot extends BaseRobot {
         }
 
         oi = getInjectorComponent().operatorInterface();
-        autonomousCommandSelector.setCurrentAutonomousCommand(getInjectorComponent().defaultAutoCommand());
 
         dataFrameRefreshables.add((DriveSubsystem)getInjectorComponent().driveSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().poseSubsystem());
@@ -69,7 +67,6 @@ public class Robot extends BaseRobot {
 
         getInjectorComponent().superstructureMechanismSubsystem();
 
-        CommandScheduler.getInstance().schedule(getInjectorComponent().gamepadRumbleCommand());
     }
 
     protected BaseRobotComponent createDaggerComponent() {

@@ -5,30 +5,21 @@ import competition.electrical_contract.Hardware;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
-import xbot.common.properties.AngularVelocityProperty;
-import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import static edu.wpi.first.units.Units.RPM;
 
 @Singleton
 public class CollectorSubsystem extends BaseSubsystem {
 
     public final ElectricalContract electricalContract;
     public final XCANMotorController collectorMotor;
-    final AngularVelocityProperty intakeVelocity;
-    final AngularVelocityProperty intakeVelocityWhileShooting;
-    final DoubleProperty intakePower;
-    final DoubleProperty ejectPower;
 
     @Inject
     public CollectorSubsystem(ElectricalContract electricalContract,
                               XCANMotorController.XCANMotorControllerFactory motorFactory,
                               PropertyFactory pf) {
-
         pf.setPrefix(this);
         this.electricalContract = electricalContract;
 
@@ -46,55 +37,16 @@ public class CollectorSubsystem extends BaseSubsystem {
             this.collectorMotor = motorFactory.create(
                     electricalContract.getFuelIntakeMotor(),
                     getPrefix(),
-                    "FuelIntakePID", 
+                    "FuelIntakePID",
                     collectorMotorDefaultPIDProperties
             );
             this.registerDataFrameRefreshable(collectorMotor);
         } else {
             this.collectorMotor = null;
         }
-
-        intakeVelocity = pf.createPersistentProperty("FuelIntakeVelocity", RPM.of(5000));
-        intakeVelocityWhileShooting = pf.createPersistentProperty("FuelIntakeVelocityWhileShooting", RPM.of(1000));
-        intakePower = pf.createPersistentProperty("FuelIntakePower", 1);
-        ejectPower = pf.createPersistentProperty("FuelEjectPower", -1);
     }
 
-    public void intakeVelocity() {
-        if (collectorMotor == null) {
-            return;
-        }
-        collectorMotor.setVelocityTarget(intakeVelocity.get());
-    }
-
-    public void intakeVelocityWhileShooting() {
-        if (collectorMotor == null
-        ) {
-            return;
-        }
-        collectorMotor.setVelocityTarget(intakeVelocityWhileShooting.get());
-    }
-
-    public void intakePower() {
-        if (collectorMotor == null) {
-            return;
-        }
-        collectorMotor.setPower(intakePower.get());
-    }
-
-    public void eject() {
-        if (collectorMotor == null) {
-            return;
-        }
-        collectorMotor.setPower(ejectPower.get());
-    }
-
-    public void stop() {
-        if (collectorMotor == null) {
-            return;
-        }
-        collectorMotor.setPower(0);
-    }
+    // TODO: add methods to intake, eject, and stop the collector
 
     @Override
     public void periodic() {

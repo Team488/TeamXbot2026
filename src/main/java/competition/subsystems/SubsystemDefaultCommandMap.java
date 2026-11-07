@@ -3,23 +3,8 @@ package competition.subsystems;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import competition.subsystems.climber.ClimberSubsystem;
-import competition.subsystems.climber.commands.ClimberMaintainerCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
-import competition.subsystems.collector_intake.CollectorSubsystem;
-import competition.subsystems.collector_intake.commands.CollectorStopCommand;
-import competition.subsystems.hood.HoodSubsystem;
-import competition.subsystems.hood.commands.HoodMaintainerCommand;
-import competition.subsystems.hood.commands.HoodToZeroCommand;
-import competition.subsystems.hopper_roller.HopperRollerSubsystem;
-import competition.subsystems.intake_deploy.commands.IntakeDeployMaintainerCommand;
-import competition.subsystems.shooter.ShooterSubsystem;
-import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
-import competition.subsystems.shooter.commands.ShooterStopCommand;
-import competition.subsystems.shooter.commands.ShooterWheelMaintainerCommand;
-import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
-import competition.subsystems.shooter_feeder.commands.ShooterFeederStop;
 
 /**
  * For setting the default commands on subsystems
@@ -35,43 +20,5 @@ public class SubsystemDefaultCommandMap {
         driveSubsystem.setDefaultCommand(command);
     }
 
-    @Inject
-    public void setupCollectorSubsystem(CollectorSubsystem collect, CollectorStopCommand command) {
-        collect.setDefaultCommand(command);
-    }
-
-    @Inject
-    public void setupShooterSubsystem(ShooterSubsystem shooter,
-                                      ShooterWheelMaintainerCommand command,
-                                      ShooterStopCommand stopCommand) {
-        shooter.setDefaultCommand(command);
-        shooter.getSetpointLock().setDefaultCommand(stopCommand);
-    }
-
-    @Inject
-    public void setupClimberSubsystem(ClimberSubsystem climber, ClimberMaintainerCommand command) {
-        climber.setDefaultCommand(command);
-    }
-
-    @Inject
-    public void setupShooterFeederSubsystem(ShooterFeederSubsystem shooterFeeder, ShooterFeederStop command) {
-        shooterFeeder.setDefaultCommand(command);
-    }
-
-    @Inject
-    public void setupIntakeDeploySubsystem(IntakeDeploySubsystem intakeDeploy,
-                                           IntakeDeployMaintainerCommand command) {
-        intakeDeploy.setDefaultCommand(command);
-    }
-
-    @Inject
-    public void setupHoodSubsystem(HoodSubsystem hood, HoodMaintainerCommand command, HoodToZeroCommand hoodToZeroCommand) {
-        hood.setDefaultCommand(command);
-        hood.getSetpointLock().setDefaultCommand(hoodToZeroCommand);
-    }
-
-    @Inject
-    public void setupHopperRollerSubsystem(HopperRollerSubsystem hopperRoller) {
-        hopperRoller.setDefaultCommand(hopperRoller.getStopCommand());
-    }
+    // TODO: set default commands for the other subsystems (shooter, collector, intake deploy, etc.) here
 }

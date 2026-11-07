@@ -2,27 +2,19 @@ package competition.subsystems.shooter_feeder;
 
 import competition.electrical_contract.ElectricalContract;
 import competition.electrical_contract.Hardware;
-import edu.wpi.first.units.measure.Current;
 import xbot.common.command.BaseSubsystem;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
-import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.RPM;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
 public class ShooterFeederSubsystem extends BaseSubsystem {
     public final XCANMotorController shooterFeederMotor;
-
-    public final DoubleProperty shooterFeederMotorPower;
-    public final DoubleProperty firePower;
-    public final DoubleProperty shooterFeederFireVelocity;
-    public final DoubleProperty voltageRampTime;
 
     @Inject
     public ShooterFeederSubsystem(ElectricalContract electricalContract,
@@ -39,25 +31,18 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
                 .withMaxPowerOutput(1.0)
                 .build();
 
-        this.voltageRampTime = pf.createPersistentProperty("VoltageRampTime", 0.1);
-
         if (electricalContract.isReady(Hardware.ShooterFeeder)) {
             this.shooterFeederMotor = motorFactory.create(electricalContract.getShooterFeederMotor(),
                     getPrefix(), "ShooterFeederMotorPID", defaultPIDProperties);
-            this.shooterFeederMotor.setOpenLoopRampRates(
-                    Seconds.of(voltageRampTime.get()),
-                    Seconds.of(voltageRampTime.get()));
-            this.shooterFeederMotor.setClosedLoopRampRates(
-                    Seconds.of(voltageRampTime.get()),
-                    Seconds.of(voltageRampTime.get()));
+            this.shooterFeederMotor.setOpenLoopRampRates(Seconds.of(0.1), Seconds.of(0.1));
+            this.shooterFeederMotor.setClosedLoopRampRates(Seconds.of(0.1), Seconds.of(0.1));
             this.registerDataFrameRefreshable(shooterFeederMotor);
         } else {
             this.shooterFeederMotor = null;
         }
-        this.shooterFeederMotorPower = pf.createPersistentProperty("ShooterFeederMotorPower", 1);
-        this.firePower = pf.createPersistentProperty("firePower", 1);
-        this.shooterFeederFireVelocity = pf.createPersistentProperty("RPMShooterFeederVelocity", 200);
     }
+
+    // TODO: add methods to feed fuel into the shooter (fire), eject, and stop
 
     @Override
     public void periodic() {
@@ -65,30 +50,4 @@ public class ShooterFeederSubsystem extends BaseSubsystem {
             shooterFeederMotor.periodic();
         }
     }
-
-    public void stop() {
-        shooterFeederMotor.setPower(0);
-    }
-
-    public void fire() {
-        shooterFeederMotor.setPower(shooterFeederMotorPower.get());
-    }
-
-    public void eject() {
-        shooterFeederMotor.setPower(-1 * shooterFeederMotorPower.get());
-    }
-
-    public void fireVelocity () {
-        if (shooterFeederMotor != null) {
-            shooterFeederMotor.setVelocityTarget(RPM.of(shooterFeederFireVelocity.get()));
-        }
-    }
-
-    public Current getMotorCurrent() {
-        if (this.shooterFeederMotor != null) {
-            return this.shooterFeederMotor.getCurrent();
-        }
-        return Amps.zero();
-    }
-
 }

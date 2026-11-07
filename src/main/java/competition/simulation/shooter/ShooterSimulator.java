@@ -93,7 +93,8 @@ public class ShooterSimulator {
     }
 
     public boolean isShooting() {
-        return shooterFeederMotor.getPower() > 0;
+        return shooterFeederMotor.getPower() > 0
+                || shooterFeederMotor.getRawTargetVelocity().magnitude() > 0;
     }
 
     public AngularVelocity getShooterVelocity() {
@@ -108,7 +109,7 @@ public class ShooterSimulator {
     public void updateShooterSimAndMotor() {
         // Update the power of the motor based on our current velocity and goal
         MotorInternalPIDHelper.updateInternalPIDWithVelocity(
-                this.middleShooterMotor, pidManager, shooter.getTrimmedTargetValue());
+                this.middleShooterMotor, pidManager, this.middleShooterMotor.getRawTargetVelocity());
 
         // Update the sim with our new power
         if (DriverStation.isEnabled()) {

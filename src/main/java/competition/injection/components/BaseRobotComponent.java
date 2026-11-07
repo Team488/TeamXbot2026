@@ -11,11 +11,6 @@ import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.IntakeDeploySubsystem;
 import competition.subsystems.lights.LightsSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
-import competition.auto.vision.CollectAndShootTwiceCommand;
-import competition.auto.vision.ShootFromHubCommandGroup;
-import competition.auto.vision.ShootFromTrenchCommandGroup;
-import competition.auto.pathplanner.ConfigurePathPlannerLib;
-import competition.general_commands.GamepadRumbleCommand;
 import competition.subsystems.shooter_feeder.ShooterFeederSubsystem;
 import competition.subsystems.voltage_alert.VoltageMonitorSubsystem;
 import xbot.common.injection.components.BaseComponent;
@@ -58,20 +53,14 @@ public abstract class BaseRobotComponent extends BaseComponent {
 
     public abstract ClimberSubsystem climberSubsystem();
 
-    public abstract ShootFromTrenchCommandGroup defaultAutoCommand();
 
     public abstract OperatorInterface operatorInterface();
 
-    public abstract GamepadRumbleCommand gamepadRumbleCommand();
 
     public abstract SuperstructureMechanismSubsystem superstructureMechanismSubsystem();
 
-    public abstract ConfigurePathPlannerLib configurePathPlannerLib();
 
-    public abstract CollectAndShootTwiceCommand collectAndShootTwiceCommand();
 
-    public abstract ShootFromHubCommandGroup shootFromHubCommandGroup();
 
-    public abstract ShootFromTrenchCommandGroup shootFromTrenchCommandGroup();
 
 }

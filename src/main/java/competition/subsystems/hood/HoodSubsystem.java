@@ -1,39 +1,31 @@
 package competition.subsystems.hood;
 
 import competition.electrical_contract.ElectricalContract;
-
 import competition.electrical_contract.Hardware;
 import edu.wpi.first.units.measure.Time;
-import edu.wpi.first.wpilibj2.command.Command;
 import xbot.common.command.BaseSetpointSubsystem;
-import xbot.common.command.SimpleWaitForMaintainerCommand;
 import xbot.common.controls.actuators.TimedAndBoundedServo;
 import xbot.common.controls.actuators.XServo;
-import xbot.common.math.MathUtils;
-import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import java.util.Optional;
-
 import static edu.wpi.first.units.Units.Seconds;
 
+/**
+ * The hood is moved by two servos (left and right) that should always move together.
+ * Servos have no position sensor, so TimedAndBoundedServo estimates the current position
+ * based on how long the servo has been moving. Positions are "normalized" from 0 (retracted) to 1 (extended).
+ */
 @Singleton
 public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
 
-    public static double getMechanismAngle(double servoPosition) {
-        return Math.acos(mechanismAngleMax - servoPosition * (mechanismAngleMax - mechanismAngleMin));
-    }
-
-    public static double getServoPosition(double ballReleaseAngle) {
-        return Math.acos(mechanismAngleMax - ballReleaseAngle / (mechanismAngleMax - mechanismAngleMin));
-    }
-
+    // Angle of the hood (in degrees) at either end of its travel
     public static final double mechanismAngleMax = 75.6;
     public static final double mechanismAngleMin = 41.6;
-    // Constants
+
+    // Servo hardware limits
     public static final double servoMinBound = 0.2;
     public static final double servoMaxBound = 0.65;
     public static final Time servoMinToMaxTime = Seconds.of(3);
@@ -41,15 +33,6 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
     public final TimedAndBoundedServo hoodServoLeft;
     public final TimedAndBoundedServo hoodServoRight;
     public final ElectricalContract electricalContract;
-
-    public final DoubleProperty servoTargetNormalized;
-    public final DoubleProperty extend;
-    public final DoubleProperty retract;
-    public final DoubleProperty readinessTimeoutSeconds;
-
-    public final DoubleProperty minDistanceGoal;
-    public final DoubleProperty medDistanceGoal;
-    public final DoubleProperty maxDistanceGoal;
 
     @Inject
     public HoodSubsystem(XServo.XServoFactory servoFactory,
@@ -82,99 +65,34 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         } else {
             hoodServoRight = null;
         }
-
-        this.servoTargetNormalized = propertyFactory.createPersistentProperty(
-                "ServoTargetPositionNormalized", 0);
-        this.extend = propertyFactory.createPersistentProperty("MaxExtensionGoal", 1.0);
-        this.retract = propertyFactory.createPersistentProperty("MinExtensionGoal", 0.0);
-        this.readinessTimeoutSeconds = propertyFactory.createPersistentProperty("ReadinessTimeoutSeconds", 3.0);
-
-        this.minDistanceGoal = propertyFactory.createPersistentProperty("Hood Min Distance Goal", 0.0);
-        this.medDistanceGoal = propertyFactory.createPersistentProperty("Hood Med Distance Goal", 0.5); //change this later
-        this.maxDistanceGoal = propertyFactory.createPersistentProperty("Hood Max Distance Goal", 1.0); //change this later
-    }
-
-    public void extend() {
-        setTargetValue(getTargetValue());
-    }
-
-    public void retract() {
-        setTargetValue(getTargetValue());
-    }
-
-    public boolean isHoodDown() {
-        return hoodServoLeft.getNormalizedCurrentPosition() <= 0.05;
-    }
-
-    public void runServo() {
-        if (hoodServoLeft != null && hoodServoRight != null) {
-            hoodServoLeft.setNormalizedTargetPosition(servoTargetNormalized.get());
-            hoodServoRight.setNormalizedTargetPosition(servoTargetNormalized.get());
-        }
-    }
-
-    public void servoZero() {
-        servoTargetNormalized.set(0);
-    }
-
-    @Override
-    public void periodic() {
-        if (this.hoodServoLeft != null) {
-            aKitLog.record("LeftServoPosition", hoodServoLeft.getNormalizedCurrentPosition());
-        }
-
-        if (this.hoodServoRight != null) {
-            aKitLog.record("RightServoPosition", hoodServoRight.getNormalizedCurrentPosition());
-        }
-        aKitLog.record("HoodTargetPosition", getTargetValue());
-    }
-
-    public Optional<TimedAndBoundedServo> getHoodServoLeft() {
-        if (hoodServoLeft == null) {
-            return Optional.empty();
-        } else {
-            return Optional.of(hoodServoLeft);
-        }
-    }
-
-    public Optional<TimedAndBoundedServo> getHoodServoRight() {
-        if (hoodServoRight == null) {
-            return Optional.empty();
-        } else {
-            return Optional.of(hoodServoRight);
-        }
     }
 
     @Override
     public Double getCurrentValue() {
-        if(hoodServoLeft == null) { return 0.0; }
-        return hoodServoLeft.getNormalizedCurrentPosition();
+        // TODO: return the current normalized (0 to 1) position of the hood
+        return 0.0;
     }
 
     @Override
     public Double getTargetValue() {
-        double minPosition = retract.get();
-        double maxPosition = extend.get();
-        double targetRatio = servoTargetNormalized.get();
-        return MathUtils.constrainDouble(targetRatio, minPosition, maxPosition);
+        // TODO: return the target normalized (0 to 1) position of the hood
+        return 0.0;
     }
 
     @Override
-    public void setTargetValue(Double targetRatio) {
-        double minPosition = retract.get();
-        double maxPosition = extend.get();
-        targetRatio = MathUtils.constrainDouble(targetRatio, minPosition, maxPosition);
-        servoTargetNormalized.set(targetRatio);
+    public void setTargetValue(Double value) {
+        // TODO: remember this target position in this class for later
     }
 
     @Override
-    public void setPower(Double power) {}
+    public void setPower(Double power) {
+        // Servos don't take power, they take a target position. Nothing to do here.
+    }
 
     @Override
     public boolean isCalibrated() {
-        // Since this subsystem uses servos with no feedback, we can
-        // consider it always calibrated.
-        return true;
+        // TODO: servos have no feedback, do they need calibration?
+        return false;
     }
 
     @Override
@@ -182,7 +100,14 @@ public class HoodSubsystem extends BaseSetpointSubsystem<Double, Double> {
         return Math.abs(target1 - target2) < 0.1;
     }
 
-    public Command getWaitForAtGoalCommand() {
-        return new SimpleWaitForMaintainerCommand(this, readinessTimeoutSeconds::get);
+    @Override
+    public void periodic() {
+        if (this.hoodServoLeft != null) {
+            aKitLog.record("LeftServoPosition", hoodServoLeft.getNormalizedCurrentPosition());
+        }
+        if (this.hoodServoRight != null) {
+            aKitLog.record("RightServoPosition", hoodServoRight.getNormalizedCurrentPosition());
+        }
+        aKitLog.record("HoodTargetPosition", getTargetValue());
     }
 }
