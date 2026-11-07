@@ -67,7 +67,18 @@ repositories {
 
     mavenLocal()
 
-    // Azure Artifacts feed for SeriouslyCommonLib
+    // SeriouslyCommonLib releases on GitHub (https://github.com/Team488/SeriouslyCommonLib/releases).
+    // Gradle downloads the jar straight from the release; no credentials needed.
+    ivy {
+        name = 'SeriouslyCommonLibReleases'
+        url = 'https://github.com/Team488/SeriouslyCommonLib/releases/download/'
+        patternLayout { artifact '[revision]/[module]-[revision](-[classifier]).[ext]' }
+        metadataSources { artifact() }
+        content { includeGroup 'xbot.common' }
+    }
+
+    // Older SeriouslyCommonLib versions (published before the move to GitHub releases).
+    // Can be removed once SeriouslyCommonLibVersion points at a GitHub release.
     maven {
         url "https://pkgs.dev.azure.com/Team488/2ef6eee3-1df0-441a-9af8-5edc5c3cb203/_packaging/2b1ba3b9-5dd7-47c4-ab96-d5c0a1d8af48/maven/v1"
         name "AzureArtifacts"
