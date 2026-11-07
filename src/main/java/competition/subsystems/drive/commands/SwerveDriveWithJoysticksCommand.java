@@ -48,7 +48,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     ) {
         pf.setPrefix(this);
         this.drive = drive;
-        this.xGyro = pose.imu;
+        this.xGyro = (XGyro) pose.getImu();
         this.pose = pose;
         this.oi = oi;
         this.headingModule = headingModuleFactory.create(drive.getRotateToHeadingPid());
