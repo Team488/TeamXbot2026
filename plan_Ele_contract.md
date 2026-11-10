@@ -381,7 +381,6 @@ a hardware choice for Electrical before the 2027 contract is written.
 | SystemCore checks and report layout: ports 0–5, modes, 3.3 V rail and USB current (§10) | Programming | 2027 prep | |
 | Current-draw field per device | Programming | 2027 prep | Electrical fills in the values |
 | Explicit port type and mode in SeriouslyCommonLib `DeviceInfo` (§10) | Programming | 2027 prep | Agree with the library maintainers. Porting the exporter to the 2027 libraries is done (SeriouslyCommonLib #692) |
-| Review and merge FRCRobotTemplate #96, the last step of the exporter move (§13.5; #97 and #692 are merged) | Programming | 2027 prep | |
 | Create the 2027 repo from the template; tag its contract getters with `@ReadyWhen`; add its folder to `snapshotSources` (§13.6) | Programming | 2027 prep | |
 | Replace the hood servos, which have no SystemCore support (§10) | Electrical | 2027 prep | Programming updates the 2027 contract to match |
 | Check the SystemCore profile's port lists, connectors and pull direction against the final 2027 docs | Electrical | 2027 prep | Specs so far are from alpha hardware |
@@ -570,7 +569,7 @@ way. The template's output was checked against the API's test fixtures.
   - `--all` with `index.json`
   - JSON escaping
 
-### 13.3 FRCRobotTemplate (PR #96)
+### 13.3 FRCRobotTemplate (PR #96, merged)
 
 | File | Change |
 | --- | --- |
@@ -616,8 +615,10 @@ Checked on 2026-11-03, with JDK 25.
    which removed `CANBusId.RIO` and the `DeviceInfo(name, id, inverted, simScaling)`
    constructor; `Contract2023` now uses `CANPort.CAN_S0`. The template has since moved
    to library `20261109.020802` (#98) and to fluent builders and Spotless (#95, #99).
-3. **Open:** review and merge FRCRobotTemplate #96. It's rebased on `main` and ready for
-   review, with no version change needed.
+3. **Done:** FRCRobotTemplate #96 is merged (`7602779`, 2026-11-10). Its *Electrical
+   snapshots* workflow ran on the merge and published all 4 robots to the template's
+   `electrical-snapshots` branch (folder `main`). The site doesn't read the template's
+   snapshots; only season repos go in `snapshotSources`.
 
 ### 13.6 Starting the 2027 season repo
 
