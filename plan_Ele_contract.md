@@ -381,7 +381,7 @@ a hardware choice for Electrical before the 2027 contract is written.
 | SystemCore checks and report layout: ports 0–5, modes, 3.3 V rail and USB current (§10) | Programming | 2027 prep | |
 | Current-draw field per device | Programming | 2027 prep | Electrical fills in the values |
 | Explicit port type and mode in SeriouslyCommonLib `DeviceInfo` (§10) | Programming | 2027 prep | Agree with the library maintainers. Porting the exporter to the 2027 libraries is done (SeriouslyCommonLib #692) |
-| Land the exporter move, in order (§13.5): merge FRCRobotTemplate #97 (fix for SeriouslyCommonLib #688); merge and release SeriouslyCommonLib #692; rebase FRCRobotTemplate #96, bump its library version and merge | Programming | 2027 prep | |
+| Review and merge FRCRobotTemplate #96, the last step of the exporter move (§13.5; #97 and #692 are merged) | Programming | 2027 prep | |
 | Create the 2027 repo from the template; tag its contract getters with `@ReadyWhen`; add its folder to `snapshotSources` (§13.6) | Programming | 2027 prep | |
 | Replace the hood servos, which have no SystemCore support (§10) | Electrical | 2027 prep | Programming updates the 2027 contract to match |
 | Check the SystemCore profile's port lists, connectors and pull direction against the final 2027 docs | Electrical | 2027 prep | Specs so far are from alpha hardware |
@@ -523,7 +523,7 @@ way. The template's output was checked against the API's test fixtures.
 `PDHPort` copy, because its library build (20260214.33) predates all of this. The
 `PDHPort` copy has a comment saying so.
 
-### 13.2 SeriouslyCommonLib (PR #692)
+### 13.2 SeriouslyCommonLib (PR #692, merged)
 
 - **`xbot.common.injection.electrical_contract.ReadyWhen`:** annotation on a
   contract getter, `@ReadyWhen("Shooter")`. It's kept at run time so the exporter can
@@ -570,7 +570,7 @@ way. The template's output was checked against the API's test fixtures.
   - `--all` with `index.json`
   - JSON escaping
 
-### 13.3 FRCRobotTemplate (draft PR #96)
+### 13.3 FRCRobotTemplate (PR #96)
 
 | File | Change |
 | --- | --- |
@@ -600,22 +600,24 @@ Checked on 2026-11-03, with JDK 25.
 - **FRCRobotTemplate `electrical-report`:** built with `-DuseLocalCommonLib=true`
   against the library at #684 (the template's pinned 20261010.5) plus #692's files.
   - `./gradlew build` passes.
-  - `--all` wrote 4 robots plus `index.json`: Competition with 39 CAN devices, 2023
-    with 12, Robox with 14, and 2025 with 0, because `Contract2025` turns everything
-    off (§11).
+  - `--all` wrote 4 robots plus `index.json`.
+- **Rechecked on 2026-11-09**, after #96 was rebased on the template's `main`, against
+  the released library `20261109.020802` (which has #692):
+  - `./gradlew build` passes, including tests, checkstyle and `spotlessCheck`.
+  - `--all` writes Competition with 14 CAN devices, 2023 with 12, Robox with 14, and
+    2025 with 0, because `Contract2025` turns everything off (§11). The template's
+    `Contract2026` defines only the swerve drive, Pigeon and CANdle, and all 14 match
+    its CAN order. The 39 recorded on 2026-11-03 was wrong.
 
 ### 13.5 Landing order
 
-1. **Merge SeriouslyCommonLib #692 and publish a release.**
-2. **Merge FRCRobotTemplate #97: the fix for SeriouslyCommonLib #688.** #688 removed
-   `CANBusId.RIO` and the `DeviceInfo(name, id, inverted, simScaling)` constructor.
-   #97 moves the template from `20261010.5` to `20261031.5`, the first release with
-   #688, and changes `Contract2023` to `CANPort.CAN_S0`. It builds against both that
-   release and the library's `main`, and is needed whatever happens to #96. It can
-   merge before step 1.
-3. **Rebase #96 on `main`, set `SeriouslyCommonLibVersion` to the #692 release**, and
-   take it out of draft. CI builds #96 against the library's `main`, so its checks
-   fail until #692 merges there.
+1. **Done:** SeriouslyCommonLib #692 is merged and released as `20261109.020802`.
+2. **Done:** FRCRobotTemplate #97 is merged. It's the fix for SeriouslyCommonLib #688,
+   which removed `CANBusId.RIO` and the `DeviceInfo(name, id, inverted, simScaling)`
+   constructor; `Contract2023` now uses `CANPort.CAN_S0`. The template has since moved
+   to library `20261109.020802` (#98) and to fluent builders and Spotless (#95, #99).
+3. **Open:** review and merge FRCRobotTemplate #96. It's rebased on `main` and ready for
+   review, with no version change needed.
 
 ### 13.6 Starting the 2027 season repo
 
