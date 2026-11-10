@@ -37,26 +37,40 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public abstract Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance);
     public abstract IMUInfo getIMUInfo();
 
+    @ReadyWhen(Hardware.LeftShooter)
     public abstract CANMotorControllerInfo getLeftShooterMotor();
+    @ReadyWhen(Hardware.MiddleShooter)
     public abstract CANMotorControllerInfo getMiddleShooterMotor();
+    @ReadyWhen(Hardware.RightShooter)
     public abstract CANMotorControllerInfo getRightShooterMotor();
 
+    @ReadyWhen(Hardware.HoodServoLeft)
     public abstract DeviceInfo getHoodServoLeft();
+    @ReadyWhen(Hardware.HoodServoRight)
     public abstract DeviceInfo getHoodServoRight();
 
+    @ReadyWhen(Hardware.IntakeDeploy)
     public abstract CANMotorControllerInfo getIntakeDeployMotor();
+    @ReadyWhen(Hardware.IntakeDeployEncoder)
     public abstract DeviceInfo getIntakeDeployAbsoluteEncoder();
 
-    public abstract  CANMotorControllerInfo getClimberMotorLeft();
+    @ReadyWhen(Hardware.ClimberLeft)
+    public abstract CANMotorControllerInfo getClimberMotorLeft();
+    @ReadyWhen(Hardware.ClimberRight)
     public abstract CANMotorControllerInfo getClimberMotorRight();
+    @ReadyWhen(Hardware.ClimberSensor)
     public abstract DeviceInfo getClimberSensor();
 
+    @ReadyWhen(Hardware.ShooterFeeder)
     public abstract CANMotorControllerInfo getShooterFeederMotor();
 
+    @ReadyWhen(Hardware.FuelIntake)
     public abstract CANMotorControllerInfo getFuelIntakeMotor();
 
+    @ReadyWhen(Hardware.Lights)
     public abstract CANLightControllerInfo getLightControllerInfo();
 
+    @ReadyWhen(Hardware.HopperRoller)
     public abstract CANMotorControllerInfo getHopperRollerMotor();
 
     /**

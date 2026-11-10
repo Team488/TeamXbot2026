@@ -1,6 +1,11 @@
 package electrical.report;
 
+import competition.electrical_contract.Contract2023;
+import competition.electrical_contract.Contract2025;
 import competition.electrical_contract.Contract2026;
+import competition.electrical_contract.ElectricalContract;
+import competition.electrical_contract.ReadyWhen;
+import competition.electrical_contract.RoboxContract;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
@@ -8,7 +13,10 @@ import xbot.common.injection.electrical_contract.IMUInfo;
 import xbot.common.injection.electrical_contract.PDHPort;
 import xbot.common.injection.electrical_contract.PowerSource;
 import xbot.common.injection.swerve.SwerveInstance;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.lang.reflect.Method;
+import java.time.Instant;
+import java.util.LinkedHashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Supplier;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -29,29 +38,87 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Electrical Contract Report Generator
- * 
- * HOW TO UPDATE CONTRACT YEAR:
- * ----------------------------
- * To switch to a new year's contract (e.g., from Contract2026 to Contract2027):
- * 
- * 1. Update the import statement at the top:
- *    Change: import competition.electrical_contract.Contract2026;
- *    To:     import competition.electrical_contract.Contract2027;
- * 
- * 2. Update the return type and instantiation in createContract() method below:
- *    Change: private static Contract2026 createContract() { return new Contract2026(); }
- *    To:     private static Contract2027 createContract() { return new Contract2027(); }
+ *
+ * Usage: ./gradlew electricalReport --args="[--contract NAME] [--json] [-f FILE]"
+ *   --contract  which robot's contract to report, by its ContractToUse name
+ *               (Competition, 2025, 2023, Robox); default Competition
+ *   --json      write a snapshot for the electrical web tool instead of the text report
+ *
+ * Devices whose mechanism isn't in the contract's readiness set (see ReadyWhen) are left
+ * out: the robot doesn't have them.
+ *
+ * HOW TO ADD A NEW YEAR'S CONTRACT: add it to CONTRACTS below, using the same name as the
+ * ContractToUse switch in competition.Robot.
  */
 
 public class Main {
     
+    /** A selectable robot: its ContractToUse name, display name and contract. */
+    record RobotContract(String robotName, Supplier<ElectricalContract> create) {}
+
+    /** Same names as the ContractToUse switch in competition.Robot. */
+    static final Map<String, RobotContract> CONTRACTS = new LinkedHashMap<>();
+
+    static {
+        CONTRACTS.put("Competition", new RobotContract("2026 Competition", Contract2026::new));
+        CONTRACTS.put("2025", new RobotContract("2025 Robot", Contract2025::new));
+        CONTRACTS.put("2023", new RobotContract("2023 Robot", Contract2023::new));
+        CONTRACTS.put("Robox", new RobotContract("Robox", RoboxContract::new));
+    }
+
+    /** Devices left out because their mechanism isn't ready on this robot (filled by discovery). */
+    static final List<String> DISABLED = new ArrayList<>();
+
+    /** Device name -> simple name of the class whose getter defines it (filled by discovery). */
+    static final Map<String, String> DEFINED_IN = new HashMap<>();
+
+    private static RobotContract robotContract(String name) {
+        RobotContract rc = CONTRACTS.get(name);
+        if (rc == null) {
+            throw new IllegalArgumentException("Unknown contract '" + name + "'; use one of " + CONTRACTS.keySet());
+        }
+        return rc;
+    }
+
+    /** True unless the getter's ReadyWhen mechanism is missing from the contract's readiness set. */
+    private static boolean isEnabled(ElectricalContract contract, Method method) {
+        try {
+            Method declared = ElectricalContract.class.getMethod(method.getName(), method.getParameterTypes());
+            ReadyWhen readyWhen = declared.getAnnotation(ReadyWhen.class);
+            return readyWhen == null || contract.isReady(readyWhen.value());
+        } catch (NoSuchMethodException e) {
+            return true;
+        }
+    }
+
+    private static String declaringClass(ElectricalContract contract, String getter, Class<?>... params) {
+        try {
+            return contract.getClass().getMethod(getter, params).getDeclaringClass().getSimpleName();
+        } catch (NoSuchMethodException e) {
+            return contract.getClass().getSimpleName();
+        }
+    }
+
     /**
-     * *** CHANGE THIS WHEN UPDATING TO A NEW YEAR ***
-     * This is the single point of configuration for which contract year to use.
-     * Update the import statement above to match this year.
+     * The report-only wiring lists (CAN order, extra PDH loads, power branches) describe one physical
+     * robot, so only use them when the robot's own contract class declares them; a contract that
+     * extends another robot's (e.g. Robox extends Contract2026) would otherwise inherit its wiring.
      */
-    private static Contract2026 createContract() {
-        return new Contract2026();
+    private static boolean ownsReportData(ElectricalContract contract, String getter) {
+        return declaringClass(contract, getter).equals(contract.getClass().getSimpleName());
+    }
+
+    private static List<Contract2026.CanBusOrderEntry> canBusOrder(ElectricalContract contract) {
+        return contract instanceof Contract2026 c && ownsReportData(contract, "getCanBusConnectionOrder")
+                ? c.getCanBusConnectionOrder() : List.of();
+    }
+
+    private static Map<PDHPort, List<String>> additionalPdh(ElectricalContract contract) {
+        return ownsReportData(contract, "getAdditionalPDHConnections") ? contract.getAdditionalPDHConnections() : Map.of();
+    }
+
+    private static Map<String, List<String>> powerBranches(ElectricalContract contract) {
+        return ownsReportData(contract, "getAdditionalPowerBranches") ? contract.getAdditionalPowerBranches() : Map.of();
     }
     
     static class CANDevice implements Comparable<CANDevice> {
@@ -90,12 +157,22 @@ public class Main {
     
     public static void main(String[] args) throws Exception {
         // Determine output file: default is electrical-report.txt, override with -f <filename>
-        String outputFile = "electrical-report.txt";
+        // --json writes a machine-readable snapshot (default electrical-snapshot.json) for the web tool
+        boolean json = Arrays.asList(args).contains("--json");
+        String outputFile = json ? "electrical-snapshot.json" : "electrical-report.txt";
+        String contractName = "Competition";
         for (int i = 0; i < args.length - 1; i++) {
             if (args[i].equals("-f")) {
                 outputFile = args[i + 1];
-                break;
+            } else if (args[i].equals("--contract")) {
+                contractName = args[i + 1];
             }
+        }
+        RobotContract robot = robotContract(contractName);
+        if (json) {
+            writeJsonSnapshot(contractName, robot, outputFile);
+            System.err.println("Wrote electrical snapshot to: " + outputFile);
+            return;
         }
         PrintStream fileOut = new PrintStream(new FileOutputStream(new File(outputFile)));
         System.setOut(fileOut);
@@ -106,7 +183,8 @@ public class Main {
         System.out.println("=".repeat(80));
         System.out.println();
         
-        var contract = createContract();
+        var contract = robot.create().get();
+        System.out.println("Robot: " + robot.robotName() + " (ContractToUse = " + contractName + ")");
         System.out.println("Source: " + contract.getClass().getName());
 
         // Find and print the source file timestamp
@@ -201,10 +279,20 @@ public class Main {
 
         // Print power source assignments
         printPowerSourceReport(devicesByPowerSource);
+
+        // Devices this robot doesn't have
+        System.out.println();
+        System.out.println("-".repeat(80));
+        System.out.println("Not on this robot (mechanism not in the contract's readiness set)");
+        System.out.println("-".repeat(80));
+        if (DISABLED.isEmpty()) {
+            System.out.println("  (none)");
+        }
+        DISABLED.stream().sorted().forEach(name -> System.out.println("  " + name));
     }
     
     private static void generatePDHReport(
-            Contract2026 contract,
+            ElectricalContract contract,
             List<DeviceInfo> dioDevices, Map<PowerSource, List<String>> devicesByPowerSource) {
         // Track motor and additional connections separately for accurate conflict detection.
         // Multiple non-motor devices on the same PDH port is allowed (e.g., two buck converters).
@@ -226,7 +314,7 @@ public class Main {
 
         // Collect additional PDH connections (VRMs, buck converters, etc.)
         // Multiple non-motor devices per port are allowed and will NOT be flagged as conflicts
-        Map<PDHPort, List<String>> additionalConnections = contract.getAdditionalPDHConnections();
+        Map<PDHPort, List<String>> additionalConnections = additionalPdh(contract);
         for (Map.Entry<PDHPort, List<String>> entry : additionalConnections.entrySet()) {
             additionalPDHUsage.computeIfAbsent(entry.getKey(), k -> new ArrayList<>()).addAll(entry.getValue());
         }
@@ -355,16 +443,19 @@ public class Main {
      * Scans all public methods with no parameters that return device types.
      */
     private static void autoDiscoverDevices(
-            Contract2026 contract,
+            ElectricalContract contract,
             Map<CANBusId, List<CANDevice>> devicesByBus,
             List<DeviceInfo> dioDevices,
             List<DeviceInfo> pwmDevices,
             Map<PowerSource, List<String>> devicesByPowerSource,
             List<String> positionWarnings) {
 
+        DISABLED.clear();
+        DEFINED_IN.clear();
+
         // Build (busId, canId) -> busPosition lookup from contract's connection order list
         Map<CANBusId, Map<Integer, Integer>> positionLookup = new HashMap<>();
-        for (Contract2026.CanBusOrderEntry entry : contract.getCanBusConnectionOrder()) {
+        for (Contract2026.CanBusOrderEntry entry : canBusOrder(contract)) {
             positionLookup
                     .computeIfAbsent(entry.busId(), k -> new HashMap<>())
                     .put(entry.canId(), entry.busPosition());
@@ -380,11 +471,16 @@ public class Main {
             
             try {
                 Class<?> returnType = method.getReturnType();
+                boolean enabled = isEnabled(contract, method);
+                String owner = method.getDeclaringClass().getSimpleName();
                 
                 // Check if method returns CANMotorControllerInfo
                 if (returnType.equals(CANMotorControllerInfo.class)) {
                     CANMotorControllerInfo motor = (CANMotorControllerInfo) method.invoke(contract);
-                    if (motor != null) {
+                    if (motor != null && !enabled) {
+                        DISABLED.add(motor.name());
+                    } else if (motor != null) {
+                        DEFINED_IN.put(motor.name(), owner);
                         Integer busPosition = positionLookup
                                 .getOrDefault(motor.busId(), Map.of())
                                 .get(motor.deviceId());
@@ -412,7 +508,10 @@ public class Main {
                 // Check if method returns DeviceInfo
                 else if (returnType.equals(DeviceInfo.class)) {
                     DeviceInfo device = (DeviceInfo) method.invoke(contract);
-                    if (device != null) {
+                    if (device != null && !enabled) {
+                        DISABLED.add(device.name);
+                    } else if (device != null) {
+                        DEFINED_IN.put(device.name, owner);
                         // Track power source
                         if (device.powerFrom != null) {
                             devicesByPowerSource.computeIfAbsent(device.powerFrom, k -> new ArrayList<>()).add(device.name);
@@ -428,7 +527,9 @@ public class Main {
                         // DIO devices - identified by the "DIO" suffix on the device name (e.g. "ClimbHomeDIO").
                         // This is more reliable than checking PowerSource.RIO because canBusId defaults to
                         // CANBusId.RIO for all DeviceInfo, making PowerSource.RIO alone ambiguous.
-                        else if (device.name != null && device.name.endsWith("DIO")) {
+                        // Non-CAN devices powered from the RIO (e.g. "ClimberSensor") are also DIO.
+                        else if ((device.name != null && device.name.endsWith("DIO"))
+                                || device.powerFrom == PowerSource.RIO) {
                             dioDevices.add(device);
                         }
                         // CAN devices - have CAN bus ID and no RIO power source
@@ -457,6 +558,7 @@ public class Main {
                 else if (returnType.equals(IMUInfo.class)) {
                     IMUInfo imu = (IMUInfo) method.invoke(contract);
                     if (imu != null && imu.canBusId() != null) {
+                        DEFINED_IN.put(imu.name(), owner);
                         Integer busPosition = positionLookup
                                 .getOrDefault(imu.canBusId(), Map.of())
                                 .get(imu.deviceId());
@@ -489,11 +591,17 @@ public class Main {
 
         // Swerve devices use parameterized getters — call them explicitly for each corner.
         String[] swerveLabels = {"FrontLeftDrive", "FrontRightDrive", "RearLeftDrive", "RearRightDrive"};
+        String driveOwner = declaringClass(contract, "getDriveMotor", SwerveInstance.class);
+        String steeringOwner = declaringClass(contract, "getSteeringMotor", SwerveInstance.class);
+        String encoderOwner = declaringClass(contract, "getSteeringEncoder", SwerveInstance.class);
         for (String label : swerveLabels) {
             SwerveInstance si = new SwerveInstance(label);
 
             CANMotorControllerInfo drive = contract.getDriveMotor(si);
-            if (drive != null) {
+            if (drive != null && !contract.isDriveReady()) {
+                DISABLED.add(drive.name());
+            } else if (drive != null) {
+                DEFINED_IN.put(drive.name(), driveOwner);
                 Integer busPosition = positionLookup.getOrDefault(drive.busId(), Map.of()).get(drive.deviceId());
                 if (busPosition == null) {
                     positionWarnings.add(drive.name() + " (ID " + drive.deviceId() + " on " + drive.busId() + ")");
@@ -506,7 +614,10 @@ public class Main {
             }
 
             CANMotorControllerInfo steering = contract.getSteeringMotor(si);
-            if (steering != null) {
+            if (steering != null && !contract.isDriveReady()) {
+                DISABLED.add(steering.name());
+            } else if (steering != null) {
+                DEFINED_IN.put(steering.name(), steeringOwner);
                 Integer busPosition = positionLookup.getOrDefault(steering.busId(), Map.of()).get(steering.deviceId());
                 if (busPosition == null) {
                     positionWarnings.add(steering.name() + " (ID " + steering.deviceId() + " on " + steering.busId() + ")");
@@ -519,7 +630,10 @@ public class Main {
             }
 
             DeviceInfo encoder = contract.getSteeringEncoder(si);
-            if (encoder != null && encoder.canBusId != null && encoder.channel > 0) {
+            if (encoder != null && encoder.canBusId != null && encoder.channel > 0 && !contract.areCanCodersReady()) {
+                DISABLED.add(encoder.name);
+            } else if (encoder != null && encoder.canBusId != null && encoder.channel > 0) {
+                DEFINED_IN.put(encoder.name, encoderOwner);
                 Integer busPosition = positionLookup.getOrDefault(encoder.canBusId, Map.of()).get(encoder.channel);
                 if (busPosition == null) {
                     positionWarnings.add(encoder.name + " (ID " + encoder.channel + " on " + encoder.canBusId + ")");
@@ -531,12 +645,109 @@ public class Main {
     }
     
     /**
+     * Writes the discovered contract as a JSON snapshot for the electrical web tool.
+     * Uses the same discovery as the text report so both always agree.
+     */
+    private static void writeJsonSnapshot(String contractName, RobotContract robot, String outputFile) throws Exception {
+        ElectricalContract contract = robot.create().get();
+        Map<CANBusId, List<CANDevice>> devicesByBus = new HashMap<>();
+        List<DeviceInfo> dioDevices = new ArrayList<>();
+        List<DeviceInfo> pwmDevices = new ArrayList<>();
+        Map<PowerSource, List<String>> devicesByPowerSource = new HashMap<>();
+        List<String> positionWarnings = new ArrayList<>();
+        autoDiscoverDevices(contract, devicesByBus, dioDevices, pwmDevices, devicesByPowerSource, positionWarnings);
+
+        Map<String, Object> root = new LinkedHashMap<>();
+        root.put("source", contract.getClass().getName());
+        root.put("contractName", contractName);
+        root.put("robotName", robot.robotName());
+        root.put("gitSha", gitSha());
+        root.put("generatedAt", Instant.now().toString());
+
+        List<Map<String, Object>> canDevices = new ArrayList<>();
+        for (Map.Entry<CANBusId, List<CANDevice>> entry : devicesByBus.entrySet()) {
+            List<CANDevice> devices = new ArrayList<>(entry.getValue());
+            Collections.sort(devices);
+            for (CANDevice d : devices) {
+                Map<String, Object> m = new LinkedHashMap<>();
+                m.put("name", d.name);
+                m.put("bus", busName(d.busId));
+                m.put("canId", d.deviceId);
+                m.put("type", d.type);
+                m.put("kind", Arrays.asList("CANCoder", "Sensor", "IMU").contains(d.type) ? "can_sensor" : "motor");
+                m.put("pdhPort", d.pdhPort == null ? null : d.pdhPort.name());
+                m.put("powerFrom", d.powerSource == null ? null : d.powerSource.name());
+                m.put("busPosition", d.busPosition);
+                m.put("definedIn", DEFINED_IN.get(d.name));
+                canDevices.add(m);
+            }
+        }
+        root.put("canDevices", canDevices);
+        root.put("dio", channelDevices(dioDevices));
+        root.put("pwm", channelDevices(pwmDevices));
+
+        Map<String, List<String>> additionalPdh = new TreeMap<>();
+        additionalPdh(contract).forEach((port, names) -> additionalPdh.put(port.name(), names));
+        root.put("additionalPdh", additionalPdh);
+
+        Map<String, List<String>> powerSources = new TreeMap<>();
+        devicesByPowerSource.forEach((source, names) -> powerSources.put(source.name(), names));
+        root.put("powerSources", powerSources);
+
+        root.put("powerBranches", new TreeMap<>(powerBranches(contract)));
+
+        List<Map<String, Object>> canOrder = new ArrayList<>();
+        for (Contract2026.CanBusOrderEntry e : canBusOrder(contract)) {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("bus", busName(e.busId()));
+            m.put("canId", e.canId());
+            m.put("deviceName", e.deviceName());
+            m.put("busPosition", e.busPosition());
+            canOrder.add(m);
+        }
+        root.put("canOrder", canOrder);
+        root.put("warnings", positionWarnings);
+        root.put("disabled", DISABLED.stream().sorted().toList());
+
+        new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(new File(outputFile), root);
+    }
+
+    private static String busName(CANBusId busId) {
+        // CANBusId.Canivore's id is "*" (Phoenix's "any CANivore"); keep a readable name.
+        return busId.equals(CANBusId.Canivore) ? "Canivore" : busId.id();
+    }
+
+    private static List<Map<String, Object>> channelDevices(List<DeviceInfo> devices) {
+        List<Map<String, Object>> out = new ArrayList<>();
+        devices.sort(Comparator.comparingInt(d -> d.channel));
+        for (DeviceInfo d : devices) {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("name", d.name);
+            m.put("channel", d.channel);
+            m.put("powerFrom", d.powerFrom == null ? null : d.powerFrom.name());
+            m.put("definedIn", DEFINED_IN.get(d.name));
+            out.add(m);
+        }
+        return out;
+    }
+
+    private static String gitSha() {
+        try {
+            Process p = new ProcessBuilder("git", "rev-parse", "HEAD").redirectErrorStream(true).start();
+            String sha = new String(p.getInputStream().readAllBytes()).trim();
+            return p.waitFor() == 0 ? sha : null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
      * Generates VRM port usage report.
      */
-    private static void generateVRMReport(Contract2026 contract, Map<PowerSource, List<String>> devicesByPowerSource) {
+    private static void generateVRMReport(ElectricalContract contract, Map<PowerSource, List<String>> devicesByPowerSource) {
         // Build reverse map: device name -> PDH port(s) that supply it
         Map<String, List<String>> vrmToPDH = new HashMap<>();
-        for (Map.Entry<PDHPort, List<String>> entry : contract.getAdditionalPDHConnections().entrySet()) {
+        for (Map.Entry<PDHPort, List<String>> entry : additionalPdh(contract).entrySet()) {
             for (String device : entry.getValue()) {
                 vrmToPDH.computeIfAbsent(device, k -> new ArrayList<>()).add(entry.getKey().name());
             }
@@ -660,15 +871,15 @@ public class Main {
      * Generates power branch report for intermediate converters (buck converters, VRMs, etc.)
      * Shows the chain: PDH port -> converter -> downstream devices.
      */
-    private static void generatePowerBranchReport(Contract2026 contract, Map<PowerSource, List<String>> devicesByPowerSource) {
-        Map<String, List<String>> branches = contract.getAdditionalPowerBranches();
+    private static void generatePowerBranchReport(ElectricalContract contract, Map<PowerSource, List<String>> devicesByPowerSource) {
+        Map<String, List<String>> branches = powerBranches(contract);
         if (branches.isEmpty()) {
             return;
         }
 
         // Build reverse map: branch/converter name -> PDH port(s) that supply it
         Map<String, List<String>> branchToPDH = new HashMap<>();
-        Map<PDHPort, List<String>> pdhConnections = contract.getAdditionalPDHConnections();
+        Map<PDHPort, List<String>> pdhConnections = additionalPdh(contract);
         for (Map.Entry<PDHPort, List<String>> entry : pdhConnections.entrySet()) {
             for (String device : entry.getValue()) {
                 branchToPDH.computeIfAbsent(device, k -> new ArrayList<>()).add(entry.getKey().toString());
