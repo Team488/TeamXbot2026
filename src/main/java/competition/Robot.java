@@ -4,6 +4,8 @@ package competition;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.ctre.phoenix6.SignalLogger;
+
 import competition.injection.components.BaseRobotComponent;
 import competition.injection.components.DaggerRobotComponent;
 import competition.injection.components.DaggerRobotComponent2023;
@@ -35,6 +37,8 @@ public class Robot extends BaseRobot {
 
     @Override
     protected void initializeSystems() {
+        // Logging goes through AdvantageKit; Phoenix's own hoot logger fails to start on the rio bus
+        SignalLogger.enableAutoLogging(false);
         super.initializeSystems();
         getInjectorComponent().configurePathPlannerLib();
         getInjectorComponent().subsystemDefaultCommandMap();
