@@ -28,7 +28,6 @@ import competition.subsystems.drive.commands.PrecisionModeCommand;
 import competition.subsystems.drive.commands.RotateToHubCommand;
 import competition.subsystems.drive.commands.XPositionCommand;
 import competition.subsystems.hood.HoodSubsystem;
-import competition.subsystems.hood.commands.DropHoodForTrenchCommand;
 import competition.subsystems.hopper_roller.HopperRollerSubsystem;
 import competition.subsystems.intake_deploy.commands.IntakeDeployExtendCommand;
 import competition.subsystems.intake_deploy.commands.IntakeDeployClosingAndOscillatingForShootingCommand;
@@ -67,7 +66,6 @@ public class OperatorCommandMap {
     @Inject
     public void setupDriveCommands(OperatorInterface operatorInterface,
                                    SetRobotHeadingCommand resetHeading,
-                                   DropHoodForTrenchCommand dropHoodForTrenchCommand,
                                    RotateToHubCommand rotateToHubCommand,
                                    XPositionCommand xPositionCommand,
                                    DriveThroughAllianceTrenchCommand driveThroughAllianceTrenchCommand,
@@ -162,6 +160,33 @@ public class OperatorCommandMap {
                 .whileTrue(hopperRollerSubsystem.getIntakeCommand());
         operatorInterface.setupDebugGamepad.getPovIfAvailable(90).whileTrue(collectorEjectCommand);
         operatorInterface.setupDebugGamepad.getPovIfAvailable(270).whileTrue(shooterFeederFire);
+    }
+
+    @Inject
+    public void setupDemoCommands(OperatorInterface operatorInterface,
+                                  SetRobotHeadingCommand resetHeading,
+                                  HopperAndIntakeCommandGroup intakeCommand,
+                                  HopperAndIntakeEjectCommandGroup ejectCommand,
+                                  IntakeDeployExtendCommand intakeDeployExtendCommand,
+                                  IntakeDeployRetractCommand intakeDeployRetractCommand,
+                                  IntakeSlowlyAndFireWhenReady intakeSlowlyAndFireWhenReady,
+                                  Provider<PrepareToShootCommandGroup> prepareToShootCommand) {
+        var prepareToShootNear = prepareToShootCommand.get()
+                .setPresetLocation(TrajectoriesCalculation.PresetShootingDistance.NEAR);
+
+        operatorInterface.demoGamepad.getifAvailable(XXboxController.XboxButton.Start).onTrue(resetHeading);
+        operatorInterface.demoGamepad.getifAvailable(XXboxController.XboxButton.LeftBumper)
+                .whileTrue(intakeDeployExtendCommand);
+        operatorInterface.demoGamepad.getifAvailable(XXboxController.XboxButton.RightBumper)
+                .whileTrue(intakeDeployRetractCommand);
+        operatorInterface.demoGamepad.getifAvailable(XXboxController.XboxButton.A)
+                .whileTrue(prepareToShootNear);
+        operatorInterface.demoGamepad.getifAvailable(XXboxController.XboxButton.X)
+                .whileTrue(ejectCommand);
+        operatorInterface.demoGamepad.getifAvailable(XXboxController.XboxButton.Y)
+                .whileTrue(intakeCommand);
+        operatorInterface.demoGamepad.getifAvailable(XXboxController.XboxButton.B)
+                .whileTrue(intakeSlowlyAndFireWhenReady);
     }
 
     @Inject

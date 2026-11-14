@@ -18,10 +18,12 @@ import xbot.common.properties.PropertyFactory;
 public class OperatorInterface {
     public XXboxController driverGamepad;
     public XXboxController operatorGamepad;
+    public XXboxController demoGamepad;
     public XXboxController setupDebugGamepad;
 
     final DoubleProperty driverDeadband;
     final DoubleProperty operatorDeadband;
+    final DoubleProperty demoDeadband;
 
     @Inject
     public OperatorInterface(XXboxControllerFactory controllerFactory, RobotAssertionManager assertionManager,
@@ -38,10 +40,15 @@ public class OperatorInterface {
         setupDebugGamepad.setLeftInversion(false,true);
         setupDebugGamepad.setRightInversion(true,true);
 
+        demoGamepad = controllerFactory.create(3);
+        demoGamepad.setLeftInversion(false,true);
+        demoGamepad.setRightInversion(true,true);
+
         pf.setPrefix("OperatorInterface");
         pf.setDefaultLevel(Property.PropertyLevel.Debug);
         driverDeadband = pf.createPersistentProperty("Driver Deadband", 0.12);
         operatorDeadband = pf.createPersistentProperty("Operator Deadband", 0.15);
+        demoDeadband = pf.createPersistentProperty("Demo Deadband", 0.15);
     }
 
     public double getDriverGamepadTypicalDeadband() {
@@ -50,6 +57,16 @@ public class OperatorInterface {
 
     public double getOperatorGamepadTypicalDeadband() {
         return operatorDeadband.get();
+    }
+
+    public XXboxController getActiveDriveGamepad() {
+        if (driverGamepad.getLeftVector().getNorm() > 0.15
+                || driverGamepad.getRightVector().getNorm() > 0.15
+                || driverGamepad.getLeftTrigger() > 0.05
+                || driverGamepad.getRightTrigger() > 0.05) {
+            return driverGamepad;
+        }
+        return demoGamepad;
     }
 
     public void periodic() {
