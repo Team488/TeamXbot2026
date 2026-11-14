@@ -18,20 +18,6 @@
             },
             "children": [
               {
-                "title": "Shoot from trench then collect from netural zone.",
-                "x": 768.0,
-                "y": 256.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/Shoot from trench then collect from netural zone.",
-                  "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": false
-                }
-              },
-              {
                 "title": "TimeoutSeconds",
                 "x": 0.0,
                 "y": 0.0,
@@ -58,20 +44,6 @@
               "label_position": "TOP"
             },
             "children": [
-              {
-                "title": "Shoot from trench.",
-                "x": 512.0,
-                "y": 256.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/Shoot from trench.",
-                  "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": false
-                }
-              },
               {
                 "title": "TimeoutSeconds",
                 "x": 0.0,
@@ -100,20 +72,6 @@
             },
             "children": [
               {
-                "title": "Shoot from hub.",
-                "x": 256.0,
-                "y": 384.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/Shoot from hub.",
-                  "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": false
-                }
-              },
-              {
                 "title": "TimeoutSeconds",
                 "x": 0.0,
                 "y": 0.0,
@@ -132,20 +90,6 @@
         ],
         "containers": [
           {
-            "title": "Move midway through field and back.",
-            "x": 384.0,
-            "y": 256.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Move midway through field and back.",
-              "period": 0.06,
-              "show_type": false,
-              "maximize_button_space": false
-            }
-          },
-          {
             "title": "Current autonomous command name",
             "x": 128.0,
             "y": 128.0,
@@ -160,17 +104,16 @@
             }
           },
           {
-            "title": "Collect and shoot twice.",
+            "title": "Auto Chooser",
             "x": 512.0,
             "y": 128.0,
-            "width": 256.0,
+            "width": 640.0,
             "height": 128.0,
-            "type": "Command",
+            "type": "ComboBox Chooser",
             "properties": {
-              "topic": "/SmartDashboard/Collect and shoot twice.",
+              "topic": "/SmartDashboard/Auto Chooser",
               "period": 0.06,
-              "show_type": true,
-              "maximize_button_space": false
+              "sort_options": false
             }
           },
           {
@@ -183,34 +126,6 @@
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/DeviceHealth",
               "period": 0.06
-            }
-          },
-          {
-            "title": "Hub to Depo to Tower Auto",
-            "x": 384.0,
-            "y": 512.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Hub to Depo to Tower Auto",
-              "period": 0.06,
-              "show_type": true,
-              "maximize_button_space": false
-            }
-          },
-          {
-            "title": "Normal Bump Auto Right",
-            "x": 640.0,
-            "y": 512.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Normal Bump Auto Right",
-              "period": 0.06,
-              "show_type": true,
-              "maximize_button_space": false
             }
           }
         ]

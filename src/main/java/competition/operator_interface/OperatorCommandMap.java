@@ -40,6 +40,8 @@ import competition.subsystems.shooter.commands.ShooterOutputCommand;
 import competition.subsystems.shooter.commands.TrimShooterVelocityDown;
 import competition.subsystems.shooter.commands.TrimShooterVelocityUp;
 import competition.subsystems.shooter_feeder.commands.ShooterFeederFire;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.autonomous.SetAutonomousCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
@@ -49,6 +51,8 @@ import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
  */
 @Singleton
 public class OperatorCommandMap {
+
+    public static final String AUTO_CHOOSER_KEY = "Auto Chooser";
 
     @Inject
     public OperatorCommandMap() {
@@ -178,45 +182,57 @@ public class OperatorCommandMap {
         ) {
         driveToOutpostCommand.includeOnSmartDashboard("Drive to Outpost");
 
-        var moveAcrossField = setAutonomousCommandProvider.get();
-        moveAcrossField.setAutoCommand(moveAcrossFieldCommand, Landmarks.blueStartTrenchToOutpost);
-        moveAcrossField.includeOnSmartDashboard("Move midway through field and back.");
+        // A single dashboard chooser for the autonomous program. The selection is logged by AdvantageKit
+        // (under DashboardInputs/SmartDashboard/Auto Chooser), so it is also available in replay.
+        var autoChooser = new LoggedDashboardChooser<SetAutonomousCommand>(AUTO_CHOOSER_KEY);
 
         var shootFromTrench = setAutonomousCommandProvider.get();
         shootFromTrench.setAutoCommand(shootFromTrenchCommandGroup, Landmarks.blueStartTrenchToOutpost);
-        shootFromTrench.includeOnSmartDashboard("Shoot from trench.");
+        // Keep this default in sync with BaseRobotComponent.defaultAutoCommand()
+        autoChooser.addDefaultOption("Shoot from trench.", shootFromTrench);
+
+        var moveAcrossField = setAutonomousCommandProvider.get();
+        moveAcrossField.setAutoCommand(moveAcrossFieldCommand, Landmarks.blueStartTrenchToOutpost);
+        autoChooser.addOption("Move midway through field and back.", moveAcrossField);
 
         var shootFromHub = setAutonomousCommandProvider.get();
         shootFromHub.setAutoCommand(shootFromHubCommandGroup, Landmarks.blueStartTrenchToOutpost);
-        shootFromHub.includeOnSmartDashboard("Shoot from hub.");
+        autoChooser.addOption("Shoot from hub.", shootFromHub);
 
         var moveAcrossField2Right = setAutonomousCommandProvider.get();
         moveAcrossField2Right.setAutoCommand(rightBumpAutoCommand, Landmarks.blueStartTrenchToOutpost);
-        moveAcrossField2Right.includeOnSmartDashboard("Right bump double cycle.");
+        autoChooser.addOption("Right bump double cycle.", moveAcrossField2Right);
 
         var moveAcrossField2Left = setAutonomousCommandProvider.get();
         moveAcrossField2Left.setAutoCommand(leftBumpAutoCommand, Landmarks.blueStartTrenchToOutpost);
-        moveAcrossField2Left.includeOnSmartDashboard("Left bump double cycle.");
+        autoChooser.addOption("Left bump double cycle.", moveAcrossField2Left);
 
         var shootFromTrenchThenMove = setAutonomousCommandProvider.get();
         shootFromTrenchThenMove.setAutoCommand(shootFromTrenchThenMoveToNeutralCommand, Landmarks.blueStartTrenchToOutpost);
-        shootFromTrenchThenMove.includeOnSmartDashboard("Shoot from trench then collect from neutral zone.");
+        autoChooser.addOption("Shoot from trench then collect from neutral zone.", shootFromTrenchThenMove);
 
         var justDrivePortionOfAuto = setAutonomousCommandProvider.get();
         justDrivePortionOfAuto.setAutoCommand(justDriveNeutralMoveCommand, Landmarks.blueStartTrenchToOutpost);
-        justDrivePortionOfAuto.includeOnSmartDashboard("Just drive Portion of Auto.");
+        autoChooser.addOption("Just drive Portion of Auto.", justDrivePortionOfAuto);
 
         var collectAndShootTwice = setAutonomousCommandProvider.get();
         collectAndShootTwice.setAutoCommand(collectAndShootTwiceCommand, Landmarks.blueStartTrenchToOutpost);
-        collectAndShootTwice.includeOnSmartDashboard("Collect and shoot twice.");
+        autoChooser.addOption("Collect and shoot twice.", collectAndShootTwice);
 
         var hubToDepoToTower = setAutonomousCommandProvider.get();
         hubToDepoToTower.setAutoCommand(AutoBuilder.buildAuto("HubToDepoToTower"));
-        hubToDepoToTower.includeOnSmartDashboard("Hub to Depo to Tower Auto");
+        autoChooser.addOption("Hub to Depo to Tower Auto", hubToDepoToTower);
 
         var normalBumpAutoRight = setAutonomousCommandProvider.get();
         normalBumpAutoRight.setAutoCommand(AutoBuilder.buildAuto("NormalBumpAutoRight"));
-        normalBumpAutoRight.includeOnSmartDashboard("Normal Bump Auto Right");
+        autoChooser.addOption("Normal Bump Auto Right", normalBumpAutoRight);
+
+        // Whenever the selection changes (including the initial default), apply it to the AutonomousCommandSelector.
+        autoChooser.onChange(setAutonomousCommand -> {
+            if (setAutonomousCommand != null) {
+                CommandScheduler.getInstance().schedule(setAutonomousCommand);
+            }
+        });
     }
 
     @Inject
