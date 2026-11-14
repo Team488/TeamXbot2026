@@ -37,7 +37,6 @@ public class Robot extends BaseRobot {
 
     @Override
     protected void initializeSystems() {
-        // Logging goes through AdvantageKit; Phoenix's own hoot logger fails to start on the rio bus
         SignalLogger.enableAutoLogging(false);
         super.initializeSystems();
         getInjectorComponent().configurePathPlannerLib();
