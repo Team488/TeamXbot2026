@@ -44,5 +44,5 @@ if (useLocalCommonLib) {
         throw new GradleException("useLocalCommonLib=true but ../SeriouslyCommonLib directory not found. Clone it first.")
     }
 } else {
-    println "→ Using SeriouslyCommonLib from Maven repository"
+    println "→ Using SeriouslyCommonLib from Github repository"
 }
