@@ -1,5 +1,6 @@
 package competition.aspects;
 
+import competition.subsystems.hood.commands.HoodToZeroCommand;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.apache.logging.log4j.Logger;
@@ -51,8 +52,10 @@ public class CommandTracer {
             completedAlertList.add(runningCommandAlerts.remove(command));
             var startTime = commandStartTimes.remove(command);
             var endTime = XTimer.getFPGATimestamp();
-            logger.info("Command {} took {} seconds (interrupted: {})",
-                    command.getName(), String.format("%.4f", endTime - startTime), wasInterrupted);
+            if (!(command instanceof HoodToZeroCommand)) {
+                logger.info("Command {} took {} seconds (interrupted: {})",
+                        command.getName(), String.format("%.4f", endTime - startTime), wasInterrupted);
+            }
         }
     }
 }

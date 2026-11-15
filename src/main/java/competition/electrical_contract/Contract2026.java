@@ -72,11 +72,11 @@ public class Contract2026 extends GeneralContract {
     }
 
     public DeviceInfo pigeon2() {
-        return new DeviceInfo("Pigeon2.0",CANBusId.Canivore, 56);
+        return new DeviceInfo("Pigeon2.0",CANBusId.RIO, 56);
     }
 
     public DeviceInfo candle() {
-        return new DeviceInfo("CANdle",CANBusId.Canivore, 57);
+        return new DeviceInfo("CANdle",CANBusId.RIO, 57);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class Contract2026 extends GeneralContract {
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.TalonFx,
-                            CANBusId.Canivore,
+                            CANBusId.RIO,
                             30,
                             PDHPort.PDH10,
                             motorConfig);
@@ -97,7 +97,7 @@ public class Contract2026 extends GeneralContract {
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.TalonFx,
-                            CANBusId.Canivore,
+                            CANBusId.RIO,
                             38,
                             PDHPort.PDH18,
                             motorConfig);
@@ -105,7 +105,7 @@ public class Contract2026 extends GeneralContract {
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.TalonFx,
-                            CANBusId.Canivore,
+                            CANBusId.RIO,
                             28,
                             PDHPort.PDH08,
                             motorConfig);
@@ -113,7 +113,7 @@ public class Contract2026 extends GeneralContract {
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.TalonFx,
-                            CANBusId.Canivore,
+                            CANBusId.RIO,
                             20,
                             PDHPort.PDH00,
                             motorConfig);
@@ -132,7 +132,7 @@ public class Contract2026 extends GeneralContract {
                     new CANMotorControllerInfo(
                             getSteeringControllerName(swerveInstance),
                             MotorControllerType.TalonFx,
-                            CANBusId.Canivore,
+                            CANBusId.RIO,
                             31,
                             PDHPort.PDH11,
                             motorConfig);
@@ -140,7 +140,7 @@ public class Contract2026 extends GeneralContract {
                     new CANMotorControllerInfo(
                             getSteeringControllerName(swerveInstance),
                             MotorControllerType.TalonFx,
-                            CANBusId.Canivore,
+                            CANBusId.RIO,
                             39,
                             PDHPort.PDH19,
                             motorConfig);
@@ -148,7 +148,7 @@ public class Contract2026 extends GeneralContract {
                     new CANMotorControllerInfo(
                             getSteeringControllerName(swerveInstance),
                             MotorControllerType.TalonFx,
-                            CANBusId.Canivore,
+                            CANBusId.RIO,
                             29,
                             PDHPort.PDH09,
                             motorConfig);
@@ -156,7 +156,7 @@ public class Contract2026 extends GeneralContract {
                     new CANMotorControllerInfo(
                             getSteeringControllerName(swerveInstance),
                             MotorControllerType.TalonFx,
-                            CANBusId.Canivore,
+                            CANBusId.RIO,
                             21,
                             PDHPort.PDH01,
                             motorConfig);
@@ -170,13 +170,13 @@ public class Contract2026 extends GeneralContract {
 
         return switch (swerveInstance.label()) {
             case "FrontLeftDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.Canivore, 53, false);
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.RIO, 53, false);
             case "FrontRightDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.Canivore, 54, false);
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.RIO, 54, false);
             case "RearLeftDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.Canivore, 52, false);
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.RIO, 52, false);
             case "RearRightDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.Canivore, 51, false);
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.RIO, 51, false);
             default -> null;
         };
     }
@@ -209,31 +209,31 @@ public class Contract2026 extends GeneralContract {
 
     public List<CanBusOrderEntry> getCanBusConnectionOrder() {
         return List.of(
-            new CanBusOrderEntry(CANBusId.Canivore, 30, "FrontLeftDrive/Drive",              1),
-            new CanBusOrderEntry(CANBusId.Canivore, 53, "FrontLeftDrive/SteeringEncoder",    2),
-            new CanBusOrderEntry(CANBusId.Canivore, 31, "FrontLeftDrive/Steering",           3),
-            new CanBusOrderEntry(CANBusId.Canivore, 29, "RearLeftDrive/Steering",            4),
-            new CanBusOrderEntry(CANBusId.Canivore, 52, "RearLeftDrive/SteeringEncoder",     5),
-            new CanBusOrderEntry(CANBusId.Canivore, 28, "RearLeftDrive/Drive",               6),
-            new CanBusOrderEntry(CANBusId.Canivore, 20, "RearRightDrive/Drive",              7),
-            new CanBusOrderEntry(CANBusId.Canivore, 51, "RearRightDrive/SteeringEncoder",    8),
-            new CanBusOrderEntry(CANBusId.Canivore, 21, "RearRightDrive/Steering",           9),
-            new CanBusOrderEntry(CANBusId.Canivore, 39, "FrontRightDrive/Steering",         10),
-            new CanBusOrderEntry(CANBusId.Canivore, 54, "FrontRightDrive/SteeringEncoder",  11),
-            new CanBusOrderEntry(CANBusId.Canivore, 38, "FrontRightDrive/Drive",            12),
-            new CanBusOrderEntry(CANBusId.Canivore, 56, "Pigeon",                           13),
-            new CanBusOrderEntry(CANBusId.Canivore, 57, "CANdle",                           14),
-            new CanBusOrderEntry(CANBusId.Canivore, 58, "IntakeDeployAbsoluteEncoderReady", 15),
-            new CanBusOrderEntry(CANBusId.Canivore, 34, "IntakeDeployMotor",                16),
-            new CanBusOrderEntry(CANBusId.Canivore, 32, "FuelIntakeMotor",                  17),
-            new CanBusOrderEntry(CANBusId.Canivore, 33, "HopperRoller",                     18),
-            new CanBusOrderEntry(CANBusId.Canivore, 37, "ShooterFeederMotor",               19),
-            new CanBusOrderEntry(CANBusId.Canivore, 25, "ClimberMotorLeft",                 20),
-            new CanBusOrderEntry(CANBusId.Canivore, 22, "ShooterLeftMotor",                 21),
-            new CanBusOrderEntry(CANBusId.Canivore, 23, "ShooterMiddleMotor",               22),
-            new CanBusOrderEntry(CANBusId.Canivore, 59, "ClimberAbsoluteEncoderReady",      23),
-            new CanBusOrderEntry(CANBusId.Canivore, 24, "ShooterRightMotor",                24),
-            new CanBusOrderEntry(CANBusId.Canivore, 26, "ClimberMotorRight",                25)
+            new CanBusOrderEntry(CANBusId.RIO, 30, "FrontLeftDrive/Drive",              1),
+            new CanBusOrderEntry(CANBusId.RIO, 53, "FrontLeftDrive/SteeringEncoder",    2),
+            new CanBusOrderEntry(CANBusId.RIO, 31, "FrontLeftDrive/Steering",           3),
+            new CanBusOrderEntry(CANBusId.RIO, 29, "RearLeftDrive/Steering",            4),
+            new CanBusOrderEntry(CANBusId.RIO, 52, "RearLeftDrive/SteeringEncoder",     5),
+            new CanBusOrderEntry(CANBusId.RIO, 28, "RearLeftDrive/Drive",               6),
+            new CanBusOrderEntry(CANBusId.RIO, 20, "RearRightDrive/Drive",              7),
+            new CanBusOrderEntry(CANBusId.RIO, 51, "RearRightDrive/SteeringEncoder",    8),
+            new CanBusOrderEntry(CANBusId.RIO, 21, "RearRightDrive/Steering",           9),
+            new CanBusOrderEntry(CANBusId.RIO, 39, "FrontRightDrive/Steering",         10),
+            new CanBusOrderEntry(CANBusId.RIO, 54, "FrontRightDrive/SteeringEncoder",  11),
+            new CanBusOrderEntry(CANBusId.RIO, 38, "FrontRightDrive/Drive",            12),
+            new CanBusOrderEntry(CANBusId.RIO, 56, "Pigeon",                           13),
+            new CanBusOrderEntry(CANBusId.RIO, 57, "CANdle",                           14),
+            new CanBusOrderEntry(CANBusId.RIO, 58, "IntakeDeployAbsoluteEncoderReady", 15),
+            new CanBusOrderEntry(CANBusId.RIO, 34, "IntakeDeployMotor",                16),
+            new CanBusOrderEntry(CANBusId.RIO, 32, "FuelIntakeMotor",                  17),
+            new CanBusOrderEntry(CANBusId.RIO, 33, "HopperRoller",                     18),
+            new CanBusOrderEntry(CANBusId.RIO, 37, "ShooterFeederMotor",               19),
+            new CanBusOrderEntry(CANBusId.RIO, 25, "ClimberMotorLeft",                 20),
+            new CanBusOrderEntry(CANBusId.RIO, 22, "ShooterLeftMotor",                 21),
+            new CanBusOrderEntry(CANBusId.RIO, 23, "ShooterMiddleMotor",               22),
+            new CanBusOrderEntry(CANBusId.RIO, 59, "ClimberAbsoluteEncoderReady",      23),
+            new CanBusOrderEntry(CANBusId.RIO, 24, "ShooterRightMotor",                24),
+            new CanBusOrderEntry(CANBusId.RIO, 26, "ClimberMotorRight",                25)
         );
     }
 

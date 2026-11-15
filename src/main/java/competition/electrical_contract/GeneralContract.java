@@ -38,7 +38,7 @@ public abstract class GeneralContract extends ElectricalContract {
     public CANMotorControllerInfo getShooterFeederMotor() {
         return new CANMotorControllerInfo("ShooterFeederMotor",
                 MotorControllerType.TalonFx,
-                CANBusId.Canivore,
+                CANBusId.RIO,
                 37,
                 PDHPort.PDH17,
                 new TalonFxMotorControllerOutputConfig()
@@ -50,7 +50,7 @@ public abstract class GeneralContract extends ElectricalContract {
     public CANMotorControllerInfo getLeftShooterMotor() {
         return new CANMotorControllerInfo("ShooterLeftMotor",
                 MotorControllerType.TalonFx,
-                CANBusId.Canivore,
+                CANBusId.RIO,
                 22,
                 PDHPort.PDH02,
                 new TalonFxMotorControllerOutputConfig()
@@ -65,7 +65,7 @@ public abstract class GeneralContract extends ElectricalContract {
     public CANMotorControllerInfo getMiddleShooterMotor() {
         return new CANMotorControllerInfo("ShooterMiddleMotor",
                 MotorControllerType.TalonFx,
-                CANBusId.Canivore,
+                CANBusId.RIO,
                 23,
                 PDHPort.PDH03,
                 new TalonFxMotorControllerOutputConfig()
@@ -81,7 +81,7 @@ public abstract class GeneralContract extends ElectricalContract {
     public CANMotorControllerInfo getRightShooterMotor() {
         return new CANMotorControllerInfo("ShooterRightMotor",
                 MotorControllerType.TalonFx,
-                CANBusId.Canivore,
+                CANBusId.RIO,
                 24,
                 PDHPort.PDH04,
                 new TalonFxMotorControllerOutputConfig()
@@ -97,7 +97,7 @@ public abstract class GeneralContract extends ElectricalContract {
     public CANMotorControllerInfo getIntakeDeployMotor() {
         return new CANMotorControllerInfo("IntakeDeployMotor",
                 MotorControllerType.TalonFx,
-                CANBusId.Canivore,
+                CANBusId.RIO,
                 34,
                 PDHPort.PDH14,
                 new TalonFxMotorControllerOutputConfig()
@@ -108,14 +108,14 @@ public abstract class GeneralContract extends ElectricalContract {
 
     @Override
     public DeviceInfo getIntakeDeployAbsoluteEncoder() {
-        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady", CANBusId.Canivore, 58);
+        return new DeviceInfo("IntakeDeployAbsoluteEncoderReady", CANBusId.RIO, 58);
     }
 
     @Override
     public CANMotorControllerInfo getFuelIntakeMotor() {
         return new CANMotorControllerInfo("FuelIntakeMotor",
                 MotorControllerType.TalonFx,
-                CANBusId.Canivore,
+                CANBusId.RIO,
                 32,
                 PDHPort.PDH12,
                 new TalonFxMotorControllerOutputConfig()
@@ -126,7 +126,7 @@ public abstract class GeneralContract extends ElectricalContract {
     @Override
     public CANLightControllerInfo getLightControllerInfo() {
         return new CANLightControllerInfo("Lights",
-                LightControllerType.Candle, CANBusId.Canivore,
+                LightControllerType.Candle, CANBusId.RIO,
                 57, new CANLightControllerOutputConfig(LEDStripType.GRB,
                 0.15, new int[] {8, 30, 30}));
 
@@ -136,7 +136,7 @@ public abstract class GeneralContract extends ElectricalContract {
     public CANMotorControllerInfo getHopperRollerMotor() {
         return new CANMotorControllerInfo("HopperRoller",
                 MotorControllerType.TalonFx,
-                CANBusId.Canivore,
+                CANBusId.RIO,
                 33,
                 PDHPort.PDH13,
                 new TalonFxMotorControllerOutputConfig()
@@ -147,7 +147,7 @@ public abstract class GeneralContract extends ElectricalContract {
     public CANMotorControllerInfo getClimberMotorLeft() {
         return new CANMotorControllerInfo("ClimberMotorLeft",
                 MotorControllerType.TalonFx,
-                CANBusId.Canivore,
+                CANBusId.RIO,
                 25,
                 PDHPort.PDH05,
                 new TalonFxMotorControllerOutputConfig()
@@ -159,7 +159,7 @@ public abstract class GeneralContract extends ElectricalContract {
     public CANMotorControllerInfo getClimberMotorRight() {
         return new CANMotorControllerInfo("ClimberMotorRight",
                 MotorControllerType.TalonFx,
-                CANBusId.Canivore,
+                CANBusId.RIO,
                 26,
                 PDHPort.PDH06,
                 new TalonFxMotorControllerOutputConfig()

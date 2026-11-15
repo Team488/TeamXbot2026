@@ -5,6 +5,7 @@ import competition.subsystems.drive.DriveSubsystem;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import xbot.common.controls.sensors.XXboxController;
 import xbot.common.controls.sensors.XGyro;
 import xbot.common.logic.HumanVsMachineDecider;
 import xbot.common.logic.HumanVsMachineDecider.HumanVsMachineDeciderFactory;
@@ -76,15 +77,17 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
     @Override
     public void execute() {
+        XXboxController gamepad = oi.getActiveDriveGamepad();
+
         // Get raw human translate and rotation intents
-        XYPair translationIntent = getRawHumanTranslationIntent();
-        double rawRotationIntent = getRawHumanRotationIntent();
+        XYPair translationIntent = getRawHumanTranslationIntent(gamepad);
+        double rawRotationIntent = getRawHumanRotationIntent(gamepad);
 
         // Process the translation intent
         translationIntent = getSuggestedTranslationIntent(translationIntent);
 
         // Checks snapping to side or other rotation features to get suggested intent
-        double rotationIntent = getSuggestedRotationIntent(rawRotationIntent);
+        double rotationIntent = getSuggestedRotationIntent(gamepad, rawRotationIntent);
 
         if (!drive.isUnlockFullDrivePowerActive()) {
             translationIntent = translationIntent.scale(overallDrivingPowerScale.get());
@@ -104,9 +107,9 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         aKitLog.record("HumanRotationIntent", rawRotationIntent);
     }
 
-    private XYPair getRawHumanTranslationIntent() {
-        double xIntent = MathUtils.deadband(oi.driverGamepad.getLeftVector().getX(), 0.15);
-        double yIntent = MathUtils.deadband(oi.driverGamepad.getLeftVector().getY(), 0.15);
+    private XYPair getRawHumanTranslationIntent(XXboxController gamepad) {
+        double xIntent = MathUtils.deadband(gamepad.getLeftVector().getX(), 0.15);
+        double yIntent = MathUtils.deadband(gamepad.getLeftVector().getY(), 0.15);
 
         XYPair translationIntent = new XYPair(xIntent, yIntent);
 
@@ -118,17 +121,17 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         return translationIntent.rotate(-90);
     }
 
-    private double getRawHumanRotationIntent() {
+    private double getRawHumanRotationIntent(XXboxController gamepad) {
         // Deadband is to prevent buggy joysticks/triggers
-        double rotateLeftIntent = MathUtils.deadband(oi.driverGamepad.getLeftTrigger(), 0.05);
-        double rotateRightIntent = MathUtils.deadband(oi.driverGamepad.getRightTrigger(), 0.05);
+        double rotateLeftIntent = MathUtils.deadband(gamepad.getLeftTrigger(), 0.05);
+        double rotateRightIntent = MathUtils.deadband(gamepad.getRightTrigger(), 0.05);
 
         // Merge the two trigger values together in case of conflicts
         // Rotate left = positive, right = negative
         return rotateLeftIntent - rotateRightIntent;
     }
 
-    public double getSuggestedRotationIntent(double triggerRotateIntent) {
+    public double getSuggestedRotationIntent(XXboxController gamepad, double triggerRotateIntent) {
         // Checks the right joystick input to see if we want to snap to a certain side
         // Apparently, we need to invert the x input here as it has been inverted for other commands already
         // And of course, we must rotate -90 (similar to how we got raw translation) for default alignment
@@ -136,7 +139,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         if (xGyro != null && xGyro.isBroken()){
             joystickInput = new Translation2d();
         } else {
-            joystickInput = oi.driverGamepad.getRightVector();
+            joystickInput = gamepad.getRightVector();
         }
         Translation2d processedInput = new Translation2d(
                 -joystickInput.getX(),
